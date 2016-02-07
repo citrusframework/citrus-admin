@@ -1,0 +1,20 @@
+<project name="citrus-sample" basedir="." default="citrus.run.tests" description="This is a sample Citrus ANT build">
+
+  <property file="src/test/resources/citrus.properties"/>
+  <property name="citrus.version" value="2.6-SNAPSHOT"/>
+
+  <path id="citrus-classpath">
+    <pathelement path="src/test/java"/>
+    <pathelement path="src/test/resources"/>
+    <pathelement path="src/test/tests"/>
+  </path>
+
+  <target name="compile.tests">
+    <javac srcdir="src/test/java" classpathref="citrus-classpath"/>
+    <javac srcdir="src/test/tests" classpathref="citrus-classpath"/>
+  </target>
+
+  <target name="citrus.run.tests" depends="compile.tests" description="Runs all Citrus tests">
+  </target>
+
+</project>

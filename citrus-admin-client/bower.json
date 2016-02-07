@@ -1,0 +1,28 @@
+{
+  "name": "citrus-admin-client",
+  "description": "Citrus administration UI client application",
+  "main": "",
+  "authors": [
+    "Christoph Deppisch <deppisch@consol.de>",
+    "Martin Maher <maher@consol.de>"
+  ],
+  "license": "APL",
+  "homepage": "http://citrusframeork.org",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "components/bootstrap#~3.3.6",
+    "jquery": "components/jquery#~2.2.0",
+    "jquery-ui": "1.11.4",
+    "underscore": "1.8.3",
+    "moment": "2.11.2",
+    "font-awesome": "4.5.0"
+  }
+}

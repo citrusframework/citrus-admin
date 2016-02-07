@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.consol.citrus</groupId>
+		<artifactId>citrus-admin</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.consol.citrus</groupId>
+	<artifactId>citrus-admin-client</artifactId>
+	<name>citrus-admin-client</name>
+
+	<build>
+		<resources>
+      <resource>
+        <directory>src</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <excludes>
+          <exclude>**/*.ts</exclude>
+        </excludes>
+      </resource>
+			<resource>
+				<directory>${basedir}/node_modules</directory>
+        <excludes>
+          <exclude>.bin/**</exclude>
+          <exclude>bower/**</exclude>
+          <exclude>gulp/**</exclude>
+          <exclude>tsd/**</exclude>
+          <exclude>typescript/**</exclude>
+        </excludes>
+			</resource>
+			<resource>
+				<directory>${basedir}/bower_components</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<configuration>
+					<installDirectory>target</installDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>node-npm-setup</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v4.2.1</nodeVersion>
+							<npmVersion>2.14.7</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm-install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>bower-build</id>
+						<goals>
+							<goal>bower</goal>
+						</goals>
+					</execution>
+          <execution>
+						<id>tsc-compile</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+            <configuration>
+              <arguments>run tsc</arguments>
+            </configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/classes/public/</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
