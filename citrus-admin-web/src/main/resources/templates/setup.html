@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <base href="/" th:href="@{/}"/>
+
+    <title>Citrus Admin GUI</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="description" content="Citrus Administration UI"/>
+    <meta name="author" content="ConSol Software GmbH"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <link rel="shortcut icon" th:href="@{/icons/favicon.ico}"/>
+
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/file/jqueryFileTree.js}"></script>
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+    <script type="text/javascript" th:src="@{/es6-shim/es6-shim.min.js}"></script>
+    <script type="text/javascript" th:src="@{/systemjs/dist/system-polyfills.js}"></script>
+
+    <script type="text/javascript" th:src="@{/angular2/bundles/angular2-polyfills.js}"></script>
+    <script type="text/javascript" th:src="@{/systemjs/dist/system.js}"></script>
+    <script type="text/javascript" th:src="@{/rxjs/bundles/Rx.min.js}"></script>
+    <script type="text/javascript" th:src="@{/angular2/bundles/angular2.js}"></script>
+    <script type="text/javascript" th:src="@{/angular2/bundles/http.js}"></script>
+
+    <script type="text/javascript" th:src="@{/js/util/app.util.js}"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jqueryFileTree.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+
+    <script>
+      System.config({
+        packages: {
+          js: {
+            format: 'register',
+            defaultExtension: 'js'
+          }
+        }
+      });
+      System.import('js/setup')
+              .then(null, console.error.bind(console));
+    </script>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <setup><div class="container"><h2><img class="ajax-loader" th:src="@{/images/ajax-loader.gif}"/> Loading ...</h2></div></setup>
+  </body>
+</html>

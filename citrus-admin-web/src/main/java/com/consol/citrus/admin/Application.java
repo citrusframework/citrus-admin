@@ -32,6 +32,15 @@ public class Application {
 	/** Test source directory */
 	public static final String TEST_SRC_DIRECTORY = "test.source.directory";
 
+	/**
+	 * Gets the root directory from system property. By default user.home system
+	 * property setting is used as root.
+	 * @return
+	 */
+	public static String getRootDirectory() {
+		return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}

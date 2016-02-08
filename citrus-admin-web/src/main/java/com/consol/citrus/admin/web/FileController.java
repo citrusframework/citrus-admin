@@ -16,32 +16,35 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.admin.Application;
+import com.consol.citrus.admin.service.FileBrowserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.File;
 
 /**
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/project")
-public class ProjectController {
+@RequestMapping("/file")
+public class FileController {
 
     @Autowired
-    private ProjectService projectService;
+    private FileBrowserService fileBrowserService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "browse", method = RequestMethod.POST)
     @ResponseBody
-    public Project getProject() {
-        return projectService.getActiveProject();
-    }
+    public ModelAndView browse(@RequestParam("dir") String dir) {
+        String directory = fileBrowserService.decodeDirectoryUrl(dir, Application.getRootDirectory());
+        String[] folders = fileBrowserService.getFolders(new File(directory));
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity openProject(@RequestParam("projecthome") String projecthome) {
-        projectService.load(projecthome);
-        return ResponseEntity.ok(projecthome);
+        ModelAndView view = new ModelAndView("filetree");
+        view.addObject("folders", folders);
+        view.addObject("baseDir", fileBrowserService.separatorsToUnix(directory));
+
+        return view;
     }
 }
