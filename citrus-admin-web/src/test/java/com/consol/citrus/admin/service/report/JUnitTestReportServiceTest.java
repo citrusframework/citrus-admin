@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service;
+package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.TestReport;
