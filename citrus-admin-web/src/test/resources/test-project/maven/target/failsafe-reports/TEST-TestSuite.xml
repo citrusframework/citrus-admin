@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="Sample test suite" time="9.000" tests="16" errors="0" skipped="1" failures="5">
+  <properties>
+  </properties>
+  <testcase name="test_1" classname="com.consol.citrus.samples.Test_1_IT" time="4.000"/>
+  <testcase name="test_2" classname="com.consol.citrus.samples.Test_2_IT" time="5.000"/>
+</testsuite>
