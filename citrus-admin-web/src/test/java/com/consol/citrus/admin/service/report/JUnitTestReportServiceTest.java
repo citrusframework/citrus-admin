@@ -18,7 +18,6 @@ package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.TestReport;
-import com.consol.citrus.admin.service.report.JUnitTestReportService;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +31,7 @@ public class JUnitTestReportServiceTest {
 
     @Test
     public void testReport() throws Exception {
-        Project project = new Project(new ClassPathResource("maven").getFile().getCanonicalPath());
+        Project project = new Project(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
 
         Assert.assertTrue(service.hasTestResults(project));
 

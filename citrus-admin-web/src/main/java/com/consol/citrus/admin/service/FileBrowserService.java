@@ -34,6 +34,11 @@ public class FileBrowserService {
     private static final char UNIX_SEPARATOR = '/';
     private static final char WINDOWS_SEPARATOR = '\\';
 
+    /**
+     * Gets all sub-folder names in give directory.
+     * @param directory
+     * @return
+     */
     public String[] getFolders(File directory) {
         if (directory.exists()) {
             String[] files = directory.list(new FilenameFilter() {
@@ -54,6 +59,13 @@ public class FileBrowserService {
         }
     }
 
+    /**
+     * Finds file in folder structure. When recursive also searches in sub-directories.
+     * @param directory
+     * @param filename
+     * @param recursive
+     * @return
+     */
     public File findFileInPath(File directory, String filename, boolean recursive) {
         if (!directory.isDirectory()) {
             String msg = String.format("Expected a directory but instead got '%s'", directory.getAbsolutePath());
@@ -62,7 +74,7 @@ public class FileBrowserService {
 
         File[] files = directory.listFiles();
         for (File file : files) {
-            if (file.isDirectory()) {
+            if (file.isDirectory() && recursive) {
                 File returnedFile = findFileInPath(file, filename, recursive);
                 if (returnedFile != null) {
                     return returnedFile;
@@ -76,6 +88,12 @@ public class FileBrowserService {
         return null;
     }
 
+    /**
+     * Decodes file path url.
+     * @param url
+     * @param rootDirectory
+     * @return
+     */
     public String decodeDirectoryUrl(String url, String rootDirectory) {
         String directory;
 
@@ -102,6 +120,11 @@ public class FileBrowserService {
         return directory;
     }
 
+    /**
+     * Convert all path separators in given path expression to system separator character.
+     * @param path
+     * @return
+     */
     public String separatorsToSystem(String path) {
         if (path == null) {
             return null;
@@ -113,6 +136,11 @@ public class FileBrowserService {
         }
     }
 
+    /**
+     * Convert all path separators to windows style separator.
+     * @param path
+     * @return
+     */
     public String separatorsToWindows(String path) {
         if (path == null || path.indexOf(UNIX_SEPARATOR) == -1) {
             return path;
@@ -120,6 +148,11 @@ public class FileBrowserService {
         return path.replace(UNIX_SEPARATOR, WINDOWS_SEPARATOR);
     }
 
+    /**
+     * Convert all path separators to unix style separator.
+     * @param path
+     * @return
+     */
     public String separatorsToUnix(String path) {
         if (path == null || path.indexOf(WINDOWS_SEPARATOR) == -1) {
             return path;

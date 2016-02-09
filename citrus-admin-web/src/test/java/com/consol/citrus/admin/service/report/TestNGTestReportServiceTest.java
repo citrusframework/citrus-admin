@@ -31,7 +31,7 @@ public class TestNGTestReportServiceTest {
 
     @Test
     public void testReport() throws Exception {
-        Project project = new Project(new ClassPathResource("maven").getFile().getCanonicalPath());
+        Project project = new Project(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
 
         Assert.assertTrue(service.hasTestResults(project));
 

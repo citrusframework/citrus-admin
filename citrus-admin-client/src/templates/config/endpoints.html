@@ -1,0 +1,78 @@
+<h2 class="page-header">
+  <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
+  <div class="btn-group pull-right">
+    <button [disabled]="endpoint?.id" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li *ngFor="#type of endpointTypes" (click)="newEndpoint(type)" ><a name="{{type}}"><span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span> {{type}}</a></li>
+    </ul>
+  </div>
+</h2>
+
+<p>Endpoint components create producer and consumers for sending and receiving messages to/from various endpoint destinations. Endpoint components can be of synchronous and asynchronous nature and get referenced in test cases
+  when sending and receiving messages.</p>
+
+<br/>
+
+<form *ngIf="endpoint" class="form-horizontal">
+  <h3 *ngIf="endpoint.id">Edit Endpoint</h3>
+  <h3 *ngIf="!endpoint.id">New Endpoint</h3>
+
+  <input name="modelType" type="hidden" value="{{endpoint.modelType}}"/>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="type" value="{{endpoint.type}}" type="text" disabled="disabled" class="form-control"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="newId" value="{{endpoint.id}}" type="text" class="form-control"/>
+    </div>
+  </div>
+
+  <div *ngFor="#property of endpoint.properties" class="form-group">
+    <label class="col-sm-2 control-label">{{property.displayName}}</label>
+    <div class="col-sm-10">
+      <div *ngIf="property.optionKey" class="input-group">
+        <input name="{{property.fieldName}}" class="form-control" value="{{property.value}}" type="text"/>
+        <div class="btn-group input-group-btn">
+          <button name="{{property.optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-search"></i>
+          </button>
+          <ul class="dropdown-menu">
+          </ul>
+        </div>
+      </div>
+
+      <select *ngIf="property.options" class="form-control" name="{{property.fieldName}}" value="{{property.value}}">
+        <option *ngFor="#option of property.options" value="{{option}}">{{option}}</option>
+      </select>
+
+      <input *ngIf="!property.optionKey && !property.options" name="{{property.fieldName}}" value="{{property.value}}" type="text" class="form-control"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button *ngIf="endpoint.id" class="btn btn-primary" (click)="saveEndpoint()" type="submit">Save</button>
+      <button *ngIf="!endpoint.id" class="btn btn-primary" (click)="createEndpoint()" type="submit">Add</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="!endpoint" class="list-group">
+  <div *ngIf="endpoints.length == 0" class="list-group-item"><i class="fa fa-times"></i> No endpoints defined</div>
+
+  <div *ngFor="#endpoint of endpoints" class="list-group-item clickable" (click)="selectEndpoint(endpoint)">
+    <a class="pull-right" (click)="removeEndpoint(endpoint, $event)" name="remove" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
+    <span class="label label-{{endpoint.type}}"><i class="fa fa-share-alt-square"></i> {{endpoint.type}}</span>&nbsp;
+    <span><b>name</b>: {{endpoint.id}}</span>
+    <ul class="endpoint_properties">
+      <li *ngFor="#property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
+    </ul>
+  </div>
+</div>

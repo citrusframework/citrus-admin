@@ -29,11 +29,11 @@ public class ProjectServiceTest {
     @Test
     public void testLoadMavenProject() throws Exception {
         ProjectService projectService = new ProjectService();
-        projectService.load(new ClassPathResource("maven").getFile().getCanonicalPath());
+        projectService.load(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
 
         Project project = projectService.getActiveProject();
         Assert.assertNotNull(project);
-        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("maven").getFile().getCanonicalPath());
+        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "2.6-SNAPSHOT");
         Assert.assertEquals(project.getBasePackage(), "com.consol.citrus");
@@ -43,11 +43,11 @@ public class ProjectServiceTest {
     @Test
     public void testLoadAntProject() throws Exception {
         ProjectService projectService = new ProjectService();
-        projectService.load(new ClassPathResource("ant").getFile().getCanonicalPath());
+        projectService.load(new ClassPathResource("test-project/ant").getFile().getCanonicalPath());
 
         Project project = projectService.getActiveProject();
         Assert.assertNotNull(project);
-        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("ant").getFile().getCanonicalPath());
+        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("test-project/ant").getFile().getCanonicalPath());
         Assert.assertEquals(project.getName(), "citrus-sample");
         Assert.assertEquals(project.getVersion(), "2.6-SNAPSHOT");
         Assert.assertEquals(project.getBasePackage(), "com.consol.citrus");

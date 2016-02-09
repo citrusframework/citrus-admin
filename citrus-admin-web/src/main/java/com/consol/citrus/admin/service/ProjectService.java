@@ -25,7 +25,9 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -36,12 +38,16 @@ import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  */
 @Service
 public class ProjectService {
+
+    @Autowired
+    private FileBrowserService fileBrowserService;
 
     /** Current project actively opened in Citrus admin */
     private Project project;
@@ -96,6 +102,30 @@ public class ProjectService {
                 throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
             }
         }
+    }
+
+    /**
+     * Returns the project's Spring application context config file.
+     * @return the config file or null if no config file exists within the selected project.
+     */
+    public File getProjectContextConfigFile() {
+        return fileBrowserService.findFileInPath(new File(project.getProjectHome()), getDefaultConfigurationFile(), true);
+    }
+
+    /**
+     * Reads default Citrus project property file for active project.
+     * @return properties loaded or empty properties if nothing is found
+     */
+    public Properties getProjectProperties() {
+        File projectProperties = fileBrowserService.findFileInPath(new File(project.getProjectHome()), "citrus.properties", true);
+
+        try {
+            return PropertiesLoaderUtils.loadProperties(new FileSystemResource(projectProperties));
+        } catch (IOException e) {
+            log.warn("Unable to read default Citrus project properties from file resource", e);
+        }
+
+        return new Properties();
     }
 
     /**
