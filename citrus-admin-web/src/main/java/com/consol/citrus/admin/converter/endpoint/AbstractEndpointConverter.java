@@ -18,9 +18,16 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.admin.converter.AbstractObjectConverter;
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.Property;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.xml.bind.annotation.XmlSchema;
+import java.lang.reflect.Method;
 
 /**
  * Abstract endpoint converter provides basic endpoint property handling by Java reflection on JAXb objects.
@@ -43,5 +50,72 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
     public String getEndpointType() {
         String endpointNamespace = getModelClass().getPackage().getAnnotation(XmlSchema.class).namespace();
         return endpointNamespace.substring("http://www.citrusframework.org/schema/".length(), endpointNamespace.indexOf("/config"));
+    }
+
+    @Override
+    public S convertBack(EndpointDefinition definition) {
+        try {
+            S instance = getModelClass().newInstance();
+
+            ReflectionUtils.invokeMethod(findSetter(getModelClass(), "id"), instance, definition.getId());
+
+            for (Property property : definition.getProperties()) {
+                if (StringUtils.hasText(property.getValue())) {
+                    Method setter = findSetter(getModelClass(), property.getFieldName());
+                    ReflectionUtils.invokeMethod(setter, instance, getMethodArgument(setter, property.getValue()));
+                }
+            }
+
+            return instance;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new ApplicationRuntimeException("Failed to instantiate model class", e);
+        }
+    }
+
+    private Method findSetter(Class<S> modelClass, String fieldName) {
+        final Method[] setter = {null};
+
+        ReflectionUtils.doWithMethods(modelClass, new ReflectionUtils.MethodCallback() {
+            @Override
+            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                if (method.getName().equals("set" + StringUtils.capitalize(fieldName))) {
+                    setter[0] = method;
+                }
+            }
+        }, new ReflectionUtils.MethodFilter() {
+            @Override
+            public boolean matches(Method method) {
+                return method.getName().startsWith("set");
+            }
+        });
+
+        if (setter[0] == null) {
+            throw new ApplicationRuntimeException(String.format("Unable to find proper setter for field '%s' on model class '%s'", fieldName, modelClass));
+        }
+
+        return setter[0];
+    }
+
+    /**
+     *
+     * @param setter
+     * @param value
+     * @return
+     */
+    private Object getMethodArgument(Method setter, String value) {
+        Class<?> type = setter.getParameterTypes()[0];
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+
+        try {
+            return new SimpleTypeConverter().convertIfNecessary(value, type);
+        } catch (ConversionNotSupportedException e) {
+            if (String.class.equals(type)) {
+                return value.toString();
+            }
+
+            throw new ApplicationRuntimeException("Unable to convert method argument type", e);
+        }
     }
 }

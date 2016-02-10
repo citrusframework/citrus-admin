@@ -25,11 +25,11 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class FtpClientEndpointConverter extends AbstractEndpointConverter<FtpClientDefinition> {
+public class FtpClientConverter extends AbstractEndpointConverter<FtpClientDefinition> {
 
     @Override
     public EndpointDefinition convert(FtpClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass());
+        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
 
         endpointData.add(property("host", client));
         endpointData.add(property("port", client));

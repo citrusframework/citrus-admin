@@ -35,7 +35,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
 
     @Override
     public EndpointDefinition convert(WebServiceClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass());
+        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
 
         endpointData.add(property("requestUrl", client));
         endpointData.add(property("webServiceTemplate", client)

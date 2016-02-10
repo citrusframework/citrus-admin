@@ -1,52 +1,59 @@
 import {Component, OnInit} from 'angular2/core';
-import {ConfigService} from '../../service/config.service';
+import {EndpointService} from '../../service/endpoint.service';
 import {Endpoint} from "../../model/endpoint";
 import {Property} from "../../model/property";
 
 @Component({
     selector: 'endpoints',
-    templateUrl: 'templates/config/endpoints.html'
+    templateUrl: 'templates/config/endpoints.html',
+    providers: [EndpointService]
 })
 export class EndpointsComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _endpointService: EndpointService) {
         this.endpoints = [];
+        this.endpointTypes = [];
     }
 
     errorMessage: string;
-    endpoint: Endpoint;
+    newEndpoint: Endpoint;
+    selectedEndpoint: Endpoint;
     endpoints: Endpoint[];
 
-    endpointTypes = ["jms", "channel", "http-client", "http-server",
-                    "ws-client", "ws-server", "websocket-client", "websocket-server",
-                    "ssh-client", "ssh-server", "camel", "vertx", "docker",
-                    "rmi-client", "rmi-server", "jmx-client", "jmx-server",
-                    "mail-client", "mail-server", "ftp-client", "ftp-server"];
+    endpointTypes: string[];
 
     ngOnInit() {
+        this.getEndpointTypes();
         this.getEndpoints();
     }
 
+    getEndpointTypes() {
+        this._endpointService.getEndpointTypes()
+            .subscribe(
+                types => this.endpointTypes = types,
+                error => this.errorMessage = <any>error);
+    }
+
     getEndpoints() {
-        this._configService.getBeans("endpoints")
+        this._endpointService.getEndpoints()
             .subscribe(
                 endpoints => this.endpoints = endpoints,
                 error => this.errorMessage = <any>error);
     }
 
     selectEndpoint(endpoint: Endpoint) {
-        this.endpoint = endpoint;
+        this.selectedEndpoint = endpoint;
     }
 
-    newEndpoint(type: string) {
-        this._configService.getEndpointType(type)
+    getEndpointType(type: string) {
+        this._endpointService.getEndpointType(type)
             .subscribe(
-                endpoint => this.endpoint = endpoint,
+                endpoint => this.newEndpoint = endpoint,
                 error => this.errorMessage = <any>error);
     }
 
     removeEndpoint(endpoint: Endpoint, event) {
-        this._configService.deleteBean(endpoint.id)
+        this._endpointService.deleteEndpoint(endpoint.id)
             .subscribe(
                 response => this.endpoints.splice(this.endpoints.indexOf(endpoint), 1),
                 error => this.errorMessage = <any>error);
@@ -56,20 +63,25 @@ export class EndpointsComponent implements OnInit {
     }
 
     createEndpoint() {
-        this._configService.createBean(this.endpoint)
+        this._endpointService.createEndpoint(this.newEndpoint)
             .subscribe(
-                response => console.log(response),
+                response => { this.endpoints.push(this.newEndpoint); this.newEndpoint = undefined; },
                 error => this.errorMessage = <any>error);
     }
 
     saveEndpoint() {
-        this._configService.updateBean(this.endpoint)
+        this._endpointService.updateEndpoint(this.selectedEndpoint)
             .subscribe(
-                response => console.log(response),
+                response => { this.selectedEndpoint = undefined },
                 error => this.errorMessage = <any>error);
     }
 
     cancel() {
-        this.endpoint = undefined;
+        if (this.selectedEndpoint) {
+            this.selectedEndpoint = undefined;
+            this.getEndpoints();
+        } else {
+            this.newEndpoint = undefined;
+        }
     }
 }

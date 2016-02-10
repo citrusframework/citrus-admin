@@ -33,7 +33,7 @@ public class HttpServerConverter extends AbstractEndpointConverter<HttpServerDef
 
     @Override
     public EndpointDefinition convert(HttpServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass());
+        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
 
         endpointData.add(property("port", server));
         endpointData.add(property("autoStart", server, TRUE)

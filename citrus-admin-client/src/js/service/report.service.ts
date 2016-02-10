@@ -8,10 +8,10 @@ export class ReportService {
 
     constructor (private http: Http) {}
 
-    private _reportUrl = 'report/latest';
+    private _serviceUrl = 'report';
 
     getLatest() {
-        return this.http.get(this._reportUrl)
+        return this.http.get(this._serviceUrl + '/latest')
                         .map(res => <TestReport> res.json())
                         .catch(this.handleError);
     }

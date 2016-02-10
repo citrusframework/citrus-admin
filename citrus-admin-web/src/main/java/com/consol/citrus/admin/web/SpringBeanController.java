@@ -16,9 +16,7 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.converter.endpoint.EndpointConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.EndpointDefinition;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.model.config.core.*;
@@ -40,9 +38,6 @@ public class SpringBeanController {
 
     @Autowired
     private SpringBeanService springBeanService;
-
-    @Autowired
-    private List<EndpointConverter> endpointConverter;
 
     private Map<String, Class[]> typeMappings = new HashMap<>();
 
@@ -79,66 +74,28 @@ public class SpringBeanController {
     @RequestMapping(value = "/{type}", method = {RequestMethod.GET})
     @ResponseBody
     public List<?> listBeans(@PathVariable("type") String type) {
-        if (type.equals("endpoints")) {
-            List<EndpointDefinition> endpoints = new ArrayList<>();
-            for (EndpointConverter converter : endpointConverter) {
-                List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), converter.getModelClass());
-                for (Object endpoint : models) {
-                    endpoints.add(converter.convert(endpoint));
-                }
-            }
+        List<?> beans = new ArrayList<>();
+        Class[] types = typeMappings.get(type);
 
-            return endpoints;
-        } else {
-            List<?> beans = new ArrayList<>();
-            Class[] types = typeMappings.get(type);
-
-            for (Class definitionType : types) {
-                beans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), definitionType));
-            }
-            return beans;
+        for (Class definitionType : types) {
+            beans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), definitionType));
         }
-
+        return beans;
     }
 
     @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public Object getBean(@PathVariable("type") String type, @PathVariable("id") String id) {
-        if (type.equals("endpoints")) {
-            for (EndpointConverter converter : endpointConverter) {
-                Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, converter.getModelClass());
-                if (model != null) {
-                    return converter.convert(model);
-                }
-            }
-        } else {
-            Class[] types = typeMappings.get(type);
+        Class[] types = typeMappings.get(type);
 
-            for (Class definitionType : types) {
-                Object bean = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, definitionType);
-                if (bean != null) {
-                    return bean;
-                }
+        for (Class definitionType : types) {
+            Object bean = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, definitionType);
+            if (bean != null) {
+                return bean;
             }
         }
 
         throw new ApplicationRuntimeException(String.format("Unable to find bean of type %s and id %id", type, id));
-    }
-
-    @RequestMapping(value = "/type/{type}", method = {RequestMethod.GET})
-    @ResponseBody
-    public EndpointDefinition getEndpointType(@PathVariable("type") String type) {
-        for (EndpointConverter converter : endpointConverter) {
-            if (converter.getEndpointType().equals(type)) {
-                try {
-                    return converter.convert(converter.getModelClass().newInstance());
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new ApplicationRuntimeException("Failed to create new endpoint model instance", e);
-                }
-            }
-        }
-
-        throw new ApplicationRuntimeException("Unable to find endpoint definition for type '" + type + "'");
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)

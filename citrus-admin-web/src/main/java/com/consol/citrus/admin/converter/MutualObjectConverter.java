@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.endpoint;
-
-import com.consol.citrus.admin.converter.MutualObjectConverter;
-import com.consol.citrus.admin.model.EndpointDefinition;
+package com.consol.citrus.admin.converter;
 
 /**
  * @author Christoph Deppisch
  */
-public interface EndpointConverter<S> extends MutualObjectConverter<EndpointDefinition, S> {
-
-    @Override
-    EndpointDefinition convert(S definition);
-
-    @Override
-    S convertBack(EndpointDefinition object);
+public interface MutualObjectConverter<T, S> extends ObjectConverter<T, S> {
 
     /**
-     * Gets the endpoint type name.
+     * Converts a configuration definition object to desired object.
+     * @param object
      * @return
      */
-    String getEndpointType();
+    S convertBack(T object);
 }

@@ -24,17 +24,24 @@ import java.util.List;
  */
 public class EndpointDefinition {
 
-    private final String id;
-    private final String type;
-    private final Class<?> modelType;
+    private String id;
+    private String type;
+    private String modelType;
     private List<Property> properties = new ArrayList<Property>();
+
+    /**
+     * Default constructor basically used when constructing from json object.
+     */
+    public EndpointDefinition() {
+        super();
+    }
 
     /**
      * Constructor using endpoint type field and identifier.
      * @param type
      * @param id
      */
-    public EndpointDefinition(String type, String id, Class<?> modelType) {
+    public EndpointDefinition(String type, String id, String modelType) {
         this.id = id;
         this.modelType = modelType;
         this.type = type;
@@ -59,6 +66,15 @@ public class EndpointDefinition {
     }
 
     /**
+     * Sets the id property.
+     *
+     * @param id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
      * Gets the endpoint type such as http, jms, camel, etc.
      * @return
      */
@@ -67,11 +83,29 @@ public class EndpointDefinition {
     }
 
     /**
+     * Sets the type property.
+     *
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * Gets the model type that is logically linked to this endpoint data.
      * @return
      */
-    public Class<?> getModelType() {
+    public String getModelType() {
         return modelType;
+    }
+
+    /**
+     * Sets the modelType property.
+     *
+     * @param modelType
+     */
+    public void setModelType(String modelType) {
+        this.modelType = modelType;
     }
 
     /**

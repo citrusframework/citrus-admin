@@ -24,13 +24,20 @@ import java.util.List;
  */
 public class Property {
 
-    private final String id;
-    private final String fieldName;
-    private final String displayName;
-    private final String value;
+    private String id;
+    private String fieldName;
+    private String displayName;
+    private String value;
 
     private String optionKey;
     private List<String> options;
+
+    /**
+     * Default constructor basically used when constructing from json object.
+     */
+    public Property() {
+        super();
+    }
 
     /**
      * Constructor using form field id, displayName and value.
@@ -85,11 +92,29 @@ public class Property {
     }
 
     /**
+     * Sets the fieldName property.
+     *
+     * @param fieldName
+     */
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    /**
      * Gets the display name.
      * @return
      */
     public String getDisplayName() {
         return displayName;
+    }
+
+    /**
+     * Sets the displayName property.
+     *
+     * @param displayName
+     */
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     /**
@@ -101,11 +126,29 @@ public class Property {
     }
 
     /**
+     * Sets the id property.
+     *
+     * @param id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
      * Gets the parameter value.
      * @return
      */
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Sets the value property.
+     *
+     * @param value
+     */
+    public void setValue(String value) {
+        this.value = value;
     }
 
     /**
@@ -117,10 +160,28 @@ public class Property {
     }
 
     /**
+     * Sets the options property.
+     *
+     * @param options
+     */
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
+
+    /**
      * Returns the option key used when searching for options.
      * @return
      */
     public String getOptionKey() {
         return optionKey;
+    }
+
+    /**
+     * Sets the optionKey property.
+     *
+     * @param optionKey
+     */
+    public void setOptionKey(String optionKey) {
+        this.optionKey = optionKey;
     }
 }

@@ -3,30 +3,42 @@ import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 
 @Injectable()
-export class ConfigService {
+export class EndpointService {
 
     constructor (private http: Http) {}
 
-    private _serviceUrl = 'beans';
+    private _serviceUrl = 'endpoints';
 
-    getBeans(type: string) {
-        return this.http.get(this._serviceUrl + '/' + type)
+    getEndpoints() {
+        return this.http.get(this._serviceUrl)
                         .map(res => res.json())
                         .catch(this.handleError);
     }
 
-    createBean(bean: any) {
+    createEndpoint(bean: any) {
         return this.http.post(this._serviceUrl, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
     }
 
-    updateBean(bean: any) {
+    updateEndpoint(bean: any) {
         return this.http.put(this._serviceUrl + '/' + bean.id, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
     }
 
-    deleteBean(id: string) {
+    deleteEndpoint(id: string) {
         return this.http.delete(this._serviceUrl + '/' + id)
+                .catch(this.handleError);
+    }
+
+    getEndpointTypes() {
+        return this.http.get(this._serviceUrl + '/types')
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    getEndpointType(type: string) {
+        return this.http.get(this._serviceUrl + '/type/' + type)
+                .map(res => res.json())
                 .catch(this.handleError);
     }
 

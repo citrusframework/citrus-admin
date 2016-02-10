@@ -8,10 +8,10 @@ export class ProjectService {
 
     constructor (private http: Http) {}
 
-    private _projectUrl = 'project';
+    private _serviceUrl = 'project';
 
     getActiveProject() {
-        return this.http.get(this._projectUrl)
+        return this.http.get(this._serviceUrl)
                         .map(res => <Project> res.json())
                         .catch(this.handleError);
     }

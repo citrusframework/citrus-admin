@@ -19,44 +19,38 @@ package com.consol.citrus.admin.converter.endpoint;
 import com.consol.citrus.admin.model.EndpointDefinition;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.ws.WebServiceServerDefinition;
+import com.consol.citrus.model.config.mail.MailServerDefinition;
 import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class WebServiceServerConverter extends AbstractEndpointConverter<WebServiceServerDefinition> {
+public class MailServerConverter extends AbstractEndpointConverter<MailServerDefinition> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(WebServiceServerDefinition server) {
+    public EndpointDefinition convert(MailServerDefinition server) {
         EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
 
         endpointData.add(property("port", server));
         endpointData.add(property("autoStart", server, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("resourceBase", server));
-        endpointData.add(property("contextPath", server));
-        endpointData.add(property("rootParentContext", server, TRUE)
+        endpointData.add(property("autoAccept", server, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("handleMimeHeaders", server, TRUE)
+        endpointData.add(property("splitMultipart", server, TRUE)
                 .options(TRUE, FALSE));
         endpointData.add(property("messageConverter", server)
                 .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("endpointAdapter", server)
                 .optionKey(EndpointAdapter.class.getName()));
-        endpointData.add(property("securityHandler", server));
-        endpointData.add(property("servletHandler", server));
-        endpointData.add(property("connector", server));
-        endpointData.add(property("connectors", server));
-        endpointData.add(property("servletName", server));
-        endpointData.add(property("servletMappingPath", server));
+        endpointData.add(property("mailProperties", server)
+                .optionKey(Properties.class.getName()));
         endpointData.add(property("interceptors", server));
-        endpointData.add(property("soapHeaderNamespace", server));
-        endpointData.add(property("soapHeaderPrefix", server));
 
         endpointData.add(property("timeout", server, "5000"));
 
@@ -64,12 +58,12 @@ public class WebServiceServerConverter extends AbstractEndpointConverter<WebServ
     }
 
     @Override
-    public Class<WebServiceServerDefinition> getModelClass() {
-        return WebServiceServerDefinition.class;
+    public Class<MailServerDefinition> getModelClass() {
+        return MailServerDefinition.class;
     }
 
     @Override
     public String getEndpointType() {
-        return "ws-server";
+        return "mail-server";
     }
 }

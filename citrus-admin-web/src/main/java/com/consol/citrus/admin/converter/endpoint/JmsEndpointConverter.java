@@ -21,9 +21,9 @@ import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.jms.JmsEndpointDefinition;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -33,13 +33,11 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointD
 
     @Override
     public EndpointDefinition convert(JmsEndpointDefinition definition) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass());
+        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass().getName());
 
-        if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add(property("destinationName", "Destination", definition));
-        } else {
-            endpointData.add(property("destination", definition.getDestination(), definition));
-        }
+        endpointData.add(property("destinationName", "Destination Name", definition));
+        endpointData.add(property("destination", "Destination", definition)
+                .optionKey(Destination.class.getName()));
 
         endpointData.add(property("connectionFactory", definition)
                 .optionKey(ConnectionFactory.class.getName()));
