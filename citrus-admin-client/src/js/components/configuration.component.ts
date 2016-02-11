@@ -5,11 +5,12 @@ import {ConfigService} from "../service/config.service";
 import {Pills, Pill} from "../components/util/pills";
 import {EndpointsComponent} from "../components/config/endpoints.component"
 import {GlobalVariablesComponent} from "../components/config/global.variables.component"
+import {NamespaceContextComponent} from "../components/config/namespace.context.component"
 
 @Component({
     templateUrl: 'templates/config.html',
     providers: [ConfigService, HTTP_PROVIDERS],
-    directives: [NgIf, NgFor, NgModel, Pills, Pill, EndpointsComponent, GlobalVariablesComponent]
+    directives: [NgIf, NgFor, NgModel, Pills, Pill, EndpointsComponent, GlobalVariablesComponent, NamespaceContextComponent]
 })
 export class ConfigurationComponent {
     errorMessage: string;

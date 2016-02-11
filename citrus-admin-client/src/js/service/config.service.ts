@@ -2,6 +2,7 @@ import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {GlobalVariables} from '../model/global.variables';
+import {NamespaceContext} from '../model/namespace.context';
 
 @Injectable()
 export class ConfigService {
@@ -24,6 +25,17 @@ export class ConfigService {
 
     updateGlobalVariables(component: GlobalVariables) {
         return this.http.put(this._globalVariablesUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    getNamespaceContext() {
+        return this.http.get(this._namespaceContextUrl)
+            .map(res => <NamespaceContext> res.json())
+            .catch(this.handleError);
+    }
+
+    updateNamespaceContext(component: NamespaceContext) {
+        return this.http.put(this._namespaceContextUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
     }
 

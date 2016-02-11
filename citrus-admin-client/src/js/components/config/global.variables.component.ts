@@ -1,14 +1,14 @@
-import {Component, AfterViewInit} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {Variable} from "../../model/variable";
 import {GlobalVariables} from "../../model/global.variables";
 
 @Component({
-    selector: 'variables',
+    selector: 'global-variables',
     templateUrl: 'templates/config/global-variables.html',
     providers: [ConfigService]
 })
-export class GlobalVariablesComponent implements AfterViewInit {
+export class GlobalVariablesComponent implements OnInit {
 
     constructor(private _configService: ConfigService) {
         this.globalVariables = new GlobalVariables();
@@ -19,7 +19,7 @@ export class GlobalVariablesComponent implements AfterViewInit {
     newVariable: Variable;
     globalVariables: GlobalVariables;
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.getVariables();
     }
 

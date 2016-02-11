@@ -83,11 +83,11 @@ public class ConfigurationController {
     @ResponseBody
     public void updateNamespaceContext(@RequestBody NamespaceContextDefinition component) {
         if (component.getNamespaces().isEmpty()) {
-            springBeanService.removeBeanDefinitions(projectService.getProjectContextConfigFile(), GlobalVariablesDefinition.class);
+            springBeanService.removeBeanDefinitions(projectService.getProjectContextConfigFile(), NamespaceContextDefinition.class);
         } else if (getNamespaceContext().getNamespaces().isEmpty()) {
             createNamespaceContext(component);
         } else {
-            springBeanService.updateBeanDefinitions(projectService.getProjectContextConfigFile(), GlobalVariablesDefinition.class, component);
+            springBeanService.updateBeanDefinitions(projectService.getProjectContextConfigFile(), NamespaceContextDefinition.class, component);
         }
     }
 
