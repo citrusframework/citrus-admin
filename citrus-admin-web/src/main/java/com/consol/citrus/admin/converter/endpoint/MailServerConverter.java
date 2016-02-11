@@ -50,7 +50,6 @@ public class MailServerConverter extends AbstractEndpointConverter<MailServerDef
                 .optionKey(EndpointAdapter.class.getName()));
         endpointData.add(property("mailProperties", server)
                 .optionKey(Properties.class.getName()));
-        endpointData.add(property("interceptors", server));
 
         endpointData.add(property("timeout", server, "5000"));
 

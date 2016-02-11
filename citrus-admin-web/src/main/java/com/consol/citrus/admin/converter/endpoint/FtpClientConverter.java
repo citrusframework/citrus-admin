@@ -33,7 +33,7 @@ public class FtpClientConverter extends AbstractEndpointConverter<FtpClientDefin
 
         endpointData.add(property("host", client));
         endpointData.add(property("port", client));
-        endpointData.add(property("user", client));
+        endpointData.add(property("username", client));
         endpointData.add(property("password", client));
         endpointData.add(property("messageCorrelator", client)
                 .optionKey(MessageCorrelator.class.getName()));

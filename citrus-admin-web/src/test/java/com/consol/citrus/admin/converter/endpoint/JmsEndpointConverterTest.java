@@ -30,13 +30,6 @@ public class JmsEndpointConverterTest {
     @Test
     public void testConvert() throws Exception {
         JmsEndpointConverter endpointConverter = new JmsEndpointConverter();
-        EndpointDefinition result = endpointConverter.convert(new JmsEndpointDefinition());
-        Assert.assertEquals(result.getType(), "jms");
-    }
-
-    @Test
-    public void testConvertBack() throws Exception {
-        JmsEndpointConverter endpointConverter = new JmsEndpointConverter();
         EndpointDefinition definition = new EndpointDefinition();
         definition.setId("newEndpoint");
         definition.setType(endpointConverter.getEndpointType());

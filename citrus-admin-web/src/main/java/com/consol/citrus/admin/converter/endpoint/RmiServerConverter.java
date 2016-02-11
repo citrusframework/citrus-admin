@@ -37,7 +37,7 @@ public class RmiServerConverter extends AbstractEndpointConverter<RmiServerDefin
         endpointData.add(property("host", server));
         endpointData.add(property("port", server));
         endpointData.add(property("binding", server));
-        endpointData.add(property("interface", server));
+        endpointData.add(property("_interface", server));
         endpointData.add(property("createRegistry", server, TRUE)
                 .options(TRUE, FALSE));
         endpointData.add(property("autoStart", server, TRUE)
