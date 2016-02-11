@@ -16,15 +16,15 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
-import com.consol.citrus.model.config.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -39,29 +39,15 @@ public class SpringBeanController {
     @Autowired
     private SpringBeanService springBeanService;
 
-    private Map<String, Class[]> typeMappings = new HashMap<>();
-
-    /**
-     * Default constructor.
-     */
-    public SpringBeanController() {
-        typeMappings.put("schema-repository", new Class[] { SchemaRepositoryDefinition.class });
-        typeMappings.put("global-variables", new Class[] { GlobalVariablesDefinition.class });
-        typeMappings.put("namespace-context", new Class[] { NamespaceContextDefinition.class });
-        typeMappings.put("data-dictionary", new Class[] { XpathDataDictionaryDefinition.class, XmlDataDictionaryDefinition.class, JsonDataDictionaryDefinition.class });
-        typeMappings.put("function-library", new Class[] { FunctionLibraryDefinition.class });
-        typeMappings.put("validation-matcher", new Class[] { ValidationMatcherLibraryDefinition.class });
-    }
-
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createBean(@RequestBody Object bean) {
+    public void createBean(@RequestBody SpringBean bean) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), bean);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateBean(@PathVariable("id") String id, @RequestBody Object bean) {
+    public void updateBean(@PathVariable("id") String id, @RequestBody SpringBean bean) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, bean);
     }
 
@@ -73,34 +59,19 @@ public class SpringBeanController {
 
     @RequestMapping(value = "/{type}", method = {RequestMethod.GET})
     @ResponseBody
-    public List<?> listBeans(@PathVariable("type") String type) {
-        List<?> beans = new ArrayList<>();
-        Class[] types = typeMappings.get(type);
-
-        for (Class definitionType : types) {
-            beans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), definitionType));
-        }
-        return beans;
+    public List<SpringBean> listBeans(@PathVariable("type") String type) {
+        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", type));
     }
 
     @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public Object getBean(@PathVariable("type") String type, @PathVariable("id") String id) {
-        Class[] types = typeMappings.get(type);
-
-        for (Class definitionType : types) {
-            Object bean = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, definitionType);
-            if (bean != null) {
-                return bean;
-            }
-        }
-
-        throw new ApplicationRuntimeException(String.format("Unable to find bean of type %s and id %id", type, id));
+    public SpringBean getBean(@PathVariable("type") String type, @PathVariable("id") String id) {
+        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, SpringBean.class);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
-    public List<String> search(@RequestBody String beanType) {
-        return springBeanService.getBeanNames(projectService.getProjectContextConfigFile(), beanType);
+    public List<String> search(@RequestBody String type) {
+        return springBeanService.getBeanNames(projectService.getProjectContextConfigFile(), type);
     }
 }

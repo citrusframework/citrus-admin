@@ -1,31 +1,38 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
+import {GlobalVariables} from '../model/global.variables';
 
 @Injectable()
 export class ConfigService {
 
     constructor (private http: Http) {}
 
-    private _serviceUrl = 'beans';
+    private _serviceUrl = 'config';
+    private _globalVariablesUrl = this._serviceUrl + '/global-variables';
+    private _schemaRepositoryUrl = this._serviceUrl + '/schema-repository';
+    private _namespaceContextUrl = this._serviceUrl + '/namespace-context';
+    private _functionLibraryUrl = this._serviceUrl + '/function-library';
+    private _validationMatcherUrl = this._serviceUrl + '/validation-matcher';
+    private _dataDictionaryUrl = this._serviceUrl + '/data-dictionary';
 
-    getBeans(type: string) {
-        return this.http.get(this._serviceUrl + '/' + type)
-                        .map(res => res.json())
+    getGlobalVariables() {
+        return this.http.get(this._globalVariablesUrl)
+                        .map(res => <GlobalVariables> res.json())
                         .catch(this.handleError);
     }
 
-    createBean(bean: any) {
-        return this.http.post(this._serviceUrl, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+    updateGlobalVariables(component: GlobalVariables) {
+        return this.http.put(this._globalVariablesUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createComponent(component: any) {
+        return this.http.post(this._serviceUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
     }
 
-    updateBean(bean: any) {
-        return this.http.put(this._serviceUrl + '/' + bean.id, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
-                .catch(this.handleError);
-    }
-
-    deleteBean(id: string) {
+    deleteComponent(id: string) {
         return this.http.delete(this._serviceUrl + '/' + id)
                 .catch(this.handleError);
     }

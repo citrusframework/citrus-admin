@@ -3,7 +3,7 @@
   <div class="btn-group pull-right">
     <button [disabled]="selectedEndpoint" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></button>
     <ul class="dropdown-menu">
-      <li *ngFor="#type of endpointTypes" (click)="getEndpointType(type)" ><a name="{{type}}"><span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span> {{type}}</a></li>
+      <li *ngFor="#type of endpointTypes" (click)="getEndpointType(type)" ><a name="{{type}}" class="clickable"><span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span> {{type}}</a></li>
     </ul>
   </div>
 </h2>

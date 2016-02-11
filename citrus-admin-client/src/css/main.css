@@ -171,29 +171,41 @@ a:hover {
 }
 
 .label-jms, .badge-jms {
-    background-color: #faac00;
+    background-color: #fa6c00;
 }
 
 .label-http-client, .badge-http-client,
 .label-http-server, .badge-http-server {
-    background-color: #428bca;
+    background-color: #34abca;
 }
 
-.label-ssh, .badge-ssh {
-    background-color: #F4645C;
+.label-ssh-client, .badge-ssh-client,
+.label-ssh-server, .badge-ssh-server {
+    background-color: #f42222;
 }
 
-.label-mail, .badge-mail {
-    background-color: #768dc1;
+.label-mail-client, .badge-mail-client,
+.label-mail-server, .badge-mail-server {
+    background-color: #7c83c1;
 }
 
 .label-ws-client, .badge-ws-client,
 .label-ws-server, .badge-ws-server{
-    background-color: #0480be;
+    background-color: #026ebe;
 }
 
 .label-channel, .badge-channel {
-    background-color: #92bed2;
+    background-color: #96c1d2;
+}
+
+.label-ftp-client, .badge-ftp-client,
+.label-ftp-server, .badge-ftp-server {
+    background-color: #5cb85c;
+}
+
+.label-websocket-client, .badge-websocker-client,
+.label-websocket-server, .badge-websocker-server {
+    background-color: #b06db8;
 }
 
 .badge-success {
