@@ -5,6 +5,7 @@ import {GlobalVariables} from '../model/global.variables';
 import {NamespaceContext} from '../model/namespace.context';
 import {FunctionLibrary} from '../model/function.library';
 import {ValidationMatcherLibrary} from '../model/validation.matcher.library';
+import {DataDictionary} from '../model/data.dictionary';
 
 @Injectable()
 export class ConfigService {
@@ -47,12 +48,6 @@ export class ConfigService {
             .catch(this.handleError);
     }
 
-    getFunctionLibrary(id: string) {
-        return this.http.get(this._functionLibraryUrl + '/' + id)
-            .map(res => <FunctionLibrary> res.json())
-            .catch(this.handleError);
-    }
-
     updateFunctionLibrary(component: FunctionLibrary) {
         return this.http.put(this._functionLibraryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
@@ -69,12 +64,6 @@ export class ConfigService {
             .catch(this.handleError);
     }
 
-    getValidationMatcherLibrary(id: string) {
-        return this.http.get(this._validationMatcherUrl + '/' + id)
-            .map(res => <ValidationMatcherLibrary> res.json())
-            .catch(this.handleError);
-    }
-
     updateValidationMatcherLibrary(component: ValidationMatcherLibrary) {
         return this.http.put(this._validationMatcherUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
@@ -82,6 +71,22 @@ export class ConfigService {
 
     createValidationMatcherLibrary(component: ValidationMatcherLibrary) {
         return this.http.post(this._validationMatcherUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    getDataDictionaries() {
+        return this.http.get(this._dataDictionaryUrl)
+            .map(res => <DataDictionary[]> res.json())
+            .catch(this.handleError);
+    }
+
+    updateDataDictionary(component: DataDictionary) {
+        return this.http.put(this._dataDictionaryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createDataDictionary(type: string, component: DataDictionary) {
+        return this.http.post(this._dataDictionaryUrl + '/' + type, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
     }
 

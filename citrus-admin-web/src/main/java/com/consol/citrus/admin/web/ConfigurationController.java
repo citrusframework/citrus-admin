@@ -216,11 +216,24 @@ public class ConfigurationController {
         }
     }
 
-    @RequestMapping(value = "/data-dictionary/{type}/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/data-dictionary", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateDataDictionary(@PathVariable("type") String type, @PathVariable("id") String id, @RequestBody JSONObject model) {
+    public void updateDataDictionary(@RequestBody JSONObject model) {
         try {
-            springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, getDataDictionaryType(type, model));
+            DataDictionaryType dictionary = getDataDictionary(model.get("id").toString());
+            String type;
+            if (dictionary instanceof XpathDataDictionaryDefinition) {
+                type = "xpath";
+            } else if (dictionary instanceof XmlDataDictionaryDefinition) {
+                type = "xml";
+            } else if (dictionary instanceof JsonDataDictionaryDefinition) {
+                type = "json";
+            } else {
+                throw new ApplicationRuntimeException("Unsupported data-dictionary type: " + dictionary.getClass());
+            }
+
+            DataDictionaryType component = getDataDictionaryType(type, model);
+            springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to read data dictionary model", e);
         }
