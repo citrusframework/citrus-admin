@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {GlobalVariables} from '../model/global.variables';
 import {NamespaceContext} from '../model/namespace.context';
 import {FunctionLibrary} from '../model/function.library';
+import {ValidationMatcherLibrary} from '../model/validation.matcher.library';
 
 @Injectable()
 export class ConfigService {
@@ -60,6 +61,28 @@ export class ConfigService {
     createFunctionLibrary(component: FunctionLibrary) {
         return this.http.post(this._functionLibraryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
+    }
+
+    getValidationMatcherLibraries() {
+        return this.http.get(this._validationMatcherUrl)
+            .map(res => <ValidationMatcherLibrary[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getValidationMatcherLibrary(id: string) {
+        return this.http.get(this._validationMatcherUrl + '/' + id)
+            .map(res => <ValidationMatcherLibrary> res.json())
+            .catch(this.handleError);
+    }
+
+    updateValidationMatcherLibrary(component: ValidationMatcherLibrary) {
+        return this.http.put(this._validationMatcherUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createValidationMatcherLibrary(component: ValidationMatcherLibrary) {
+        return this.http.post(this._validationMatcherUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
     }
 
     deleteComponent(id: string) {

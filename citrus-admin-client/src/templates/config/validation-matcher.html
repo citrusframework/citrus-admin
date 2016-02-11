@@ -1,15 +1,15 @@
 <h2 class="page-header">
-  <span><i class="fa fa-unlink"></i> Function Libraries</span>
+  <span><i class="fa fa-check-square"></i> Validation Matcher Libraries</span>
   <div class="btn-group pull-right">
     <button [disabled]="selectedLibrary" (click)="initLibrary()" type="button" class="btn btn-default dropdown-toggle">New</button>
   </div>
 </h2>
 
-<p>Functions are used inside a test case in order to provide more dynamic values such as the current date, timestamps, random numbers and so on. The functions
-  have a name and are grouped in a function library. Citrus provides a default function library but you can easily write your own functions and put them in a custom library in
-  order to extend the framework capabilities.</p>
+<p>When validating incoming messages Citrus is able to consult the service of validation matcher implementations. These validation matcher bring more flexibility to a validation operation.
+  When comparing a received value with an expected control value validation matcher help to get more powerful validation capabilities. Citrus offers a default list of validation matcher implementations
+  such as equalsIgnoreCase or isNumber. Of course you can easily write your own validation matcher and put it to some custom validation matcher library.</p>
 
-<p>Your project defines <span class="badge badge-emphasis badge-citrus">{{libraries.length}}</span> custom function libraries. See all available libraries listed below:</p>
+<p>Your project defines <span class="badge badge-emphasis badge-citrus">{{libraries.length}}</span> custom validation matcher libraries. See all available libraries listed below:</p>
 
 <br/>
 
@@ -31,22 +31,22 @@
   </div>
 
   <div class="form-group">
-    <label class="col-sm-2 control-label">Functions</label>
+    <label class="col-sm-2 control-label">ValidationMatchers</label>
     <div class="col-sm-3">
-      <input [(ngModel)]="newFunction.name" type="text" class="form-control"/>
+      <input [(ngModel)]="newValidationMatcher.name" type="text" class="form-control"/>
     </div>
     <div class="col-sm-6">
-      <input [(ngModel)]="newFunction.clazz" placeholder="Implementation Class" type="text" class="form-control"/>
+      <input [(ngModel)]="newValidationMatcher.clazz" placeholder="Implementation Class" type="text" class="form-control"/>
     </div>
     <div class="col-sm-1">
-      <button (click)="addFunction()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      <button (click)="addValidationMatcher()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
     </div>
   </div>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#function of newLibrary.functions" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b> class={{function.clazz}}&nbsp;<a class="pull-right" name="remove-function" title="Remove function" (click)="removeFunction(function)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#matcher of newLibrary.matchers" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{matcher.name}}()</b> class={{matcher.clazz}}&nbsp;<a class="pull-right" name="remove-matcher" title="Remove matcher" (click)="removeValidationMatcher(matcher)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -77,22 +77,22 @@
   </div>
 
   <div class="form-group">
-    <label class="col-sm-2 control-label">Functions</label>
+    <label class="col-sm-2 control-label">ValidationMatchers</label>
     <div class="col-sm-3">
-      <input [(ngModel)]="newFunction.name" type="text" class="form-control"/>
+      <input [(ngModel)]="newValidationMatcher.name" type="text" class="form-control"/>
     </div>
     <div class="col-sm-6">
-      <input [(ngModel)]="newFunction.clazz" placeholder="Implementation Class" type="text" class="form-control"/>
+      <input [(ngModel)]="newValidationMatcher.clazz" placeholder="Implementation Class" type="text" class="form-control"/>
     </div>
     <div class="col-sm-1">
-      <button (click)="addFunction()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      <button (click)="addValidationMatcher()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
     </div>
   </div>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#function of selectedLibrary.functions" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b> class={{function.clazz}}&nbsp;<a class="pull-right" name="remove-function" title="Remove function" (click)="removeFunction(function)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#matcher of selectedLibrary.matchers" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{matcher.name}}()</b> class={{matcher.clazz}}&nbsp;<a class="pull-right" name="remove-matcher" title="Remove matcher" (click)="removeValidationMatcher(matcher)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -106,14 +106,14 @@
 </form>
 
 <div *ngIf="!newLibrary && !selectedLibrary" class="list-group">
-  <div *ngIf="libraries.length == 0" class="list-group-item"><i class="fa fa-times"></i> No function libraries defined</div>
+  <div *ngIf="libraries.length == 0" class="list-group-item"><i class="fa fa-times"></i> No validation matcher libraries defined</div>
 
   <div *ngFor="#library of libraries" class="list-group-item clickable" (click)="selectLibrary(library)">
     <a class="pull-right" (click)="removeLibrary(library, $event)" name="remove" title="Remove library"><i class="fa fa-times" style="color: #A50000;"></i></a>
-    <span class="label label-primary"><i class="fa fa-unlink"></i></span>&nbsp;
+    <span class="label label-primary"><i class="fa fa-check-square"></i></span>&nbsp;
     <span><b>{{library.id}} ({{library.prefix}})</b></span>
     <ul class="properties">
-      <li *ngFor="#function of library.functions"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b></li>
+      <li *ngFor="#matcher of library.matchers"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{matcher.name}}()</b></li>
     </ul>
   </div>
 </div>

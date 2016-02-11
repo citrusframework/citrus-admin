@@ -120,10 +120,10 @@ public class ConfigurationController {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), component);
     }
 
-    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/schema-repository", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepositoryDefinition component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, component);
+    public void updateSchemaRepository(@RequestBody SchemaRepositoryDefinition component) {
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
     }
 
     @RequestMapping(value = "/function-library", method = {RequestMethod.GET})
@@ -168,10 +168,10 @@ public class ConfigurationController {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), component);
     }
 
-    @RequestMapping(value = "/validation-matcher/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/validation-matcher", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateValidationMatcherLibrary(@PathVariable("id") String id, @RequestBody ValidationMatcherLibraryDefinition component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, component);
+    public void updateValidationMatcherLibrary(@RequestBody ValidationMatcherLibraryDefinition component) {
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
     }
 
     @RequestMapping(value = "/data-dictionary", method = {RequestMethod.GET})
