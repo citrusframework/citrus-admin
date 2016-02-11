@@ -3,6 +3,7 @@ import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {GlobalVariables} from '../model/global.variables';
 import {NamespaceContext} from '../model/namespace.context';
+import {FunctionLibrary} from '../model/function.library';
 
 @Injectable()
 export class ConfigService {
@@ -39,8 +40,25 @@ export class ConfigService {
             .catch(this.handleError);
     }
 
-    createComponent(component: any) {
-        return this.http.post(this._serviceUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+    getFunctionLibraries() {
+        return this.http.get(this._functionLibraryUrl)
+            .map(res => <FunctionLibrary[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getFunctionLibrary(id: string) {
+        return this.http.get(this._functionLibraryUrl + '/' + id)
+            .map(res => <FunctionLibrary> res.json())
+            .catch(this.handleError);
+    }
+
+    updateFunctionLibrary(component: FunctionLibrary) {
+        return this.http.put(this._functionLibraryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createFunctionLibrary(component: FunctionLibrary) {
+        return this.http.post(this._functionLibraryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
     }
 

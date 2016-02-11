@@ -26,6 +26,17 @@ a:hover {
     background: #eff6fb;
 }
 
+ul.properties {
+    margin: 0 0 0 0;
+    padding-left: 100px;
+}
+
+ul.properties li {
+    list-style: none;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
 /** Navigation **/
 
 .navbar-brand {
@@ -141,6 +152,54 @@ a:hover {
 
 .content {
     margin-top: 20px;
+}
+
+/** Buttons **/
+
+.btn-primary {
+    color: #ffffff;
+    border-color: #0096D6;
+    background: #0096D6;
+}
+
+.btn-primary:hover {
+    border-color: #33abde;
+    background-color: #33abde;
+}
+
+.btn-citrus {
+    color: #ffffff;
+    text-shadow: none;
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(#fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
+    background-repeat: repeat-x;
+    border-color: #fcc300 #fcc300 #fad011;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFBD06E', endColorstr='#ffF89406', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn-citrus:hover,
+.btn-citrus:active,
+.btn-citrus.active,
+.btn-citrus.disabled,
+.btn-citrus[disabled] {
+    color: #ffffff;
+    background-color: #fcc300;
+    *background-color: #fad011;
+}
+
+.btn-citrus.active {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-citrus .caret {
+    border-top-color: #ffffff;
+    border-bottom-color: #ffffff;
 }
 
 /** Labels **/
@@ -275,17 +334,4 @@ i.channel {
 
 .list-group-item:focus, .list-group-item:hover {
     background-color: #eff6fb;
-}
-
-/** Endpoint component **/
-
-ul.endpoint_properties {
-    margin: 0 0 0 0;
-    padding-left: 100px;
-}
-
-ul.endpoint_properties li {
-    list-style: none;
-    word-break: break-all;
-    word-wrap: break-word;
 }

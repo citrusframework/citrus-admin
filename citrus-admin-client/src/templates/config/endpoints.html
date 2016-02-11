@@ -114,7 +114,7 @@
     <a class="pull-right" (click)="removeEndpoint(endpoint, $event)" name="remove" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
     <span class="label label-{{endpoint.type}}"><i class="fa fa-share-alt-square"></i> {{endpoint.type}}</span>&nbsp;
     <span><b>name</b>: {{endpoint.id}}</span>
-    <ul class="endpoint_properties">
+    <ul class="properties">
       <li *ngFor="#property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
     </ul>
   </div>

@@ -144,10 +144,10 @@ public class ConfigurationController {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), component);
     }
 
-    @RequestMapping(value = "/function-library/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/function-library", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateFunctionLibrary(@PathVariable("id") String id, @RequestBody FunctionLibraryDefinition component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, component);
+    public void updateFunctionLibrary(@RequestBody FunctionLibraryDefinition component) {
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
     }
 
     @RequestMapping(value = "/validation-matcher", method = {RequestMethod.GET})
