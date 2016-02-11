@@ -6,6 +6,7 @@ import {NamespaceContext} from '../model/namespace.context';
 import {FunctionLibrary} from '../model/function.library';
 import {ValidationMatcherLibrary} from '../model/validation.matcher.library';
 import {DataDictionary} from '../model/data.dictionary';
+import {SchemaRepository, Schema} from "../model/schema.repository";
 
 @Injectable()
 export class ConfigService {
@@ -15,6 +16,7 @@ export class ConfigService {
     private _serviceUrl = 'config';
     private _globalVariablesUrl = this._serviceUrl + '/global-variables';
     private _schemaRepositoryUrl = this._serviceUrl + '/schema-repository';
+    private _schemaUrl = this._serviceUrl + '/schema';
     private _namespaceContextUrl = this._serviceUrl + '/namespace-context';
     private _functionLibraryUrl = this._serviceUrl + '/function-library';
     private _validationMatcherUrl = this._serviceUrl + '/validation-matcher';
@@ -71,6 +73,38 @@ export class ConfigService {
 
     createValidationMatcherLibrary(component: ValidationMatcherLibrary) {
         return this.http.post(this._validationMatcherUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    getSchemaRepositories() {
+        return this.http.get(this._schemaRepositoryUrl)
+            .map(res => <SchemaRepository[]> res.json())
+            .catch(this.handleError);
+    }
+
+    updateSchemaRepository(component: SchemaRepository) {
+        return this.http.put(this._schemaRepositoryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createSchemaRepository(component: SchemaRepository) {
+        return this.http.post(this._schemaRepositoryUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    getSchemas() {
+        return this.http.get(this._schemaUrl)
+            .map(res => <Schema[]> res.json())
+            .catch(this.handleError);
+    }
+
+    updateSchema(component: Schema) {
+        return this.http.put(this._schemaUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
+    }
+
+    createSchema(component: Schema) {
+        return this.http.post(this._schemaUrl, JSON.stringify(component), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
     }
 

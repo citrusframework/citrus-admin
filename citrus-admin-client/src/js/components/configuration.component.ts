@@ -9,13 +9,15 @@ import {NamespaceContextComponent} from "./config/namespace.context.component"
 import {FunctionLibraryComponent} from "./config/function.library.component"
 import {ValidationMatcherComponent} from "./config/validation.matcher.component"
 import {DataDictionaryComponent} from "./config/data.dictionary.component"
+import {SchemaRepositoryComponent} from "./config/schema.repository.component"
 
 @Component({
     templateUrl: 'templates/config.html',
     providers: [ConfigService, HTTP_PROVIDERS],
     directives: [NgIf, NgFor, NgModel, Pills, Pill,
         EndpointsComponent, GlobalVariablesComponent, NamespaceContextComponent,
-        FunctionLibraryComponent, ValidationMatcherComponent, DataDictionaryComponent]
+        FunctionLibraryComponent, ValidationMatcherComponent, DataDictionaryComponent,
+        SchemaRepositoryComponent]
 })
 export class ConfigurationComponent {
     errorMessage: string;

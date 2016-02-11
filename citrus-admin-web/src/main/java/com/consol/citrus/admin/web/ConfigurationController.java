@@ -126,6 +126,30 @@ public class ConfigurationController {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
     }
 
+    @RequestMapping(value = "/schema", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<SchemaDefinition> listSchemas() {
+        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SchemaDefinition.class);
+    }
+
+    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.GET})
+    @ResponseBody
+    public SchemaDefinition getSchema(@PathVariable("id") String id) {
+        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, SchemaDefinition.class);
+    }
+
+    @RequestMapping(value = "/schema", method = {RequestMethod.POST})
+    @ResponseBody
+    public void createSchema(@RequestBody SchemaDefinition component) {
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), component);
+    }
+
+    @RequestMapping(value = "/schema", method = {RequestMethod.PUT})
+    @ResponseBody
+    public void updateSchema(@RequestBody SchemaDefinition component) {
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), component.getId(), component);
+    }
+
     @RequestMapping(value = "/function-library", method = {RequestMethod.GET})
     @ResponseBody
     public List<FunctionLibraryDefinition> listFunctionLibraries() {
