@@ -7,6 +7,8 @@
   <version>1.0.0</version>
   <name>Citrus Integration Test</name>
 
+  <description>This is a sample Citrus Maven build</description>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <citrus.version>2.6-SNAPSHOT</citrus.version>

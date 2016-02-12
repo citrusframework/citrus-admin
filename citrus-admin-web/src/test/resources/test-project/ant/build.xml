@@ -1,4 +1,4 @@
-<project name="citrus-sample" basedir="." default="citrus.run.tests" description="This is a sample Citrus ANT build">
+<project name="citrus-integration-tests" basedir="." default="citrus.run.tests" description="This is a sample Citrus ANT build">
 
   <property file="src/test/resources/citrus.properties"/>
   <property name="citrus.version" value="2.6-SNAPSHOT"/>

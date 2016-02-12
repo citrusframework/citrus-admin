@@ -47,7 +47,7 @@ import java.util.Properties;
 public class ProjectService {
 
     @Autowired
-    private FileBrowserService fileBrowserService;
+    protected FileBrowserService fileBrowserService;
 
     /** Current project actively opened in Citrus admin */
     private Project project;
@@ -186,4 +186,12 @@ public class ProjectService {
         return project;
     }
 
+    /**
+     * Sets the project property.
+     *
+     * @param project
+     */
+    public void setActiveProject(Project project) {
+        this.project = project;
+    }
 }

@@ -18,39 +18,68 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.model.Project;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.CollectionUtils;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+
+import java.io.File;
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  */
 public class ProjectServiceTest {
 
-    @Test
-    public void testLoadMavenProject() throws Exception {
-        ProjectService projectService = new ProjectService();
-        projectService.load(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
+    private ProjectService projectService;
+    private FileBrowserService fileBrowserService = new FileBrowserService();
+
+    @BeforeMethod
+    public void setup() {
+        projectService = new ProjectService();
+        projectService.fileBrowserService = fileBrowserService;
+    }
+
+    @Test(dataProvider = "projectProvider")
+    public void testLoadProject(String projectHome, String description) throws Exception {
+        projectService.load(new ClassPathResource(projectHome).getFile().getCanonicalPath());
 
         Project project = projectService.getActiveProject();
         Assert.assertNotNull(project);
-        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
+        Assert.assertEquals(project.getProjectHome(), new ClassPathResource(projectHome).getFile().getCanonicalPath());
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "2.6-SNAPSHOT");
         Assert.assertEquals(project.getBasePackage(), "com.consol.citrus");
-        Assert.assertEquals(project.getDescription(), "");
+        Assert.assertEquals(project.getDescription(), description);
+    }
+
+    @Test(dataProvider = "projectProvider")
+    public void testGetProjectProperties(String projectHome, String description) throws Exception {
+        Project testProject = new Project(new ClassPathResource(projectHome).getFile().getCanonicalPath());
+
+        projectService.setActiveProject(testProject);
+        Properties properties = projectService.getProjectProperties();
+
+        Assert.assertFalse(CollectionUtils.isEmpty(properties));
+        Assert.assertEquals(properties.size(), 2L);
+        Assert.assertEquals(properties.get("project.name"), "citrus-integration-tests");
+        Assert.assertEquals(properties.get("project.description"), description);
     }
 
     @Test
-    public void testLoadAntProject() throws Exception {
-        ProjectService projectService = new ProjectService();
-        projectService.load(new ClassPathResource("test-project/ant").getFile().getCanonicalPath());
+    public void testGetProjectContextConfigFile() throws Exception {
+        Project testProject = new Project(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
+        projectService.setActiveProject(testProject);
 
-        Project project = projectService.getActiveProject();
-        Assert.assertNotNull(project);
-        Assert.assertEquals(project.getProjectHome(), new ClassPathResource("test-project/ant").getFile().getCanonicalPath());
-        Assert.assertEquals(project.getName(), "citrus-sample");
-        Assert.assertEquals(project.getVersion(), "2.6-SNAPSHOT");
-        Assert.assertEquals(project.getBasePackage(), "com.consol.citrus");
-        Assert.assertEquals(project.getDescription(), "This is a sample Citrus ANT build");
+        File configFile = projectService.getProjectContextConfigFile();
+        Assert.assertTrue(configFile.exists());
+        Assert.assertEquals(configFile.getName(), "citrus-context.xml");
+    }
+
+    @DataProvider
+    public Object[][] projectProvider() {
+        return new Object[][] {
+            new Object[] {"test-project/maven", "This is a sample Citrus Maven build"},
+            new Object[] {"test-project/ant", "This is a sample Citrus ANT build"}
+        };
     }
 }
