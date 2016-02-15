@@ -1,4 +1,4 @@
-import { Component, Input } from 'angular2/core';
+import { Component, Input, Output, EventEmitter } from 'angular2/core';
 import { NgFor } from 'angular2/common';
 
 @Component({
@@ -6,7 +6,8 @@ import { NgFor } from 'angular2/common';
     template:`
     <ul class="nav nav-tabs">
       <li *ngFor="#tab of tabs" [class.active]="tab.active">
-        <a href="{{tab.id}}" (click)="select(pill, $event)">{{tab.title}}</a>
+        <button *ngIf="tab.closable" (click)="close(tab)" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <a (click)="select(tab)" name="{{tab.id}}">{{tab.title}}</a>
       </li>
     </ul>
     <ng-content></ng-content>
@@ -15,23 +16,45 @@ import { NgFor } from 'angular2/common';
 })
 export class Tabs {
 
+    @Input() dynamic: boolean;
+
+    @Output() closed = new EventEmitter(false);
+    @Output() selected = new EventEmitter(true);
+
     tabs: Tab[];
 
     constructor() {
         this.tabs = [];
     }
 
-    select(tab: Tab, event) {
+    select(tab: Tab) {
         this.tabs.forEach((tab: Tab) => {
             tab.active = false;
         });
         tab.active = true;
 
-        event.stopPropagation();
-        return false;
+        this.selected.emit(tab);
+    }
+
+    close(tab: Tab) {
+        this.tabs.splice(this.tabs.indexOf(tab), 1);
+        this.closed.emit(tab);
+
+        if (tab.active && this.tabs.length) {
+            this.select(this.tabs[0]);
+        }
     }
 
     addTab(tab: Tab) {
+        if (this.dynamic) {
+            this.tabs.forEach((tab: Tab) => {
+                tab.active = false;
+            });
+            tab.active = true;
+        } else if (this.tabs.length === 0) {
+            tab.active = true;
+        }
+
         this.tabs.push(tab);
     }
 }
@@ -47,7 +70,9 @@ export class Tabs {
 export class Tab {
     @Input('tab-id') id: string;
     @Input('tab-title') title: string;
-    @Input() active: boolean;
+    @Input() closable: boolean;
+
+    active: boolean;
 
     constructor(tabs: Tabs){
         tabs.addTab(this);

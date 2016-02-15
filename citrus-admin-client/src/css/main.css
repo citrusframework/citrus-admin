@@ -37,6 +37,29 @@ ul.properties li {
     word-wrap: break-word;
 }
 
+/* Disable bootstrap icons as we use font-awesome icons */
+
+[class^="icon-"],
+[class*=" icon-"] {
+    background-image: none;
+}
+
+.icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"] {
+    background-image: none;
+}
+
 /** Navigation **/
 
 .navbar-brand {
@@ -84,6 +107,44 @@ ul.properties li {
 .navbar .nav > li > a:hover {
     color: #ffffff;
     background-color: rgba(255,255,255,0.2);
+}
+
+/** Tab navigation **/
+
+.nav-tabs > li > a {
+    color: #404040;
+    background-color: #eff6fb;
+    border: 1px solid #dddddd;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: #fff;
+    background-color: #0096D6;
+    border-color: #0096D6;
+}
+
+.nav-tabs > li > a:hover {
+    color: #404040;
+    background-color: #e3effc;
+    border-color: #dddddd;
+}
+
+.nav-tabs > li > button.close {
+    position: relative;
+    top: -2px;
+    z-index: 100;
+    margin-right: 6px;
+    font-weight: lighter;
+}
+
+.nav-tabs > li.active > button.close {
+    color: #fff;
+    opacity: .5;
+    filter: alpha(opacity=50);
 }
 
 /** Nav Pills **/
@@ -334,4 +395,95 @@ i.channel {
 
 .list-group-item:focus, .list-group-item:hover {
     background-color: #eff6fb;
+}
+
+/** Drop Down Menu **/
+
+.dropdown-submenu{
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #cccccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fcc300;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left > a:after {
+    display: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a {
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(#fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
+}
+
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(#fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
+}
+
+.dropdown-menu li > a {
+    min-width: 125px;
+    line-height: 1.8em;
+}
+
+.dropdown-menu li:hover .sub-menu {
+    visibility: visible;
+}
+
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu, .nav-pills .dropdown-menu, .navbar .dropdown-menu {
+    margin-top: 0;
 }
