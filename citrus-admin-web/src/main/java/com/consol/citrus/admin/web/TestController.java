@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.model.TestPackage;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +42,13 @@ public class TestController {
     @ResponseBody
     public List<TestPackage> list() {
         return testCaseService.getTestPackages(projectService.getActiveProject());
+    }
+
+    @RequestMapping(value="/detail/{type}/{package}/{name}", method = { RequestMethod.GET })
+    @ResponseBody
+    public TestDetail getTestDetail(@PathVariable("package") String testPackage,
+                                    @PathVariable("name") String testName,
+                                    @PathVariable("type") String type) {
+        return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName, TestType.valueOf(type.toUpperCase()));
     }
 }

@@ -4,13 +4,12 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {Tabs, Tab} from "./util/tabs";
 import {TestPackage, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
-
-declare var jQuery: any;
+import {TestDetailComponent} from "./test.detail.component";
 
 @Component({
     templateUrl: 'templates/tests.html',
     providers: [TestService, HTTP_PROVIDERS],
-    directives: [NgSwitch, NgFor, Tabs, Tab]
+    directives: [NgSwitch, NgFor, Tabs, Tab, TestDetailComponent]
 })
 export class TestsComponent implements OnInit {
 
@@ -40,6 +39,10 @@ export class TestsComponent implements OnInit {
         var test = this.openTests.find(test => test.name === tab.id);
         if (test) {
             this.openTests.splice(this.openTests.indexOf(test), 1);
+        }
+
+        if (this.openTests.length === 0) {
+            this.activeTest = undefined;
         }
     }
 

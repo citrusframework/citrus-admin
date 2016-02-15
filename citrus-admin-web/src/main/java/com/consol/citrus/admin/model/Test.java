@@ -16,8 +16,6 @@
 
 package com.consol.citrus.admin.model;
 
-import com.consol.citrus.model.testcase.core.MetaInfoType;
-
 /**
  * @author Christoph Deppisch
  */
@@ -26,15 +24,7 @@ public class Test {
     private String name;
 
     private TestType type;
-
     private String packageName;
-    private String groups;
-    private String file;
-    private Long lastModified;
-
-    private MetaInfoType metaInfo;
-
-    private String description;
 
     /**
      * Gets the value of the name property.
@@ -88,95 +78,5 @@ public class Test {
      */
     public void setPackageName(String packageName) {
         this.packageName = packageName;
-    }
-
-    /**
-     * Gets the value of the groups property.
-     *
-     * @return the groups
-     */
-    public String getGroups() {
-        return groups;
-    }
-
-    /**
-     * Sets the groups property.
-     *
-     * @param groups
-     */
-    public void setGroups(String groups) {
-        this.groups = groups;
-    }
-
-    /**
-     * Gets the value of the file property.
-     *
-     * @return the file
-     */
-    public String getFile() {
-        return file;
-    }
-
-    /**
-     * Sets the file property.
-     *
-     * @param file
-     */
-    public void setFile(String file) {
-        this.file = file;
-    }
-
-    /**
-     * Gets the value of the lastModified property.
-     *
-     * @return the lastModified
-     */
-    public Long getLastModified() {
-        return lastModified;
-    }
-
-    /**
-     * Sets the lastModified property.
-     *
-     * @param lastModified
-     */
-    public void setLastModified(Long lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    /**
-     * Gets the value of the metaInfo property.
-     *
-     * @return the metaInfo
-     */
-    public MetaInfoType getMetaInfo() {
-        return metaInfo;
-    }
-
-    /**
-     * Sets the metaInfo property.
-     *
-     * @param metaInfo
-     */
-    public void setMetaInfo(MetaInfoType metaInfo) {
-        this.metaInfo = metaInfo;
-    }
-
-    /**
-     * Gets the value of the description property.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description property.
-     *
-     * @param description
-     */
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

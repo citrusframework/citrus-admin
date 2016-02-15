@@ -1,3 +1,5 @@
+import {Property} from "./property";
+
 export class TestPackage {
 
     constructor() {
@@ -10,8 +12,41 @@ export class TestPackage {
 
 export class Test {
 
-    constructor(public name?: string) {}
+    constructor(name?: string) {
+        this.name = name;
+    }
 
-    type: string;
-    packageName: string;
+    public name: string;
+    public type: string;
+    public packageName: string;
+}
+
+export class TestDetail extends Test {
+
+    constructor(public name?: string) {
+        super(name);
+        this.actions = [];
+    }
+
+    public groups: string;
+    public file: string;
+
+    public lastModified: number;
+    public author: string;
+    public description: string;
+
+    public variables: any[];
+    public parameters: any[];
+
+    public actions: TestAction[];
+}
+
+export class TestAction {
+
+    constructor() {
+        this.properties = [];
+    }
+
+    public type: string;
+    public properties: Property[];
 }
