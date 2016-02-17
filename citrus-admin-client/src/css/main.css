@@ -161,7 +161,6 @@ ul.properties li {
 .nav-pills > li > a {
     background: #eff6fb;
     color: #333;
-    min-width: 223px;
     text-align: center;
     margin: 1px;
 }
@@ -176,6 +175,31 @@ ul.properties li {
 .nav-pills > li.active > a:focus {
     background: #0096D6;
     color: #fff;
+}
+
+.pills-bar {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.pills-bar > li > a {
+    padding: 3px 15px;
+    border-radius: 0px;
+    margin: 0px;
+    background: #e3effc;
+}
+
+.pills-bar > li > a:hover {
+    background-color: #eff6fb;
+}
+
+.pills-bar > li.active > a,
+.pills-bar > li.active > a:hover,
+.pills-bar > li.active > a:focus {
+    background: #e3effc;
+    color: #333;
+    font-weight: bold;
 }
 
 /** Container **/
@@ -444,10 +468,15 @@ i.channel {
 }
 
 .dropdown-submenu.pull-left > .dropdown-menu {
-    left: -100%;
+    width: 350px;
+    left: -350px;
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu > li {
+    width: 350px;
 }
 
 .dropdown-menu li > a:hover,
@@ -486,4 +515,79 @@ i.channel {
 
 .dropdown-menu, .nav-pills .dropdown-menu, .navbar .dropdown-menu {
     margin-top: 0;
+}
+
+/** Test design icons **/
+
+.test-actions {
+    list-style: none;
+}
+
+.test-actions > li {
+    float: left;
+}
+
+.test-action, .test-transition {
+    float: left;
+    width: 40px;
+    height: 30px;
+    margin-bottom: 35px;
+}
+
+.start-action i, .stop-action i {
+    font-size: 20px;
+}
+
+.test-action i {
+    font-size: 20px;
+}
+
+.start-action i.fa-play {
+    color: #5ab15a;
+}
+
+.stop-action i.fa-stop {
+    color: #F4645C;
+}
+
+.icon-echo:before {
+    content: "\f05a";
+}
+
+.icon-sleep:before {
+    content: "\f017";
+}
+
+.icon-sql:before {
+    content: "\f085";
+}
+
+.icon-sequential:before {
+    content: "\f160";
+}
+
+.icon-parallel:before {
+    content: "\f126";
+}
+
+.icon-catch:before {
+    content: "\f0e9";
+}
+
+.icon-assert:before {
+    content: "\f06e";
+}
+
+.icon-fail:before {
+    content: "\f0e7";
+}
+
+.icon-send:before {
+    content: "\f08b";
+    color: #92bed2;
+}
+
+.icon-receive:before {
+    content: "\f090";
+    color: #5ab15a;
 }

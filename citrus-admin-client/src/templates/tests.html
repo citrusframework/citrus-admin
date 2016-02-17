@@ -30,23 +30,19 @@
 
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Open <span class="caret"></span></button>
-    <ul class="dropdown-menu" style="width: 350px;">
+    <ul class="dropdown-menu">
       <li *ngIf="packages.length == 0" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
       <li *ngFor="#package of packages" role="presentation" class="dropdown-submenu pull-left">
-        <a role="menuitem" name="tests" class="clickable" style="min-width: 348px; text-align: right;">{{package.name}}</a>
+        <a role="menuitem" name="tests" class="clickable">{{package.name}}</a>
         <ul class="dropdown-menu" role="menu">
-          <li *ngFor="#test of package.tests" role="presentation"><a role="menuitem" (click)="open(test)" name="{{test.name}}" class="clickable" style="width: 350px;">{{test.name}}</a></li>
+          <li *ngFor="#test of package.tests" role="presentation"><a role="menuitem" (click)="open(test)" name="{{test.name}}" class="clickable">{{test.name}}</a></li>
         </ul>
       </li>
     </ul>
   </div>
 
   <tabs dynamic="true" (selected)="onTabSelected($event)" (closed)="onTabClosed($event)">
-    <tab *ngFor="#test of openTests" tab-id="{{test.name}}" tab-title="{{test.name}}" closable="true">
-      <div>
-        <h3>{{test.name}}</h3>
-      </div>
-    </tab>
+    <tab *ngFor="#test of openTests" tab-id="{{test.name}}" tab-title="{{test.name}}" closable="true"></tab>
     <test-detail *ngIf="activeTest" [test]="activeTest"></test-detail>
   </tabs>
 </div>

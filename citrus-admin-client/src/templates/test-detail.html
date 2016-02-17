@@ -1,44 +1,82 @@
-<form *ngIf="detail" class="form-horizontal">
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Name</label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="detail.name" class="form-control" type="text" placeholder="Name"/>
-    </div>
-  </div>
+<pills navigation="true" stacked="true" justified="true">
+  <pill pill-id="test-details" pill-title="Details" pill-icon="fa fa-cube" active="true">
+    <form *ngIf="detail" class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="detail.name" class="form-control" type="text" placeholder="Name"/>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Author</label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="detail.author" class="form-control" type="text" placeholder="Author"/>
-    </div>
-  </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Author</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="detail.author" class="form-control" type="text" placeholder="Author"/>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Status</label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="detail.status" class="form-control" type="text" placeholder="Status"/>
-    </div>
-  </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Status</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="detail.status" class="form-control" type="text" placeholder="Status"/>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Package</label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="detail.packageName" class="form-control" type="text" placeholder="Package"/>
-    </div>
-  </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Package</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="detail.packageName" class="form-control" type="text" placeholder="Package"/>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Description</label>
-    <div class="col-sm-10">
-      <textarea [(ngModel)]="detail.description" rows="4" class="form-control"></textarea>
-    </div>
-  </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-10">
+          <textarea [(ngModel)]="detail.description" rows="4" class="form-control"></textarea>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Source Code</label>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-primary" (click)="save()" type="submit">Save</button>
+          <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </pill>
+  <pill pill-id="test-sources" pill-title="Sources" pill-icon="fa fa-code">
+    <pre class="prettycode linenums"><ol class="linenums"><li class="L0"><span class="str">Loading sources ...</span></li></ol></pre>
+  </pill>
+  <pill pill-id="test-design" pill-title="Design" pill-icon="fa fa-sitemap">
+    <ul *ngIf="detail" class="test-actions">
+      <li class="start-action">
+        <i class="fa fa-play"></i>
+      </li>
 
-    <div class="col-sm-10">
-      <label class="control-label"><a name="xml-source">XML</a>&nbsp;|&nbsp;<a name="java-source">Java</a></label>
-    </div>
-  </div>
-</form>
+      <div *ngFor="#action of detail.actions">
+        <li class="test-transition">
+          <i class="fa fa-long-arrow-right"></i>
+        </li>
+        <li class="test-action">
+          <i class="fa icon-{{action.type}}">&nbsp;</i>
+          <span *ngIf="action.reference">{{action.reference}}</span>
+          <span *ngIf="!action.reference">{{action.type}}</span>
+        </li>
+      </div>
+
+      <li class="test-transition">
+        <i class="fa fa-long-arrow-right"></i>
+      </li>
+
+      <li class="stop-action">
+        <i class="fa fa-stop"></i>
+      </li>
+    </ul>
+  </pill>
+  <pill pill-id="test-run" pill-title="Run" pill-icon="fa fa-play-circle">
+    <h3>Run Test</h3>
+  </pill>
+  <pill pill-id="test-run" pill-title="Results" pill-icon="fa fa-tasks">
+    <h3>Test Results</h3>
+  </pill>
+</pills>
