@@ -179,27 +179,27 @@ ul.properties li {
 
 .pills-bar {
     border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
+    max-width: 470px;
 }
 
 .pills-bar > li > a {
     padding: 3px 15px;
+    border-right: 1px solid #ddd;
     border-radius: 0px;
     margin: 0px;
-    background: #e3effc;
+    background: #fefefe;
 }
 
 .pills-bar > li > a:hover {
-    background-color: #eff6fb;
+    background-color: #efefef;
 }
 
 .pills-bar > li.active > a,
 .pills-bar > li.active > a:hover,
 .pills-bar > li.active > a:focus {
-    background: #e3effc;
+    background: #efefef;
     color: #333;
-    font-weight: bold;
 }
 
 /** Container **/
