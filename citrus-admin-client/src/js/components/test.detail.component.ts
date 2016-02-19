@@ -4,11 +4,12 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {Pills, Pill} from "./util/pills";
 import {Test, TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
+import {SourceCodeComponent} from "./source.code.component";
 
 @Component({
     selector: "test-detail",
     templateUrl: 'templates/test-detail.html',
-    directives: [NgSwitch, NgFor, Pills, Pill]
+    directives: [NgSwitch, NgFor, Pills, Pill, SourceCodeComponent]
 })
 export class TestDetailComponent implements OnChanges {
 

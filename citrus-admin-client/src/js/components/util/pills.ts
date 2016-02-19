@@ -4,12 +4,16 @@ import { NgFor } from 'angular2/common';
 @Component({
     selector: 'pills',
     template:`
-    <ul class="nav nav-pills" [class.pills-bar]="navigation" [class.nav-justified]="justified" [class.nav-stacked]="stacked">
-      <li *ngFor="#pill of pills" [class.active]="pill.active">
-        <a href="{{pill.id}}" (click)="select(pill, $event)"><i *ngIf="pill.icon" class="{{pill.icon}}"></i>&nbsp;{{pill.title}}</a>
-      </li>
-    </ul>
-    <ng-content></ng-content>
+    <div [class.pull-right]="navigation">
+      <ul class="nav nav-pills" [class.pills-bar]="navigation" [class.nav-justified]="justified" [class.nav-stacked]="stacked">
+        <li *ngFor="#pill of pills" [class.active]="pill.active">
+          <a href="{{pill.id}}" (click)="select(pill, $event)"><i *ngIf="pill.icon" class="{{pill.icon}}"></i>&nbsp;{{pill.title}}</a>
+        </li>
+      </ul>
+    </div>
+    <div [class.clearfix]="navigation">
+      <ng-content></ng-content>
+    </div>
   `,
     directives: [NgFor]
 })

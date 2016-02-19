@@ -39,13 +39,12 @@
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <button class="btn btn-primary" (click)="save()" type="submit">Save</button>
-          <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
         </div>
       </div>
     </form>
   </pill>
   <pill pill-id="test-sources" pill-title="Sources" pill-icon="fa fa-code">
-    <pre class="prettycode linenums"><ol class="linenums"><li class="L0"><span class="str">Loading sources ...</span></li></ol></pre>
+    <source-code *ngIf="detail" [detail]="detail" editor-id="xml-sources"></source-code>
   </pill>
   <pill pill-id="test-design" pill-title="Design" pill-icon="fa fa-sitemap">
     <ul *ngIf="detail" class="test-actions">

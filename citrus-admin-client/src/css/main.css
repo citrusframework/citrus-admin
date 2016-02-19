@@ -111,6 +111,10 @@ ul.properties li {
 
 /** Tab navigation **/
 
+.tab-pane {
+    margin-top: 30px;
+}
+
 .nav-tabs > li > a {
     color: #404040;
     background-color: #eff6fb;
@@ -178,6 +182,7 @@ ul.properties li {
 }
 
 .pills-bar {
+    border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     max-width: 470px;

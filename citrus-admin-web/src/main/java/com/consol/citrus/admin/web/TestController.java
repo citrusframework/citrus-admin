@@ -51,4 +51,11 @@ public class TestController {
                                     @PathVariable("type") String type) {
         return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName, TestType.valueOf(type.toUpperCase()));
     }
+
+    @RequestMapping(value="/source/{type}/{package}/{name}", method = { RequestMethod.GET })
+    @ResponseBody
+    public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
+                                @PathVariable("type") String type) {
+        return testCaseService.getSourceCode(projectService.getActiveProject(), testPackage, testName, TestType.valueOf(type.toUpperCase()));
+    }
 }

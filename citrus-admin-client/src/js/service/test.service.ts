@@ -10,6 +10,7 @@ export class TestService {
 
     private _serviceUrl = 'tests';
     private _testDetailUrl = this._serviceUrl + '/detail';
+    private _testSourceUrl = this._serviceUrl + '/source';
 
     getTestPackages() {
         return this.http.get(this._serviceUrl)
@@ -20,6 +21,12 @@ export class TestService {
     getTestDetail(test: Test) {
         return this.http.get(this._testDetailUrl + '/' + test.type + '/' + test.packageName + '/' + test.name)
             .map(res => <TestDetail> res.json())
+            .catch(this.handleError);
+    }
+
+    getSourceCode(test: TestDetail) {
+        return this.http.get(this._testSourceUrl + '/' + test.type + '/' + test.packageName + '/' + test.name)
+            .map(res => <string> res.text())
             .catch(this.handleError);
     }
 
