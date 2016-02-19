@@ -10,7 +10,8 @@ declare var ace;
     template: '<pre id="{{id}}" style="height: 650px;">{{sourceCode}}</pre>'
 })
 export class SourceCodeComponent implements OnChanges, AfterViewInit {
-    @Input("editor-id") id: string;
+    @Input('editor-id') id: string;
+    @Input() type = "xml";
     @Input() detail: TestDetail;
 
     constructor(private _testService: TestService) {}
@@ -26,11 +27,11 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     ngAfterViewInit() {
         this.editor = ace.edit(this.id);
         this.editor.setTheme("ace/theme/chrome");
-        this.editor.session.setMode("ace/mode/xml");
+        this.editor.session.setMode("ace/mode/" + this.type);
     }
 
     getSourceCode() {
-        this._testService.getSourceCode(this.detail)
+        this._testService.getSourceCode(this.detail, this.type)
             .subscribe(
                 sourceCode => {
                     this.sourceCode = sourceCode;

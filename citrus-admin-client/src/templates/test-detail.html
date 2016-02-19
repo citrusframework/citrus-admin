@@ -1,5 +1,6 @@
-<pills navigation="true" stacked="true" justified="true">
-  <pill pill-id="test-details" pill-title="Details" pill-icon="fa fa-cube" active="true">
+<pills navigation="true" justified="true" pull-right="true">
+  <pill pill-id="test-info" pill-title="Info" pill-icon="fa fa-cube" active="true">
+    <div class="space-top-30"></div>
     <form *ngIf="detail" class="form-horizontal">
       <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
@@ -44,9 +45,14 @@
     </form>
   </pill>
   <pill pill-id="test-sources" pill-title="Sources" pill-icon="fa fa-code">
-    <source-code *ngIf="detail" [detail]="detail" editor-id="xml-sources"></source-code>
+    <div class="space-top-30"></div>
+    <pills *ngIf="detail" navigation="true">
+      <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail" editor-id="xml-code"></source-code></pill>
+      <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail" editor-id="java-code" type="java"></source-code></pill>
+    </pills>
   </pill>
   <pill pill-id="test-design" pill-title="Design" pill-icon="fa fa-sitemap">
+    <div class="space-top-30"></div>
     <ul *ngIf="detail" class="test-actions">
       <li class="start-action">
         <i class="fa fa-play"></i>
@@ -75,7 +81,7 @@
   <pill pill-id="test-run" pill-title="Run" pill-icon="fa fa-play-circle">
     <h3>Run Test</h3>
   </pill>
-  <pill pill-id="test-run" pill-title="Results" pill-icon="fa fa-tasks">
+  <pill pill-id="test-results" pill-title="Results" pill-icon="fa fa-tasks">
     <h3>Test Results</h3>
   </pill>
 </pills>

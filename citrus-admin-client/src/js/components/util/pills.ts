@@ -4,16 +4,15 @@ import { NgFor } from 'angular2/common';
 @Component({
     selector: 'pills',
     template:`
-    <div [class.pull-right]="navigation">
+    <div [class.pull-right]="navigation && pullRight">
       <ul class="nav nav-pills" [class.pills-bar]="navigation" [class.nav-justified]="justified" [class.nav-stacked]="stacked">
         <li *ngFor="#pill of pills" [class.active]="pill.active">
           <a href="{{pill.id}}" (click)="select(pill, $event)"><i *ngIf="pill.icon" class="{{pill.icon}}"></i>&nbsp;{{pill.title}}</a>
         </li>
       </ul>
     </div>
-    <div [class.clearfix]="navigation">
-      <ng-content></ng-content>
-    </div>
+    <div [class.clearfix]="navigation && pullRight"></div>
+    <ng-content></ng-content>
   `,
     directives: [NgFor]
 })
@@ -21,6 +20,7 @@ export class Pills {
     @Input() navigation: boolean;
     @Input() justified: boolean;
     @Input() stacked: boolean;
+    @Input('pull-right') pullRight: boolean;
 
     @Output() selected = new EventEmitter(true);
 
@@ -31,6 +31,7 @@ export class Pills {
         this.justified = false;
         this.stacked = false;
         this.navigation = false;
+        this.pullRight = false;
     }
 
     select(pill: Pill, event) {

@@ -24,8 +24,8 @@ export class TestService {
             .catch(this.handleError);
     }
 
-    getSourceCode(test: TestDetail) {
-        return this.http.get(this._testSourceUrl + '/' + test.type + '/' + test.packageName + '/' + test.name)
+    getSourceCode(test: TestDetail, type: string) {
+        return this.http.get(this._testSourceUrl + '/' + type + '/' + test.packageName + '/' + test.name)
             .map(res => <string> res.text())
             .catch(this.handleError);
     }

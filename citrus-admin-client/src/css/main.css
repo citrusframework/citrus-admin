@@ -37,6 +37,12 @@ ul.properties li {
     word-wrap: break-word;
 }
 
+/** Space placeholders */
+
+.space-top-30 {
+    margin-top: 30px;
+}
+
 /* Disable bootstrap icons as we use font-awesome icons */
 
 [class^="icon-"],
@@ -111,10 +117,6 @@ ul.properties li {
 
 /** Tab navigation **/
 
-.tab-pane {
-    margin-top: 30px;
-}
-
 .nav-tabs > li > a {
     color: #404040;
     background-color: #eff6fb;
@@ -153,11 +155,6 @@ ul.properties li {
 
 /** Nav Pills **/
 
-.nav-pills > li {
-    margin-right: 2px;
-    margin-bottom: 2px;
-}
-
 .nav-pills > li + li {
     margin-left: 0px;
 }
@@ -182,14 +179,15 @@ ul.properties li {
 }
 
 .pills-bar {
-    border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
     max-width: 470px;
+    margin-top: 30px;
 }
 
 .pills-bar > li > a {
     padding: 3px 15px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
     border-radius: 0px;
     margin: 0px;

@@ -26,6 +26,8 @@ import com.consol.citrus.model.testcase.core.TestcaseDefinition;
 import com.consol.citrus.model.testcase.core.VariablesDefinition;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -40,6 +42,9 @@ import java.util.*;
  */
 @Service
 public class TestCaseService {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(TestCaseService.class);
 
     @Autowired
     private List<TestActionConverter<?, ? extends com.consol.citrus.TestAction>> actionConverter;
@@ -140,12 +145,13 @@ public class TestCaseService {
         String dir = type.equals(TestType.JAVA) ? getJavaDirectory(project) : getTestDirectory(project);
 
         try {
-            String sourceFilePath = dir + File.separator + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type.name().toLowerCase();
+            String sourceFilePath = dir + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type.name().toLowerCase();
 
             if (new File(sourceFilePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourceFilePath));
             } else {
-                return "";
+                log.warn("Unable to find source code for path: " + sourceFilePath);
+                return "No sources available!";
             }
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to load test case source code", e);
