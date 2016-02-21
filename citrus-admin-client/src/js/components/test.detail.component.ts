@@ -5,11 +5,14 @@ import {Pills, Pill} from "./util/pills";
 import {Test, TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {SourceCodeComponent} from "./source.code.component";
+import {TestActionComponent} from "./design/test.action.component";
+import {TestTransitionComponent} from "./design/test.transition.component";
 
 @Component({
     selector: "test-detail",
     templateUrl: 'templates/test-detail.html',
-    directives: [NgSwitch, NgFor, Pills, Pill, SourceCodeComponent]
+    directives: [NgSwitch, NgFor, Pills, Pill,
+        SourceCodeComponent, TestActionComponent, TestTransitionComponent]
 })
 export class TestDetailComponent implements OnChanges {
 

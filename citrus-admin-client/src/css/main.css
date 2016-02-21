@@ -522,27 +522,53 @@ i.channel {
 
 /** Test design icons **/
 
-.test-actions {
-    list-style: none;
+.test-action, .test-transition,
+.start-action, .stop-action {
+    text-align: center;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.test-actions > li {
-    float: left;
+.test-transition {
+    height: 15px;
 }
 
-.test-action, .test-transition {
-    float: left;
-    width: 40px;
-    height: 30px;
-    margin-bottom: 35px;
+.test-action {
+    background-color: #eff6fb;
+    border-radius: 15px;
+    width: 135px;
+    height: 65px;
+    border: 1px solid #ddd;
+}
+
+.test-action:hover {
+    background-color: #e3effc;
+}
+
+.test-action > i {
+    display: block;
+    text-align: left;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.test-action > span {
+    display: block;
+    font-weight: bold;
 }
 
 .start-action i, .stop-action i {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    border: 2px solid;
     font-size: 20px;
+    padding-top: 12px;
 }
 
 .test-action i {
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .start-action i.fa-play {
