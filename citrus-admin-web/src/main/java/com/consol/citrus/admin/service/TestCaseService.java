@@ -116,18 +116,19 @@ public class TestCaseService {
         testDetail.setFile(getTestDirectory(project) + packageName.replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(testName));
 
         for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
-            boolean converterFound = false;
-            for (TestActionConverter testActionConverter : actionConverter) {
-                if (testActionConverter.getModelClass().isInstance(actionType)) {
-                    testDetail.getActions().add(testActionConverter.convert(actionType));
-                    converterFound = true;
+            TestAction model = null;
+            for (TestActionConverter converter : actionConverter) {
+                if (converter.getModelClass().isInstance(actionType)) {
+                    model = converter.convert(actionType);
                     break;
                 }
             }
 
-            if (!converterFound) {
-                testDetail.getActions().add(new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType));
+            if (model == null) {
+                model = new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType);
             }
+
+            testDetail.getActions().add(model);
         }
 
         return testDetail;

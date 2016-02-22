@@ -7,7 +7,7 @@ declare var ace;
 
 @Component({
     selector: "source-code",
-    template: '<pre id="{{id}}" style="height: 650px;">{{sourceCode}}</pre>'
+    template: '<pre id="{{id}}" class="code-editor">{{sourceCode}}</pre>'
 })
 export class SourceCodeComponent implements OnChanges, AfterViewInit {
     @Input('editor-id') id: string;

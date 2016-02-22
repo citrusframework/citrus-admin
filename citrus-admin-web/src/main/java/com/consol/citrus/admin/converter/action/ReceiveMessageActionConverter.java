@@ -18,6 +18,7 @@ package com.consol.citrus.admin.converter.action;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestAction;
+import com.consol.citrus.config.xml.PayloadElementParser;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.ReceiveDefinition;
 import org.springframework.stereotype.Component;
@@ -40,16 +41,20 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     public TestAction convert(ReceiveDefinition definition) {
         TestAction action = new TestAction(getActionType(), getModelClass());
 
-        action.add(property("endoint", definition));
+        action.add(property("endpoint", definition));
 
         if (definition.getMessage() != null) {
             if (StringUtils.hasText(definition.getMessage().getData())) {
-                action.add(new Property("message-data", "message.data", "Message", definition.getMessage().getData()));
+                action.add(new Property("message.data", "message.data", "Message Data", definition.getMessage().getData()));
+            }
+
+            if (definition.getMessage().getPayload()!= null) {
+                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(definition.getMessage().getPayload().getAnies().get(0))));
             }
 
             if (definition.getMessage().getResource() != null &&
                     StringUtils.hasText(definition.getMessage().getResource().getFile())) {
-                action.add(new Property("message-resource", "message.resource", "Message", definition.getMessage().getResource().getFile()));
+                action.add(new Property("message.resource", "message.resource", "Message Resource", definition.getMessage().getResource().getFile()));
             }
         }
 
@@ -59,17 +64,17 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public ReceiveDefinition convertModel(ReceiveMessageAction definition) {
+    public ReceiveDefinition convertModel(ReceiveMessageAction model) {
         ReceiveDefinition action = new ObjectFactory().createReceiveDefinition();
 
-        if (definition.getActor() != null) {
-            action.setActor(definition.getActor().getName());
-        } else if (definition.getEndpoint().getActor() != null) {
-            action.setActor(definition.getEndpoint().getActor().getName());
+        if (model.getActor() != null) {
+            action.setActor(model.getActor().getName());
+        } else if (model.getEndpoint() != null && model.getEndpoint().getActor() != null) {
+            action.setActor(model.getEndpoint().getActor().getName());
         }
 
-        action.setDescription(definition.getDescription());
-        action.setEndpoint(definition.getEndpoint().getName());
+        action.setDescription(model.getDescription());
+        action.setEndpoint(model.getEndpoint() != null ? model.getEndpoint().getName() : model.getEndpointUri());
 
         return action;
     }

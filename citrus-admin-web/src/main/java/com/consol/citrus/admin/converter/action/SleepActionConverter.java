@@ -44,12 +44,12 @@ public class SleepActionConverter extends AbstractTestActionConverter<SleepDefin
     }
 
     @Override
-    public SleepDefinition convertModel(SleepAction definition) {
+    public SleepDefinition convertModel(SleepAction model) {
         SleepDefinition action = new ObjectFactory().createSleepDefinition();
 
-        action.setDescription(definition.getDescription());
-        action.setMilliseconds(definition.getMilliseconds());
-        action.setSeconds(definition.getSeconds());
+        action.setDescription(model.getDescription());
+        action.setMilliseconds(model.getMilliseconds());
+        action.setSeconds(model.getSeconds());
 
         return action;
     }

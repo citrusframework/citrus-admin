@@ -100,7 +100,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
                 return new Property(fieldName, fieldName, displayName, null);
             }
         } else {
-            log.warn(String.format("Unknown field %s on endpoint type %s", fieldName, definition.getClass()));
+            log.warn(String.format("Unknown field '%s' on source type '%s'", fieldName, definition.getClass()));
             return null;
         }
     }

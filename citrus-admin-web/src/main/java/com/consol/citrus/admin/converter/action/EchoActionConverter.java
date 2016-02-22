@@ -42,11 +42,11 @@ public class EchoActionConverter extends AbstractTestActionConverter<EchoDefinit
     }
 
     @Override
-    public EchoDefinition convertModel(EchoAction definition) {
+    public EchoDefinition convertModel(EchoAction model) {
         EchoDefinition action = new ObjectFactory().createEchoDefinition();
 
-        action.setDescription(definition.getDescription());
-        action.setMessage(definition.getMessage());
+        action.setDescription(model.getDescription());
+        action.setMessage(model.getMessage());
 
         return action;
     }
