@@ -5,25 +5,22 @@ import {Pills, Pill} from "./util/pills";
 import {Test, TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {SourceCodeComponent} from "./source.code.component";
-import {TestActionComponent} from "./design/test.action.component";
-import {TestTransitionComponent} from "./design/test.transition.component";
+import {TestDesignerComponent} from "./design/test.designer.component";
 
 @Component({
     selector: "test-detail",
     templateUrl: 'templates/test-detail.html',
     directives: [NgSwitch, NgFor, Pills, Pill,
-        SourceCodeComponent, TestActionComponent, TestTransitionComponent]
+        SourceCodeComponent, TestDesignerComponent]
 })
 export class TestDetailComponent implements OnChanges {
 
     @Input() test: Test;
 
     constructor(private _testService: TestService) {
-        this.display = "test-details";
     }
 
     errorMessage: string;
-    display: string;
     detail: TestDetail;
 
     ngOnChanges() {
@@ -32,10 +29,6 @@ export class TestDetailComponent implements OnChanges {
         } else {
             this.getTestDetail();
         }
-    }
-
-    onPillSelected(pill: Pill) {
-        this.display = pill.id;
     }
 
     getTestDetail() {

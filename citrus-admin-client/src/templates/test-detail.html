@@ -53,22 +53,7 @@
   </pill>
   <pill pill-id="test-design" pill-title="Design" pill-icon="fa fa-sitemap">
     <div class="space-top-30"></div>
-    <div *ngIf="detail" class="test-actions">
-      <div class="start-action">
-        <i class="fa fa-play"></i>
-      </div>
-
-      <div *ngFor="#action of detail.actions">
-        <test-transition></test-transition>
-        <test-action [action]="action"></test-action>
-      </div>
-
-      <test-transition></test-transition>
-
-      <div class="stop-action">
-        <i class="fa fa-stop"></i>
-      </div>
-    </div>
+    <test-designer *ngIf="detail" [actions]="detail.actions"></test-designer>
   </pill>
   <pill pill-id="test-run" pill-title="Run" pill-icon="fa fa-play-circle">
     <h3>Run Test</h3>

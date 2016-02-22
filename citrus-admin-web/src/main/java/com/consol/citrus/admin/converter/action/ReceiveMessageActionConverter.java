@@ -16,10 +16,12 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.ReceiveDefinition;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -39,6 +41,18 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
         TestAction action = new TestAction(getActionType(), getModelClass());
 
         action.add(property("endoint", definition));
+
+        if (definition.getMessage() != null) {
+            if (StringUtils.hasText(definition.getMessage().getData())) {
+                action.add(new Property("message-data", "message.data", "Message", definition.getMessage().getData()));
+            }
+
+            if (definition.getMessage().getResource() != null &&
+                    StringUtils.hasText(definition.getMessage().getResource().getFile())) {
+                action.add(new Property("message-resource", "message.resource", "Message", definition.getMessage().getResource().getFile()));
+            }
+        }
+
         action.add(property("actor", "TestActor", definition));
 
         return action;

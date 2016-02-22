@@ -16,10 +16,12 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.SendDefinition;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -39,9 +41,21 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
         TestAction action = new TestAction(getActionType(), getModelClass());
 
         action.add(property("endoint", definition));
-        action.add(property("actor", "TestActor", definition));
+
+        if (definition.getMessage() != null) {
+            if (StringUtils.hasText(definition.getMessage().getData())) {
+                action.add(new Property("message-data", "message.data", "Message", definition.getMessage().getData()));
+            }
+
+            if (definition.getMessage().getResource() != null &&
+                    StringUtils.hasText(definition.getMessage().getResource().getFile())) {
+                action.add(new Property("message-resource", "message.resource", "Message", definition.getMessage().getResource().getFile()));
+            }
+        }
+
         action.add(property("fork", definition, "false")
                 .options("true", "false"));
+        action.add(property("actor", "TestActor", definition));
 
         return action;
     }
