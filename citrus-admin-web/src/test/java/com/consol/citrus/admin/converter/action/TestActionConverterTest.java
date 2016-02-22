@@ -37,14 +37,6 @@ public class TestActionConverterTest {
         Assert.assertEquals(modelConversion.getClass(), definition.getClass());
     }
 
-    @Test
-    public void specialTest() throws Exception {
-        SendDefinition definition = new SendDefinition();
-        definition.setMessage(new SendDefinition.Message());
-        definition.getMessage().setData("Hello");
-        testConvert(new SendMessageActionConverter(), definition, new SendMessageAction(), "send");
-    }
-
     @DataProvider
     public Object[][] converterData() {
         return new Object[][] {
