@@ -96,6 +96,6 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(0).getId(), "endpoint");
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(0).getValue(), "samplePayloadEndpoint");
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getId(), "message.payload");
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getValue(), "Hello");
+        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getValue(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Test xmlns=\"http://www.citrusframework.org\" xmlns:jms=\"http://www.citrusframework.org/schema/jms/testcase\" xmlns:spring=\"http://www.springframework.org/schema/beans\" xmlns:ws=\"http://www.citrusframework.org/schema/ws/testcase\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">Hello</Test>");
     }
 }
