@@ -572,6 +572,12 @@ i.channel {
     font-weight: bold;
 }
 
+.test-action > .panel {
+    position: relative;
+    left: 120%;
+    width: 500px;
+}
+
 .start-action i, .stop-action i {
     width: 50px;
     height: 50px;
