@@ -166,8 +166,75 @@
           <artifactId>frontend-maven-plugin</artifactId>
           <version>0.0.28</version>
         </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.19</version>
+          <configuration>
+            <systemProperties>
+              <property>
+                <name>javax.xml.parsers.SAXParserFactory</name>
+                <value>org.apache.xerces.jaxp.SAXParserFactoryImpl</value>
+              </property>
+              <property>
+                <name>user.language</name>
+                <value>en</value>
+              </property>
+            </systemProperties>
+            <forkMode>once</forkMode>
+            <failIfNoTests>false</failIfNoTests>
+            <workingDirectory>${project.build.directory}</workingDirectory>
+          </configuration>
+        </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<!-- Enable JaCoCo Test-->
+		<profile>
+			<id>jacoco</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.7.6.201602180812</version>
+						<executions>
+							<execution>
+								<id>jacoco-unit-init</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<configuration>
+									<propertyName>surefireArgLine</propertyName>
+									<destFile>${build.directory}/coverage-reports/jacoco-unit.exec</destFile>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jacoco-unit-report</id>
+								<phase>package</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<dataFile>${build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
+									<outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<argLine>${surefireArgLine}</argLine>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
