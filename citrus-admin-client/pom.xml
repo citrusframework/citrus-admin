@@ -31,6 +31,8 @@
           <exclude>.bin/**</exclude>
           <exclude>bower/**</exclude>
           <exclude>gulp/**</exclude>
+          <exclude>gulp-uglify/**</exclude>
+          <exclude>gulp-minify-css/**</exclude>
           <exclude>tsd/**</exclude>
           <exclude>typescript/**</exclude>
         </excludes>
