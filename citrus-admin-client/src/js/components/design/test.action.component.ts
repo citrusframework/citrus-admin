@@ -1,4 +1,5 @@
 import {Component,  Input, Output, EventEmitter} from 'angular2/core';
+import {NgSwitch} from "angular2/common";
 import {TestAction} from "../../model/tests";
 
 @Component({
@@ -11,10 +12,27 @@ import {TestAction} from "../../model/tests";
                 <h3 class="panel-title">{{action.type}}</h3>
               </div>
               <div class="panel-body">
-                <p *ngFor="#property of action.properties">{{property.id}}={{property.value}}</p>
+                <div [ngSwitch]="action.type">
+                  <template [ngSwitchWhen]="'send'">
+                    <span>{{getProperty("endpoint")}}</span>
+                  </template>
+                  <template [ngSwitchWhen]="'receive'">
+                    <span>{{getProperty("endpoint")}}</span>
+                  </template>
+                  <template [ngSwitchWhen]="'sleep'">
+                    <span>{{getProperty("time")}}</span>
+                  </template>
+                  <template [ngSwitchWhen]="'echo'">
+                    <span>{{getProperty("message")}}</span>
+                  </template>
+                  <template ngSwitchDefault>
+                    <p *ngFor="#property of action.properties">{{property.id}}={{property.value}}</p>
+                  </template>
+                </div>
               </div>
             </div>
-        </div>`
+        </div>`,
+    directives: [NgSwitch]
 })
 export class TestActionComponent {
 
@@ -28,6 +46,11 @@ export class TestActionComponent {
 
     select() {
         this.selected.emit(this.action);
+    }
+
+    getProperty(name: string) {
+        var property = this.action.properties.find(p => p.id === name);
+        return property.value;
     }
 
 }
