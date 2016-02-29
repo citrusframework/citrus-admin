@@ -81,6 +81,15 @@ public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
     }
 
     /**
+     * Gets the value of the redirect property.
+     *
+     * @return the redirect
+     */
+    public String getRedirect() {
+        return redirect;
+    }
+
+    /**
      * Sets the redirect.
      * @param redirect the redirect to set
      */
@@ -104,4 +113,12 @@ public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
         this.excludes = Arrays.copyOf(excludes, excludes.length);
     }
 
+    /**
+     * Sets the projectService property.
+     *
+     * @param projectService
+     */
+    public void setProjectService(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 }
