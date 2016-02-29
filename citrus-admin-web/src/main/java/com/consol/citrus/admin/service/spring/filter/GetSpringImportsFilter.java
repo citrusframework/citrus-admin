@@ -37,7 +37,6 @@ import java.util.List;
  * of file resources for these imported files.
  *
  * @author Christoph Deppisch
- * @since 1.3.1
  */
 public class GetSpringImportsFilter implements LSSerializerFilter, LSParserFilter {
 

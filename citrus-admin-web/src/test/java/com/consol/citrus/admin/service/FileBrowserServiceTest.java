@@ -16,13 +16,16 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.Citrus;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * @author Christoph Deppisch
@@ -48,6 +51,16 @@ public class FileBrowserServiceTest {
     }
 
     @Test
+    public void testGetFolders() throws Exception {
+        String[] folders = testling.getFolders(new ClassPathResource("test-project").getFile());
+        Assert.assertNotNull(folders);
+        Assert.assertEquals(folders.length, 3);
+        Assert.assertEquals(folders[0], "ant");
+        Assert.assertEquals(folders[1], "maven");
+        Assert.assertEquals(folders[2], "src");
+    }
+
+    @Test
     public void testFindFileInPath() throws Exception {
         File foundFile = testling.findFileInPath(tmpDir, tmpFile.getName(), true);
         Assert.assertNotNull(foundFile);
@@ -55,6 +68,36 @@ public class FileBrowserServiceTest {
 
         foundFile = testling.findFileInPath(tmpDir, tmpFile.getName() + "_", true);
         Assert.assertNull(foundFile);
+    }
+
+    @Test
+    public void testDecodeDirectoryUrl() throws Exception {
+        String path = testling.decodeDirectoryUrl(URLEncoder.encode("/request/test/1", Citrus.CITRUS_FILE_ENCODING), "");
+        Assert.assertEquals(path, "/request/test/1/");
+
+        path = testling.decodeDirectoryUrl(URLEncoder.encode("/request/test/1", Citrus.CITRUS_FILE_ENCODING), "/Users/home");
+        Assert.assertEquals(path, "/request/test/1/");
+
+        path = testling.decodeDirectoryUrl(URLEncoder.encode("/", Citrus.CITRUS_FILE_ENCODING), "/Users/home");
+        Assert.assertEquals(path, "/Users/home/");
+
+        path = testling.decodeDirectoryUrl(URLEncoder.encode("", Citrus.CITRUS_FILE_ENCODING), "/Users/home");
+        Assert.assertEquals(path, "");
+
+        path = testling.decodeDirectoryUrl(URLEncoder.encode("/", Citrus.CITRUS_FILE_ENCODING), "");
+        Assert.assertEquals(path, "");
+    }
+
+    @Test
+    public void testSeparatorsToUnix() throws Exception {
+        String path = testling.separatorsToUnix("C:\\windows\\system\\test");
+        Assert.assertEquals(path, "C:/windows/system/test");
+    }
+
+    @Test
+    public void testSeparatorsToWindows() throws Exception {
+        String path = testling.separatorsToWindows("/Users/test/temp");
+        Assert.assertEquals(path, "\\Users\\test\\temp");
     }
 
     private File createTmpFile(File rootDirectory) throws IOException {

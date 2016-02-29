@@ -107,11 +107,13 @@ public class FileBrowserService {
             if (StringUtils.hasText(rootDirectory)) {
                 directory = rootDirectory;
             } else {
-                return rootDirectory;
+                return "";
             }
         }
 
-        if (directory.charAt(directory.length() - 1) == '\\') {
+        if (!StringUtils.hasText(directory)) {
+            return "";
+        } else if (directory.charAt(directory.length() - 1) == '\\') {
             directory = directory.substring(0, directory.length() - 1) + "/";
         } else if (directory.charAt(directory.length() - 1) != '/') {
             directory += "/";
