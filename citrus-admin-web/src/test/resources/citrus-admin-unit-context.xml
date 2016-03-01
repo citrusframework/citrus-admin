@@ -10,8 +10,13 @@
   <context:annotation-config/>
 
   <context:component-scan base-package="com.consol.citrus.admin.converter"/>
+  <context:component-scan base-package="com.consol.citrus.admin.web"/>
 
   <bean class="com.consol.citrus.admin.service.TestCaseService"/>
   <bean class="com.consol.citrus.admin.service.ProjectService"/>
   <bean class="com.consol.citrus.admin.service.FileBrowserService"/>
+  <bean class="com.consol.citrus.admin.service.report.TestNGTestReportService"/>
+  <bean class="com.consol.citrus.admin.service.spring.SpringBeanService"/>
+
+  <bean class="com.consol.citrus.admin.marshal.SpringBeanMarshaller"/>
 </beans>

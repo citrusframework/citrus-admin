@@ -223,10 +223,6 @@ public class ConfigurationController {
             library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, JsonDataDictionaryDefinition.class);
         }
 
-        if (library == null) {
-            throw new ApplicationRuntimeException(String.format("Unable to find data dictionary definition for id '%s'", id));
-        }
-
         return library;
     }
 
@@ -271,7 +267,7 @@ public class ConfigurationController {
      * @return
      * @throws IOException
      */
-    private DataDictionaryType getDataDictionaryType(@PathVariable("type") String type, @RequestBody JSONObject model) throws IOException {
+    private DataDictionaryType getDataDictionaryType(String type, JSONObject model) throws IOException {
         ObjectMapper jsonMapper = new ObjectMapper();
         DataDictionaryType component;
         if (type.equals("xpath")) {
