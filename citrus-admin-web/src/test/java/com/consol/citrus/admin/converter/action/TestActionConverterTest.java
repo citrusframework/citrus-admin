@@ -44,6 +44,7 @@ public class TestActionConverterTest {
                 new Object[] {new ReceiveMessageActionConverter(), new ReceiveDefinition(), new ReceiveMessageAction(), "receive"},
                 new Object[] {new EchoActionConverter(), new EchoDefinition(), new EchoAction(), "echo"},
                 new Object[] {new SleepActionConverter(), new SleepDefinition(), new SleepAction(), "sleep"},
+                new Object[] {new ActionConverter("sample"), new ActionDefinition(), new EchoAction(), "sample"},
         };
     }
 }
