@@ -43,7 +43,6 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
         endpointData.add(property("messageFactory", client)
                 .optionKey(SoapMessageFactory.class.getName()));
         endpointData.add(property("messageSender", client));
-        endpointData.add(property("messageSenders", client));
         endpointData.add(property("messageCorrelator", client)
                 .optionKey(MessageCorrelator.class.getName()));
         endpointData.add(property("interceptors", client));
