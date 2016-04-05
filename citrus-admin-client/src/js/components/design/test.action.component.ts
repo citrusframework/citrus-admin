@@ -20,7 +20,7 @@ import {TestAction} from "../../model/tests";
                     <span>{{getProperty("endpoint")}}</span>
                   </template>
                   <template [ngSwitchWhen]="'sleep'">
-                    <span>{{getProperty("time")}}</span>
+                    <span>{{getProperty("milliseconds")}}</span>
                   </template>
                   <template [ngSwitchWhen]="'echo'">
                     <span>{{getProperty("message")}}</span>
@@ -50,7 +50,12 @@ export class TestActionComponent {
 
     getProperty(name: string) {
         var property = this.action.properties.find(p => p.id === name);
-        return property.value;
+
+        if (property) {
+            return property.value;
+        } else {
+            return "";
+        }
     }
 
 }
