@@ -108,19 +108,22 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <configuration>
-              <installDirectory>target</installDirectory>
+              <arguments>run tsc:w</arguments>
             </configuration>
-            <executions>
-              <execution>
-                <id>tsc-compile-watch</id>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <configuration>
-                  <arguments>run tsc:w</arguments>
-                </configuration>
-              </execution>
-            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>gulp-watch</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <configuration>
+              <arguments>watch</arguments>
+            </configuration>
           </plugin>
         </plugins>
       </build>

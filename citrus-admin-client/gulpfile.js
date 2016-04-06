@@ -30,9 +30,10 @@ var outputDir = 'target/classes/static/';
 // lib copy
 gulp.task('sourcecopy', function() {
     // clean dest
-    del([outputDir + 'js/lib/*'], {force: true});
-    del([outputDir + 'js/**/*.js'], {force: true});
-    del([outputDir + 'css/*'], {force: true});
+    del([outputDir + 'js/lib/**/*',
+        outputDir + 'js/**/*.js',
+        outputDir + 'css/**/*',
+        outputDir + 'fonts/**/*'], {force: true});
 
     // copy css sources
     gulp.src('./bower_components/bootstrap/css/bootstrap.min.css')
@@ -48,9 +49,6 @@ gulp.task('sourcecopy', function() {
 
     gulp.src('./bower_components/font-awesome/fonts/**/*')
         .pipe(gulp.dest(outputDir + 'fonts'));
-
-    gulp.src('./src/css/icons/**/*')
-        .pipe(gulp.dest(outputDir + 'css/icons'));
 
     gulp.src('./src/app/**/*.js')
         .pipe(gulp.dest(outputDir + 'js'));
@@ -121,18 +119,19 @@ gulp.task('htmlw', function() {
 
 // sass compile
 gulp.task('sass', function() {
-    gulp.src('./src/css/**/*.css')
+    gulp.src('./src/css/**/*')
         .pipe(gulp.dest(outputDir + 'css'));
 
     // compile sass and copy
-    return gulp.src('./src/sass/**/*.scss')
+    return gulp.src('./src/sass/*.scss')
         .pipe(sass.sync().on('error', sass.logError))
         .pipe(gulp.dest(outputDir + 'css'));
 });
 
 // sass watch compile
 gulp.task('sassw', function() {
-    gulp.watch(['./src/sass/**/*.scss','./src/css/**/*.css'], ['sass']);
+    gulp.watch('./src/sass/*.scss', ['sass']);
+    gulp.watch('./src/css/*.css', ['sass']);
 });
 
 // typescript compile
@@ -152,7 +151,7 @@ gulp.task('tscw', function() {
 });
 
 // build sass and ts, copy libs, copy html
-gulp.task('build', ['sourcecopy', 'htmlcopy', 'sass', 'tsc']);
+gulp.task('build', ['sourcecopy', 'htmlcopy', 'tsc', 'sass']);
 
 // watch sass, ts, and html
 gulp.task('watch', ['sassw', 'htmlw', 'tscw']);
