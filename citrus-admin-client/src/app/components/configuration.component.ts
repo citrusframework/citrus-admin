@@ -12,7 +12,7 @@ import {DataDictionaryComponent} from "./config/data.dictionary.component"
 import {SchemaRepositoryComponent} from "./config/schema.repository.component"
 
 @Component({
-    templateUrl: 'templates/config.html',
+    templateUrl: 'js/components/config.html',
     providers: [ConfigService, HTTP_PROVIDERS],
     directives: [NgIf, NgFor, NgModel, Pills, Pill,
         EndpointsComponent, GlobalVariablesComponent, NamespaceContextComponent,

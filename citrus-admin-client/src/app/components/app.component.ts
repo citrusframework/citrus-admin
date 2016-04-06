@@ -1,5 +1,4 @@
 import {Component} from 'angular2/core';
-import {View} from 'angular2/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 
 import {HeaderComponent} from './header.component';
@@ -9,11 +8,9 @@ import {TestsComponent} from './tests.component';
 import {ComingComponent} from "./coming.component";
 
 @Component({
-    selector: 'app'
-})
-@View({
+    selector: 'app',
     directives: [HeaderComponent, ROUTER_DIRECTIVES],
-    templateUrl: 'templates/app.html'
+    templateUrl: 'js/components/app.html'
 })
 @RouteConfig([
     {path:'/', name: 'Home', component: DashboardComponent},

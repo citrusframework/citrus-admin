@@ -1,11 +1,10 @@
 import {Component, AfterViewInit} from 'angular2/core';
-import {View} from 'angular2/core';
 
 declare var jQuery:any;
 
 @Component({
     selector: 'setup',
-    templateUrl: 'templates/open.project.html'
+    templateUrl: 'js/components/open.project.html'
 })
 export class SetupComponent implements AfterViewInit {
 

@@ -9,7 +9,7 @@ import {TestDesignerComponent} from "./design/test.designer.component";
 
 @Component({
     selector: "test-detail",
-    templateUrl: 'templates/test-detail.html',
+    templateUrl: 'js/components/test-detail.html',
     directives: [NgSwitch, NgFor, Pills, Pill,
         SourceCodeComponent, TestDesignerComponent]
 })

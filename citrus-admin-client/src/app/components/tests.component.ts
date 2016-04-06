@@ -7,7 +7,7 @@ import {TestService} from "../service/test.service";
 import {TestDetailComponent} from "./test.detail.component";
 
 @Component({
-    templateUrl: 'templates/tests.html',
+    templateUrl: 'js/components/tests.html',
     providers: [TestService, HTTP_PROVIDERS],
     directives: [NgSwitch, NgFor, Tabs, Tab, TestDetailComponent]
 })

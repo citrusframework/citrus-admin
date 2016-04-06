@@ -1,6 +1,6 @@
 import {Component} from 'angular2/core';
 
 @Component({
-    templateUrl: 'templates/coming-soon.html'
+    templateUrl: 'js/components/coming-soon.html'
 })
 export class ComingComponent { }

@@ -4,7 +4,7 @@ import {SchemaRepository, Schema, SchemaReference} from "../../model/schema.repo
 
 @Component({
     selector: 'schema-repository',
-    templateUrl: 'templates/config/schema-repository.html',
+    templateUrl: 'js/components/config/schema-repository.html',
     providers: [ConfigService]
 })
 export class SchemaRepositoryComponent implements OnInit {

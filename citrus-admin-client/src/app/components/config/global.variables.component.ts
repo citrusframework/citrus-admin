@@ -5,7 +5,7 @@ import {GlobalVariables} from "../../model/global.variables";
 
 @Component({
     selector: 'global-variables',
-    templateUrl: 'templates/config/global-variables.html',
+    templateUrl: 'js/components/config/global-variables.html',
     providers: [ConfigService]
 })
 export class GlobalVariablesComponent implements OnInit {
