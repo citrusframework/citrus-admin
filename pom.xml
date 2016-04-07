@@ -185,6 +185,20 @@
     </pluginManagement>
   </build>
 
+  <repositories>
+    <repository>
+      <id>consol-labs-snapshots</id>
+      <url>http://labs.consol.de/maven/snapshots-repository/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <profiles>
     <!-- Enable JaCoCo Test-->
     <profile>
