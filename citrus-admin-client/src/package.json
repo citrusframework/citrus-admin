@@ -29,6 +29,7 @@
   },
 
   "scripts": {
+    "postinstall": "typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "start": "gulp",
