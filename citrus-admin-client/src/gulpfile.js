@@ -32,15 +32,12 @@ gulp.task('sourcecopy', function() {
     // clean dest
     del([outputDir + 'app/lib/**/*',
         outputDir + 'app/**/*.js',
-        outputDir + 'app/icons/**/*',
         outputDir + 'app/images/**/*',
         outputDir + 'app/css/**/*',
         outputDir + 'app/fonts/**/*'], {force: true});
 
     gulp.src('./app/images/**/*')
         .pipe(gulp.dest(outputDir + 'app/images'));
-    gulp.src('./app/icons/**/*')
-        .pipe(gulp.dest(outputDir + 'app/icons'));
 
     // copy css sources
     gulp.src('./bower_components/bootstrap/css/bootstrap.min.css')
