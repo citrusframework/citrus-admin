@@ -4,7 +4,7 @@ import {FunctionLibrary, Function} from "../../model/function.library";
 
 @Component({
     selector: 'function-library',
-    templateUrl: 'js/components/config/function-library.html',
+    templateUrl: 'app/components/config/function-library.html',
     providers: [ConfigService]
 })
 export class FunctionLibraryComponent implements OnInit {

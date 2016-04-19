@@ -4,7 +4,7 @@ import {ValidationMatcherLibrary, ValidationMatcher} from "../../model/validatio
 
 @Component({
     selector: 'validation-matcher',
-    templateUrl: 'js/components/config/validation-matcher.html',
+    templateUrl: 'app/components/config/validation-matcher.html',
     providers: [ConfigService]
 })
 export class ValidationMatcherComponent implements OnInit {

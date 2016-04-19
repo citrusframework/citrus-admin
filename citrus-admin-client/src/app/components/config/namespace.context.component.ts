@@ -4,7 +4,7 @@ import {NamespaceContext, Namespace} from "../../model/namespace.context";
 
 @Component({
     selector: 'namespace-context',
-    templateUrl: 'js/components/config/namespace-context.html',
+    templateUrl: 'app/components/config/namespace-context.html',
     providers: [ConfigService]
 })
 export class NamespaceContextComponent implements OnInit {

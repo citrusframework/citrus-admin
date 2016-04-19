@@ -4,7 +4,7 @@ declare var jQuery:any;
 
 @Component({
     selector: 'setup',
-    templateUrl: 'js/components/open.project.html'
+    templateUrl: 'app/components/open.project.html'
 })
 export class SetupComponent implements AfterViewInit {
 

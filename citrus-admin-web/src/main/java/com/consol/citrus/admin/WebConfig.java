@@ -31,15 +31,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public ProjectSetupInterceptor getProjectSetupInterceptor() {
         ProjectSetupInterceptor interceptor = new ProjectSetupInterceptor();
         interceptor.setRedirect("/setup");
-        interceptor.setExcludes(new String[] {"/static/*", "/js/*", "/templates/*",
-                "/file/browse", "/project"});
+        interceptor.setExcludes(new String[] {"/static/*", "/app/*", "/templates/*", "/file/browse", "/project", "/error"});
         return interceptor;
     }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/setup").setViewName("setup");
+        registry.addViewController("/setup").setViewName("forward:/setup.html");
     }
 
     @Override

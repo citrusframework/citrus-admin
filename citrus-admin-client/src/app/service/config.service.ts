@@ -1,6 +1,7 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/Rx';
 import {GlobalVariables} from '../model/global.variables';
 import {NamespaceContext} from '../model/namespace.context';
 import {FunctionLibrary} from '../model/function.library';

@@ -7,7 +7,7 @@ import {ReportService} from "../service/report.service";
 import {TestReport} from "../model/test.report";
 
 @Component({
-    templateUrl: 'js/components/dashboard.html',
+    templateUrl: 'app/components/dashboard.html',
     providers: [ProjectService, ReportService, HTTP_PROVIDERS],
     directives: [NgSwitch, NgFor]
 })

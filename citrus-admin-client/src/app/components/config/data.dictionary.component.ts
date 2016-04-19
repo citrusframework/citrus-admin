@@ -4,7 +4,7 @@ import {DataDictionary, Mapping} from "../../model/data.dictionary";
 
 @Component({
     selector: 'data-dictionary',
-    templateUrl: 'js/components/config/data-dictionary.html',
+    templateUrl: 'app/components/config/data-dictionary.html',
     providers: [ConfigService]
 })
 export class DataDictionaryComponent implements OnInit {

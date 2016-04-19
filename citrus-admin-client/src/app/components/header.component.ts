@@ -3,7 +3,7 @@ import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 @Component({
     selector: 'header',
-    templateUrl: 'js/components/header.html',
+    templateUrl: 'app/components/header.html',
     directives: [ROUTER_DIRECTIVES]
 })
 export class HeaderComponent { }

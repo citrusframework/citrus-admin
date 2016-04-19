@@ -17,4 +17,8 @@ logs
 node_modules
 bower_components
 typings
-
+coverage
+**/app/**/*.js
+**/app/**/*.js.map
+**/test/**/*.js
+**/test/**/*.js.map

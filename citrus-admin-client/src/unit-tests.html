@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Citrus Admin GUI Unit Tests</title>
+
+  <link rel="shortcut icon" href="app/icons/favicon.ico"/>
+
+  <script src="node_modules/es6-shim/es6-shim.js"></script>
+  <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+
+  <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script src="node_modules/systemjs/dist/system.js"></script>
+  <script src="node_modules/rxjs/bundles/Rx.js"></script>
+  <script src="node_modules/angular2/bundles/angular2.js"></script>
+  <script src="node_modules/angular2/bundles/testing.dev.js"></script>
+  <script src="node_modules/angular2/bundles/http.js"></script>
+
+  <script src="node_modules/angular2/bundles/router.js"></script>
+
+  <link rel="stylesheet" href="node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+  <script src="node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+  <script src="node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+  <script src="node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+
+  <script>
+    System.config({
+      packages: {
+        'app': {defaultExtension: 'js'}
+      }
+    });
+
+    Promise.all([
+              System.import('app/service/config.service.spec')
+            ])
+            .then(window.onload)
+            .catch(console.error.bind(console));
+  </script>
+</head>
+<body>
+</body>
+</html>

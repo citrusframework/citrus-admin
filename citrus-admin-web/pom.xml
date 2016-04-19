@@ -14,16 +14,21 @@
   <artifactId>citrus-admin-web</artifactId>
   <name>citrus-admin-web</name>
 
+  <properties>
+    <project.home></project.home>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <fork>true</fork>
           <profiles>
             <profile>dev</profile>
           </profiles>
-          <fork>true</fork>
+          <jvmArguments>-Dproject.home=${project.home}</jvmArguments>
         </configuration>
       </plugin>
     </plugins>

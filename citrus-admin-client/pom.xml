@@ -17,11 +17,10 @@
   <build>
     <resources>
       <resource>
-        <directory>${basedir}/node_modules</directory>
+        <directory>${project.basedir}/src/node_modules</directory>
         <includes>
           <include>es6-promise/**</include>
           <include>es6-shim/**</include>
-          <include>angular2/**</include>
           <include>systemjs/**</include>
           <include>reflect-metadata/**</include>
           <include>rxjs/**</include>
@@ -30,7 +29,7 @@
         </includes>
       </resource>
       <resource>
-        <directory>${basedir}/bower_components</directory>
+        <directory>${project.basedir}/src/bower_components</directory>
       </resource>
     </resources>
     <plugins>
@@ -38,6 +37,7 @@
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <configuration>
+          <workingDirectory>src</workingDirectory>
           <installDirectory>target</installDirectory>
         </configuration>
         <executions>
@@ -56,15 +56,6 @@
             <goals>
               <goal>npm</goal>
             </goals>
-          </execution>
-          <execution>
-            <id>typings-install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run typings install</arguments>
-            </configuration>
           </execution>
           <execution>
             <id>rebuild-node-sass</id>
@@ -93,27 +84,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
-          <outputDirectory>${project.build.directory}/modules</outputDirectory>
+          <outputDirectory>${project.build.directory}/node_modules</outputDirectory>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
   <profiles>
-    <profile>
-      <id>ts-watch</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <configuration>
-              <arguments>run tsc:w</arguments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>gulp-watch</id>
       <build>
@@ -123,6 +100,20 @@
             <artifactId>frontend-maven-plugin</artifactId>
             <configuration>
               <arguments>watch</arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>jasmine-server</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <configuration>
+              <arguments>test</arguments>
             </configuration>
           </plugin>
         </plugins>

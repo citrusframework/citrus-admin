@@ -5,7 +5,7 @@ import {Property} from "../../model/property";
 
 @Component({
     selector: 'endpoints',
-    templateUrl: 'js/components/config/endpoints.html',
+    templateUrl: 'app/components/config/endpoints.html',
     providers: [EndpointService]
 })
 export class EndpointsComponent implements OnInit {

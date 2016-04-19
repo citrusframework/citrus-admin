@@ -10,7 +10,7 @@ import {ComingComponent} from "./coming.component";
 @Component({
     selector: 'app',
     directives: [HeaderComponent, ROUTER_DIRECTIVES],
-    templateUrl: 'js/components/app.html'
+    templateUrl: 'app/components/app.html'
 })
 @RouteConfig([
     {path:'/', name: 'Home', component: DashboardComponent},

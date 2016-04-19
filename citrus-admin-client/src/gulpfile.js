@@ -25,129 +25,141 @@ var tsProject = ts.createProject('tsconfig.json',
 var del = require('del');
 
 // vars
-var outputDir = 'target/classes/static/';
+var outputDir = '../target/classes/static/';
 
 // lib copy
 gulp.task('sourcecopy', function() {
     // clean dest
-    del([outputDir + 'js/lib/**/*',
-        outputDir + 'js/**/*.js',
-        outputDir + 'css/**/*',
-        outputDir + 'fonts/**/*'], {force: true});
+    del([outputDir + 'app/lib/**/*',
+        outputDir + 'app/**/*.js',
+        outputDir + 'app/icons/**/*',
+        outputDir + 'app/images/**/*',
+        outputDir + 'app/css/**/*',
+        outputDir + 'app/fonts/**/*'], {force: true});
+
+    gulp.src('./app/images/**/*')
+        .pipe(gulp.dest(outputDir + 'app/images'));
+    gulp.src('./app/icons/**/*')
+        .pipe(gulp.dest(outputDir + 'app/icons'));
 
     // copy css sources
     gulp.src('./bower_components/bootstrap/css/bootstrap.min.css')
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
     gulp.src('./bower_components/bootstrap/css/bootstrap.min.css.map')
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
     gulp.src('./bower_components/font-awesome/css/font-awesome.min.css')
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
     gulp.src('./bower_components/font-awesome/css/font-awesome.min.css.map')
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
     gulp.src('./bower_components/jquery-ui/themes/base/jquery-ui.min.css')
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
 
     gulp.src('./bower_components/font-awesome/fonts/**/*')
-        .pipe(gulp.dest(outputDir + 'fonts'));
+        .pipe(gulp.dest(outputDir + 'app/fonts'));
 
-    gulp.src('./src/app/**/*.js')
-        .pipe(gulp.dest(outputDir + 'js'));
+    gulp.src('./app/**/*.js')
+        .pipe(gulp.dest(outputDir + 'app'));
 
     // copy bower dependencies
     gulp.src('./bower_components/jquery/dist/jquery.min.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/jquery-ui/jquery-ui.min.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/underscore/underscore.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/moment/moment.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/bootstrap/js/bootstrap.min.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
 
     // copy angular dependencies
     gulp.src('./node_modules/es6-shim/es6-shim.min.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/angular2/bundles/angular2.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/angular2/bundles/angular2-polyfills.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/angular2/bundles/http.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/angular2/bundles/router.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/systemjs/dist/system.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/systemjs/dist/system-polyfills.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/rxjs/bundles/Rx.min.js')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
 
     gulp.src('./node_modules/es6-shim/es6-shim.map')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/systemjs/dist/system.js.map')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/systemjs/dist/system-polyfills.js.map')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/rxjs/bundles/Rx.min.js.map')
-        .pipe(gulp.dest(outputDir + 'js/lib'));
+        .pipe(gulp.dest(outputDir + 'app/lib'));
 })
 
 // html copy
 gulp.task('htmlcopy', function() {
     // clean dest
     del([outputDir + 'index.html',
-        outputDir + 'js/**/*.html'], {force:true});
+        outputDir + 'setup.html',
+        outputDir + 'app/**/*.html'], {force:true});
 
     // copy index
     gulp.src('./index.html')
         .pipe(gulp.dest(outputDir));
+    gulp.src('./setup.html')
+        .pipe(gulp.dest(outputDir));
 
     // copy angular templates
-    gulp.src('./src/app/**/*.html')
-        .pipe(gulp.dest(outputDir + 'js'));
+    gulp.src('./app/**/*.html')
+        .pipe(gulp.dest(outputDir + 'app'));
 });
 
 // html watch
 gulp.task('htmlw', function() {
     // watch index
-    gulp.watch('./index.html', ['htmlcopy']);
+    gulp.watch(['./index.html',
+        './setup.html'], ['htmlcopy']);
 
     // watch angular templates
-    gulp.watch('./src/app/**/*.html', ['htmlcopy']);
+    gulp.watch('./app/**/*.html', ['htmlcopy']);
 });
 
 // sass compile
 gulp.task('sass', function() {
-    gulp.src('./src/css/**/*')
-        .pipe(gulp.dest(outputDir + 'css'));
+    gulp.src('./app/css/**/*')
+        .pipe(gulp.dest(outputDir + 'app/css'));
 
     // compile sass and copy
-    return gulp.src('./src/sass/*.scss')
+    return gulp.src('./app/sass/*.scss')
         .pipe(sass.sync().on('error', sass.logError))
-        .pipe(gulp.dest(outputDir + 'css'));
+        .pipe(gulp.dest(outputDir + 'app/css'));
 });
 
 // sass watch compile
 gulp.task('sassw', function() {
-    gulp.watch('./src/sass/*.scss', ['sass']);
-    gulp.watch('./src/css/*.css', ['sass']);
+    gulp.watch(['./app/sass/*.scss',
+        './app/css/*.css'], ['sass']);
 });
 
 // typescript compile
 gulp.task('tsc', function() {
     // compile typescript
-    var tsResult = gulp.src('src/app/**/*.ts').pipe(ts(tsProject));
+    var tsResult = gulp.src('app/**/*.ts').pipe(ts(tsProject));
+
+    tsResult.js.pipe(gulp.dest('app'));
 
     // copy
-    return tsResult.js.pipe(gulp.dest(outputDir + 'js'));
+    return tsResult.js.pipe(gulp.dest(outputDir + 'app'));
 });
 
 // typescript watch compile
 gulp.task('tscw', function() {
-    gulp.watch(['./src/app/**/*.ts',
-            './src/app/**/*.html'],
-        ['htmlcopy', 'tsc']);
+    gulp.watch(['./app/**/*.ts',
+            './app/**/*.html'], ['tsc']);
 });
 
 // build sass and ts, copy libs, copy html
