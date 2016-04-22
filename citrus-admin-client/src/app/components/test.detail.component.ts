@@ -6,12 +6,13 @@ import {Test, TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {SourceCodeComponent} from "./source.code.component";
 import {TestDesignerComponent} from "./design/test.designer.component";
+import {TestExecuteComponent} from "./test.execute.component";
 
 @Component({
     selector: "test-detail",
     templateUrl: 'app/components/test-detail.html',
     directives: [NgSwitch, NgFor, Pills, Pill,
-        SourceCodeComponent, TestDesignerComponent]
+        SourceCodeComponent, TestDesignerComponent, TestExecuteComponent]
 })
 export class TestDetailComponent implements OnChanges {
 

@@ -56,7 +56,7 @@
     <test-designer *ngIf="detail" [actions]="detail.actions"></test-designer>
   </pill>
   <pill pill-id="test-run" pill-title="Run" pill-icon="fa fa-play-circle">
-    <h3>Run Test</h3>
+    <test-execute *ngIf="detail" [detail]="detail"></test-execute>
   </pill>
   <pill pill-id="test-results" pill-title="Results" pill-icon="fa fa-tasks">
     <h3>Test Results</h3>
