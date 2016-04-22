@@ -86,6 +86,8 @@ gulp.task('sourcecopy', function() {
         .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./node_modules/rxjs/bundles/Rx.min.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));
+    gulp.src('./node_modules/stompjs/lib/stomp.js')
+        .pipe(gulp.dest(outputDir + 'app/lib'));
 
     gulp.src('./node_modules/es6-shim/es6-shim.map')
         .pipe(gulp.dest(outputDir + 'app/lib'));

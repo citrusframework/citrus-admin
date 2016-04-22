@@ -26,6 +26,7 @@
           <include>rxjs/**</include>
           <include>zone/**</include>
           <include>angular2/**</include>
+          <include>stompjs/**</include>
         </includes>
       </resource>
       <resource>

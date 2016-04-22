@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service.executor.maven;
 
 import com.consol.citrus.admin.process.*;
 import com.consol.citrus.admin.process.listener.LoggingProcessListener;
+import com.consol.citrus.admin.process.listener.WebSocketProcessListener;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.executor.TestExecutor;
 import org.apache.commons.cli.ParseException;
@@ -33,6 +34,9 @@ import java.io.File;
 public class MavenTestExecutor implements TestExecutor {
 
     @Autowired
+    private WebSocketProcessListener webSocketProcessListener;
+
+    @Autowired
     private ProcessMonitor processMonitor;
     @Autowired
     private ProjectService projectService;
@@ -43,6 +47,7 @@ public class MavenTestExecutor implements TestExecutor {
         ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, testName).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 
+        processLauncher.addProcessListener(webSocketProcessListener);
         processLauncher.addProcessListener(new LoggingProcessListener());
         processLauncher.launchAndContinue(processBuilder, 0);
 
