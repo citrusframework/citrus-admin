@@ -223,7 +223,8 @@ public class TestCaseService {
      * @return
      */
     private String getTestDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + project.getSrcDirectory() + "resources" + File.separator;
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
+                project.getSettings().getSrcDirectory() + "resources" + File.separator;
     }
 
     /**
@@ -231,6 +232,7 @@ public class TestCaseService {
      * @return
      */
     private String getJavaDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + project.getSrcDirectory() + "java" + File.separator;
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
+                project.getSettings().getSrcDirectory() + "java" + File.separator;
     }
 }

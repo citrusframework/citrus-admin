@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.ProjectSettings;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,13 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity openProject(@RequestParam("projecthome") String projecthome) {
+    public ResponseEntity open(@RequestParam("projecthome") String projecthome) {
         projectService.load(projecthome);
         return ResponseEntity.ok(projecthome);
+    }
+
+    @RequestMapping(value = "/settings", method = RequestMethod.POST)
+    public void save(@RequestBody ProjectSettings settings) {
+        projectService.saveSettings(settings);
     }
 }

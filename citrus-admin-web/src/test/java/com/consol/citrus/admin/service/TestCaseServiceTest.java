@@ -16,7 +16,6 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.model.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestPackages() throws IOException {
         reset(project);
-        when(project.getSrcDirectory()).thenReturn(Citrus.DEFAULT_TEST_SRC_DIRECTORY);
+        when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
         List<TestPackage> testPackages = testCaseService.getTestPackages(project);
@@ -66,7 +65,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestDetail() throws Exception {
         reset(project);
-        when(project.getSrcDirectory()).thenReturn(Citrus.DEFAULT_TEST_SRC_DIRECTORY);
+        when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
         TestDetail testDetail = testCaseService.getTestDetail(project, "com.consol.citrus.foo", "FooTest", TestType.XML);

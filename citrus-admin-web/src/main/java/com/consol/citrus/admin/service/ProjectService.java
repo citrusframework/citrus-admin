@@ -20,6 +20,8 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.ProjectSettings;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -36,8 +39,7 @@ import org.w3c.dom.Document;
 
 import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -82,9 +84,20 @@ public class ProjectService {
                 nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
 
                 Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
-                project.setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
                 project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
-                project.setVersion(evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext));
+
+                String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
+                if (StringUtils.hasText(version)) {
+                    project.setVersion(version);
+                }
+
+                project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
+
+                String citrusVersion = evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext);
+                if (StringUtils.hasText(citrusVersion)) {
+                    project.getSettings().setCitrusVersion(citrusVersion);
+                }
+
                 project.setDescription(evaluate(pomDoc, "/mvn:project/mvn:description", nsContext));
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
@@ -96,7 +109,12 @@ public class ProjectService {
 
                 Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
                 project.setName(evaluate(buildDoc, "/project/@name", nsContext));
-                project.setVersion(evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext));
+
+                String citrusVersion = evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext);
+                if (StringUtils.hasText(citrusVersion)) {
+                    project.getSettings().setCitrusVersion(citrusVersion);
+                }
+
                 project.setDescription(evaluate(buildDoc, "/project/@description", nsContext));
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
@@ -110,6 +128,34 @@ public class ProjectService {
      */
     public File getProjectContextConfigFile() {
         return fileBrowserService.findFileInPath(new File(project.getProjectHome()), getDefaultConfigurationFile(), true);
+    }
+
+    /**
+     * Save project settings.
+     */
+    public void saveSettings(ProjectSettings settings) {
+        project.setSettings(settings);
+        saveProject();
+    }
+
+    /**
+     * Save project to file system.
+     */
+    public void saveProject() {
+        try (FileOutputStream fos = new FileOutputStream(getProjectInfoFile())) {
+            fos.write(Jackson2ObjectMapperBuilder.json().build().writer().writeValueAsBytes(project));
+            fos.flush();
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Unable to open project info file", e);
+        }
+    }
+
+    /**
+     * Gets file pointer to project info file in project home directory.
+     * @return
+     */
+    public File getProjectInfoFile() {
+        return new File(project.getProjectHome() + System.getProperty("file.separator") + "citrus-project.json");
     }
 
     /**

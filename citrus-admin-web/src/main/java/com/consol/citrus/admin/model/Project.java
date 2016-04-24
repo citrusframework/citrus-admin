@@ -16,8 +16,6 @@
 
 package com.consol.citrus.admin.model;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,10 +30,10 @@ public class Project {
     private final String projectHome;
     private String name;
     private String description;
-    private String version;
-    private String srcDirectory = System.getProperty(Application.TEST_SRC_DIRECTORY, Citrus.DEFAULT_TEST_SRC_DIRECTORY);
-    private String basePackage = System.getProperty(Application.BASE_PACKAGE, "com.consol.citrus");
+    private String version = "1.0.0";
     private Long testCount = 0L;
+
+    private ProjectSettings settings = new ProjectSettings();
 
     /** Citrus project information as Json file */
     private static final String PROJECT_INFO_FILENAME = "citrus-project.info";
@@ -178,48 +176,12 @@ public class Project {
     }
 
     /**
-     * Gets the value of the srcDirectory property.
-     *
-     * @return the srcDirectory
-     */
-    public String getSrcDirectory() {
-        return srcDirectory;
-    }
-
-    /**
-     * Sets the srcDirectory property.
-     *
-     * @param srcDirectory
-     */
-    public void setSrcDirectory(String srcDirectory) {
-        this.srcDirectory = srcDirectory;
-    }
-
-    /**
      * Gets the value of the projectHome property.
      *
      * @return the projectHome
      */
     public String getProjectHome() {
         return projectHome;
-    }
-
-    /**
-     * Gets the value of the basePackage property.
-     *
-     * @return the basePackage
-     */
-    public String getBasePackage() {
-        return basePackage;
-    }
-
-    /**
-     * Sets the basePackage property.
-     *
-     * @param basePackage
-     */
-    public void setBasePackage(String basePackage) {
-        this.basePackage = basePackage;
     }
 
     /**
@@ -238,5 +200,21 @@ public class Project {
      */
     public void setTestCount(Long testCount) {
         this.testCount = testCount;
+    }
+
+    /**
+     * Sets the project settings.
+     * @param settings
+     */
+    public void setSettings(ProjectSettings settings) {
+        this.settings = settings;
+    }
+
+    /**
+     * Gets the project settings.
+     * @return
+     */
+    public ProjectSettings getSettings() {
+        return settings;
     }
 }

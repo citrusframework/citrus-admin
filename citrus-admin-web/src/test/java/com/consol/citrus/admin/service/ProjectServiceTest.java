@@ -47,8 +47,9 @@ public class ProjectServiceTest {
         Assert.assertNotNull(project);
         Assert.assertEquals(project.getProjectHome(), new ClassPathResource(projectHome).getFile().getCanonicalPath());
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
-        Assert.assertEquals(project.getVersion(), "2.6-SNAPSHOT");
-        Assert.assertEquals(project.getBasePackage(), "com.consol.citrus");
+        Assert.assertEquals(project.getVersion(), "1.0.0");
+        Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6-SNAPSHOT");
+        Assert.assertEquals(project.getSettings().getBasePackage(), "com.consol.citrus");
         Assert.assertEquals(project.getDescription(), description);
     }
 
