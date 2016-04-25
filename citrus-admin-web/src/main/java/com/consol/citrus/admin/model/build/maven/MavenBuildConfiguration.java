@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
+    private String testPlugin = "maven-failsafe-plugin";
     private List<String> profiles;
 
     public MavenBuildConfiguration() {
@@ -45,5 +46,31 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
      */
     public List<String> getProfiles() {
         return profiles;
+    }
+
+    /**
+     * Sets the testPlugin property.
+     *
+     * @param testPlugin
+     */
+    public void setTestPlugin(String testPlugin) {
+        this.testPlugin = testPlugin;
+    }
+
+    /**
+     * Gets the value of the testPlugin property.
+     *
+     * @return the testPlugin
+     */
+    public String getTestPlugin() {
+        return testPlugin;
+    }
+
+    /**
+     * Should we use failsafe Maven plugin for test execution.
+     * @return
+     */
+    public boolean useFailsafe() {
+        return testPlugin.equalsIgnoreCase("maven-failsafe-plugin");
     }
 }

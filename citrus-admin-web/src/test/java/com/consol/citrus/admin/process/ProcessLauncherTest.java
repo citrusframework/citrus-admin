@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.process;
 
 import com.consol.citrus.admin.process.listener.ProcessListener;
-import com.consol.citrus.admin.service.executor.ExecuteCommand;
+import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
 import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,7 +150,7 @@ public class ProcessLauncherTest {
         } else {
             command = String.format("ping -n %s 127.0.0.1", sleepInSeconds);
         }
-        return new ExecuteCommand(command, new File(System.getProperty("user.dir"))).getProcessBuilder();
+        return new AbstractExecuteCommand(new File(System.getProperty("user.dir"))) { public String buildCommand() { return command; } }.getProcessBuilder();
     }
 
     private ProcessLauncher launchAndWait(ProcessBuilder processBuilder, String processName) throws InterruptedException {

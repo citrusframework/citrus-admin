@@ -84,6 +84,16 @@
     </div>
 
     <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
+      <label class="col-sm-2 control-label">TestPlugin</label>
+      <div class="col-sm-10">
+        <select [(ngModel)]="project.settings.build.testPlugin" class="form-control">
+          <option value="maven-surefire-plugin">maven-surefire-plugin</option>
+          <option value="maven-failsafe-plugin">maven-failsafe-plugin</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
       <label class="col-sm-2 control-label">Profiles</label>
       <div class="col-sm-10">
         <input [(ngModel)]="project.settings.build.profiles" type="text" class="form-control"/>

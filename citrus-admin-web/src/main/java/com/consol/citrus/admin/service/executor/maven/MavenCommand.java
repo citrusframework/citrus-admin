@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service.executor.maven;
 
-import com.consol.citrus.admin.service.executor.ExecuteCommand;
+import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
 
 import java.io.File;
 import java.util.HashMap;
@@ -25,28 +25,28 @@ import java.util.Map;
 /**
  * @author Christoph Deppisch
  */
-public class MavenCommand extends ExecuteCommand {
+public class MavenCommand extends AbstractExecuteCommand {
 
     protected static final String MVN = "mvn ";
     protected static final String COMPILE = "compile ";
+    protected static final String TEST = "test ";
     protected static final String INTEGRATION_TEST = "integration-test ";
     protected static final String CLEAN = "clean ";
+    protected static final String PACKAGE = "package ";
     protected static final String INSTALL = "install ";
 
     /**
      * Constructor for executing a command.
-     *
-     * @param command the command to be executed
      */
-    public MavenCommand(String command, File workingDirectory) {
-        super(command, workingDirectory);
+    public MavenCommand(File workingDirectory) {
+        super(workingDirectory);
     }
 
-    protected String buildCommand(String command) {
+    protected String buildCommand() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(MVN);
-        builder.append(command);
+        builder.append(getLifeCycleCommand());
 
         for (Map.Entry<Object, Object> propertyEntry: getSystemProperties().entrySet()) {
             builder.append(String.format("-D%s=%s ", propertyEntry.getKey(), propertyEntry.getValue()));
@@ -57,6 +57,10 @@ public class MavenCommand extends ExecuteCommand {
         }
 
         return builder.toString();
+    }
+
+    protected String getLifeCycleCommand() {
+        return "";
     }
 
     protected String[] getActiveProfiles() {

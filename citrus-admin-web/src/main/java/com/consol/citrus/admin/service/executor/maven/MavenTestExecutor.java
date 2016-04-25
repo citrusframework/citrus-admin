@@ -16,6 +16,10 @@
 
 package com.consol.citrus.admin.service.executor.maven;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.build.BuildConfiguration;
+import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.process.*;
 import com.consol.citrus.admin.process.listener.LoggingProcessListener;
 import com.consol.citrus.admin.process.listener.WebSocketProcessListener;
@@ -43,8 +47,15 @@ public class MavenTestExecutor implements TestExecutor {
 
     @Override
     public String execute(String packageName, String testName) throws ParseException {
-        File projectHome = new File(projectService.getActiveProject().getProjectHome());
-        ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, testName).getProcessBuilder();
+        Project activeProject = projectService.getActiveProject();
+        File projectHome = new File(activeProject.getProjectHome());
+
+        BuildConfiguration buildConfiguration = activeProject.getSettings().getBuild();
+        if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
+            throw new ApplicationRuntimeException("Unable to execute Maven command with non-maven build configuration: " + buildConfiguration.getClass());
+        }
+
+        ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, testName, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 
         processLauncher.addProcessListener(webSocketProcessListener);

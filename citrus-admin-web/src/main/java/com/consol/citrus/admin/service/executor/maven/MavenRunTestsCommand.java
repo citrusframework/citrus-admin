@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service.executor.maven;
 
+import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -28,23 +29,38 @@ import java.util.Map;
  */
 public class MavenRunTestsCommand extends MavenCommand {
 
+    /** Maven build configuration */
+    private final MavenBuildConfiguration buildConfiguration;
+
     /** Test to execute */
     private String testName;
 
-    public MavenRunTestsCommand(File projectDirectory, String testName) {
-        this(projectDirectory);
+    public MavenRunTestsCommand(File projectDirectory, String testName, MavenBuildConfiguration buildConfiguration) {
+        this(projectDirectory, buildConfiguration);
         this.testName = testName;
     }
 
-    public MavenRunTestsCommand(File projectDirectory) {
-        super(MavenCommand.COMPILE + MavenCommand.INTEGRATION_TEST, projectDirectory);
+    public MavenRunTestsCommand(File projectDirectory, MavenBuildConfiguration buildConfiguration) {
+        super(projectDirectory);
+        this.buildConfiguration = buildConfiguration;
+    }
+
+    @Override
+    protected String getLifeCycleCommand() {
+        if (buildConfiguration.useFailsafe()) {
+            return COMPILE + INTEGRATION_TEST;
+        } else {
+            return COMPILE + TEST;
+        }
     }
 
     @Override
     protected Map<Object, Object> getSystemProperties() {
         Map<Object, Object> properties = super.getSystemProperties();
-        if (StringUtils.hasText(testName)) {
+        if (StringUtils.hasText(testName) && buildConfiguration.useFailsafe()) {
             properties.put("it.test", testName);
+        } else if (StringUtils.hasText(testName)) {
+            properties.put("test", testName);
         }
 
         return properties;

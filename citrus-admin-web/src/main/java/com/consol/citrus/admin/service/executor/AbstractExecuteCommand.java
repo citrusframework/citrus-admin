@@ -29,27 +29,23 @@ import java.util.List;
  *
  * @author Martin.Maher@consol.de
  */
-public class ExecuteCommand {
+public abstract class AbstractExecuteCommand {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ExecuteCommand.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String BASH = "bash";
     private static final String BASH_OPTION_C = "-c";
     private static final String CMD = "cmd";
     private static final String CMD_OPTION_C = "/c";
 
-    private String command;
     private File workingDirectory;
 
     /**
-     * Constructor for executing a command.
-     *
-     * @param command the command to be executed
+     * Constructor initializes with working directory.
      * @param workingDirectory the working directory where the command is to be executed from
      */
-    public ExecuteCommand(String command, File workingDirectory) {
-        this.command = command;
+    public AbstractExecuteCommand(File workingDirectory) {
         this.workingDirectory = workingDirectory;
     }
 
@@ -65,7 +61,7 @@ public class ExecuteCommand {
             commands.add(CMD_OPTION_C);
         }
 
-        commands.add(buildCommand(command));
+        commands.add(buildCommand());
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.directory(workingDirectory);
@@ -74,9 +70,7 @@ public class ExecuteCommand {
         return pb;
     }
 
-    protected String buildCommand(String command) {
-        return command;
-    }
+    protected abstract String buildCommand();
 
     private void validateWorkingDirectory(File workingDirectory) {
         if (workingDirectory == null) {
