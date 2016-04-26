@@ -36,10 +36,10 @@
       <div *ngIf="property.optionKey" class="input-group">
         <input [(ngModel)]="property.value" class="form-control" type="text"/>
         <div class="btn-group input-group-btn">
-          <button name="{{property.optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
+          <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
             <i class="fa fa-search"></i>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu option-search">
           </ul>
         </div>
       </div>
@@ -83,10 +83,10 @@
       <div *ngIf="property.optionKey" class="input-group">
         <input [(ngModel)]="property.value" class="form-control" type="text"/>
         <div class="btn-group input-group-btn">
-          <button name="{{property.optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
+          <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
             <i class="fa fa-search"></i>
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu option-search">
           </ul>
         </div>
       </div>

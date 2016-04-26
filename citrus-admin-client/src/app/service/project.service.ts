@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Project} from "../model/project";
 import {Observable} from 'rxjs/Observable';
 
@@ -14,6 +14,11 @@ export class ProjectService {
         return this.http.get(this._serviceUrl)
                         .map(res => <Project> res.json())
                         .catch(this.handleError);
+    }
+
+    saveSettings(project: Project) {
+        return this.http.post(this._serviceUrl, JSON.stringify(project), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .catch(this.handleError);
     }
 
     private handleError (error: Response) {

@@ -31,8 +31,6 @@ export class ProjectComponent implements OnInit {
 
     saveSettings() {
         this._projectService.saveSettings(this.project)
-            .subscribe(
-                project => this.project = project,
-                error => this.errorMessage = <any>error);
+            .subscribe(error => this.errorMessage = <any>error);
     }
 }

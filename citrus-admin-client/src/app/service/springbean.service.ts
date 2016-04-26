@@ -10,6 +10,12 @@ export class SpringBeanService {
 
     private _serviceUrl = 'beans';
 
+    searchBeans(type: string) {
+        return this.http.post(this._serviceUrl + '/search', type, new RequestOptions({ headers: new Headers({ 'Content-Type': 'plain/text' }) }))
+                        .map(res => <string[]> res.json())
+                        .catch(this.handleError);
+    }
+
     getBeans(type: string) {
         return this.http.get(this._serviceUrl + '/' + type)
                         .map(res => <SpringBean[]> res.json())
