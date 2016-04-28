@@ -20,36 +20,96 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.model.build.BuildConfiguration;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import org.springframework.util.StringUtils;
+
+import java.io.File;
 
 /**
  * @author Christoph Deppisch
  */
 public class ProjectSettings {
 
-    private String srcDirectory = System.getProperty(Application.TEST_SRC_DIRECTORY, Citrus.DEFAULT_TEST_SRC_DIRECTORY);
     private String basePackage = System.getProperty(Application.BASE_PACKAGE, "com.consol.citrus");
     private String citrusVersion = Citrus.getVersion();
+
+    private String javaSrcDirectory = System.getProperty(Application.JAVA_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "java" + File.separator);
+    private String xmlSrcDirectory = System.getProperty(Application.XML_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "resources" + File.separator);
+    private String javaFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getJavaTestFileNamePattern().toArray());
+    private String xmlFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getXmlTestFileNamePattern().toArray());
 
     private BuildConfiguration build = new MavenBuildConfiguration();
 
     /**
-     * Gets the value of the srcDirectory property.
+     * Gets the value of the javaSrcDirectory property.
      *
-     * @return the srcDirectory
+     * @return the javaSrcDirectory
      */
-    public String getSrcDirectory() {
-        return srcDirectory;
+    public String getJavaSrcDirectory() {
+        return javaSrcDirectory;
     }
 
     /**
-     * Sets the srcDirectory property.
+     * Sets the javaSrcDirectory property.
      *
-     * @param srcDirectory
+     * @param javaSrcDirectory
      */
-    public void setSrcDirectory(String srcDirectory) {
-        this.srcDirectory = srcDirectory;
+    public void setJavaSrcDirectory(String javaSrcDirectory) {
+        this.javaSrcDirectory = javaSrcDirectory;
     }
 
+    /**
+     * Gets the value of the xmlSrcDirectory property.
+     *
+     * @return the xmlSrcDirectory
+     */
+    public String getXmlSrcDirectory() {
+        return xmlSrcDirectory;
+    }
+
+    /**
+     * Sets the xmlSrcDirectory property.
+     *
+     * @param xmlSrcDirectory
+     */
+    public void setXmlSrcDirectory(String xmlSrcDirectory) {
+        this.xmlSrcDirectory = xmlSrcDirectory;
+    }
+
+    /**
+     * Sets the javaFilePattern property.
+     *
+     * @param javaFilePattern
+     */
+    public void setJavaFilePattern(String javaFilePattern) {
+        this.javaFilePattern = javaFilePattern;
+    }
+
+    /**
+     * Gets the value of the javaFilePattern property.
+     *
+     * @return the javaFilePattern
+     */
+    public String getJavaFilePattern() {
+        return javaFilePattern;
+    }
+
+    /**
+     * Sets the xmlFilePattern property.
+     *
+     * @param xmlFilePattern
+     */
+    public void setXmlFilePattern(String xmlFilePattern) {
+        this.xmlFilePattern = xmlFilePattern;
+    }
+
+    /**
+     * Gets the value of the xmlFilePattern property.
+     *
+     * @return the xmlFilePattern
+     */
+    public String getXmlFilePattern() {
+        return xmlFilePattern;
+    }
 
     /**
      * Gets the value of the basePackage property.

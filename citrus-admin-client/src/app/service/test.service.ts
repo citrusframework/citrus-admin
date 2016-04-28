@@ -20,13 +20,13 @@ export class TestService {
     }
 
     getTestDetail(test: Test) {
-        return this.http.get(this._testDetailUrl + '/' + test.type + '/' + test.packageName + '/' + test.name)
+        return this.http.get(this._testDetailUrl + '/' + test.packageName + '/' + test.name + '?type=' + test.type + '&className=' + test.className + '&methodName=' + test.methodname)
             .map(res => <TestDetail> res.json())
             .catch(this.handleError);
     }
 
     getSourceCode(test: TestDetail, type: string) {
-        return this.http.get(this._testSourceUrl + '/' + type + '/' + test.packageName + '/' + test.name)
+        return this.http.get(this._testSourceUrl + '/' + test.packageName + '/' + test.name + '?type=' + test.type + '&className=' + test.className + '&methodName=' + test.methodname)
             .map(res => <string> res.text())
             .catch(this.handleError);
     }

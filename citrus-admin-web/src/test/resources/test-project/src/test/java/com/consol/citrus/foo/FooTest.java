@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,16 @@
 package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusXmlTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class JavaTest extends TestNGCitrusTestDesigner {
+public class FooTest extends TestNGCitrusTestDesigner {
 
-    @CitrusTest(name = "FooJavaTest")
-    public void fooTest() {
-    }
-
-    @CitrusTest
+    @CitrusXmlTest
     public void FooTest() {
     }
 }

@@ -29,8 +29,9 @@ public class Application {
 	/** Base package for test cases to look for */
 	public static final String BASE_PACKAGE = "test.base.package";
 
-	/** Test source directory */
-	public static final String TEST_SRC_DIRECTORY = "test.source.directory";
+	/** Source directory */
+	public static final String JAVA_SRC_DIRECTORY = "java.source.directory";
+	public static final String XML_SRC_DIRECTORY = "xml.source.directory";
 
 	/**
 	 * Gets the root directory from system property. By default user.home system

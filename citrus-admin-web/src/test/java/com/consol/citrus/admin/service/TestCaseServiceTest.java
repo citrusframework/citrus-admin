@@ -51,15 +51,26 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         List<TestPackage> testPackages = testCaseService.getTestPackages(project);
 
         Assert.assertNotNull(testPackages);
-        Assert.assertEquals(testPackages.size(), 2L);
+        Assert.assertEquals(testPackages.size(), 3L);
         Assert.assertEquals(testPackages.get(0).getName(), "com.consol.citrus.bar");
         Assert.assertEquals(testPackages.get(0).getTests().size(), 1L);
         Assert.assertEquals(testPackages.get(1).getName(), "com.consol.citrus.foo");
         Assert.assertEquals(testPackages.get(1).getTests().size(), 1L);
-
+        Assert.assertEquals(testPackages.get(2).getName(), "com.consol.citrus.java");
+        Assert.assertEquals(testPackages.get(2).getTests().size(), 2L);
 
         Assert.assertEquals(testPackages.get(0).getTests().get(0).getName(), "BarTest");
+        Assert.assertEquals(testPackages.get(0).getTests().get(0).getClassName(), "BarTest");
+        Assert.assertEquals(testPackages.get(0).getTests().get(0).getMethodName(), "barTest");
         Assert.assertEquals(testPackages.get(1).getTests().get(0).getName(), "FooTest");
+        Assert.assertEquals(testPackages.get(1).getTests().get(0).getClassName(), "FooTest");
+        Assert.assertEquals(testPackages.get(1).getTests().get(0).getMethodName(), "FooTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(0).getName(), "CitrusTest.fooTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(0).getClassName(), "CitrusTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(0).getMethodName(), "fooTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(1).getName(), "BarJavaTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(1).getClassName(), "CitrusTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(1).getMethodName(), "barTest");
     }
 
     @Test
@@ -68,7 +79,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
-        TestDetail testDetail = testCaseService.getTestDetail(project, "com.consol.citrus.foo", "FooTest", TestType.XML);
+        TestDetail testDetail = testCaseService.getTestDetail(project, "com.consol.citrus.foo", "FooTest", "fooTest", "FooTest", TestType.XML);
 
         Assert.assertEquals(testDetail.getName(), "FooTest");
         Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.foo");

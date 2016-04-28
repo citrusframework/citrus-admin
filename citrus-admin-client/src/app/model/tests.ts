@@ -17,6 +17,8 @@ export class Test {
     }
 
     public name: string;
+    public className: string;
+    public methodname: string;
     public type: string;
     public packageName: string;
 }

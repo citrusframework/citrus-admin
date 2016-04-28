@@ -26,6 +26,9 @@ public class Test {
     private TestType type;
     private String packageName;
 
+    private String className;
+    private String methodName;
+
     /**
      * Gets the value of the name property.
      *
@@ -42,6 +45,42 @@ public class Test {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Sets the className property.
+     *
+     * @param className
+     */
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    /**
+     * Gets the value of the className property.
+     *
+     * @return the className
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * Sets the methodName property.
+     *
+     * @param methodName
+     */
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    /**
+     * Gets the value of the methodName property.
+     *
+     * @return the methodName
+     */
+    public String getMethodName() {
+        return methodName;
     }
 
     /**

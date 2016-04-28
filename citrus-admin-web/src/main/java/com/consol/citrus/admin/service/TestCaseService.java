@@ -29,6 +29,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
@@ -36,6 +37,8 @@ import org.springframework.xml.transform.StringSource;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Christoph Deppisch
@@ -58,25 +61,18 @@ public class TestCaseService {
         Map<String, TestPackage> testPackages = new HashMap<>();
         List<Test> tests = new ArrayList<>();
 
-        List<File> testFiles = FileUtils.getTestFiles(getTestDirectory(project));
-        for (File file : testFiles) {
-            String testName = FilenameUtils.getBaseName(file.getName());
-            String testPackageName = file.getPath().substring(getTestDirectory(project).length(), file.getPath().length() - file.getName().length())
+        List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+        for (File sourceFile : sourceFiles) {
+            String className = FilenameUtils.getBaseName(sourceFile.getName());
+            String testPackageName = sourceFile.getPath().substring(getJavaDirectory(project).length(), sourceFile.getPath().length() - sourceFile.getName().length())
                     .replace(File.separatorChar, '.');
 
             if (testPackageName.endsWith(".")) {
                 testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
             }
 
-            Test test = new Test();
-            test.setType(TestType.XML);
-            test.setName(testName);
-            test.setPackageName(testPackageName);
-
-            tests.add(test);
+            tests.addAll(findTests(sourceFile, testPackageName, className));
         }
-
-        //TODO load Java tests
 
         for (Test test : tests) {
             if (!testPackages.containsKey(test.getPackageName())) {
@@ -92,16 +88,84 @@ public class TestCaseService {
     }
 
     /**
+     * Find all tests in give source file.
+     * @param sourceFile
+     * @param packageName
+     * @param className
+     * @return
+     */
+    private List<Test> findTests(File sourceFile, String packageName, String className) {
+        List<Test> tests = new ArrayList<>();
+
+        try {
+            String sourceCode = FileUtils.readToString(new FileSystemResource(sourceFile));
+
+            Matcher matcher = Pattern.compile("@CitrusTest").matcher(sourceCode);
+            while (matcher.find()) {
+                Test test = new Test();
+                test.setType(TestType.JAVA);
+                test.setClassName(className);
+                test.setPackageName(packageName);
+
+                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start(), sourceCode.indexOf('{', matcher.start())));
+                String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
+                methodName = methodName.substring(0, methodName.indexOf("("));
+                test.setMethodName(methodName);
+
+                if (snippet.contains("@CitrusTest(name=")) {
+                    String explicitName = snippet.substring(snippet.indexOf("name=\"") + 6);
+                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
+                    test.setName(explicitName);
+                } else {
+                    test.setName(className + "." + methodName);
+                }
+
+                tests.add(test);
+            }
+
+            matcher = Pattern.compile("@CitrusXmlTest").matcher(sourceCode);
+            while (matcher.find()) {
+                Test test = new Test();
+                test.setType(TestType.XML);
+                test.setClassName(className);
+                test.setPackageName(packageName);
+
+                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start(), sourceCode.indexOf('{', matcher.start())));
+                String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
+                methodName = methodName.substring(0, methodName.indexOf("("));
+                test.setMethodName(methodName);
+
+                if (snippet.contains("@CitrusXmlTest(name=")) {
+                    String explicitName = snippet.substring(snippet.indexOf("name=\"") + 6);
+                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
+                    test.setName(explicitName);
+                } else {
+                    test.setName(methodName);
+                }
+
+                tests.add(test);
+            }
+        } catch (IOException e) {
+            log.error("Failed to read test source file", e);
+        }
+
+        return tests;
+    }
+
+    /**
      * Gets test case details such as status, description, author.
      * @return
      */
-    public TestDetail getTestDetail(Project project, String packageName, String testName, TestType type) {
+    public TestDetail getTestDetail(Project project, String packageName, String className, String methodName, String testName, TestType type) {
         TestDetail testDetail = new TestDetail();
         testDetail.setName(testName);
+        testDetail.setClassName(className);
+        testDetail.setMethodName(methodName);
         testDetail.setPackageName(packageName);
+
         testDetail.setType(type);
 
-        TestcaseDefinition testModel = getTestModel(project, packageName, testName, type);
+        TestcaseDefinition testModel = getTestModel(project, testDetail);
 
         if (testModel.getVariables() != null) {
             for (VariablesDefinition.Variable variable : testModel.getVariables().getVariables()) {
@@ -135,19 +199,42 @@ public class TestCaseService {
     }
 
     /**
-     * Gets the source code for the given test.
+     * Gets the source code for given test information.
      * @param project
      * @param packageName
-     * @param name
+     * @param className
+     * @param methodName
+     * @param testName
      * @param type
      * @return
      */
-    public String getSourceCode(Project project, String packageName, String name, TestType type) {
-        String dir = type.equals(TestType.JAVA) ? getJavaDirectory(project) : getTestDirectory(project);
+    public String getSourceCode(Project project, String packageName, String className, String methodName, String testName, TestType type) {
+        TestDetail testDetail = new TestDetail();
+        testDetail.setName(testName);
+        testDetail.setClassName(className);
+        testDetail.setMethodName(methodName);
+        testDetail.setPackageName(packageName);
+
+        testDetail.setType(type);
+
+        return getSourceCode(project, testDetail);
+    }
+
+    /**
+     * Gets the source code for the given test.
+     * @param project
+     * @param detail
+     * @return
+     */
+    public String getSourceCode(Project project, TestDetail detail) {
+        String sourceFilePath;
+        if (detail.getType().equals(TestType.JAVA)) {
+            sourceFilePath = getJavaDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getClassName() + ".java";
+        } else {
+            sourceFilePath = getTestDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getName() + ".xml";
+        }
 
         try {
-            String sourceFilePath = dir + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type.name().toLowerCase();
-
             if (new File(sourceFilePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourceFilePath));
             } else {
@@ -162,32 +249,29 @@ public class TestCaseService {
     /**
      * Reads either XML or Java test definition to model class.
      * @param project
-     * @param packageName
-     * @param testName
-     * @param type
      * @return
      */
-    private TestcaseDefinition getTestModel(Project project, String packageName, String testName, TestType type) {
-        if (type.equals(TestType.XML)) {
-            return getXmlTestModel(project, packageName, testName);
-        } else if (type.equals(TestType.JAVA)) {
-            return getJavaTestModel(packageName, testName);
+    private TestcaseDefinition getTestModel(Project project, TestDetail detail) {
+        if (detail.getType().equals(TestType.XML)) {
+            return getXmlTestModel(project, detail);
+        } else if (detail.getType().equals(TestType.JAVA)) {
+            return getJavaTestModel(project, detail);
         } else {
-            throw new ApplicationRuntimeException("Unsupported test case type: " + type);
+            throw new ApplicationRuntimeException("Unsupported test case type: " + detail.getType());
         }
     }
 
     /**
      * Get test case model from XML source code.
-     * @param packageName
-     * @param testName
+     * @param project
+     * @param detail
      * @return
      */
-    private TestcaseDefinition getXmlTestModel(Project project, String packageName, String testName) {
-        String xmlSource = getSourceCode(project, packageName, testName, TestType.XML);
+    private TestcaseDefinition getXmlTestModel(Project project, TestDetail detail) {
+        String xmlSource = getSourceCode(project, detail);
 
         if (!StringUtils.hasText(xmlSource)) {
-            throw new ApplicationRuntimeException("Failed to get XML source code for test: " + packageName + "." + testName);
+            throw new ApplicationRuntimeException("Failed to get XML source code for test: " + detail.getPackageName() + "." + detail.getName());
         }
 
         return ((SpringBeans) new XmlTestMarshaller().unmarshal(new StringSource(xmlSource))).getTestcase();
@@ -195,26 +279,16 @@ public class TestCaseService {
 
     /**
      * Get test case model from Java source code.
-     * @param packageName
-     * @param testName
+     * @param project
+     * @param detail
      * @return
      */
-    private TestcaseDefinition getJavaTestModel(String packageName, String testName) {
-        String methodName = null;
-        String testClassName;
-
-        int methodSeparatorIndex = testName.indexOf('.');
-        if (methodSeparatorIndex > 0) {
-            methodName = testName.substring(methodSeparatorIndex + 1);
-            testClassName = testName.substring(0, methodSeparatorIndex);
-        } else {
-            testClassName = testName;
-        }
+    private TestcaseDefinition getJavaTestModel(Project project, TestDetail detail) {
+        TestcaseDefinition testModel = new TestcaseDefinition();
+        testModel.setName(detail.getClassName() + "." + detail.getMethodName());
 
         //TODO load Java test logic into model
 
-        TestcaseDefinition testModel = new TestcaseDefinition();
-        testModel.setName(StringUtils.hasText(methodName) ? methodName : testClassName);
         return testModel;
     }
 
@@ -224,7 +298,7 @@ public class TestCaseService {
      */
     private String getTestDirectory(Project project) {
         return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
-                project.getSettings().getSrcDirectory() + "resources" + File.separator;
+                project.getSettings().getXmlSrcDirectory();
     }
 
     /**
@@ -233,6 +307,6 @@ public class TestCaseService {
      */
     private String getJavaDirectory(Project project) {
         return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
-                project.getSettings().getSrcDirectory() + "java" + File.separator;
+                project.getSettings().getJavaSrcDirectory();
     }
 }

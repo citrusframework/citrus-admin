@@ -57,9 +57,22 @@
     </div>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label">Sources <em>*</em></label>
-      <div class="col-sm-10">
-        <input [(ngModel)]="project.settings.srcDirectory" type="text" class="form-control"/>
+      <label class="col-sm-2 control-label">Java Sources <em>*</em></label>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.javaSrcDirectory" type="text" class="form-control"/>
+      </div>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.javaFilePattern" type="text" class="form-control"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">XML Sources <em>*</em></label>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.xmlSrcDirectory" type="text" class="form-control"/>
+      </div>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.xmlFilePattern" type="text" class="form-control"/>
       </div>
     </div>
 

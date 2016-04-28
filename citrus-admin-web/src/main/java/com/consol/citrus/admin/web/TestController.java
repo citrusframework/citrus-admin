@@ -49,19 +49,24 @@ public class TestController {
         return testCaseService.getTestPackages(projectService.getActiveProject());
     }
 
-    @RequestMapping(value="/detail/{type}/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/detail/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public TestDetail getTestDetail(@PathVariable("package") String testPackage,
                                     @PathVariable("name") String testName,
-                                    @PathVariable("type") String type) {
-        return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName, TestType.valueOf(type.toUpperCase()));
+                                    @RequestParam("type") String type,
+                                    @RequestParam("className") String className,
+                                    @RequestParam("methodName") String methodName) {
+        return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, className, methodName, testName, TestType.valueOf(type.toUpperCase()));
     }
 
-    @RequestMapping(value="/source/{type}/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/source/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
-                                @PathVariable("type") String type) {
-        return testCaseService.getSourceCode(projectService.getActiveProject(), testPackage, testName, TestType.valueOf(type.toUpperCase()));
+    public String getSourceCode(@PathVariable("package") String testPackage,
+                                @PathVariable("name") String testName,
+                                @RequestParam("type") String type,
+                                @RequestParam("className") String className,
+                                @RequestParam("methodName") String methodName) {
+        return testCaseService.getSourceCode(projectService.getActiveProject(), testPackage, className, methodName, testName, TestType.valueOf(type.toUpperCase()));
     }
 
     @RequestMapping(value="/execute/{package}/{name}", method = { RequestMethod.GET })
