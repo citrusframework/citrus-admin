@@ -20,19 +20,19 @@ export class TestService {
     }
 
     getTestDetail(test: Test) {
-        return this.http.get(this._testDetailUrl + '/' + test.packageName + '/' + test.name + '?type=' + test.type + '&className=' + test.className + '&methodName=' + test.methodname)
+        return this.http.post(this._testDetailUrl, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .map(res => <TestDetail> res.json())
             .catch(this.handleError);
     }
 
     getSourceCode(test: TestDetail, type: string) {
-        return this.http.get(this._testSourceUrl + '/' + test.packageName + '/' + test.name + '?type=' + test.type + '&className=' + test.className + '&methodName=' + test.methodname)
+        return this.http.post(this._testSourceUrl + '/' + type, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .map(res => <string> res.text())
             .catch(this.handleError);
     }
 
     execute(test: TestDetail) {
-        return this.http.get(this._testExecuteUrl + '/' + test.packageName + '/' + test.name)
+        return this.http.post(this._testExecuteUrl, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .map(res => <string> res.text())
             .catch(this.handleError);
     }

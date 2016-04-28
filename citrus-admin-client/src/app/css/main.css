@@ -43,6 +43,15 @@ ul.properties li {
     height: 800px;
 }
 
+pre.logger {
+    margin-top: 5px;
+    height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 12px;
+    background-color: #ffffff;
+}
+
 /** Space placeholders */
 
 .space-top-30 {

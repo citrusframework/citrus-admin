@@ -16,6 +16,8 @@
 
 package com.consol.citrus.admin.service.executor;
 
+import com.consol.citrus.admin.model.Test;
+
 /**
  * @author Christoph Deppisch
  */
@@ -23,10 +25,9 @@ public interface TestExecutor {
 
     /**
      * Run test and throw exception when failed.
-     * @param packageName
-     * @param testName
+     * @param test
      * @return the processId
      * @throws Exception
      */
-    String execute(String packageName, String testName) throws Exception;
+    String execute(Test test) throws Exception;
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service.executor.maven;
 
+import com.consol.citrus.admin.model.Test;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import org.springframework.util.StringUtils;
 
@@ -33,11 +34,11 @@ public class MavenRunTestsCommand extends MavenCommand {
     private final MavenBuildConfiguration buildConfiguration;
 
     /** Test to execute */
-    private String testName;
+    private Test test;
 
-    public MavenRunTestsCommand(File projectDirectory, String testName, MavenBuildConfiguration buildConfiguration) {
+    public MavenRunTestsCommand(File projectDirectory, Test test, MavenBuildConfiguration buildConfiguration) {
         this(projectDirectory, buildConfiguration);
-        this.testName = testName;
+        this.test = test;
     }
 
     public MavenRunTestsCommand(File projectDirectory, MavenBuildConfiguration buildConfiguration) {
@@ -57,10 +58,10 @@ public class MavenRunTestsCommand extends MavenCommand {
     @Override
     protected Map<Object, Object> getSystemProperties() {
         Map<Object, Object> properties = super.getSystemProperties();
-        if (StringUtils.hasText(testName) && buildConfiguration.useFailsafe()) {
-            properties.put("it.test", testName);
-        } else if (StringUtils.hasText(testName)) {
-            properties.put("test", testName);
+        if (StringUtils.hasText(test.getName()) && buildConfiguration.useFailsafe()) {
+            properties.put("it.test", test.getClassName() + "#" + test.getMethodName());
+        } else if (StringUtils.hasText(test.getName())) {
+            properties.put("test", test.getClassName() + "#" + test.getMethodName());
         }
 
         return properties;

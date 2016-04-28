@@ -30,6 +30,29 @@ public class Test {
     private String methodName;
 
     /**
+     * Default constructor.
+     */
+    public Test() {
+        super();
+    }
+
+    /**
+     * Constructor using fields.
+     * @param packageName
+     * @param className
+     * @param methodName
+     * @param name
+     * @param type
+     */
+    public Test(String packageName, String className, String methodName, String name, TestType type) {
+        this.packageName = packageName;
+        this.className = className;
+        this.methodName= methodName;
+        this.name = name;
+        this.type = type;
+    }
+
+    /**
      * Gets the value of the name property.
      *
      * @return the name

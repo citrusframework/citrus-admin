@@ -36,6 +36,26 @@ public class TestDetail extends Test {
     private List<TestAction> actions = new ArrayList<>();
 
     /**
+     * Default constructor.
+     */
+    public TestDetail() {
+        super();
+    }
+
+    /**
+     * Creates new detail from test.
+     * @param test
+     */
+    public TestDetail(Test test) {
+        setName(test.getName());
+        setClassName(test.getClassName());
+        setMethodName(test.getMethodName());
+        setPackageName(test.getPackageName());
+
+        setType(test.getType());
+    }
+
+    /**
      * Gets the value of the groups property.
      *
      * @return the groups

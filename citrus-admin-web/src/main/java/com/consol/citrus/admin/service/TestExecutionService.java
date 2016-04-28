@@ -46,23 +46,20 @@ public class TestExecutionService {
     /**
      * Runs a test case and returns result outcome (success or failure).
      * @param project
-     * @param packageName
-     * @param testName
+     * @param test
      * @return
      */
-    public TestResult execute(Project project, String packageName, String testName) {
+    public TestResult execute(Project project, Test test) {
         TestResult result = new TestResult();
-        Test testCase = new Test();
-        testCase.setName(testName);
-        testCase.setPackageName(packageName);
-        result.setTestCase(testCase);
+        result.setTestCase(test);
 
         try {
-            testExecutor.execute(packageName, testName);
+            String processId = testExecutor.execute(test);
 
+            result.setProcessId(processId);
             result.setSuccess(true);
         } catch (Exception e) {
-            log.warn("Failed to execute Citrus test case '" + testName + "'", e);
+            log.warn("Failed to execute Citrus test case '" + test.getName() + "'", e);
             setFailureStack(result, e);
         }
 

@@ -154,17 +154,12 @@ public class TestCaseService {
 
     /**
      * Gets test case details such as status, description, author.
+     * @param project
+     * @param test
      * @return
      */
-    public TestDetail getTestDetail(Project project, String packageName, String className, String methodName, String testName, TestType type) {
-        TestDetail testDetail = new TestDetail();
-        testDetail.setName(testName);
-        testDetail.setClassName(className);
-        testDetail.setMethodName(methodName);
-        testDetail.setPackageName(packageName);
-
-        testDetail.setType(type);
-
+    public TestDetail getTestDetail(Project project, Test test) {
+        TestDetail testDetail = new TestDetail(test);
         TestcaseDefinition testModel = getTestModel(project, testDetail);
 
         if (testModel.getVariables() != null) {
@@ -173,62 +168,52 @@ public class TestCaseService {
             }
         }
 
-        testDetail.setDescription(testModel.getDescription().trim().replaceAll(" +", " ").replaceAll("\t", ""));
-        testDetail.setAuthor(testModel.getMetaInfo().getAuthor());
-        testDetail.setLastModified(testModel.getMetaInfo().getLastUpdatedOn().getTimeInMillis());
+        if (testModel.getDescription() != null) {
+            testDetail.setDescription(testModel.getDescription().trim().replaceAll(" +", " ").replaceAll("\t", ""));
+        }
 
-        testDetail.setFile(getTestDirectory(project) + packageName.replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(testName));
+        if (testModel.getMetaInfo() != null) {
+            testDetail.setAuthor(testModel.getMetaInfo().getAuthor());
+            testDetail.setLastModified(testModel.getMetaInfo().getLastUpdatedOn().getTimeInMillis());
+        }
 
-        for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
-            TestAction model = null;
-            for (TestActionConverter converter : actionConverter) {
-                if (converter.getModelClass().isInstance(actionType)) {
-                    model = converter.convert(actionType);
-                    break;
+        if (test.getType().equals(TestType.JAVA)) {
+            testDetail.setFile(getJavaDirectory(project) + test.getPackageName().replace('.', File.separatorChar) + File.separator + test.getClassName());
+        } else {
+            testDetail.setFile(getTestDirectory(project) + test.getPackageName().replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(test.getName()));
+        }
+
+        if (testModel.getActions() != null) {
+            for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
+                TestAction model = null;
+                for (TestActionConverter converter : actionConverter) {
+                    if (converter.getModelClass().isInstance(actionType)) {
+                        model = converter.convert(actionType);
+                        break;
+                    }
                 }
-            }
 
-            if (model == null) {
-                model = new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType);
-            }
+                if (model == null) {
+                    model = new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType);
+                }
 
-            testDetail.getActions().add(model);
+                testDetail.getActions().add(model);
+            }
         }
 
         return testDetail;
     }
 
     /**
-     * Gets the source code for given test information.
-     * @param project
-     * @param packageName
-     * @param className
-     * @param methodName
-     * @param testName
-     * @param type
-     * @return
-     */
-    public String getSourceCode(Project project, String packageName, String className, String methodName, String testName, TestType type) {
-        TestDetail testDetail = new TestDetail();
-        testDetail.setName(testName);
-        testDetail.setClassName(className);
-        testDetail.setMethodName(methodName);
-        testDetail.setPackageName(packageName);
-
-        testDetail.setType(type);
-
-        return getSourceCode(project, testDetail);
-    }
-
-    /**
      * Gets the source code for the given test.
      * @param project
      * @param detail
+     * @param type
      * @return
      */
-    public String getSourceCode(Project project, TestDetail detail) {
+    public String getSourceCode(Project project, TestDetail detail, TestType type) {
         String sourceFilePath;
-        if (detail.getType().equals(TestType.JAVA)) {
+        if (type.equals(TestType.JAVA)) {
             sourceFilePath = getJavaDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getClassName() + ".java";
         } else {
             sourceFilePath = getTestDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getName() + ".xml";
@@ -268,7 +253,7 @@ public class TestCaseService {
      * @return
      */
     private TestcaseDefinition getXmlTestModel(Project project, TestDetail detail) {
-        String xmlSource = getSourceCode(project, detail);
+        String xmlSource = getSourceCode(project, detail, TestType.XML);
 
         if (!StringUtils.hasText(xmlSource)) {
             throw new ApplicationRuntimeException("Failed to get XML source code for test: " + detail.getPackageName() + "." + detail.getName());

@@ -1,4 +1,4 @@
-import {Component,  Input, OnChanges, AfterViewInit} from 'angular2/core';
+import {Component,  Input} from 'angular2/core';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import {TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
@@ -6,10 +6,11 @@ import {LoggingOutput} from "../model/logging.output";
 
 declare var SockJS;
 declare var Stomp;
+declare var jQuery;
 
 @Component({
     selector: "test-execute",
-    template: '<button (click)="execute()" type="button" class="btn btn-success"><i class="fa fa-play"></i> Run</button><pre [textContent]="processOutput"></pre>'
+    template: '<button (click)="execute()" type="button" class="btn btn-success"><i class="fa fa-play"></i> Run</button><pre class="logger" [textContent]="processOutput"></pre>'
 })
 export class TestExecuteComponent {
     @Input() detail: TestDetail;
@@ -44,6 +45,7 @@ export class TestExecuteComponent {
             this.stompClient.subscribe('/topic/log-output', output => {
                 var loggingOutput: LoggingOutput = JSON.parse(output.body);
                 console.log(loggingOutput);
+                jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
                 this.processOutput += loggingOutput.msg;
             });
         }

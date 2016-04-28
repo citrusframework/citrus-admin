@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,34 +48,22 @@ public class TestController {
         return testCaseService.getTestPackages(projectService.getActiveProject());
     }
 
-    @RequestMapping(value="/detail/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/detail", method = { RequestMethod.POST })
     @ResponseBody
-    public TestDetail getTestDetail(@PathVariable("package") String testPackage,
-                                    @PathVariable("name") String testName,
-                                    @RequestParam("type") String type,
-                                    @RequestParam("className") String className,
-                                    @RequestParam("methodName") String methodName) {
-        return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, className, methodName, testName, TestType.valueOf(type.toUpperCase()));
+    public TestDetail getTestDetail(@RequestBody Test test) {
+        return testCaseService.getTestDetail(projectService.getActiveProject(), test);
     }
 
-    @RequestMapping(value="/source/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/source/{type}", method = { RequestMethod.POST })
     @ResponseBody
-    public String getSourceCode(@PathVariable("package") String testPackage,
-                                @PathVariable("name") String testName,
-                                @RequestParam("type") String type,
-                                @RequestParam("className") String className,
-                                @RequestParam("methodName") String methodName) {
-        return testCaseService.getSourceCode(projectService.getActiveProject(), testPackage, className, methodName, testName, TestType.valueOf(type.toUpperCase()));
+    public String getSourceCode(@RequestBody Test test, @PathVariable("type") String type) {
+        return testCaseService.getSourceCode(projectService.getActiveProject(), new TestDetail(test), TestType.valueOf(type.toUpperCase()));
     }
 
-    @RequestMapping(value="/execute/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/execute", method = { RequestMethod.POST })
     @ResponseBody
-    public TestResult execute(@PathVariable("package") String testPackage, @PathVariable("name") String testName, @RequestParam(value = "method", required = false) String method) {
-        if (StringUtils.hasText(method)) {
-            return testExecutionService.execute(projectService.getActiveProject(), testPackage, testName + "." + method);
-        } else {
-            return testExecutionService.execute(projectService.getActiveProject(), testPackage, testName);
-        }
+    public TestResult execute(@RequestBody Test test) {
+        return testExecutionService.execute(projectService.getActiveProject(), test);
     }
 
     @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })

@@ -26,6 +26,8 @@ public class TestResult {
     private String stackTrace;
     private String failureStack;
 
+    private String processId;
+
     /**
      * @return
      */
@@ -80,5 +82,23 @@ public class TestResult {
      */
     public void setFailureStack(String value) {
         this.failureStack = value;
+    }
+
+    /**
+     * Sets the processId property.
+     *
+     * @param processId
+     */
+    public void setProcessId(String processId) {
+        this.processId = processId;
+    }
+
+    /**
+     * Gets the value of the processId property.
+     *
+     * @return the processId
+     */
+    public String getProcessId() {
+        return processId;
     }
 }

@@ -79,7 +79,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
-        TestDetail testDetail = testCaseService.getTestDetail(project, "com.consol.citrus.foo", "FooTest", "fooTest", "FooTest", TestType.XML);
+        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.foo", "FooTest", "fooTest", "FooTest", TestType.XML));
 
         Assert.assertEquals(testDetail.getName(), "FooTest");
         Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.foo");
