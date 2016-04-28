@@ -45,7 +45,7 @@ ul.properties li {
 
 pre.logger {
     margin-top: 5px;
-    height: 600px;
+    height: 700px;
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 12px;
@@ -380,6 +380,16 @@ pre.logger {
 
 .badge-danger {
     background-color: #d9534f;
+}
+
+/** Progress bar */
+
+.progress {
+    border: 1px solid #dddddd;
+}
+
+.progress-bar {
+    min-width: 2em;
 }
 
 /** Icons **/

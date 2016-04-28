@@ -52,3 +52,13 @@ export class TestAction {
     public type: string;
     public properties: Property[];
 }
+
+export class TestResult {
+
+    public test: Test;
+    public success: boolean;
+    public stackTrace: string;
+    public failureStack: string;
+
+    public processId: string;
+}

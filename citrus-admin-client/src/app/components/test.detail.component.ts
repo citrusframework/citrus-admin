@@ -11,7 +11,7 @@ import {TestExecuteComponent} from "./test.execute.component";
 @Component({
     selector: "test-detail",
     templateUrl: 'app/components/test-detail.html',
-    directives: [NgSwitch, NgFor, Pills, Pill,
+    directives: <any> [NgSwitch, NgFor, Pills, Pill,
         SourceCodeComponent, TestDesignerComponent, TestExecuteComponent]
 })
 export class TestDetailComponent implements OnChanges {

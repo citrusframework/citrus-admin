@@ -1,7 +1,7 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
-import {TestPackage, Test, TestDetail} from '../model/tests';
+import {TestPackage, Test, TestDetail, TestResult} from '../model/tests';
 
 @Injectable()
 export class TestService {
@@ -33,7 +33,7 @@ export class TestService {
 
     execute(test: TestDetail) {
         return this.http.post(this._testExecuteUrl, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
-            .map(res => <string> res.text())
+            .map(res => <TestResult> res.json())
             .catch(this.handleError);
     }
 
