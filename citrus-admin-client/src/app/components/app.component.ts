@@ -3,7 +3,7 @@ import {RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 
 import {HeaderComponent} from './header.component';
 import {DashboardComponent} from './dashboard.component';
-import {ProjectComponent} from './project.component';
+import {ProjectSettingsComponent} from './project.settings.component';
 import {ConfigurationComponent} from './configuration.component';
 import {TestsComponent} from './tests.component';
 import {ComingComponent} from "./coming.component";
@@ -14,12 +14,12 @@ import {ComingComponent} from "./coming.component";
     templateUrl: 'app/components/app.html'
 })
 @RouteConfig([
-    {path:'/', name: 'Home', component: DashboardComponent},
-    {path:'/project', name: 'Project', component: ProjectComponent},
+    {path:'/', name: 'Dashboard', component: DashboardComponent},
+    {path:'/settings', name: 'Settings', component: ProjectSettingsComponent},
     {path:'/config', name: 'Configuration', component: ConfigurationComponent},
     {path:'/tests', name: 'Tests', component: TestsComponent},
     {path:'/stats', name: 'Stats', component: ComingComponent},
-    {path:'/settings', name: 'Settings', component: ComingComponent},
+    {path:'/new', name: 'New', component: ComingComponent},
     {path:'/about', name: 'About', component: ComingComponent}
 ])
 export class AppComponent { }

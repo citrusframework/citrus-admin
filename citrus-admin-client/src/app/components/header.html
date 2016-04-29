@@ -12,12 +12,18 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a [routerLink]="['Home']" class="router-link-active">Home</a></li>
-          <li><a [routerLink]="['Project']">Project</a></li>
+          <li class="dropdown">
+            <a [routerLink]="['Dashboard']">Project <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a [routerLink]="['New']">New</a></li>
+              <li><a href="/setup">Open</a></li>
+              <li><a [routerLink]="['Dashboard']">Dashboard</a></li>
+              <li><a [routerLink]="['Settings']">Settings</a></li>
+            </ul>
+          </li>
           <li><a [routerLink]="['Configuration']">Configuration</a></li>
           <li><a [routerLink]="['Tests']">Tests</a></li>
           <li><a [routerLink]="['Stats']">Statistics</a></li>
-          <li><a [routerLink]="['Settings']">Settings</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a [routerLink]="['About']">About</a></li>

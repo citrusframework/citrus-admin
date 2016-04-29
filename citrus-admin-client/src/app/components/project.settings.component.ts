@@ -7,11 +7,11 @@ import {ReportService} from "../service/report.service";
 import {TestReport} from "../model/test.report";
 
 @Component({
-    templateUrl: 'app/components/project.html',
+    templateUrl: 'app/components/project-settings.html',
     providers: [ProjectService, HTTP_PROVIDERS],
     directives: [NgSwitch, NgFor]
 })
-export class ProjectComponent implements OnInit {
+export class ProjectSettingsComponent implements OnInit {
 
     constructor(private _projectService: ProjectService) {}
 
