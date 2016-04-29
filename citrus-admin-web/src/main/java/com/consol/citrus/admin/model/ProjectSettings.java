@@ -32,6 +32,7 @@ public class ProjectSettings {
     private String basePackage = System.getProperty(Application.BASE_PACKAGE, "com.consol.citrus");
     private String citrusVersion = Citrus.getVersion();
 
+    private String springApplicationContext = System.getProperty(Application.SPRING_APPLICAITON_CONTEXT, "src" + File.separator + "test" + File.separator + "resources" + File.separator + "citrus-context.xml");
     private String javaSrcDirectory = System.getProperty(Application.JAVA_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "java" + File.separator);
     private String xmlSrcDirectory = System.getProperty(Application.XML_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "resources" + File.separator);
     private String javaFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getJavaTestFileNamePattern().toArray());
@@ -159,5 +160,23 @@ public class ProjectSettings {
      */
     public String getCitrusVersion() {
         return citrusVersion;
+    }
+
+    /**
+     * Gets the value of the springApplicationContext property.
+     *
+     * @return the springApplicationContext
+     */
+    public String getSpringApplicationContext() {
+        return springApplicationContext;
+    }
+
+    /**
+     * Sets the springApplicationContext property.
+     *
+     * @param springApplicationContext
+     */
+    public void setSpringApplicationContext(String springApplicationContext) {
+        this.springApplicationContext = springApplicationContext;
     }
 }

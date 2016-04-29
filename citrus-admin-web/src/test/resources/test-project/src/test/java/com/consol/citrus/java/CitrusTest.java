@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl;
+package default;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;

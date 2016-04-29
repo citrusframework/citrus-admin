@@ -47,7 +47,8 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
-    public void save(@RequestBody ProjectSettings settings) {
+    public ResponseEntity save(@RequestBody ProjectSettings settings) {
         projectService.saveSettings(settings);
+        return ResponseEntity.ok("");
     }
 }

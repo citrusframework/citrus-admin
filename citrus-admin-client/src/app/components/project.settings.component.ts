@@ -16,7 +16,7 @@ export class ProjectSettingsComponent implements OnInit {
     constructor(private _projectService: ProjectService) {}
 
     errorMessage: string;
-    project = new Project();
+    project: Project = new Project();
 
     ngOnInit() {
         this.getProject();

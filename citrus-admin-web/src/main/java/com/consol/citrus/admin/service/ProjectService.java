@@ -70,56 +70,69 @@ public class ProjectService {
      * @return
      */
     public void load(String projectHomeDir) {
-        if (!validateProjectHome(projectHomeDir)) {
-            throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
+        if (getProjectSettingsFile(projectHomeDir).exists()) {
+            try {
+                project = Jackson2ObjectMapperBuilder.json().build().reader().readValue(getProjectSettingsFile(projectHomeDir));
+            } catch (IOException e) {
+                log.error("Failed to read project settings file", e);
+            }
+        }
+
+        if (project == null) {
+            project = new Project(projectHomeDir);
+
+            if (!validateProject(project)) {
+                throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
+            }
+
+            if (project.isMavenProject()) {
+                try {
+                    String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+                    SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                    nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
+
+                    Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
+                    project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
+
+                    String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
+                    if (StringUtils.hasText(version)) {
+                        project.setVersion(version);
+                    }
+
+                    project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
+
+                    String citrusVersion = evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext);
+                    if (StringUtils.hasText(citrusVersion)) {
+                        project.getSettings().setCitrusVersion(citrusVersion);
+                    }
+
+                    project.setDescription(evaluate(pomDoc, "/mvn:project/mvn:description", nsContext));
+                } catch (IOException e) {
+                    throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
+                }
+            } else if (project.isAntProject()) {
+                try {
+                    String buildXml = FileUtils.readToString(new FileSystemResource(project.getAntBuildFile()));
+                    SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+
+                    Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
+                    project.setName(evaluate(buildDoc, "/project/@name", nsContext));
+
+                    String citrusVersion = evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext);
+                    if (StringUtils.hasText(citrusVersion)) {
+                        project.getSettings().setCitrusVersion(citrusVersion);
+                    }
+
+                    project.setDescription(evaluate(buildDoc, "/project/@description", nsContext));
+                } catch (IOException e) {
+                    throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
+                }
+            }
+
+            saveProject();
         }
 
         System.setProperty(Application.PROJECT_HOME, projectHomeDir);
-        project = new Project(projectHomeDir);
-
-        if (project.isMavenProject()) {
-            try {
-                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
-                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
-
-                Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
-                project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
-
-                String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
-                if (StringUtils.hasText(version)) {
-                    project.setVersion(version);
-                }
-
-                project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
-
-                String citrusVersion = evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext);
-                if (StringUtils.hasText(citrusVersion)) {
-                    project.getSettings().setCitrusVersion(citrusVersion);
-                }
-
-                project.setDescription(evaluate(pomDoc, "/mvn:project/mvn:description", nsContext));
-            } catch (IOException e) {
-                throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
-            }
-        } else if (project.isAntProject()) {
-            try {
-                String buildXml = FileUtils.readToString(new FileSystemResource(project.getAntBuildFile()));
-                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-
-                Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
-                project.setName(evaluate(buildDoc, "/project/@name", nsContext));
-
-                String citrusVersion = evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext);
-                if (StringUtils.hasText(citrusVersion)) {
-                    project.getSettings().setCitrusVersion(citrusVersion);
-                }
-
-                project.setDescription(evaluate(buildDoc, "/project/@description", nsContext));
-            } catch (IOException e) {
-                throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
-            }
-        }
     }
 
     /**
@@ -142,7 +155,7 @@ public class ProjectService {
      * Save project to file system.
      */
     public void saveProject() {
-        try (FileOutputStream fos = new FileOutputStream(getProjectInfoFile())) {
+        try (FileOutputStream fos = new FileOutputStream(getProjectSettingsFile(project.getProjectHome()))) {
             fos.write(Jackson2ObjectMapperBuilder.json().build().writer().writeValueAsBytes(project));
             fos.flush();
         } catch (IOException e) {
@@ -152,10 +165,11 @@ public class ProjectService {
 
     /**
      * Gets file pointer to project info file in project home directory.
+     * @param projectHome
      * @return
      */
-    public File getProjectInfoFile() {
-        return new File(project.getProjectHome() + System.getProperty("file.separator") + "citrus-project.json");
+    public File getProjectSettingsFile(String projectHome) {
+        return new File(projectHome + System.getProperty("file.separator") + "citrus-project.json");
     }
 
     /**
@@ -187,17 +201,18 @@ public class ProjectService {
     }
 
     /**
-     * Checks if home directory is valid Citrus project home.
+     * Checks if home directory is valid Citrus project.
      *
-     * @param directory
+     * @param project
      */
-    private boolean validateProjectHome(String directory) {
-        File homeDir = new File(directory);
+    private boolean validateProject(Project project) {
+        File homeDir = new File(project.getProjectHome());
 
         try {
             Assert.isTrue(homeDir.exists());
-            Assert.isTrue(new File(homeDir, Citrus.DEFAULT_TEST_SRC_DIRECTORY).exists());
-            Assert.isTrue(new File(homeDir, Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/" + getDefaultConfigurationFile()).exists());
+            Assert.isTrue(new File(homeDir, project.getSettings().getJavaSrcDirectory()).exists());
+            Assert.isTrue(new File(homeDir, project.getSettings().getXmlSrcDirectory()).exists());
+            Assert.isTrue(new File(homeDir, project.getSettings().getSpringApplicationContext()).exists());
         } catch (IllegalArgumentException e) {
             log.warn("Project home validation failed", e);
             return false;

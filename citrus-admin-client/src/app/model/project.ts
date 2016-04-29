@@ -17,7 +17,11 @@ export class ProjectSettings {
 
     constructor() {}
 
-    public srcDirectory: string;
+    public springApplicationContext: string;
+    public javaSrcDirectory: string;
+    public xmlSrcDirectory: string;
+    public javaFilePattern: string;
+    public xmlFilePattern: string;
     public basePackage: string;
     public citrusVersion: string;
     public build: BuildConfiguration = new BuildConfiguration();
@@ -28,5 +32,6 @@ export class BuildConfiguration {
     constructor() {}
 
     public type: string;
+    public profiles: string;
     public properties: {};
 }

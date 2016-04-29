@@ -22,27 +22,30 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application {
 
-	/** System property names */
-	public static final String PROJECT_HOME = "project.home";
-	public static final String ROOT_DIRECTORY = "root.directory";
+    /** System property names */
+    public static final String PROJECT_HOME = "project.home";
+    public static final String ROOT_DIRECTORY = "root.directory";
 
-	/** Base package for test cases to look for */
-	public static final String BASE_PACKAGE = "test.base.package";
+    /** Base package for test cases to look for */
+    public static final String BASE_PACKAGE = "test.base.package";
 
-	/** Source directory */
-	public static final String JAVA_SRC_DIRECTORY = "java.source.directory";
-	public static final String XML_SRC_DIRECTORY = "xml.source.directory";
+    /** Spring application context file */
+    public static final String SPRING_APPLICAITON_CONTEXT = "spring.application.context";
 
-	/**
-	 * Gets the root directory from system property. By default user.home system
-	 * property setting is used as root.
-	 * @return
-	 */
-	public static String getRootDirectory() {
-		return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
-	}
+    /** Source directory */
+    public static final String JAVA_SRC_DIRECTORY = "java.source.directory";
+    public static final String XML_SRC_DIRECTORY = "xml.source.directory";
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    /**
+     * Gets the root directory from system property. By default user.home system
+     * property setting is used as root.
+     * @return
+     */
+    public static String getRootDirectory() {
+        return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }
