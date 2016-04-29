@@ -43,13 +43,15 @@ ul.properties li {
     height: 800px;
 }
 
+pre {
+    background-color: #ffffff;
+}
+
 pre.logger {
-    margin-top: 5px;
     height: 700px;
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 12px;
-    background-color: #ffffff;
 }
 
 /** Space placeholders */
@@ -380,6 +382,18 @@ pre.logger {
 
 .badge-danger {
     background-color: #d9534f;
+}
+
+.badge-outbound {
+    width: 4em;
+    text-align: left;
+    background-color: #3b73af;
+}
+
+.badge-inbound {
+    width: 4em;
+    text-align: left;
+    background-color: #026ebe;
 }
 
 /** Progress bar */

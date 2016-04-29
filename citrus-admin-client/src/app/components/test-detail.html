@@ -46,11 +46,11 @@
   </pill>
   <pill pill-id="test-sources" pill-title="Sources" pill-icon="fa fa-code">
     <div class="space-top-30"></div>
-    <pills *ngIf="detail && detail.type == 'XML'" navigation="true">
+    <pills *ngIf="detail?.type == 'XML'" navigation="true">
       <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail" editor-id="xml-code"></source-code></pill>
       <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail" editor-id="java-code" type="java"></source-code></pill>
     </pills>
-    <pills *ngIf="detail && detail.type == 'JAVA'" navigation="true">
+    <pills *ngIf="detail?.type == 'JAVA'" navigation="true">
       <pill pill-id="java-sources" pill-title="Java" active="true" pill-icon="fa fa-file-o"><source-code [detail]="detail" editor-id="java-code" type="java"></source-code></pill>
     </pills>
   </pill>

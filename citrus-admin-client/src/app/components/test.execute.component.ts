@@ -4,17 +4,32 @@ import {TestDetail, TestResult} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {TestProgressComponent} from "./test.progress.component";
 import {LoggingOutput} from "../model/logging.output";
+import {Message} from "../model/message";
+import {Pills, Pill} from "./util/pills";
+import {NgFor, NgIf} from "angular2/common";
 
 declare var SockJS;
 declare var Stomp;
 declare var jQuery;
+declare var _;
+declare var moment;
 
 @Component({
     selector: "test-execute",
-    template: `<button (click)="execute()" type="button" class="btn btn-success" [disabled]="running"><i class="fa fa-play"></i> Run</button>
-<test-progress [completed]="completed"></test-progress>
-<pre class="logger" [textContent]="processOutput"></pre>`,
-    directives: <any> [ TestProgressComponent ]
+    template: `<button (click)="execute()" type="button" class="btn btn-default" [disabled]="running"><i class="fa fa-play"></i> Run</button>
+<test-progress [completed]="completed" [failed]="failed"></test-progress>
+<pills navigation="true">
+    <pill pill-id="console" pill-title="Console" active="true" pill-icon="fa fa-file-text-o"><pre class="logger" [textContent]="processOutput"></pre></pill>
+    <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
+        <pre *ngIf="!messages || messages?.length == 0">No messages yet!</pre>
+        <div *ngFor="#message of messages">
+            <span *ngIf="message.type == 'OUTBOUND'" class="badge badge-emphasis badge-outbound"><i class="fa fa-sign-out">&nbsp;<b>Out</b></i></span>
+            <span *ngIf="message.type == 'INBOUND'" class="badge badge-emphasis badge-inbound"><i class="fa fa-sign-in">&nbsp;<b>In</b></i></span>
+            <pre [style.color]="message.type == 'OUTBOUND' ? '#000099' : '#026ebe'">{{message.data}}</pre>
+        </div>
+    </pill>
+</pills>`,
+    directives: <any> [ NgIf, NgFor, Pills, Pill, TestProgressComponent ]
 })
 export class TestExecuteComponent {
     @Input() detail: TestDetail;
@@ -31,6 +46,7 @@ export class TestExecuteComponent {
     result: TestResult;
     running = false;
     completed = 0;
+    failed = false;
     errorMessage: string;
     stompClient: any;
 
@@ -38,11 +54,16 @@ export class TestExecuteComponent {
 
     processOutput = "";
 
+    messages: Message[];
+
     execute() {
         this.processOutput = "";
         this.running = true;
+        this.failed = false;
         this.completed = 0;
         this.finishedActions = 0;
+        this.messages = [];
+
         this._testService.execute(this.detail)
             .subscribe(
                 result => {
@@ -83,8 +104,16 @@ export class TestExecuteComponent {
             this.completed = 100;
         } else if ("TEST_FAILED" == output.event) {
             this.running = false;
+            this.failed = true;
             this.completed = 100;
-        } else if ("INBOUND_MESSAGE" == output.event || "OUTBOUND_MESSAGE" == output.event) {
+        } else if ("INBOUND_MESSAGE" == output.event) {
+            this.messages.push(new Message(_.uniqueId(event), 'INBOUND', output.msg, moment()));
+        } else if ("OUTBOUND_MESSAGE" == output.event) {
+            this.messages.push(new Message(_.uniqueId(event), 'OUTBOUND', output.msg, moment()));
+        } else {
+            if (this.completed < 30) {
+                this.completed++;
+            }
         }
     }
 }
