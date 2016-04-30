@@ -72,7 +72,7 @@ public class ProjectService {
     public void load(String projectHomeDir) {
         if (getProjectSettingsFile(projectHomeDir).exists()) {
             try {
-                project = Jackson2ObjectMapperBuilder.json().build().reader().readValue(getProjectSettingsFile(projectHomeDir));
+                project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(getProjectSettingsFile(projectHomeDir));
             } catch (IOException e) {
                 log.error("Failed to read project settings file", e);
             }
@@ -156,7 +156,7 @@ public class ProjectService {
      */
     public void saveProject() {
         try (FileOutputStream fos = new FileOutputStream(getProjectSettingsFile(project.getProjectHome()))) {
-            fos.write(Jackson2ObjectMapperBuilder.json().build().writer().writeValueAsBytes(project));
+            fos.write(Jackson2ObjectMapperBuilder.json().build().writer().withDefaultPrettyPrinter().writeValueAsBytes(project));
             fos.flush();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Unable to open project info file", e);

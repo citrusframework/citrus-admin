@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class Project {
 
-    private final String projectHome;
+    private String projectHome;
     private String name;
     private String description;
     private String version = "1.0.0";
@@ -37,6 +37,13 @@ public class Project {
 
     /** Citrus project information as Json file */
     private static final String PROJECT_INFO_FILENAME = "citrus-project.info";
+
+    /**
+     * Default constructor.
+     */
+    public Project() {
+        super();
+    }
 
     /**
      * Default constructor using project home directory.

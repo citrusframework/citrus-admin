@@ -16,11 +16,14 @@
 
 package com.consol.citrus.admin.model.build;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public interface BuildConfiguration {
 
     /**
