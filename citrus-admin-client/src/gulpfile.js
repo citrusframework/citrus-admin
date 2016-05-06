@@ -62,7 +62,7 @@ gulp.task('sourcecopy', function() {
         .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/jquery-ui/jquery-ui.min.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));
-    gulp.src('./bower_components/underscore/underscore.js')
+    gulp.src('./bower_components/underscore/underscore-min.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/moment/moment.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));

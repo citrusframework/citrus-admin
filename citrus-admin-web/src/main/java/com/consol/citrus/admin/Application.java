@@ -30,7 +30,7 @@ public class Application {
     public static final String BASE_PACKAGE = "test.base.package";
 
     /** Spring application context file */
-    public static final String SPRING_APPLICAITON_CONTEXT = "spring.application.context";
+    public static final String SPRING_APPLICATION_CONTEXT = "spring.application.context";
 
     /** Source directory */
     public static final String JAVA_SRC_DIRECTORY = "java.source.directory";

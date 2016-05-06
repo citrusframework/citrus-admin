@@ -245,6 +245,10 @@ pre.logger {
     padding-bottom: 15px;
 }
 
+.content-header form {
+    margin-top: 25px;
+}
+
 .content-nav {
     background-color: #eff6fb;
     padding-top: 10px;

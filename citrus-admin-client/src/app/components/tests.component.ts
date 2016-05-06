@@ -5,16 +5,22 @@ import {Tabs, Tab} from "./util/tabs";
 import {TestPackage, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {TestDetailComponent} from "./test.detail.component";
+import {AutoComplete} from "./util/autocomplete";
+
+declare var _;
 
 @Component({
     templateUrl: 'app/components/tests.html',
     providers: [TestService, HTTP_PROVIDERS],
-    directives: [NgSwitch, NgFor, Tabs, Tab, TestDetailComponent]
+    directives: [NgSwitch, NgFor, Tabs, Tab,
+        TestDetailComponent, AutoComplete]
 })
 export class TestsComponent implements OnInit {
 
     constructor(private _testService: TestService) {
         this.packages = [];
+        this.tests = [];
+        this.testNames = [];
         this.openTests = [];
     }
 
@@ -23,6 +29,8 @@ export class TestsComponent implements OnInit {
     activeTest: Test;
     openTests: Test[];
     packages: TestPackage[];
+    testNames: string[];
+    tests: string[];
 
     ngOnInit() {
         this.getTestPackages();
@@ -31,7 +39,11 @@ export class TestsComponent implements OnInit {
     getTestPackages() {
         this._testService.getTestPackages()
             .subscribe(
-                packages => this.packages = packages,
+                packages => {
+                    this.packages = packages;
+                    this.tests = _.reduce(packages, function(collected, testPackage) { return collected.concat(testPackage.tests); }, []);
+                    this.testNames = _.map(this.tests, function(test) { return test.name; });
+                },
                 error => this.errorMessage = <any>error);
     }
 
@@ -51,6 +63,10 @@ export class TestsComponent implements OnInit {
         if (test) {
             this.activeTest = test;
         }
+    }
+
+    onTestSelected(name: string) {
+        this.open(_.find(this.tests, function(test){ return test.name === name }));
     }
 
     open(test: Test) {
