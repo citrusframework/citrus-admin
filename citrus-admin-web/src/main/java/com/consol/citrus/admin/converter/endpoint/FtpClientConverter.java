@@ -16,38 +16,38 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.model.config.ftp.FtpClientDefinition;
+import com.consol.citrus.model.config.ftp.FtpClientModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class FtpClientConverter extends AbstractEndpointConverter<FtpClientDefinition> {
+public class FtpClientConverter extends AbstractEndpointConverter<FtpClientModel> {
 
     @Override
-    public EndpointDefinition convert(FtpClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(FtpClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("host", client));
-        endpointData.add(property("port", client));
-        endpointData.add(property("username", client));
-        endpointData.add(property("password", client));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("username", model));
+        endpointModel.add(property("password", model));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
 
-        endpointData.add(property("pollingInterval", client));
+        endpointModel.add(property("pollingInterval", model));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<FtpClientDefinition> getModelClass() {
-        return FtpClientDefinition.class;
+    public Class<FtpClientModel> getSourceModelClass() {
+        return FtpClientModel.class;
     }
 
     @Override

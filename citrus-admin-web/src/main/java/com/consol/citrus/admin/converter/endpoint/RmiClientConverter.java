@@ -16,41 +16,41 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.model.config.rmi.RmiClientDefinition;
+import com.consol.citrus.model.config.rmi.RmiClientModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class RmiClientConverter extends AbstractEndpointConverter<RmiClientDefinition> {
+public class RmiClientConverter extends AbstractEndpointConverter<RmiClientModel> {
 
     @Override
-    public EndpointDefinition convert(RmiClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(RmiClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("serverUrl", client));
-        endpointData.add(property("host", client));
-        endpointData.add(property("port", client));
-        endpointData.add(property("binding", client));
-        endpointData.add(property("method", client));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("serverUrl", model));
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("binding", model));
+        endpointModel.add(property("method", model));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("pollingInterval", client, "500"));
+        endpointModel.add(property("pollingInterval", model, "500"));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<RmiClientDefinition> getModelClass() {
-        return RmiClientDefinition.class;
+    public Class<RmiClientModel> getSourceModelClass() {
+        return RmiClientModel.class;
     }
 
     @Override

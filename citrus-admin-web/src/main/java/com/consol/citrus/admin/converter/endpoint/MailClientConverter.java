@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.mail.MailClientDefinition;
+import com.consol.citrus.model.config.mail.MailClientModel;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
@@ -26,29 +26,29 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class MailClientConverter extends AbstractEndpointConverter<MailClientDefinition> {
+public class MailClientConverter extends AbstractEndpointConverter<MailClientModel> {
 
     @Override
-    public EndpointDefinition convert(MailClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(MailClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("host", client));
-        endpointData.add(property("port", client, "25"));
-        endpointData.add(property("protocol", client, JavaMailSenderImpl.DEFAULT_PROTOCOL));
-        endpointData.add(property("username", client));
-        endpointData.add(property("password", client));
-        endpointData.add(property("properties", client));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model, "25"));
+        endpointModel.add(property("protocol", model, JavaMailSenderImpl.DEFAULT_PROTOCOL));
+        endpointModel.add(property("username", model));
+        endpointModel.add(property("password", model));
+        endpointModel.add(property("properties", model));
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
 
-        endpointData.add(property("actor", "TestActor", client));
+        endpointModel.add(property("actor", "TestActor", model));
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<MailClientDefinition> getModelClass() {
-        return MailClientDefinition.class;
+    public Class<MailClientModel> getSourceModelClass() {
+        return MailClientModel.class;
     }
 
     @Override

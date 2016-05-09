@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.*;
 import com.consol.citrus.admin.converter.action.ActionConverter;
 import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
@@ -143,8 +142,12 @@ public class TestCaseService {
                 methodName = methodName.substring(0, methodName.indexOf("("));
                 test.setMethodName(methodName);
 
-                if (snippet.contains("@CitrusXmlTest(name=")) {
+                if (snippet.contains("@CitrusXmlTest(name=\"")) {
                     String explicitName = snippet.substring(snippet.indexOf("name=\"") + 6);
+                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
+                    test.setName(explicitName);
+                } else if (snippet.contains("@CitrusXmlTest(name={\"")) {
+                    String explicitName = snippet.substring(snippet.indexOf("name={\"") + 7);
                     explicitName = explicitName.substring(0, explicitName.indexOf("\""));
                     test.setName(explicitName);
                 } else {
@@ -168,10 +171,10 @@ public class TestCaseService {
      */
     public TestDetail getTestDetail(Project project, Test test) {
         TestDetail testDetail = new TestDetail(test);
-        TestcaseDefinition testModel = getTestModel(project, testDetail);
+        TestcaseModel testModel = getTestModel(project, testDetail);
 
         if (testModel.getVariables() != null) {
-            for (VariablesDefinition.Variable variable : testModel.getVariables().getVariables()) {
+            for (VariablesModel.Variable variable : testModel.getVariables().getVariables()) {
                 testDetail.getVariables().put(variable.getName(), variable.getValue());
             }
         }
@@ -195,7 +198,7 @@ public class TestCaseService {
             for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
                 TestAction model = null;
                 for (TestActionConverter converter : actionConverter) {
-                    if (converter.getModelClass().isInstance(actionType)) {
+                    if (converter.getSourceModelClass().isInstance(actionType)) {
                         model = converter.convert(actionType);
                         break;
                     }
@@ -244,7 +247,7 @@ public class TestCaseService {
      * @param project
      * @return
      */
-    private TestcaseDefinition getTestModel(Project project, TestDetail detail) {
+    private TestcaseModel getTestModel(Project project, TestDetail detail) {
         if (detail.getType().equals(TestType.XML)) {
             return getXmlTestModel(project, detail);
         } else if (detail.getType().equals(TestType.JAVA)) {
@@ -260,7 +263,7 @@ public class TestCaseService {
      * @param detail
      * @return
      */
-    private TestcaseDefinition getXmlTestModel(Project project, TestDetail detail) {
+    private TestcaseModel getXmlTestModel(Project project, TestDetail detail) {
         String xmlSource = getSourceCode(project, detail, TestType.XML);
 
         if (!StringUtils.hasText(xmlSource)) {
@@ -276,7 +279,7 @@ public class TestCaseService {
      * @param detail
      * @return
      */
-    private TestcaseDefinition getJavaTestModel(Project project, TestDetail detail) {
+    private TestcaseModel getJavaTestModel(Project project, TestDetail detail) {
         if (project.isMavenProject()) {
             try {
                 ClassLoader classLoader = URLClassLoader.newInstance(new URL[]{
@@ -292,14 +295,14 @@ public class TestCaseService {
                     testInstance.simulate(testMethod, new TestContext());
                     testMethod.invoke(testInstance);
 
-                    return getTestcaseDefinition(testInstance.getTestCase());
+                    return getTestcaseModel(testInstance.getTestCase());
                 } else if (TestNGCitrusTestRunner.class.isAssignableFrom(testClass)) {
                     TestNGCitrusTestRunner testInstance = (TestNGCitrusTestRunner) testClass.newInstance();
                     Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
                     testInstance.simulate(testMethod, new TestContext());
                     testMethod.invoke(testInstance);
 
-                    return getTestcaseDefinition(testInstance.getTestCase());
+                    return getTestcaseModel(testInstance.getTestCase());
                 } else {
                     throw new ApplicationRuntimeException("Unsupported test case type: " + testClass);
                 }
@@ -316,46 +319,41 @@ public class TestCaseService {
             }
         }
 
-        TestcaseDefinition testcaseDefinition = new TestcaseDefinition();
-        testcaseDefinition.setName(detail.getClassName() + "." + detail.getMethodName());
-        return testcaseDefinition;
+        TestcaseModel testModel = new TestcaseModel();
+        testModel.setName(detail.getClassName() + "." + detail.getMethodName());
+        return testModel;
     }
 
-    private TestcaseDefinition getTestcaseDefinition(TestCase testCase) {
-        TestcaseDefinition definition = new TestcaseDefinition();
-        definition.setName(testCase.getName());
+    private TestcaseModel getTestcaseModel(TestCase testCase) {
+        TestcaseModel testModel = new TestcaseModel();
+        testModel.setName(testCase.getName());
 
-        VariablesDefinition variablesDefinition = new VariablesDefinition();
+        VariablesModel variablesModel = new VariablesModel();
         for (Map.Entry<String, Object> entry : testCase.getVariableDefinitions().entrySet()) {
-            VariablesDefinition.Variable variable = new VariablesDefinition.Variable();
+            VariablesModel.Variable variable = new VariablesModel.Variable();
             variable.setName(entry.getKey());
             variable.setValue(entry.getValue().toString());
-            variablesDefinition.getVariables().add(variable);
+            variablesModel.getVariables().add(variable);
         }
-        definition.setVariables(variablesDefinition);
+        testModel.setVariables(variablesModel);
 
         TestActionsType actions = new TestActionsType();
         for (com.consol.citrus.TestAction action : testCase.getActions()) {
-            if (action instanceof EchoAction) {
-                EchoDefinition echo = new EchoDefinition();
-                echo.setMessage(((EchoAction) action).getMessage());
-                actions.getActionsAndSendsAndReceives().add(echo);
-            }
+            actions.getActionsAndSendsAndReceives().add(getActionModel(action));
+        }
 
-            if (action instanceof SendMessageAction) {
-                SendDefinition send = new SendDefinition();
-                send.setEndpoint(((SendMessageAction) action).getEndpoint().getName());
-                actions.getActionsAndSendsAndReceives().add(send);
-            }
+        testModel.setActions(actions);
+        return testModel;
+    }
 
-            if (action instanceof ReceiveMessageAction) {
-                ReceiveDefinition receive = new ReceiveDefinition();
-                receive.setEndpoint(((ReceiveMessageAction) action).getEndpoint().getName());
-                actions.getActionsAndSendsAndReceives().add(receive);
+    private Object getActionModel(com.consol.citrus.TestAction action) {
+        for (TestActionConverter converter : actionConverter) {
+            if (converter.getActionModelClass().isInstance(action)) {
+                return converter.convertModel(action);
             }
         }
-        definition.setActions(actions);
-        return definition;
+
+        return new ActionConverter(action.getName()).convertModel(action);
     }
 
     /**

@@ -21,7 +21,7 @@ import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.config.xml.PayloadElementParser;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.SendDefinition;
+import com.consol.citrus.model.testcase.core.SendModel;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 @Component
-public class SendMessageActionConverter extends AbstractTestActionConverter<SendDefinition, SendMessageAction> {
+public class SendMessageActionConverter extends AbstractTestActionConverter<SendModel, SendMessageAction> {
 
     /**
      * Default constructor using action type reference.
@@ -39,36 +39,36 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public TestAction convert(SendDefinition definition) {
-        TestAction action = new TestAction(getActionType(), getModelClass());
+    public TestAction convert(SendModel model) {
+        TestAction action = new TestAction(getActionType(), getSourceModelClass());
 
-        action.add(property("endpoint", definition));
+        action.add(property("endpoint", model));
 
-        if (definition.getMessage() != null) {
-            if (StringUtils.hasText(definition.getMessage().getData())) {
-                action.add(new Property("message.data", "message.data", "Message Data", definition.getMessage().getData()));
+        if (model.getMessage() != null) {
+            if (StringUtils.hasText(model.getMessage().getData())) {
+                action.add(new Property("message.data", "message.data", "Message Data", model.getMessage().getData()));
             }
 
-            if (definition.getMessage().getPayload()!= null) {
-                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(definition.getMessage().getPayload().getAnies().get(0))));
+            if (model.getMessage().getPayload()!= null) {
+                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(model.getMessage().getPayload().getAnies().get(0))));
             }
 
-            if (definition.getMessage().getResource() != null &&
-                    StringUtils.hasText(definition.getMessage().getResource().getFile())) {
-                action.add(new Property("message.resource", "message.resource", "Message Resource", definition.getMessage().getResource().getFile()));
+            if (model.getMessage().getResource() != null &&
+                    StringUtils.hasText(model.getMessage().getResource().getFile())) {
+                action.add(new Property("message.resource", "message.resource", "Message Resource", model.getMessage().getResource().getFile()));
             }
         }
 
-        action.add(property("fork", definition, "false")
+        action.add(property("fork", model, "false")
                 .options("true", "false"));
-        action.add(property("actor", "TestActor", definition));
+        action.add(property("actor", "TestActor", model));
 
         return action;
     }
 
     @Override
-    public SendDefinition convertModel(SendMessageAction model) {
-        SendDefinition action = new ObjectFactory().createSendDefinition();
+    public SendModel convertModel(SendMessageAction model) {
+        SendModel action = new ObjectFactory().createSendModel();
 
         if (model.getActor() != null) {
             action.setActor(model.getActor().getName());
@@ -83,7 +83,12 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public Class<SendDefinition> getModelClass() {
-        return SendDefinition.class;
+    public Class<SendModel> getSourceModelClass() {
+        return SendModel.class;
+    }
+
+    @Override
+    public Class<SendMessageAction> getActionModelClass() {
+        return SendMessageAction.class;
     }
 }

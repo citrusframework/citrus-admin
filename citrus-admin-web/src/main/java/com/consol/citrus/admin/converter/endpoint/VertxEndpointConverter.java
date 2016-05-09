@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.vertx.VertxEndpointDefinition;
+import com.consol.citrus.model.config.vertx.VertxEndpointModel;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 import org.springframework.stereotype.Component;
 
@@ -26,34 +26,34 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpointDefinition> {
+public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpointModel> {
 
     @Override
-    public EndpointDefinition convert(VertxEndpointDefinition definition) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass().getName());
+    public EndpointModel convert(VertxEndpointModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("host", definition));
-        endpointData.add(property("port", definition));
-        endpointData.add(property("address", definition));
-        endpointData.add(property("pollingInterval", definition, "500"));
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("address", model));
+        endpointModel.add(property("pollingInterval", model, "500"));
 
-        endpointData.add(property("messageConverter", definition)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
 
-        endpointData.add(property("vertxFactory", definition)
+        endpointModel.add(property("vertxFactory", model)
                 .optionKey(VertxInstanceFactory.class.getName()));
 
-        endpointData.add(property("pubSubDomain", definition, "false")
+        endpointModel.add(property("pubSubDomain", model, "false")
                 .options("true", "false"));
 
-        addEndpointProperties(endpointData, definition);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<VertxEndpointDefinition> getModelClass() {
-        return VertxEndpointDefinition.class;
+    public Class<VertxEndpointModel> getSourceModelClass() {
+        return VertxEndpointModel.class;
     }
 
     @Override

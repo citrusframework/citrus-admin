@@ -59,15 +59,15 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         Assert.assertNotNull(controller.getGlobalVariables());
         Assert.assertEquals(controller.getGlobalVariables().getVariables().size(), 0L);
 
-        GlobalVariablesDefinition variables = new GlobalVariablesDefinition();
-        GlobalVariablesDefinition.Variable variable = new GlobalVariablesDefinition.Variable();
+        GlobalVariablesModel variables = new GlobalVariablesModel();
+        GlobalVariablesModel.Variable variable = new GlobalVariablesModel.Variable();
         variable.setName("foo");
         variable.setValue("bar");
         variables.getVariables().add(variable);
 
         controller.createGlobalVariables(variables);
 
-        GlobalVariablesDefinition newGlobalVariables = controller.getGlobalVariables();
+        GlobalVariablesModel newGlobalVariables = controller.getGlobalVariables();
         Assert.assertNotNull(newGlobalVariables);
         Assert.assertEquals(newGlobalVariables.getVariables().size(), 1L);
         Assert.assertEquals(newGlobalVariables.getVariables().get(0).getName(), "foo");
@@ -94,15 +94,15 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         Assert.assertNotNull(controller.getNamespaceContext());
         Assert.assertEquals(controller.getNamespaceContext().getNamespaces().size(), 0L);
 
-        NamespaceContextDefinition namespaceContext = new NamespaceContextDefinition();
-        NamespaceContextDefinition.Namespace namespace = new NamespaceContextDefinition.Namespace();
+        NamespaceContextModel namespaceContext = new NamespaceContextModel();
+        NamespaceContextModel.Namespace namespace = new NamespaceContextModel.Namespace();
         namespace.setPrefix("foo");
         namespace.setUri("http://citrusframework/sample");
         namespaceContext.getNamespaces().add(namespace);
 
         controller.createNamespaceContext(namespaceContext);
 
-        NamespaceContextDefinition newNamespaceContext = controller.getNamespaceContext();
+        NamespaceContextModel newNamespaceContext = controller.getNamespaceContext();
         Assert.assertNotNull(newNamespaceContext);
         Assert.assertEquals(newNamespaceContext.getNamespaces().size(), 1L);
         Assert.assertEquals(newNamespaceContext.getNamespaces().get(0).getPrefix(), "foo");
@@ -264,11 +264,11 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @Test
     public void testValidationMatcherLibrary() throws Exception {
-        List<ValidationMatcherLibraryDefinition> libraries = controller.listValidationMatcherLibraries();
+        List<ValidationMatcherLibraryModel> libraries = controller.listValidationMatcherLibraries();
         Assert.assertEquals(libraries.size(), 0L);
 
-        ValidationMatcherLibraryDefinition library = new ValidationMatcherLibraryDefinition();
-        ValidationMatcherLibraryDefinition.Matcher matcher = new ValidationMatcherLibraryDefinition.Matcher();
+        ValidationMatcherLibraryModel library = new ValidationMatcherLibraryModel();
+        ValidationMatcherLibraryModel.Matcher matcher = new ValidationMatcherLibraryModel.Matcher();
         matcher.setName("fooValidationMatcher");
         matcher.setClazz("com.citrus.foo.FooValidationMatcher");
         library.getMatchers().add(matcher);
@@ -281,7 +281,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         libraries = controller.listValidationMatcherLibraries();
         Assert.assertEquals(libraries.size(), 1L);
 
-        ValidationMatcherLibraryDefinition newValidationMatcherLibrary = controller.getValidationMatcherLibrary("newValidationMatcherLibrary");
+        ValidationMatcherLibraryModel newValidationMatcherLibrary = controller.getValidationMatcherLibrary("newValidationMatcherLibrary");
         Assert.assertNotNull(newValidationMatcherLibrary);
         Assert.assertEquals(newValidationMatcherLibrary.getPrefix(), "foo");
 
@@ -302,11 +302,11 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @Test
     public void testFunctionLibrary() throws Exception {
-        List<FunctionLibraryDefinition> libraries = controller.listFunctionLibraries();
+        List<FunctionLibraryModel> libraries = controller.listFunctionLibraries();
         Assert.assertEquals(libraries.size(), 0L);
 
-        FunctionLibraryDefinition library = new FunctionLibraryDefinition();
-        FunctionLibraryDefinition.Function function = new FunctionLibraryDefinition.Function();
+        FunctionLibraryModel library = new FunctionLibraryModel();
+        FunctionLibraryModel.Function function = new FunctionLibraryModel.Function();
         function.setName("fooFunction");
         function.setClazz("com.citrus.foo.FooFunction");
         library.getFunctions().add(function);
@@ -319,7 +319,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         libraries = controller.listFunctionLibraries();
         Assert.assertEquals(libraries.size(), 1L);
 
-        FunctionLibraryDefinition newFunctionLibrary = controller.getFunctionLibrary("newFunctionLibrary");
+        FunctionLibraryModel newFunctionLibrary = controller.getFunctionLibrary("newFunctionLibrary");
         Assert.assertNotNull(newFunctionLibrary);
         Assert.assertEquals(newFunctionLibrary.getPrefix(), "foo");
 
@@ -340,15 +340,15 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @Test
     public void testSchemaRepository() throws Exception {
-        List<SchemaRepositoryDefinition> schemaRepositories = controller.listSchemaRepositories();
+        List<SchemaRepositoryModel> schemaRepositories = controller.listSchemaRepositories();
         Assert.assertEquals(schemaRepositories.size(), 0L);
 
-        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinition();
+        SchemaRepositoryModel schemaRepository = new SchemaRepositoryModel();
         schemaRepository.setId("newSchemaRepository");
         schemaRepository.setSchemaMappingStrategy("simpleMappingStrategy");
-        SchemaRepositoryDefinition.Schemas schemas = new SchemaRepositoryDefinition.Schemas();
+        SchemaRepositoryModel.Schemas schemas = new SchemaRepositoryModel.Schemas();
 
-        SchemaDefinition schema = new SchemaDefinition();
+        SchemaModel schema = new SchemaModel();
         schema.setId("newSchema");
         schema.setLocation("sample/location.xsd");
         schemas.getSchemas().add(schema);
@@ -359,7 +359,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         schemaRepositories = controller.listSchemaRepositories();
         Assert.assertEquals(schemaRepositories.size(), 1L);
 
-        SchemaRepositoryDefinition newSchemaRepository = controller.getSchemaRepository("newSchemaRepository");
+        SchemaRepositoryModel newSchemaRepository = controller.getSchemaRepository("newSchemaRepository");
         Assert.assertNotNull(newSchemaRepository);
         Assert.assertEquals(newSchemaRepository.getSchemaMappingStrategy(), "simpleMappingStrategy");
 
@@ -380,10 +380,10 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @Test
     public void testSchema() throws Exception {
-        List<SchemaDefinition> schemas = controller.listSchemas();
+        List<SchemaModel> schemas = controller.listSchemas();
         Assert.assertEquals(schemas.size(), 0L);
 
-        SchemaDefinition schema = new SchemaDefinition();
+        SchemaModel schema = new SchemaModel();
         schema.setId("newSchema");
         schema.setLocation("sample/location.xsd");
 
@@ -392,7 +392,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         schemas = controller.listSchemas();
         Assert.assertEquals(schemas.size(), 1L);
 
-        SchemaDefinition newSchema = controller.getSchema("newSchema");
+        SchemaModel newSchema = controller.getSchema("newSchema");
         Assert.assertNotNull(newSchema);
         Assert.assertEquals(newSchema.getLocation(), "sample/location.xsd");
 

@@ -26,7 +26,7 @@ public interface TestActionConverter<S, T extends com.consol.citrus.TestAction> 
 
 
     @Override
-    TestAction convert(S definition);
+    TestAction convert(S model);
 
     /**
      * Gets the action type name.
@@ -40,4 +40,10 @@ public interface TestActionConverter<S, T extends com.consol.citrus.TestAction> 
      * @return
      */
     S convertModel(T model);
+
+    /**
+     * Gets the test action model class.
+     * @return
+     */
+    Class<T> getActionModelClass();
 }

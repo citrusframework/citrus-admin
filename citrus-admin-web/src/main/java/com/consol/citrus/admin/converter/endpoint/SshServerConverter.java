@@ -16,44 +16,44 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.ssh.SshServerDefinition;
+import com.consol.citrus.model.config.ssh.SshServerModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class SshServerConverter extends AbstractEndpointConverter<SshServerDefinition> {
+public class SshServerConverter extends AbstractEndpointConverter<SshServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(SshServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(SshServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("port", server));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("hostKeyPath", server));
-        endpointData.add(property("allowedKeyPath", server));
-        endpointData.add(property("messageConverter", server)
+        endpointModel.add(property("hostKeyPath", model));
+        endpointModel.add(property("allowedKeyPath", model));
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("endpointAdapter", server)
+        endpointModel.add(property("endpointAdapter", model)
                 .optionKey(EndpointAdapter.class.getName()));
-        endpointData.add(property("interceptors", server));
-        endpointData.add(property("user", server));
-        endpointData.add(property("password", server));
+        endpointModel.add(property("interceptors", model));
+        endpointModel.add(property("user", model));
+        endpointModel.add(property("password", model));
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<SshServerDefinition> getModelClass() {
-        return SshServerDefinition.class;
+    public Class<SshServerModel> getSourceModelClass() {
+        return SshServerModel.class;
     }
 
     @Override

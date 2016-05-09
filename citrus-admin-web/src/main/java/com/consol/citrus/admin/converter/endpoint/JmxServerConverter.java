@@ -16,45 +16,45 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.jmx.JmxServerDefinition;
+import com.consol.citrus.model.config.jmx.JmxServerModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class JmxServerConverter extends AbstractEndpointConverter<JmxServerDefinition> {
+public class JmxServerConverter extends AbstractEndpointConverter<JmxServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(JmxServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(JmxServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("serverUrl", server));
-        endpointData.add(property("host", server));
-        endpointData.add(property("port", server));
-        endpointData.add(property("protocol", server));
-        endpointData.add(property("binding", server));
-        endpointData.add(property("environmentProperties", server));
-        endpointData.add(property("createRegistry", server, TRUE)
+        endpointModel.add(property("serverUrl", model));
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("protocol", model));
+        endpointModel.add(property("binding", model));
+        endpointModel.add(property("environmentProperties", model));
+        endpointModel.add(property("createRegistry", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("messageConverter", server)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
 
-        addEndpointProperties(endpointData, server);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<JmxServerDefinition> getModelClass() {
-        return JmxServerDefinition.class;
+    public Class<JmxServerModel> getSourceModelClass() {
+        return JmxServerModel.class;
     }
 
     @Override

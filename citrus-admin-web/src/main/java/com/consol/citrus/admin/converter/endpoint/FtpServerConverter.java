@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.model.config.ftp.FtpServerDefinition;
+import com.consol.citrus.model.config.ftp.FtpServerModel;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.springframework.stereotype.Component;
 
@@ -26,33 +26,33 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class FtpServerConverter extends AbstractEndpointConverter<FtpServerDefinition> {
+public class FtpServerConverter extends AbstractEndpointConverter<FtpServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(FtpServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(FtpServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("server", server));
-        endpointData.add(property("port", server));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("server", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("endpointAdapter", server)
+        endpointModel.add(property("endpointAdapter", model)
                 .optionKey(EndpointAdapter.class.getName()));
-        endpointData.add(property("userManager", server)
+        endpointModel.add(property("userManager", model)
                 .optionKey(UserManager.class.getName()));
-        endpointData.add(property("userManagerProperties", server));
+        endpointModel.add(property("userManagerProperties", model));
 
-        endpointData.add(property("timeout", server, "5000"));
+        endpointModel.add(property("timeout", model, "5000"));
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<FtpServerDefinition> getModelClass() {
-        return FtpServerDefinition.class;
+    public Class<FtpServerModel> getSourceModelClass() {
+        return FtpServerModel.class;
     }
 
     @Override

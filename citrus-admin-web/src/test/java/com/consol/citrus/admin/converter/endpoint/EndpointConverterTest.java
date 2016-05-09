@@ -16,27 +16,27 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
-import com.consol.citrus.model.config.camel.CamelEndpointDefinition;
-import com.consol.citrus.model.config.core.ChannelEndpointDefinition;
-import com.consol.citrus.model.config.ftp.FtpClientDefinition;
-import com.consol.citrus.model.config.ftp.FtpServerDefinition;
-import com.consol.citrus.model.config.http.HttpClientDefinition;
-import com.consol.citrus.model.config.http.HttpServerDefinition;
-import com.consol.citrus.model.config.jms.JmsEndpointDefinition;
-import com.consol.citrus.model.config.jmx.JmxClientDefinition;
-import com.consol.citrus.model.config.jmx.JmxServerDefinition;
-import com.consol.citrus.model.config.mail.MailClientDefinition;
-import com.consol.citrus.model.config.mail.MailServerDefinition;
-import com.consol.citrus.model.config.rmi.RmiClientDefinition;
-import com.consol.citrus.model.config.rmi.RmiServerDefinition;
-import com.consol.citrus.model.config.ssh.SshClientDefinition;
-import com.consol.citrus.model.config.ssh.SshServerDefinition;
-import com.consol.citrus.model.config.vertx.VertxEndpointDefinition;
-import com.consol.citrus.model.config.websocket.WebSocketClientDefinition;
-import com.consol.citrus.model.config.websocket.WebSocketServerDefinition;
-import com.consol.citrus.model.config.ws.WebServiceClientDefinition;
-import com.consol.citrus.model.config.ws.WebServiceServerDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
+import com.consol.citrus.model.config.camel.CamelEndpointModel;
+import com.consol.citrus.model.config.core.ChannelEndpointModel;
+import com.consol.citrus.model.config.ftp.FtpClientModel;
+import com.consol.citrus.model.config.ftp.FtpServerModel;
+import com.consol.citrus.model.config.http.HttpClientModel;
+import com.consol.citrus.model.config.http.HttpServerModel;
+import com.consol.citrus.model.config.jms.JmsEndpointModel;
+import com.consol.citrus.model.config.jmx.JmxClientModel;
+import com.consol.citrus.model.config.jmx.JmxServerModel;
+import com.consol.citrus.model.config.mail.MailClientModel;
+import com.consol.citrus.model.config.mail.MailServerModel;
+import com.consol.citrus.model.config.rmi.RmiClientModel;
+import com.consol.citrus.model.config.rmi.RmiServerModel;
+import com.consol.citrus.model.config.ssh.SshClientModel;
+import com.consol.citrus.model.config.ssh.SshServerModel;
+import com.consol.citrus.model.config.vertx.VertxEndpointModel;
+import com.consol.citrus.model.config.websocket.WebSocketClientModel;
+import com.consol.citrus.model.config.websocket.WebSocketServerModel;
+import com.consol.citrus.model.config.ws.WebServiceClientModel;
+import com.consol.citrus.model.config.ws.WebServiceServerModel;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -48,7 +48,7 @@ public class EndpointConverterTest {
 
     @Test(dataProvider = "converterData")
     public void testConvert(EndpointConverter endpointConverter, Object definition, String endpointType) throws Exception {
-        EndpointDefinition result = endpointConverter.convert(definition);
+        EndpointModel result = endpointConverter.convert(definition);
         Assert.assertEquals(result.getType(), endpointType);
 
         Object roundTrip = endpointConverter.convertBack(result);
@@ -58,26 +58,26 @@ public class EndpointConverterTest {
     @DataProvider
     public Object[][] converterData() {
         return new Object[][] {
-            new Object[] {new JmsEndpointConverter(), new JmsEndpointDefinition(), "jms"},
-            new Object[] {new ChannelEndpointConverter(), new ChannelEndpointDefinition(), "channel"},
-            new Object[] {new CamelEndpointConverter(), new CamelEndpointDefinition(), "camel"},
-            new Object[] {new VertxEndpointConverter(), new VertxEndpointDefinition(), "vertx"},
-            new Object[] {new HttpClientConverter(), new HttpClientDefinition(), "http-client"},
-            new Object[] {new HttpServerConverter(), new HttpServerDefinition(), "http-server"},
-            new Object[] {new WebServiceClientConverter(), new WebServiceClientDefinition(), "ws-client"},
-            new Object[] {new WebServiceServerConverter(), new WebServiceServerDefinition(), "ws-server"},
-            new Object[] {new WebSocketClientConverter(), new WebSocketClientDefinition(), "websocket-client"},
-            new Object[] {new WebSocketServerConverter(), new WebSocketServerDefinition(), "websocket-server"},
-            new Object[] {new FtpClientConverter(), new FtpClientDefinition(), "ftp-client"},
-            new Object[] {new FtpServerConverter(), new FtpServerDefinition(), "ftp-server"},
-            new Object[] {new SshClientConverter(), new SshClientDefinition(), "ssh-client"},
-            new Object[] {new SshServerConverter(), new SshServerDefinition(), "ssh-server"},
-            new Object[] {new RmiClientConverter(), new RmiClientDefinition(), "rmi-client"},
-            new Object[] {new RmiServerConverter(), new RmiServerDefinition(), "rmi-server"},
-            new Object[] {new JmxClientConverter(), new JmxClientDefinition(), "jmx-client"},
-            new Object[] {new JmxServerConverter(), new JmxServerDefinition(), "jmx-server"},
-            new Object[] {new MailClientConverter(), new MailClientDefinition(), "mail-client"},
-            new Object[] {new MailServerConverter(), new MailServerDefinition(), "mail-server"}
+            new Object[] {new JmsEndpointConverter(), new JmsEndpointModel(), "jms"},
+            new Object[] {new ChannelEndpointConverter(), new ChannelEndpointModel(), "channel"},
+            new Object[] {new CamelEndpointConverter(), new CamelEndpointModel(), "camel"},
+            new Object[] {new VertxEndpointConverter(), new VertxEndpointModel(), "vertx"},
+            new Object[] {new HttpClientConverter(), new HttpClientModel(), "http-client"},
+            new Object[] {new HttpServerConverter(), new HttpServerModel(), "http-server"},
+            new Object[] {new WebServiceClientConverter(), new WebServiceClientModel(), "ws-client"},
+            new Object[] {new WebServiceServerConverter(), new WebServiceServerModel(), "ws-server"},
+            new Object[] {new WebSocketClientConverter(), new WebSocketClientModel(), "websocket-client"},
+            new Object[] {new WebSocketServerConverter(), new WebSocketServerModel(), "websocket-server"},
+            new Object[] {new FtpClientConverter(), new FtpClientModel(), "ftp-client"},
+            new Object[] {new FtpServerConverter(), new FtpServerModel(), "ftp-server"},
+            new Object[] {new SshClientConverter(), new SshClientModel(), "ssh-client"},
+            new Object[] {new SshServerConverter(), new SshServerModel(), "ssh-server"},
+            new Object[] {new RmiClientConverter(), new RmiClientModel(), "rmi-client"},
+            new Object[] {new RmiServerConverter(), new RmiServerModel(), "rmi-server"},
+            new Object[] {new JmxClientConverter(), new JmxClientModel(), "jmx-client"},
+            new Object[] {new JmxServerConverter(), new JmxServerModel(), "jmx-server"},
+            new Object[] {new MailClientConverter(), new MailClientModel(), "mail-client"},
+            new Object[] {new MailServerConverter(), new MailServerModel(), "mail-server"}
         };
     }
 }

@@ -42,10 +42,10 @@ public class SpringBeanServiceTest {
 
     @Test
     public void testAddBeanDefinition() throws Exception {
-        SchemaDefinition xsdSchema1 = new SchemaDefinitionBuilder().withId("1").withLocation("l1").build();
-        SchemaDefinition xsdSchema2 = new SchemaDefinitionBuilder().withId("2").withLocation("l2").build();
+        SchemaModel xsdSchema1 = new SchemaModelBuilder().withId("1").withLocation("l1").build();
+        SchemaModel xsdSchema2 = new SchemaModelBuilder().withId("2").withLocation("l2").build();
 
-        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder().withId("x").addSchemaReference("1").addSchemaReference("2").build();
+        SchemaRepositoryModel schemaRepository = new SchemaRepositoryModelBuilder().withId("x").addSchemaReference("1").addSchemaReference("2").build();
 
         File tempFile = createTempContextFile("citrus-context-add");
 
@@ -82,7 +82,7 @@ public class SpringBeanServiceTest {
     public void testUpdateBeanDefinition() throws Exception {
         File tempFile = createTempContextFile("citrus-context-update");
 
-        SchemaDefinition helloSchema = new SchemaDefinitionBuilder().withId("helloSchema").withLocation("newLocation").build();
+        SchemaModel helloSchema = new SchemaModelBuilder().withId("helloSchema").withLocation("newLocation").build();
 
         springBeanConfigService.updateBeanDefinition(tempFile, "helloSchema", helloSchema);
 
@@ -95,12 +95,12 @@ public class SpringBeanServiceTest {
     public void testGetBeanDefinition() throws Exception {
         File tempFile = createTempContextFile("citrus-context-find");
 
-        SchemaDefinition schema = springBeanConfigService.getBeanDefinition(tempFile, "helloSchema", SchemaDefinition.class);
+        SchemaModel schema = springBeanConfigService.getBeanDefinition(tempFile, "helloSchema", SchemaModel.class);
 
         Assert.assertEquals(schema.getId(), "helloSchema");
         Assert.assertEquals(schema.getLocation(), "classpath:com/consol/citrus/demo/sayHello.xsd");
 
-        schema = springBeanConfigService.getBeanDefinition(tempFile, "helloSchemaExtended", SchemaDefinition.class);
+        schema = springBeanConfigService.getBeanDefinition(tempFile, "helloSchemaExtended", SchemaModel.class);
 
         Assert.assertEquals(schema.getId(), "helloSchemaExtended");
         Assert.assertEquals(schema.getLocation(), "classpath:com/consol/citrus/demo/sayHelloExtended.xsd");
@@ -110,7 +110,7 @@ public class SpringBeanServiceTest {
     public void testGetBeanDefinitions() throws Exception {
         File tempFile = createTempContextFile("citrus-context-find");
 
-        List<SchemaDefinition> schemas = springBeanConfigService.getBeanDefinitions(tempFile, SchemaDefinition.class);
+        List<SchemaModel> schemas = springBeanConfigService.getBeanDefinitions(tempFile, SchemaModel.class);
 
         Assert.assertEquals(schemas.size(), 2);
         Assert.assertEquals(schemas.get(0).getId(), "helloSchema");

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
-import com.consol.citrus.model.config.core.ChannelEndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
+import com.consol.citrus.model.config.core.ChannelEndpointModel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.stereotype.Component;
@@ -27,31 +27,31 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 @Component
-public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpointDefinition> {
+public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpointModel> {
 
     @Override
-    public EndpointDefinition convert(ChannelEndpointDefinition definition) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass().getName());
+    public EndpointModel convert(ChannelEndpointModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        if (StringUtils.hasText(definition.getChannelName())) {
-            endpointData.add(property("channelName", "Channel", definition));
+        if (StringUtils.hasText(model.getChannelName())) {
+            endpointModel.add(property("channelName", "Channel", model));
         } else {
-            endpointData.add(property("channel", definition));
+            endpointModel.add(property("channel", model));
         }
 
-        endpointData.add(property("messagingTemplate", definition)
+        endpointModel.add(property("messagingTemplate", model)
                 .optionKey(MessagingTemplate.class.getName()));
-        endpointData.add(property("channelResolver", definition)
+        endpointModel.add(property("channelResolver", model)
                 .optionKey(DestinationResolver.class.getName()));
 
-        addEndpointProperties(endpointData, definition);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<ChannelEndpointDefinition> getModelClass() {
-        return ChannelEndpointDefinition.class;
+    public Class<ChannelEndpointModel> getSourceModelClass() {
+        return ChannelEndpointModel.class;
     }
 
     @Override

@@ -23,14 +23,20 @@ public interface ObjectConverter<T, S> {
 
     /**
      * Converts a configuration definition object to desired object.
-     * @param definition
+     * @param model
      * @return
      */
-    T convert(S definition);
+    T convert(S model);
 
     /**
-     * Gets the model class usually the jaxb model class.
+     * Gets the source model class usually the jaxb model class.
      * @return
      */
-    Class<S> getModelClass();
+    Class<S> getSourceModelClass();
+
+    /**
+     * Gets the target model class.
+     * @return
+     */
+    Class<T> getTargetModelClass();
 }

@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter.endpoint;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.admin.converter.AbstractObjectConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.admin.model.Property;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
@@ -34,34 +34,34 @@ import java.lang.reflect.Method;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractEndpointConverter<S> extends AbstractObjectConverter<EndpointDefinition, S> implements EndpointConverter<S> {
+public abstract class AbstractEndpointConverter<S> extends AbstractObjectConverter<EndpointModel, S> implements EndpointConverter<S> {
 
     /**
-     * Adds basic endpoint properties using reflection on definition objects.
-     * @param endpointData
-     * @param definition
+     * Adds basic endpoint properties using reflection on sourceModel objects.
+     * @param endpointModel
+     * @param sourceModel
      */
-    protected void addEndpointProperties(EndpointDefinition endpointData, S definition) {
-        endpointData.add(property("timeout", definition, "5000"));
-        endpointData.add(property("actor", "TestActor", definition).optionKey(TestActor.class.getName()));
+    protected void addEndpointProperties(EndpointModel endpointModel, S sourceModel) {
+        endpointModel.add(property("timeout", sourceModel, "5000"));
+        endpointModel.add(property("actor", "TestActor", sourceModel).optionKey(TestActor.class.getName()));
     }
 
     @Override
     public String getEndpointType() {
-        String endpointNamespace = getModelClass().getPackage().getAnnotation(XmlSchema.class).namespace();
+        String endpointNamespace = getSourceModelClass().getPackage().getAnnotation(XmlSchema.class).namespace();
         return endpointNamespace.substring("http://www.citrusframework.org/schema/".length(), endpointNamespace.indexOf("/config"));
     }
 
     @Override
-    public S convertBack(EndpointDefinition definition) {
+    public S convertBack(EndpointModel definition) {
         try {
-            S instance = getModelClass().newInstance();
+            S instance = getSourceModelClass().newInstance();
 
-            ReflectionUtils.invokeMethod(findSetter(getModelClass(), "id"), instance, definition.getId());
+            ReflectionUtils.invokeMethod(findSetter(getSourceModelClass(), "id"), instance, definition.getId());
 
             for (Property property : definition.getProperties()) {
                 if (StringUtils.hasText(property.getValue())) {
-                    Method setter = findSetter(getModelClass(), property.getFieldName());
+                    Method setter = findSetter(getSourceModelClass(), property.getFieldName());
                     ReflectionUtils.invokeMethod(setter, instance, getMethodArgument(setter, property.getValue()));
                 }
             }
@@ -70,6 +70,11 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
         } catch (InstantiationException | IllegalAccessException e) {
             throw new ApplicationRuntimeException("Failed to instantiate model class", e);
         }
+    }
+
+    @Override
+    public Class<EndpointModel> getTargetModelClass() {
+        return EndpointModel.class;
     }
 
     private Method findSetter(Class<S> modelClass, String fieldName) {

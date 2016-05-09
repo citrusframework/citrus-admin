@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.jms.JmsEndpointDefinition;
+import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
@@ -29,32 +29,32 @@ import javax.jms.Destination;
  * @author Christoph Deppisch
  */
 @Component
-public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointDefinition> {
+public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointModel> {
 
     @Override
-    public EndpointDefinition convert(JmsEndpointDefinition definition) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass().getName());
+    public EndpointModel convert(JmsEndpointModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("destinationName", "Destination Name", definition));
-        endpointData.add(property("destination", "Destination", definition)
+        endpointModel.add(property("destinationName", "Destination Name", model));
+        endpointModel.add(property("destination", "Destination", model)
                 .optionKey(Destination.class.getName()));
 
-        endpointData.add(property("connectionFactory", definition)
+        endpointModel.add(property("connectionFactory", model)
                 .optionKey(ConnectionFactory.class.getName()));
-        endpointData.add(property("messageConverter", definition)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("jmsTemplate", definition)
+        endpointModel.add(property("jmsTemplate", model)
                 .optionKey(JmsTemplate.class.getName()));
-        endpointData.add(property("pubSubDomain", definition, "false")
+        endpointModel.add(property("pubSubDomain", model, "false")
                 .options("true", "false"));
 
-        addEndpointProperties(endpointData, definition);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<JmsEndpointDefinition> getModelClass() {
-        return JmsEndpointDefinition.class;
+    public Class<JmsEndpointModel> getSourceModelClass() {
+        return JmsEndpointModel.class;
     }
 }

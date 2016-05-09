@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
-import com.consol.citrus.model.config.ws.WebServiceClientDefinition;
+import com.consol.citrus.model.config.ws.WebServiceClientModel;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessageFactory;
@@ -31,32 +31,32 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Component
-public class WebServiceClientConverter extends AbstractEndpointConverter<WebServiceClientDefinition> {
+public class WebServiceClientConverter extends AbstractEndpointConverter<WebServiceClientModel> {
 
     @Override
-    public EndpointDefinition convert(WebServiceClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(WebServiceClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("requestUrl", client));
-        endpointData.add(property("webServiceTemplate", client)
+        endpointModel.add(property("requestUrl", model));
+        endpointModel.add(property("webServiceTemplate", model)
                 .optionKey(WebServiceTemplate.class.getName()));
-        endpointData.add(property("messageFactory", client)
+        endpointModel.add(property("messageFactory", model)
                 .optionKey(SoapMessageFactory.class.getName()));
-        endpointData.add(property("messageSender", client));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("messageSender", model));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
-        endpointData.add(property("interceptors", client));
-        endpointData.add(property("endpointResolver", client)
+        endpointModel.add(property("interceptors", model));
+        endpointModel.add(property("endpointResolver", model)
                 .optionKey(EndpointUriResolver.class.getName()));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
+        endpointModel.add(property("faultStrategy", model, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
                 .options(getErrorHandlingStrategyOptions()));
-        endpointData.add(property("pollingInterval", client));
+        endpointModel.add(property("pollingInterval", model));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     /**
@@ -72,8 +72,8 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
     }
 
     @Override
-    public Class<WebServiceClientDefinition> getModelClass() {
-        return WebServiceClientDefinition.class;
+    public Class<WebServiceClientModel> getSourceModelClass() {
+        return WebServiceClientModel.class;
     }
 
     @Override

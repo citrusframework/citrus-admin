@@ -16,42 +16,42 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.model.config.ssh.SshClientDefinition;
+import com.consol.citrus.model.config.ssh.SshClientModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class SshClientConverter extends AbstractEndpointConverter<SshClientDefinition> {
+public class SshClientConverter extends AbstractEndpointConverter<SshClientModel> {
 
     @Override
-    public EndpointDefinition convert(SshClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(SshClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("host", client, "localhost"));
-        endpointData.add(property("port", client, "2222"));
-        endpointData.add(property("user", client));
-        endpointData.add(property("password", client));
-        endpointData.add(property("strictHostChecking", client, "false")
+        endpointModel.add(property("host", model, "localhost"));
+        endpointModel.add(property("port", model, "2222"));
+        endpointModel.add(property("user", model));
+        endpointModel.add(property("password", model));
+        endpointModel.add(property("strictHostChecking", model, "false")
                 .options("true", "false"));
-        endpointData.add(property("knownHostsPath", client));
-        endpointData.add(property("commandTimeout", client));
-        endpointData.add(property("connectionTimeout", client));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("knownHostsPath", model));
+        endpointModel.add(property("commandTimeout", model));
+        endpointModel.add(property("connectionTimeout", model));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
-        endpointData.add(property("pollingInterval", client, "500"));
+        endpointModel.add(property("pollingInterval", model, "500"));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<SshClientDefinition> getModelClass() {
-        return SshClientDefinition.class;
+    public Class<SshClientModel> getSourceModelClass() {
+        return SshClientModel.class;
     }
 
     @Override

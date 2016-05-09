@@ -20,8 +20,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.config.xml.PayloadElementParser;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.ReceiveDefinition;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +28,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 @Component
-public class ReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveDefinition, ReceiveMessageAction> {
+public class ReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveModel, ReceiveMessageAction> {
 
     /**
      * Default constructor using action type reference.
@@ -39,34 +38,34 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public TestAction convert(ReceiveDefinition definition) {
-        TestAction action = new TestAction(getActionType(), getModelClass());
+    public TestAction convert(ReceiveModel model) {
+        TestAction action = new TestAction(getActionType(), getSourceModelClass());
 
-        action.add(property("endpoint", definition));
+        action.add(property("endpoint", model));
 
-        if (definition.getMessage() != null) {
-            if (StringUtils.hasText(definition.getMessage().getData())) {
-                action.add(new Property("message.data", "message.data", "Message Data", definition.getMessage().getData()));
+        if (model.getMessage() != null) {
+            if (StringUtils.hasText(model.getMessage().getData())) {
+                action.add(new Property("message.data", "message.data", "Message Data", model.getMessage().getData()));
             }
 
-            if (definition.getMessage().getPayload()!= null) {
-                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(definition.getMessage().getPayload().getAnies().get(0))));
+            if (model.getMessage().getPayload()!= null) {
+                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(model.getMessage().getPayload().getAnies().get(0))));
             }
 
-            if (definition.getMessage().getResource() != null &&
-                    StringUtils.hasText(definition.getMessage().getResource().getFile())) {
-                action.add(new Property("message.resource", "message.resource", "Message Resource", definition.getMessage().getResource().getFile()));
+            if (model.getMessage().getResource() != null &&
+                    StringUtils.hasText(model.getMessage().getResource().getFile())) {
+                action.add(new Property("message.resource", "message.resource", "Message Resource", model.getMessage().getResource().getFile()));
             }
         }
 
-        action.add(property("actor", "TestActor", definition));
+        action.add(property("actor", "TestActor", model));
 
         return action;
     }
 
     @Override
-    public ReceiveDefinition convertModel(ReceiveMessageAction model) {
-        ReceiveDefinition action = new ObjectFactory().createReceiveDefinition();
+    public ReceiveModel convertModel(ReceiveMessageAction model) {
+        ReceiveModel action = new ObjectFactory().createReceiveModel();
 
         if (model.getActor() != null) {
             action.setActor(model.getActor().getName());
@@ -80,13 +79,13 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
         return action;
     }
 
-    /**
-     * Gets the model class usually the jaxb model class.
-     *
-     * @return
-     */
     @Override
-    public Class<ReceiveDefinition> getModelClass() {
-        return ReceiveDefinition.class;
+    public Class<ReceiveModel> getSourceModelClass() {
+        return ReceiveModel.class;
+    }
+
+    @Override
+    public Class<ReceiveMessageAction> getActionModelClass() {
+        return ReceiveMessageAction.class;
     }
 }

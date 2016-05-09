@@ -16,41 +16,41 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.model.config.jmx.JmxClientDefinition;
+import com.consol.citrus.model.config.jmx.JmxClientModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class JmxClientConverter extends AbstractEndpointConverter<JmxClientDefinition> {
+public class JmxClientConverter extends AbstractEndpointConverter<JmxClientModel> {
 
     @Override
-    public EndpointDefinition convert(JmxClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(JmxClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("serverUrl", client));
-        endpointData.add(property("username", client));
-        endpointData.add(property("password", client));
-        endpointData.add(property("autoReconnect", client));
-        endpointData.add(property("delayOnReconnect", client));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("serverUrl", model));
+        endpointModel.add(property("username", model));
+        endpointModel.add(property("password", model));
+        endpointModel.add(property("autoReconnect", model));
+        endpointModel.add(property("delayOnReconnect", model));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("pollingInterval", client, "500"));
+        endpointModel.add(property("pollingInterval", model, "500"));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<JmxClientDefinition> getModelClass() {
-        return JmxClientDefinition.class;
+    public Class<JmxClientModel> getSourceModelClass() {
+        return JmxClientModel.class;
     }
 
     @Override

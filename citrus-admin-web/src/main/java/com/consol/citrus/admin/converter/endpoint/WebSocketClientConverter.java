@@ -16,37 +16,37 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.websocket.WebSocketClientDefinition;
+import com.consol.citrus.model.config.websocket.WebSocketClientModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class WebSocketClientConverter extends AbstractEndpointConverter<WebSocketClientDefinition> {
+public class WebSocketClientConverter extends AbstractEndpointConverter<WebSocketClientModel> {
 
     @Override
-    public EndpointDefinition convert(WebSocketClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(WebSocketClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("url", client));
-        endpointData.add(property("pollingInterval", client, "500"));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("url", model));
+        endpointModel.add(property("pollingInterval", model, "500"));
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("endpointResolver", client)
+        endpointModel.add(property("endpointResolver", model)
                 .optionKey(EndpointUriResolver.class.getName()));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<WebSocketClientDefinition> getModelClass() {
-        return WebSocketClientDefinition.class;
+    public Class<WebSocketClientModel> getSourceModelClass() {
+        return WebSocketClientModel.class;
     }
 
     @Override

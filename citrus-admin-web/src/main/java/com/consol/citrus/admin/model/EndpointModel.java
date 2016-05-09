@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class EndpointDefinition {
+public class EndpointModel {
 
     private String id;
     private String type;
@@ -32,7 +32,7 @@ public class EndpointDefinition {
     /**
      * Default constructor basically used when constructing from json object.
      */
-    public EndpointDefinition() {
+    public EndpointModel() {
         super();
     }
 
@@ -41,7 +41,7 @@ public class EndpointDefinition {
      * @param type
      * @param id
      */
-    public EndpointDefinition(String type, String id, String modelType) {
+    public EndpointModel(String type, String id, String modelType) {
         this.id = id;
         this.modelType = modelType;
         this.type = type;
@@ -52,7 +52,7 @@ public class EndpointDefinition {
      * @param property
      * @return
      */
-    public EndpointDefinition add(Property property) {
+    public EndpointModel add(Property property) {
         properties.add(property);
         return this;
     }

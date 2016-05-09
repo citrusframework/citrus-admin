@@ -43,9 +43,13 @@ public abstract class AbstractTestActionConverter<S, R extends com.consol.citrus
         action.add(property("description", definition));
     }
 
-
     @Override
     public String getActionType() {
         return actionType;
+    }
+
+    @Override
+    public Class<TestAction> getTargetModelClass() {
+        return TestAction.class;
     }
 }

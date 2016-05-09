@@ -25,26 +25,26 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class EchoActionConverter extends AbstractTestActionConverter<EchoDefinition, EchoAction> {
+public class EchoActionConverter extends AbstractTestActionConverter<EchoModel, EchoAction> {
 
     public EchoActionConverter() {
         super("echo");
     }
 
     @Override
-    public TestAction convert(EchoDefinition definition) {
-        TestAction action = new TestAction(getActionType(), getModelClass());
+    public TestAction convert(EchoModel model) {
+        TestAction action = new TestAction(getActionType(), getSourceModelClass());
 
-        addActionProperties(action, definition);
+        addActionProperties(action, model);
 
-        action.add(property("message", definition));
+        action.add(property("message", model));
 
         return action;
     }
 
     @Override
-    public EchoDefinition convertModel(EchoAction model) {
-        EchoDefinition action = new ObjectFactory().createEchoDefinition();
+    public EchoModel convertModel(EchoAction model) {
+        EchoModel action = new ObjectFactory().createEchoModel();
 
         action.setDescription(model.getDescription());
         action.setMessage(model.getMessage());
@@ -53,7 +53,12 @@ public class EchoActionConverter extends AbstractTestActionConverter<EchoDefinit
     }
 
     @Override
-    public Class<EchoDefinition> getModelClass() {
-        return EchoDefinition.class;
+    public Class<EchoModel> getSourceModelClass() {
+        return EchoModel.class;
+    }
+
+    @Override
+    public Class<EchoAction> getActionModelClass() {
+        return EchoAction.class;
     }
 }

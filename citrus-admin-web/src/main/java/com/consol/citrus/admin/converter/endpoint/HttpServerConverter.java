@@ -16,52 +16,52 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.http.HttpServerDefinition;
+import com.consol.citrus.model.config.http.HttpServerModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class HttpServerConverter extends AbstractEndpointConverter<HttpServerDefinition> {
+public class HttpServerConverter extends AbstractEndpointConverter<HttpServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(HttpServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(HttpServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("port", server));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("resourceBase", server));
-        endpointData.add(property("contextPath", server));
-        endpointData.add(property("rootParentContext", server, TRUE)
+        endpointModel.add(property("resourceBase", model));
+        endpointModel.add(property("contextPath", model));
+        endpointModel.add(property("rootParentContext", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("messageConverter", server)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("endpointAdapter", server)
+        endpointModel.add(property("endpointAdapter", model)
                 .optionKey(EndpointAdapter.class.getName()));
-        endpointData.add(property("securityHandler", server));
-        endpointData.add(property("servletHandler", server));
-        endpointData.add(property("connector", server));
-        endpointData.add(property("connectors", server));
-        endpointData.add(property("servletName", server));
-        endpointData.add(property("servletMappingPath", server));
-        endpointData.add(property("interceptors", server));
+        endpointModel.add(property("securityHandler", model));
+        endpointModel.add(property("servletHandler", model));
+        endpointModel.add(property("connector", model));
+        endpointModel.add(property("connectors", model));
+        endpointModel.add(property("servletName", model));
+        endpointModel.add(property("servletMappingPath", model));
+        endpointModel.add(property("interceptors", model));
 
-        endpointData.add(property("timeout", server, "5000"));
+        endpointModel.add(property("timeout", model, "5000"));
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<HttpServerDefinition> getModelClass() {
-        return HttpServerDefinition.class;
+    public Class<HttpServerModel> getSourceModelClass() {
+        return HttpServerModel.class;
     }
 
     @Override

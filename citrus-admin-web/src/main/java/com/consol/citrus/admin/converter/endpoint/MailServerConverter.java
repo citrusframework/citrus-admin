@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.mail.MailServerDefinition;
+import com.consol.citrus.model.config.mail.MailServerModel;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
@@ -28,37 +28,37 @@ import java.util.Properties;
  * @author Christoph Deppisch
  */
 @Component
-public class MailServerConverter extends AbstractEndpointConverter<MailServerDefinition> {
+public class MailServerConverter extends AbstractEndpointConverter<MailServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(MailServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(MailServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("port", server));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("autoAccept", server, TRUE)
+        endpointModel.add(property("autoAccept", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("splitMultipart", server, TRUE)
+        endpointModel.add(property("splitMultipart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("messageConverter", server)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("endpointAdapter", server)
+        endpointModel.add(property("endpointAdapter", model)
                 .optionKey(EndpointAdapter.class.getName()));
-        endpointData.add(property("mailProperties", server)
+        endpointModel.add(property("mailProperties", model)
                 .optionKey(Properties.class.getName()));
 
-        endpointData.add(property("timeout", server, "5000"));
+        endpointModel.add(property("timeout", model, "5000"));
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<MailServerDefinition> getModelClass() {
-        return MailServerDefinition.class;
+    public Class<MailServerModel> getSourceModelClass() {
+        return MailServerModel.class;
     }
 
     @Override

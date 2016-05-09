@@ -16,35 +16,35 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.camel.CamelEndpointDefinition;
+import com.consol.citrus.model.config.camel.CamelEndpointModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class CamelEndpointConverter extends AbstractEndpointConverter<CamelEndpointDefinition> {
+public class CamelEndpointConverter extends AbstractEndpointConverter<CamelEndpointModel> {
 
     @Override
-    public EndpointDefinition convert(CamelEndpointDefinition definition) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), definition.getId(), getModelClass().getName());
+    public EndpointModel convert(CamelEndpointModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("camelContext", definition));
-        endpointData.add(property("endpointUri", definition));
+        endpointModel.add(property("camelContext", model));
+        endpointModel.add(property("endpointUri", model));
 
-        endpointData.add(property("messageConverter", definition)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
 
-        addEndpointProperties(endpointData, definition);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<CamelEndpointDefinition> getModelClass() {
-        return CamelEndpointDefinition.class;
+    public Class<CamelEndpointModel> getSourceModelClass() {
+        return CamelEndpointModel.class;
     }
 
     @Override

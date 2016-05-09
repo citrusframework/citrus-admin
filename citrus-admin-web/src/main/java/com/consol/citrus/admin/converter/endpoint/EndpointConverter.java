@@ -17,18 +17,18 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.converter.MutualObjectConverter;
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 
 /**
  * @author Christoph Deppisch
  */
-public interface EndpointConverter<S> extends MutualObjectConverter<EndpointDefinition, S> {
+public interface EndpointConverter<S> extends MutualObjectConverter<EndpointModel, S> {
 
     @Override
-    EndpointDefinition convert(S definition);
+    EndpointModel convert(S model);
 
     @Override
-    S convertBack(EndpointDefinition object);
+    S convertBack(EndpointModel object);
 
     /**
      * Gets the endpoint type name.

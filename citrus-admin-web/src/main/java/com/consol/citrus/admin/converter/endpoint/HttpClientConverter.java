@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.*;
-import com.consol.citrus.model.config.http.HttpClientDefinition;
+import com.consol.citrus.model.config.http.HttpClientModel;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -31,33 +31,33 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Component
-public class HttpClientConverter extends AbstractEndpointConverter<HttpClientDefinition> {
+public class HttpClientConverter extends AbstractEndpointConverter<HttpClientModel> {
 
     @Override
-    public EndpointDefinition convert(HttpClientDefinition client) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), client.getId(), getModelClass().getName());
+    public EndpointModel convert(HttpClientModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("requestUrl", client));
-        endpointData.add(property("requestMethod", client, HttpMethod.POST.name())
+        endpointModel.add(property("requestUrl", model));
+        endpointModel.add(property("requestMethod", model, HttpMethod.POST.name())
                 .options(getHttpMethodOptions()));
-        endpointData.add(property("errorStrategy", client, ErrorHandlingStrategy.PROPAGATE.getName())
+        endpointModel.add(property("errorStrategy", model, ErrorHandlingStrategy.PROPAGATE.getName())
                 .options(getErrorHandlingStrategyOptions()));
-        endpointData.add(property("pollingInterval", client, "500"));
-        endpointData.add(property("messageCorrelator", client)
+        endpointModel.add(property("pollingInterval", model, "500"));
+        endpointModel.add(property("messageCorrelator", model)
                 .optionKey(MessageCorrelator.class.getName()));
-        endpointData.add(property("messageConverter", client)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointData.add(property("requestFactory", client)
+        endpointModel.add(property("requestFactory", model)
                 .optionKey(ClientHttpRequestFactory.class.getName()));
-        endpointData.add(property("restTemplate", client)
+        endpointModel.add(property("restTemplate", model)
                 .optionKey(RestTemplate.class.getName()));
-        endpointData.add(property("charset", client));
-        endpointData.add(property("contentType", client));
-        endpointData.add(property("interceptors", client));
+        endpointModel.add(property("charset", model));
+        endpointModel.add(property("contentType", model));
+        endpointModel.add(property("interceptors", model));
 
-        addEndpointProperties(endpointData, client);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     /**
@@ -85,8 +85,8 @@ public class HttpClientConverter extends AbstractEndpointConverter<HttpClientDef
     }
 
     @Override
-    public Class<HttpClientDefinition> getModelClass() {
-        return HttpClientDefinition.class;
+    public Class<HttpClientModel> getSourceModelClass() {
+        return HttpClientModel.class;
     }
 
     @Override

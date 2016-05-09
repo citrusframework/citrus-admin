@@ -18,7 +18,7 @@ package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.converter.endpoint.EndpointConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +47,13 @@ public class EndpointController {
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createEndpoint(@RequestBody EndpointDefinition endpointDefinition) {
+    public void createEndpoint(@RequestBody EndpointModel endpointDefinition) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), convertToModel(endpointDefinition));
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointDefinition endpointDefinition) {
+    public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointModel endpointDefinition) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, convertToModel(endpointDefinition));
     }
 
@@ -66,9 +66,9 @@ public class EndpointController {
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
     public List<?> listEndpoints() {
-        List<EndpointDefinition> endpoints = new ArrayList<>();
+        List<EndpointModel> endpoints = new ArrayList<>();
         for (EndpointConverter converter : endpointConverter) {
-            List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), converter.getModelClass());
+            List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), converter.getSourceModelClass());
             for (Object endpoint : models) {
                 endpoints.add(converter.convert(endpoint));
             }
@@ -81,7 +81,7 @@ public class EndpointController {
     @ResponseBody
     public Object getEndpoint(@PathVariable("id") String id) {
         for (EndpointConverter converter : endpointConverter) {
-            Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, converter.getModelClass());
+            Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, converter.getSourceModelClass());
             if (model != null) {
                 return converter.convert(model);
             }
@@ -103,11 +103,11 @@ public class EndpointController {
 
     @RequestMapping(value = "/type/{type}", method = {RequestMethod.GET})
     @ResponseBody
-    public EndpointDefinition getEndpointType(@PathVariable("type") String type) {
+    public EndpointModel getEndpointType(@PathVariable("type") String type) {
         for (EndpointConverter converter : endpointConverter) {
             if (converter.getEndpointType().equals(type)) {
                 try {
-                    return converter.convert(converter.getModelClass().newInstance());
+                    return converter.convert(converter.getSourceModelClass().newInstance());
                 } catch (InstantiationException | IllegalAccessException e) {
                     throw new ApplicationRuntimeException("Failed to create new endpoint model instance", e);
                 }
@@ -122,13 +122,13 @@ public class EndpointController {
      * @param endpointDefinition
      * @return
      */
-    private Object convertToModel(EndpointDefinition endpointDefinition) {
+    private Object convertToModel(EndpointModel endpointDefinition) {
         if (!StringUtils.hasText(endpointDefinition.getModelType())) {
             throw new ApplicationRuntimeException("Missing model type in endpoint definition");
         }
 
         for (EndpointConverter converter : endpointConverter) {
-            if (converter.getModelClass().getName().equals(endpointDefinition.getModelType())) {
+            if (converter.getSourceModelClass().getName().equals(endpointDefinition.getModelType())) {
                 return converter.convertBack(endpointDefinition);
             }
         }

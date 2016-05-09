@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.admin.model.TestAction;
-import com.consol.citrus.model.testcase.core.ActionDefinition;
+import com.consol.citrus.model.testcase.core.ActionModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 
 /**
@@ -34,17 +34,17 @@ public class ActionConverter extends AbstractTestActionConverter<Object, com.con
     }
 
     @Override
-    public TestAction convert(Object definition) {
-        TestAction action = new TestAction(getActionType(), getModelClass());
+    public TestAction convert(Object model) {
+        TestAction actionModel = new TestAction(getActionType(), getSourceModelClass());
 
-        addActionProperties(action, definition);
+        addActionProperties(actionModel, model);
 
-        return action;
+        return actionModel;
     }
 
     @Override
     public Object convertModel(com.consol.citrus.TestAction model) {
-        ActionDefinition action = new ObjectFactory().createActionDefinition();
+        ActionModel action = new ObjectFactory().createActionModel();
 
         action.setReference(model.getName());
         action.setDescription(model.getDescription());
@@ -53,7 +53,17 @@ public class ActionConverter extends AbstractTestActionConverter<Object, com.con
     }
 
     @Override
-    public Class<Object> getModelClass() {
+    public Class<Object> getSourceModelClass() {
         return Object.class;
+    }
+
+    @Override
+    public Class<TestAction> getTargetModelClass() {
+        return TestAction.class;
+    }
+
+    @Override
+    public Class<com.consol.citrus.TestAction> getActionModelClass() {
+        return com.consol.citrus.TestAction.class;
     }
 }

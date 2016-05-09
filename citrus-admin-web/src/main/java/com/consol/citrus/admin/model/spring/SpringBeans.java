@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.model.spring;
 
-import com.consol.citrus.model.testcase.core.TestcaseDefinition;
+import com.consol.citrus.model.testcase.core.TestcaseModel;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -43,8 +43,8 @@ public class SpringBeans {
     @XmlElementRef(name = "bean", namespace = "http://www.springframework.org/schema/beans", type = SpringBean.class)
     protected List<SpringBean> beans;
 
-    @XmlElementRef(name = "testcase", namespace = "http://www.citrusframework.org/schema/testcase", type = TestcaseDefinition.class)
-    protected TestcaseDefinition testcase;
+    @XmlElementRef(name = "testcase", namespace = "http://www.citrusframework.org/schema/testcase", type = TestcaseModel.class)
+    protected TestcaseModel testcase;
     
     /**
      * Gets the value of the description property.
@@ -132,7 +132,7 @@ public class SpringBeans {
      * Gets the test case bean.
      * @return
      */
-    public TestcaseDefinition getTestcase() {
+    public TestcaseModel getTestcase() {
         return this.testcase;
     }
 
@@ -140,7 +140,7 @@ public class SpringBeans {
      * Sets the test case bean.
      * @param testcase
      */
-    public void setTestcase(TestcaseDefinition testcase) {
+    public void setTestcase(TestcaseModel testcase) {
         this.testcase = testcase;
     }
 }

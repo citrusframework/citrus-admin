@@ -16,43 +16,43 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.rmi.RmiServerDefinition;
+import com.consol.citrus.model.config.rmi.RmiServerModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class RmiServerConverter extends AbstractEndpointConverter<RmiServerDefinition> {
+public class RmiServerConverter extends AbstractEndpointConverter<RmiServerModel> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointDefinition convert(RmiServerDefinition server) {
-        EndpointDefinition endpointData = new EndpointDefinition(getEndpointType(), server.getId(), getModelClass().getName());
+    public EndpointModel convert(RmiServerModel model) {
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointData.add(property("host", server));
-        endpointData.add(property("port", server));
-        endpointData.add(property("binding", server));
-        endpointData.add(property("_interface", server));
-        endpointData.add(property("createRegistry", server, TRUE)
+        endpointModel.add(property("host", model));
+        endpointModel.add(property("port", model));
+        endpointModel.add(property("binding", model));
+        endpointModel.add(property("_interface", model));
+        endpointModel.add(property("createRegistry", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("autoStart", server, TRUE)
+        endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointData.add(property("messageConverter", server)
+        endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
 
-        addEndpointProperties(endpointData, server);
+        addEndpointProperties(endpointModel, model);
 
-        return endpointData;
+        return endpointModel;
     }
 
     @Override
-    public Class<RmiServerDefinition> getModelClass() {
-        return RmiServerDefinition.class;
+    public Class<RmiServerModel> getSourceModelClass() {
+        return RmiServerModel.class;
     }
 
     @Override

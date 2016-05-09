@@ -16,9 +16,9 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointDefinition;
+import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.admin.model.Property;
-import com.consol.citrus.model.config.jms.JmsEndpointDefinition;
+import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,15 +30,15 @@ public class JmsEndpointConverterTest {
     @Test
     public void testConvert() throws Exception {
         JmsEndpointConverter endpointConverter = new JmsEndpointConverter();
-        EndpointDefinition definition = new EndpointDefinition();
+        EndpointModel definition = new EndpointModel();
         definition.setId("newEndpoint");
         definition.setType(endpointConverter.getEndpointType());
-        definition.setModelType(endpointConverter.getModelClass().getName());
+        definition.setModelType(endpointConverter.getSourceModelClass().getName());
 
         definition.add(new Property("destinationName", "destinationName", "Destination", "JMS.Queue"));
         definition.add(new Property("pubSubDomain", "pubSubDomain", "PubSubDomain", "TRUE"));
 
-        JmsEndpointDefinition result = endpointConverter.convertBack(definition);
+        JmsEndpointModel result = endpointConverter.convertBack(definition);
         Assert.assertEquals(result.getId(), "newEndpoint");
         Assert.assertEquals(result.getDestinationName(), "JMS.Queue");
         Assert.assertTrue(result.isPubSubDomain());

@@ -18,35 +18,34 @@ package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.admin.model.TestAction;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.SleepDefinition;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class SleepActionConverter extends AbstractTestActionConverter<SleepDefinition, SleepAction> {
+public class SleepActionConverter extends AbstractTestActionConverter<SleepModel, SleepAction> {
 
     public SleepActionConverter() {
         super("sleep");
     }
 
     @Override
-    public TestAction convert(SleepDefinition definition) {
-        TestAction action = new TestAction(getActionType(), getModelClass());
+    public TestAction convert(SleepModel model) {
+        TestAction action = new TestAction(getActionType(), getSourceModelClass());
 
-        addActionProperties(action, definition);
+        addActionProperties(action, model);
 
-        action.add(property("milliseconds", definition));
-        action.add(property("seconds", definition));
+        action.add(property("milliseconds", model));
+        action.add(property("seconds", model));
 
         return action;
     }
 
     @Override
-    public SleepDefinition convertModel(SleepAction model) {
-        SleepDefinition action = new ObjectFactory().createSleepDefinition();
+    public SleepModel convertModel(SleepAction model) {
+        SleepModel action = new ObjectFactory().createSleepModel();
 
         action.setDescription(model.getDescription());
         action.setMilliseconds(model.getMilliseconds());
@@ -56,7 +55,12 @@ public class SleepActionConverter extends AbstractTestActionConverter<SleepDefin
     }
 
     @Override
-    public Class<SleepDefinition> getModelClass() {
-        return SleepDefinition.class;
+    public Class<SleepModel> getSourceModelClass() {
+        return SleepModel.class;
+    }
+
+    @Override
+    public Class<SleepAction> getActionModelClass() {
+        return SleepAction.class;
     }
 }
