@@ -16,14 +16,18 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.admin.converter.action.ActionConverter;
 import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.XmlTestMarshaller;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
-import com.consol.citrus.model.testcase.core.TestcaseDefinition;
-import com.consol.citrus.model.testcase.core.VariablesDefinition;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -31,11 +35,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -269,12 +277,85 @@ public class TestCaseService {
      * @return
      */
     private TestcaseDefinition getJavaTestModel(Project project, TestDetail detail) {
-        TestcaseDefinition testModel = new TestcaseDefinition();
-        testModel.setName(detail.getClassName() + "." + detail.getMethodName());
+        if (project.isMavenProject()) {
+            try {
+                ClassLoader classLoader = URLClassLoader.newInstance(new URL[]{
+                        new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "classes").getURL(),
+                        new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "test-classes").getURL()
+                });
 
-        //TODO load Java test logic into model
+                Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
 
-        return testModel;
+                if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass)) {
+                    TestNGCitrusTestDesigner testInstance = (TestNGCitrusTestDesigner) testClass.newInstance();
+                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
+                    testInstance.simulate(testMethod, new TestContext());
+                    testMethod.invoke(testInstance);
+
+                    return getTestcaseDefinition(testInstance.getTestCase());
+                } else if (TestNGCitrusTestRunner.class.isAssignableFrom(testClass)) {
+                    TestNGCitrusTestRunner testInstance = (TestNGCitrusTestRunner) testClass.newInstance();
+                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
+                    testInstance.simulate(testMethod, new TestContext());
+                    testMethod.invoke(testInstance);
+
+                    return getTestcaseDefinition(testInstance.getTestCase());
+                } else {
+                    throw new ApplicationRuntimeException("Unsupported test case type: " + testClass);
+                }
+            } catch (MalformedURLException e) {
+                throw new ApplicationRuntimeException("Failed to access Java classes output folder", e);
+            } catch (ClassNotFoundException e) {
+                throw new ApplicationRuntimeException("Failed to load Java test class", e);
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Failed to access project output folder", e);
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new ApplicationRuntimeException("Failed to create test class instance", e);
+            } catch (InvocationTargetException e) {
+                throw new ApplicationRuntimeException("Failed to invoke test method", e);
+            }
+        }
+
+        TestcaseDefinition testcaseDefinition = new TestcaseDefinition();
+        testcaseDefinition.setName(detail.getClassName() + "." + detail.getMethodName());
+        return testcaseDefinition;
+    }
+
+    private TestcaseDefinition getTestcaseDefinition(TestCase testCase) {
+        TestcaseDefinition definition = new TestcaseDefinition();
+        definition.setName(testCase.getName());
+
+        VariablesDefinition variablesDefinition = new VariablesDefinition();
+        for (Map.Entry<String, Object> entry : testCase.getVariableDefinitions().entrySet()) {
+            VariablesDefinition.Variable variable = new VariablesDefinition.Variable();
+            variable.setName(entry.getKey());
+            variable.setValue(entry.getValue().toString());
+            variablesDefinition.getVariables().add(variable);
+        }
+        definition.setVariables(variablesDefinition);
+
+        TestActionsType actions = new TestActionsType();
+        for (com.consol.citrus.TestAction action : testCase.getActions()) {
+            if (action instanceof EchoAction) {
+                EchoDefinition echo = new EchoDefinition();
+                echo.setMessage(((EchoAction) action).getMessage());
+                actions.getActionsAndSendsAndReceives().add(echo);
+            }
+
+            if (action instanceof SendMessageAction) {
+                SendDefinition send = new SendDefinition();
+                send.setEndpoint(((SendMessageAction) action).getEndpoint().getName());
+                actions.getActionsAndSendsAndReceives().add(send);
+            }
+
+            if (action instanceof ReceiveMessageAction) {
+                ReceiveDefinition receive = new ReceiveDefinition();
+                receive.setEndpoint(((ReceiveMessageAction) action).getEndpoint().getName());
+                actions.getActionsAndSendsAndReceives().add(receive);
+            }
+        }
+        definition.setActions(actions);
+        return definition;
     }
 
     /**

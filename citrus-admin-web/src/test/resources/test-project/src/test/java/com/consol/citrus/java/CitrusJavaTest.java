@@ -14,19 +14,25 @@
  *  limitations under the License.
  */
 
-package com.consol.citrus.bar;
+package com.consol.citrus.java;
 
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.annotations.CitrusXmlTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class BarTest extends TestNGCitrusTestDesigner {
+public class CitrusJavaTest extends TestNGCitrusTestDesigner {
 
-    @CitrusXmlTest(name = "BarTest")
+    @CitrusTest
+    public void fooTest() {
+        echo("Hello FooTest");
+    }
+
+    @CitrusTest(name = "BarJavaTest")
     public void barTest() {
+        echo("Hello BarTest");
     }
 }

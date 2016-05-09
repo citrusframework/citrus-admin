@@ -65,16 +65,16 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testPackages.get(1).getTests().get(0).getName(), "FooTest");
         Assert.assertEquals(testPackages.get(1).getTests().get(0).getClassName(), "FooTest");
         Assert.assertEquals(testPackages.get(1).getTests().get(0).getMethodName(), "FooTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(0).getName(), "CitrusTest.fooTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(0).getClassName(), "CitrusTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(0).getName(), "CitrusJavaTest.fooTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(0).getClassName(), "CitrusJavaTest");
         Assert.assertEquals(testPackages.get(2).getTests().get(0).getMethodName(), "fooTest");
         Assert.assertEquals(testPackages.get(2).getTests().get(1).getName(), "BarJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(1).getClassName(), "CitrusTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(1).getClassName(), "CitrusJavaTest");
         Assert.assertEquals(testPackages.get(2).getTests().get(1).getMethodName(), "barTest");
     }
 
     @Test
-    public void testGetTestDetail() throws Exception {
+    public void testGetTestDetailXml() throws Exception {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
@@ -107,5 +107,26 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(0).getValue(), "samplePayloadEndpoint");
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getId(), "message.payload");
         Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getValue(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Test xmlns=\"http://www.citrusframework.org\" xmlns:jms=\"http://www.citrusframework.org/schema/jms/testcase\" xmlns:spring=\"http://www.springframework.org/schema/beans\" xmlns:ws=\"http://www.citrusframework.org/schema/ws/testcase\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">Hello</Test>");
+    }
+
+    @Test
+    public void testGetTestDetailJava() throws Exception {
+        reset(project);
+        when(project.isMavenProject()).thenReturn(true);
+        when(project.getSettings()).thenReturn(new ProjectSettings());
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
+
+        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.java", "CitrusJavaTest", "fooTest", "CitrusJavaTest.fooTest", TestType.JAVA));
+
+        Assert.assertEquals(testDetail.getName(), "CitrusJavaTest.fooTest");
+        Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.java");
+        Assert.assertEquals(testDetail.getType(), TestType.JAVA);
+        Assert.assertTrue(testDetail.getFile().endsWith("java/CitrusJavaTest"));
+        Assert.assertEquals(testDetail.getActions().size(), 1L);
+        Assert.assertEquals(testDetail.getActions().get(0).getType(), "echo");
+
+        Assert.assertEquals(testDetail.getActions().get(0).getProperties().size(), 2L);
+        Assert.assertEquals(testDetail.getActions().get(0).getProperties().get(0).getId(), "description");
+        Assert.assertEquals(testDetail.getActions().get(0).getProperties().get(1).getId(), "message");
     }
 }
