@@ -46,17 +46,17 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     public void testGetTestPackages() throws IOException {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
 
         List<TestPackage> testPackages = testCaseService.getTestPackages(project);
 
         Assert.assertNotNull(testPackages);
         Assert.assertEquals(testPackages.size(), 3L);
-        Assert.assertEquals(testPackages.get(0).getName(), "com.consol.citrus.bar");
+        Assert.assertEquals(testPackages.get(0).getName(), "bar");
         Assert.assertEquals(testPackages.get(0).getTests().size(), 1L);
-        Assert.assertEquals(testPackages.get(1).getName(), "com.consol.citrus.foo");
+        Assert.assertEquals(testPackages.get(1).getName(), "foo");
         Assert.assertEquals(testPackages.get(1).getTests().size(), 1L);
-        Assert.assertEquals(testPackages.get(2).getName(), "com.consol.citrus.java");
+        Assert.assertEquals(testPackages.get(2).getName(), "javadsl");
         Assert.assertEquals(testPackages.get(2).getTests().size(), 2L);
 
         Assert.assertEquals(testPackages.get(0).getTests().get(0).getName(), "BarTest");
@@ -77,12 +77,12 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     public void testGetTestDetailXml() throws Exception {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
 
-        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.foo", "FooTest", "fooTest", "FooTest", TestType.XML));
+        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("foo", "FooTest", "fooTest", "FooTest", TestType.XML));
 
         Assert.assertEquals(testDetail.getName(), "FooTest");
-        Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.foo");
+        Assert.assertEquals(testDetail.getPackageName(), "foo");
         Assert.assertEquals(testDetail.getType(), TestType.XML);
         Assert.assertEquals(testDetail.getAuthor(), "Christoph");
         Assert.assertEquals(testDetail.getDescription(), "This is a sample test");
@@ -114,14 +114,14 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         reset(project);
         when(project.isMavenProject()).thenReturn(true);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("").getFile().getAbsolutePath());
 
-        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.java", "CitrusJavaTest", "fooTest", "CitrusJavaTest.fooTest", TestType.JAVA));
+        TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.admin.javadsl", "CitrusJavaTest", "fooTest", "CitrusJavaTest.fooTest", TestType.JAVA));
 
         Assert.assertEquals(testDetail.getName(), "CitrusJavaTest.fooTest");
-        Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.java");
+        Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.admin.javadsl");
         Assert.assertEquals(testDetail.getType(), TestType.JAVA);
-        Assert.assertTrue(testDetail.getFile().endsWith("java/CitrusJavaTest"));
+        Assert.assertTrue(testDetail.getFile().endsWith("javadsl/CitrusJavaTest"));
         Assert.assertEquals(testDetail.getActions().size(), 1L);
         Assert.assertEquals(testDetail.getActions().get(0).getType(), "echo");
 

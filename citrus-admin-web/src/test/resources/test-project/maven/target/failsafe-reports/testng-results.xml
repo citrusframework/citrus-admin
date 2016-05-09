@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="1" failed="5" total="16" passed="10">
-  <reporter-output>
-  </reporter-output>
-  <suite name="Sample test suite" duration-ms="9000" started-at="2016-01-01T00:00:00Z" finished-at="2016-01-01T00:00:09Z">
-    <groups>
-    </groups>
-  </suite> <!-- Surefire suite -->
-</testng-results>

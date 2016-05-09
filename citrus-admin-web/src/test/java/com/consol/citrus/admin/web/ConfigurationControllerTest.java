@@ -51,7 +51,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @BeforeClass
     public void setup() throws IOException {
-        projectService.setActiveProject(new Project(new ClassPathResource("test-project/maven").getFile().getAbsolutePath()));
+        projectService.setActiveProject(new Project(new ClassPathResource("projects/maven").getFile().getAbsolutePath()));
     }
 
     @Test

@@ -52,12 +52,12 @@ public class FileBrowserServiceTest {
 
     @Test
     public void testGetFolders() throws Exception {
-        String[] folders = testling.getFolders(new ClassPathResource("test-project").getFile());
+        String[] folders = testling.getFolders(new ClassPathResource("projects").getFile());
         Assert.assertNotNull(folders);
         Assert.assertEquals(folders.length, 3);
         Assert.assertEquals(folders[0], "ant");
         Assert.assertEquals(folders[1], "maven");
-        Assert.assertEquals(folders[2], "src");
+        Assert.assertEquals(folders[2], "sample");
     }
 
     @Test

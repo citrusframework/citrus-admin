@@ -85,7 +85,7 @@ public class ProjectServiceTest {
 
     @Test
     public void testGetProjectContextConfigFile() throws Exception {
-        Project testProject = new Project(new ClassPathResource("test-project/maven").getFile().getCanonicalPath());
+        Project testProject = new Project(new ClassPathResource("projects/maven").getFile().getCanonicalPath());
         projectService.setActiveProject(testProject);
 
         File configFile = projectService.getProjectContextConfigFile();
@@ -96,8 +96,8 @@ public class ProjectServiceTest {
     @DataProvider
     public Object[][] projectProvider() {
         return new Object[][] {
-            new Object[] {"test-project/maven", "This is a sample Citrus Maven build"},
-            new Object[] {"test-project/ant", "This is a sample Citrus ANT build"}
+            new Object[] {"projects/maven", "This is a sample Citrus Maven build"},
+            new Object[] {"projects/ant", "This is a sample Citrus ANT build"}
         };
     }
 }
