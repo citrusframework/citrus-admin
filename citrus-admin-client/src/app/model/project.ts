@@ -1,4 +1,5 @@
 import {Property} from "./property";
+import {BuildProperty} from "./build.property";
 
 export class Project {
 
@@ -33,5 +34,5 @@ export class BuildConfiguration {
 
     public type: string;
     public profiles: string;
-    public properties: {};
+    public properties: BuildProperty[];
 }

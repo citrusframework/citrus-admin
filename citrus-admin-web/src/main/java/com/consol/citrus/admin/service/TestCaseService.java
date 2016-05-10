@@ -21,9 +21,11 @@ import com.consol.citrus.admin.converter.action.ActionConverter;
 import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.XmlTestMarshaller;
+import com.consol.citrus.admin.mock.Mocks;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
-import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.model.testcase.core.*;
@@ -205,10 +207,16 @@ public class TestCaseService {
                 }
 
                 if (model == null) {
-                    model = new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType);
+                    if (actionType.getClass().getAnnotation(XmlRootElement.class) == null) {
+                        log.info(actionType.getClass().getName());
+                    } else {
+                        model = new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType);
+                    }
                 }
 
-                testDetail.getActions().add(model);
+                if (model != null) {
+                    testDetail.getActions().add(model);
+                }
             }
         }
 
@@ -292,14 +300,32 @@ public class TestCaseService {
                 if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass)) {
                     TestNGCitrusTestDesigner testInstance = (TestNGCitrusTestDesigner) testClass.newInstance();
                     Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.simulate(testMethod, new TestContext());
+                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
+                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
                     testMethod.invoke(testInstance);
 
                     return getTestcaseModel(testInstance.getTestCase());
                 } else if (TestNGCitrusTestRunner.class.isAssignableFrom(testClass)) {
                     TestNGCitrusTestRunner testInstance = (TestNGCitrusTestRunner) testClass.newInstance();
                     Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.simulate(testMethod, new TestContext());
+                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
+                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
+                    testMethod.invoke(testInstance);
+
+                    return getTestcaseModel(testInstance.getTestCase());
+                } else if (JUnit4CitrusTestDesigner.class.isAssignableFrom(testClass)) {
+                    JUnit4CitrusTestDesigner testInstance = (JUnit4CitrusTestDesigner) testClass.newInstance();
+                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
+                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
+                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
+                    testMethod.invoke(testInstance);
+
+                    return getTestcaseModel(testInstance.getTestCase());
+                } else if (JUnit4CitrusTestRunner.class.isAssignableFrom(testClass)) {
+                    JUnit4CitrusTestRunner testInstance = (JUnit4CitrusTestRunner) testClass.newInstance();
+                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
+                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
+                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
                     testMethod.invoke(testInstance);
 
                     return getTestcaseModel(testInstance.getTestCase());

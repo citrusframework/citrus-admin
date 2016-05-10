@@ -5,6 +5,7 @@ import {Project} from "../model/project";
 import {ProjectService} from "../service/project.service";
 import {ReportService} from "../service/report.service";
 import {TestReport} from "../model/test.report";
+import {BuildProperty} from "../model/build.property";
 
 @Component({
     templateUrl: 'app/components/project-settings.html',
@@ -18,6 +19,9 @@ export class ProjectSettingsComponent implements OnInit {
     errorMessage: string;
     project: Project = new Project();
 
+    propertyName: string;
+    propertyValue: string;
+
     ngOnInit() {
         this.getProject();
     }
@@ -27,6 +31,22 @@ export class ProjectSettingsComponent implements OnInit {
             .subscribe(
                 project => this.project = project,
                 error => this.errorMessage = <any>error);
+    }
+
+    addProperty() {
+        var property = new BuildProperty();
+        property.name = this.propertyName;
+        property.value = this.propertyValue;
+        this.project.settings.build.properties.push(property);
+
+        this.propertyName = "";
+        this.propertyValue = "";
+    }
+
+    removeProperty(property: BuildProperty, event) {
+        this.project.settings.build.properties.splice(this.project.settings.build.properties.indexOf(property), 1);
+        event.stopPropagation();
+        return false;
     }
 
     saveSettings() {

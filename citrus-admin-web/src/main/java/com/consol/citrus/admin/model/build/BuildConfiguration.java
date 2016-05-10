@@ -18,7 +18,7 @@ package com.consol.citrus.admin.model.build;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.Properties;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -36,5 +36,5 @@ public interface BuildConfiguration {
      * Gets the build properties.
      * @return
      */
-    Properties getProperties();
+    List<BuildProperty> getProperties();
 }

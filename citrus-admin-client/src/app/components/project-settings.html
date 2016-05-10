@@ -121,8 +121,30 @@
     </div>
 
     <div class="form-group">
+      <label class="col-sm-2 control-label">Properties</label>
+      <div class="col-sm-4">
+        <input [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control"/>
+      </div>
+      <div class="col-sm-4">
+        <input [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control"/>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-primary" (click)="addProperty()">Add</button>
+      </div>
+    </div>
+
+    <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
+        <div class="list-group">
+          <div *ngIf="project.settings.build.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
+          <div *ngFor="#property of project.settings.build.properties" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeProperty(property, $event)" name="remove" title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save settings</button>
       </div>
     </div>
   </form>

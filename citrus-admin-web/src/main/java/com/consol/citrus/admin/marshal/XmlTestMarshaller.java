@@ -16,8 +16,6 @@
 
 package com.consol.citrus.admin.marshal;
 
-import com.consol.citrus.admin.model.spring.SpringBeans;
-import com.consol.citrus.model.testcase.core.TestcaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -31,7 +29,12 @@ public class XmlTestMarshaller extends Jaxb2Marshaller {
     private static Logger log = LoggerFactory.getLogger(SpringBeanMarshaller.class);
 
     public XmlTestMarshaller() {
-        setClassesToBeBound(SpringBeans.class, TestcaseModel.class);
+        setPackagesToScan("com.consol.citrus.admin.model.spring",
+                "com.consol.citrus.model.testcase.core",
+                "com.consol.citrus.model.testcase.http",
+                "com.consol.citrus.model.testcase.ws",
+                "com.consol.citrus.model.testcase.jms",
+                "com.consol.citrus.model.testcase.docker");
 
         try {
             afterPropertiesSet();

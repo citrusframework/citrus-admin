@@ -16,11 +16,12 @@
 
 package com.consol.citrus.admin.service.executor.maven;
 
+import com.consol.citrus.admin.model.build.BuildProperty;
+import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -35,11 +36,26 @@ public class MavenCommand extends AbstractExecuteCommand {
     protected static final String PACKAGE = "package ";
     protected static final String INSTALL = "install ";
 
+    /** Maven build configuration */
+    private final MavenBuildConfiguration buildConfiguration;
+
     /**
      * Constructor for executing a command.
+     * @param workingDirectory
+     * @param buildConfiguration
      */
-    public MavenCommand(File workingDirectory) {
+    public MavenCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration) {
         super(workingDirectory);
+        this.buildConfiguration = buildConfiguration;
+    }
+
+    /**
+     * Gets the value of the buildConfiguration property.
+     *
+     * @return the buildConfiguration
+     */
+    public MavenBuildConfiguration getBuildConfiguration() {
+        return buildConfiguration;
     }
 
     protected String buildCommand() {
@@ -48,8 +64,8 @@ public class MavenCommand extends AbstractExecuteCommand {
         builder.append(MVN);
         builder.append(getLifeCycleCommand());
 
-        for (Map.Entry<Object, Object> propertyEntry: getSystemProperties().entrySet()) {
-            builder.append(String.format("-D%s=%s ", propertyEntry.getKey(), propertyEntry.getValue()));
+        for (BuildProperty propertyEntry: getSystemProperties()) {
+            builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
         }
 
         for (String profile: getActiveProfiles()) {
@@ -67,7 +83,7 @@ public class MavenCommand extends AbstractExecuteCommand {
         return new String[0];
     }
 
-    protected Map<Object, Object> getSystemProperties() {
-        return new HashMap<>();
+    protected List<BuildProperty> getSystemProperties() {
+        return buildConfiguration.getProperties();
     }
 }

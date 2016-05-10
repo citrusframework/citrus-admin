@@ -17,11 +17,12 @@
 package com.consol.citrus.admin.service.executor.maven;
 
 import com.consol.citrus.admin.model.Test;
+import com.consol.citrus.admin.model.build.BuildProperty;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 /**
  * ProcessBuilder for launching a single citrus test.
@@ -29,9 +30,6 @@ import java.util.Map;
  * @author Martin.Maher@consol.de
  */
 public class MavenRunTestsCommand extends MavenCommand {
-
-    /** Maven build configuration */
-    private final MavenBuildConfiguration buildConfiguration;
 
     /** Test to execute */
     private Test test;
@@ -42,13 +40,12 @@ public class MavenRunTestsCommand extends MavenCommand {
     }
 
     public MavenRunTestsCommand(File projectDirectory, MavenBuildConfiguration buildConfiguration) {
-        super(projectDirectory);
-        this.buildConfiguration = buildConfiguration;
+        super(projectDirectory, buildConfiguration);
     }
 
     @Override
     protected String getLifeCycleCommand() {
-        if (buildConfiguration.useFailsafe()) {
+        if (getBuildConfiguration().useFailsafe()) {
             return COMPILE + INTEGRATION_TEST;
         } else {
             return COMPILE + TEST;
@@ -56,12 +53,12 @@ public class MavenRunTestsCommand extends MavenCommand {
     }
 
     @Override
-    protected Map<Object, Object> getSystemProperties() {
-        Map<Object, Object> properties = super.getSystemProperties();
-        if (StringUtils.hasText(test.getName()) && buildConfiguration.useFailsafe()) {
-            properties.put("it.test", test.getClassName() + "#" + test.getMethodName());
+    protected List<BuildProperty> getSystemProperties() {
+        List<BuildProperty> properties = super.getSystemProperties();
+        if (StringUtils.hasText(test.getName()) && getBuildConfiguration().useFailsafe()) {
+            properties.add(new BuildProperty("it.test", test.getClassName() + "#" + test.getMethodName()));
         } else if (StringUtils.hasText(test.getName())) {
-            properties.put("test", test.getClassName() + "#" + test.getMethodName());
+            properties.add(new BuildProperty("test", test.getClassName() + "#" + test.getMethodName()));
         }
 
         return properties;
