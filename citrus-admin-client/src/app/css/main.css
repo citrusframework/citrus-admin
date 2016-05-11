@@ -573,7 +573,7 @@ i.channel {
     overflow-y: scroll;
 }
 
-.test-action, .test-transition,
+.test-action, .test-container, .test-transition,
 .start-action, .stop-action {
     text-align: center;
     cursor: pointer;
@@ -593,20 +593,49 @@ i.channel {
     border: 1px solid #ddd;
 }
 
+.test-container {
+    background-color: #fcfdff;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    width: auto;
+    max-width: 350px;
+    cursor: default;
+    padding-bottom: 15px;
+}
+
+.test-container .test-container {
+    background-color: #fff;
+    max-width: 300px;
+}
+
+.test-container .test-container .test-container {
+    max-width: 250px;
+}
+
+.test-container hr {
+    margin: 0px;
+    border-top: 1px solid #ddd;
+}
+
 .test-action:hover {
     background-color: #e3effc;
 }
 
-.test-action > i {
+.test-action > i, .test-container > i {
     display: block;
     text-align: left;
     padding-left: 10px;
     padding-top: 5px;
 }
 
-.test-action > span {
+.test-action > span, .test-container > span {
     display: block;
     font-weight: bold;
+}
+
+.test-container > span {
+    text-align: left;
+    padding-left: 15px;
 }
 
 .test-action > .panel {
@@ -625,8 +654,12 @@ i.channel {
     padding-top: 12px;
 }
 
-.test-action i {
-    font-size: 30px;
+.test-action i, .test-container i {
+    font-size: 25px;
+}
+
+.test-transition i {
+    font-size: 14px;
 }
 
 .start-action i.fa-play {
@@ -635,6 +668,11 @@ i.channel {
 
 .stop-action i.fa-stop {
     color: #F4645C;
+}
+
+.icon-iterate:before,
+.icon-repeat:before {
+    content: "\f01e";
 }
 
 .icon-echo:before {
@@ -661,7 +699,8 @@ i.channel {
     content: "\f0e9";
 }
 
-.icon-assert:before {
+.icon-assert:before,
+.icon-assert-fault:before {
     content: "\f06e";
 }
 

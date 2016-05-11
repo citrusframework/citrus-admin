@@ -35,7 +35,7 @@ public class ActionConverter extends AbstractTestActionConverter<Object, com.con
 
     @Override
     public TestAction convert(Object model) {
-        TestAction actionModel = new TestAction(getActionType(), getSourceModelClass());
+        TestAction actionModel = new TestAction(getActionType(), model.getClass());
 
         addActionProperties(actionModel, model);
 

@@ -17,8 +17,11 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.actions.*;
+import com.consol.citrus.admin.converter.action.ws.AssertSoapFaultContainerConverter;
 import com.consol.citrus.admin.model.TestAction;
+import com.consol.citrus.container.*;
 import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.ws.actions.AssertSoapFault;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -44,6 +47,11 @@ public class TestActionConverterTest {
                 new Object[] {new ReceiveMessageActionConverter(), new ReceiveModel(), new ReceiveMessageAction(), "receive"},
                 new Object[] {new EchoActionConverter(), new EchoModel(), new EchoAction(), "echo"},
                 new Object[] {new SleepActionConverter(), new SleepModel(), new SleepAction(), "sleep"},
+                new Object[] {new ParallelContainerConverter(), new ParallelModel(), new Parallel(), "parallel"},
+                new Object[] {new SequentialContainerConverter(), new SequentialModel(), new Sequence(), "sequential"},
+                new Object[] {new IterateContainerConverter(), new IterateModel(), new Iterate(), "iterate"},
+                new Object[] {new AssertContainerConverter(), new AssertModel(), new com.consol.citrus.container.Assert(), "assert"},
+                new Object[] {new AssertSoapFaultContainerConverter(), new com.consol.citrus.model.testcase.ws.AssertModel(), new AssertSoapFault(), "assert-fault"},
                 new Object[] {new ActionConverter("sample"), new ActionModel(), new EchoAction(), "sample"},
         };
     }

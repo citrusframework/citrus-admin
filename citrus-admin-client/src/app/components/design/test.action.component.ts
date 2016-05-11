@@ -26,7 +26,7 @@ import {TestAction} from "../../model/tests";
                     <span>{{getProperty("message")}}</span>
                   </template>
                   <template ngSwitchDefault>
-                    <p *ngFor="#property of action.properties">{{property.id}}={{property.value}}</p>
+                    <p *ngFor="#property of action.properties">{{property.id}}:{{property.value}}</p>
                   </template>
                 </div>
               </div>

@@ -28,6 +28,8 @@ public class TestAction {
     private final Class<?> modelType;
     private List<Property> properties = new ArrayList<Property>();
 
+    private List<TestAction> actions = new ArrayList<>();
+
     /**
      * Constructor using action type field and identifier.
      * @param type
@@ -81,4 +83,21 @@ public class TestAction {
         this.properties = properties;
     }
 
+    /**
+     * Gets the value of the actions property.
+     *
+     * @return the actions
+     */
+    public List<TestAction> getActions() {
+        return actions;
+    }
+
+    /**
+     * Sets the actions property.
+     *
+     * @param actions
+     */
+    public void setActions(List<TestAction> actions) {
+        this.actions = actions;
+    }
 }
