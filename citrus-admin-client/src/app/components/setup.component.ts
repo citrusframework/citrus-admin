@@ -1,16 +1,19 @@
 import {Component, AfterViewInit} from 'angular2/core';
+import {NgModel, NgIf} from "angular2/common";
 
 declare var jQuery:any;
 
 @Component({
     selector: 'setup',
-    templateUrl: 'app/components/open.project.html'
+    templateUrl: 'app/components/open.project.html',
+    directives: [ NgModel, NgIf ]
 })
 export class SetupComponent implements AfterViewInit {
 
     constructor() {}
 
     projectHome: string;
+    error: any;
 
     ngAfterViewInit() {
         jQuery('#file-tree').fileTree({
@@ -20,7 +23,7 @@ export class SetupComponent implements AfterViewInit {
             expandSpeed: 1,
             collapseSpeed: 1
         }, function(file) {
-            jQuery('input[name="projecthome"]').val(file);
+            this.projectHome = file;
             jQuery('#file-tree').hide();
         });
 
@@ -37,7 +40,7 @@ export class SetupComponent implements AfterViewInit {
 
     select() {
         var selected = jQuery('ul.jqueryFileTree li.expanded').last().children('a:first').attr('rel');
-        jQuery('input[name="projecthome"]').val(selected);
+        this.projectHome = selected;
         this.close();
     }
 
@@ -45,15 +48,21 @@ export class SetupComponent implements AfterViewInit {
         window.location.href = "/";
     }
 
+    clearError() {
+        this.error = undefined;
+    }
+
     onSubmit() {
         jQuery.ajax({
             url: "project",
             type: 'POST',
-            data: encodeURI("projecthome=" + jQuery('input[name="projecthome"]').val()),
-            async: false,
+            data: encodeURI("projecthome=" + this.projectHome),
             success: function(response) {
+                window.location.href = "/";
+            },
+            error: response => {
+                this.error = response.responseJSON;
             }
         });
-        window.location.href = "/";
     }
 }

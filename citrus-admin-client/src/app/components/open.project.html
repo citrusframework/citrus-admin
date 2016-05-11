@@ -7,19 +7,24 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">Project Home</label>
           <div class="input-group">
-            <input name="projecthome" type="text" class="form-control" placeholder="Project Home" value="{{projectHome}}" />
+            <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Project Home" />
             <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
           </div>
         </div>
 
         <div class="form-group">
           <div class="col-sm-offset-3">
-            <button class="btn btn-primary" type="submit">Open</button>
+            <button class="btn btn-primary" type="submit" [disabled]="projectHome?.length > 0 ? false : true">Open</button>
             <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
           </div>
         </div>
       </fieldset>
     </form>
+
+    <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Error!</strong>&nbsp;<span [textContent]="error.message"></span>
+    </div>
 
     <div id="dialog-file-tree" class="modal fade">
       <div class="modal-dialog">
@@ -36,8 +41,8 @@
           </div>
 
           <div class="modal-footer">
-            <a (click)="select()"  name="dialog-select" class="btn btn-primary">Select</a>
-            <a (click)="close()" name="dialog-close" class="btn btn-default" data-dismiss="modal">Close</a>
+            <button (click)="select()" name="dialog-select" class="btn btn-primary">Select</button>
+            <button (click)="close()" name="dialog-close" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

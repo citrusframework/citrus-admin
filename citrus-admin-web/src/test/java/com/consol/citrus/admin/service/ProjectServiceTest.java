@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.CollectionUtils;
@@ -59,7 +60,7 @@ public class ProjectServiceTest {
         Assert.assertEquals(project.getDescription(), description);
 
         projectService.getActiveProject().setDescription("New description");
-        projectService.saveProject();
+        projectService.saveProject(projectService.getActiveProject());
 
         projectService.load(new ClassPathResource(projectHome).getFile().getCanonicalPath());
         project = projectService.getActiveProject();
@@ -91,6 +92,12 @@ public class ProjectServiceTest {
         File configFile = projectService.getProjectContextConfigFile();
         Assert.assertTrue(configFile.exists());
         Assert.assertEquals(configFile.getName(), "citrus-context.xml");
+    }
+
+    @Test(expectedExceptions = { ApplicationRuntimeException.class },
+            expectedExceptionsMessageRegExp = "Invalid project home - not a proper Citrus project")
+    public void testInvalidProjectHome() {
+        projectService.load("invalid");
     }
 
     @DataProvider

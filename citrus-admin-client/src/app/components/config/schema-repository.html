@@ -55,7 +55,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#schema of newRepository.schemas.schemas" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{schema.id}}</b> location={{schema.location}}&nbsp;<a class="pull-right" name="remove-schema" title="Remove schema" (click)="removeSchema(schema)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#schema of newRepository.schemas?.schemas" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{schema.id}}</b> location={{schema.location}}&nbsp;<a class="pull-right" name="remove-schema" title="Remove schema" (click)="removeSchema(schema)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -83,7 +83,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#reference of newRepository.schemas.references" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{reference.schema}}</b>&nbsp;<a class="pull-right" name="remove-schema-reference" title="Remove schema reference" (click)="removeSchemaReference(reference)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#reference of newRepository.schemas?.references" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{reference.schema}}</b>&nbsp;<a class="pull-right" name="remove-schema-reference" title="Remove schema reference" (click)="removeSchemaReference(reference)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -138,7 +138,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#schema of selectedRepository.schemas.schemas" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{schema.id}}</b> location={{schema.location}}&nbsp;<a class="pull-right" name="remove-schema" title="Remove schema" (click)="removeSchema(schema)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#schema of selectedRepository.schemas?.schemas" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{schema.id}}</b> location={{schema.location}}&nbsp;<a class="pull-right" name="remove-schema" title="Remove schema" (click)="removeSchema(schema)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -166,7 +166,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngFor="#reference of selectedRepository.schemas.references" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{reference.schema}}</b>&nbsp;<a class="pull-right" name="remove-schema-reference" title="Remove schema reference" (click)="removeSchemaReference(reference)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+        <div *ngFor="#reference of selectedRepository.schemas?.references" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{reference.schema}}</b>&nbsp;<a class="pull-right" name="remove-schema-reference" title="Remove schema reference" (click)="removeSchemaReference(reference)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
       </div>
     </div>
   </div>
@@ -186,8 +186,8 @@
     <a class="pull-right" (click)="removeRepository(repository, $event)" name="remove" title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
     <span class="label label-primary"><i class="fa fa-copy"></i></span>&nbsp;<span><b>{{repository.id}}</b></span>
     <ul class="properties">
-      <li><b>schemas:</b> <span *ngFor="#schema of repository.schemas.schemas">&nbsp;{{schema.id}}&nbsp;|</span></li>
-      <li><b>references:</b> <span *ngFor="#reference of repository.schemas.references">&nbsp;{{reference.schema}}&nbsp;|</span></li>
+      <li><b>schemas:</b> <span *ngFor="#schema of repository.schemas?.schemas">&nbsp;{{schema.id}}&nbsp;|</span></li>
+      <li><b>references:</b> <span *ngFor="#reference of repository.schemas?.references">&nbsp;{{reference.schema}}&nbsp;|</span></li>
     </ul>
   </div>
 </div>

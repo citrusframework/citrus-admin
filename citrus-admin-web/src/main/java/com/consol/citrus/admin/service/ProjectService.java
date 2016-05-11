@@ -20,7 +20,6 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.ProjectSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -70,6 +69,7 @@ public class ProjectService {
      * @return
      */
     public void load(String projectHomeDir) {
+        Project project = null;
         if (getProjectSettingsFile(projectHomeDir).exists()) {
             try {
                 project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(getProjectSettingsFile(projectHomeDir));
@@ -129,9 +129,10 @@ public class ProjectService {
                 }
             }
 
-            saveProject();
+            saveProject(project);
         }
 
+        this.project = project;
         System.setProperty(Application.PROJECT_HOME, projectHomeDir);
     }
 
@@ -146,15 +147,17 @@ public class ProjectService {
     /**
      * Save project settings.
      */
-    public void saveSettings(ProjectSettings settings) {
-        project.setSettings(settings);
-        saveProject();
+    public void update(Project project) {
+        this.project.setDescription(project.getDescription());
+        this.project.setSettings(project.getSettings());
+        saveProject(this.project);
     }
 
     /**
      * Save project to file system.
+     * @param project
      */
-    public void saveProject() {
+    public void saveProject(Project project) {
         try (FileOutputStream fos = new FileOutputStream(getProjectSettingsFile(project.getProjectHome()))) {
             fos.write(Jackson2ObjectMapperBuilder.json().build().writer().withDefaultPrettyPrinter().writeValueAsBytes(project));
             fos.flush();

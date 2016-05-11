@@ -16,8 +16,8 @@ export class ProjectService {
                         .catch(this.handleError);
     }
 
-    saveSettings(project: Project) {
-        return this.http.post(this._serviceUrl + '/settings', JSON.stringify(project), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+    update(project: Project) {
+        return this.http.put(this._serviceUrl, JSON.stringify(project), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
             .catch(this.handleError);
     }
 

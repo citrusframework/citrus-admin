@@ -50,7 +50,7 @@ export class ProjectSettingsComponent implements OnInit {
     }
 
     saveSettings() {
-        this._projectService.saveSettings(this.project)
+        this._projectService.update(this.project)
             .subscribe(error => this.errorMessage = <any>error);
     }
 }
