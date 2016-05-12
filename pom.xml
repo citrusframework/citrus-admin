@@ -17,11 +17,39 @@
     <testng.version>6.9.9</testng.version>
   </properties>
 
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>manual</distribution>
+      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software
+        (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references
+        list. You may also use our "Tested using Citrus" logo in your online or printed documentation.</comments>
+    </license>
+  </licenses>
+
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>http://labs-build.consol.de/view/Citrus/</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <address>citrus-dev-l@consol.de</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+
   <modules>
     <module>citrus-admin-client</module>
     <module>citrus-admin-web</module>
     <module>citrus-admin-docs</module>
   </modules>
+
+  <scm>
+    <connection>scm:git:git@github.com:christophd/citrus-admin.git</connection>
+    <developerConnection>scm:git:git@github.com/christophd/citrus-admin.git</developerConnection>
+    <url>http://github.com/christophd/citrus-admin.git</url>
+  </scm>
 
   <dependencyManagement>
     <dependencies>

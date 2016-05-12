@@ -48,22 +48,71 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>release-docs</id>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-scm-plugin</artifactId>
+            <configuration>
+              <connectionUrl>scm:git:git@github.com:christophd/citrus-admin.git</connectionUrl>
+              <developerConnectionUrl>scm:git:git@github.com:christophd/citrus-admin.git</developerConnectionUrl>
+              <scmVersion>gh-pages</scmVersion>
+              <scmVersionType>branch</scmVersionType>
+            </configuration>
             <executions>
               <execution>
                 <id>gh-pages-clone</id>
+                <phase>initialize</phase>
                 <goals>
                   <goal>checkout</goal>
                 </goals>
+              </execution>
+              <execution>
+                <id>gh-pages-add</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>add</goal>
+                </goals>
                 <configuration>
-                  <connectionUrl>git@github.com:christophd/citrus-admin.git</connectionUrl>
-                  <scmVersion>gh-pages</scmVersion>
-                  <scmVersionType>branch</scmVersionType>
+                  <workingDirectory>${project.build.directory}/checkout</workingDirectory>
+                  <includes>**/**</includes>
+                </configuration>
+              </execution>
+              <execution>
+                <id>gh-pages-push</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>checkin</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${project.build.directory}/checkout</workingDirectory>
+                  <message>Update reference manual</message>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-gitbook-sources</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/checkout</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/manual/_book</directory>
+                      <includes>
+                        <include>**/**</include>
+                      </includes>
+                    </resource>
+                  </resources>
                 </configuration>
               </execution>
             </executions>
