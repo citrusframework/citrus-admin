@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Installation | Usage</title>
+        <title>Installation | Citrus Admin UI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -40,7 +40,7 @@
     <link rel="next" href="./links.html" />
     
     
-    <link rel="prev" href="./index.html" />
+    <link rel="prev" href="./preconditions.html" />
     
 
         
@@ -49,11 +49,11 @@
         
         
     <div class="book"
-        data-level="1"
+        data-level="2"
         data-chapter-title="Installation"
         data-filepath="installation.md"
         data-basepath="."
-        data-revision="Thu May 12 2016 11:27:31 GMT+0200 (CEST)"
+        data-revision="Thu May 12 2016 13:04:06 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -82,14 +82,29 @@
             
         </li>
     
-        <li class="chapter active" data-level="1" data-path="installation.html">
+        <li class="chapter " data-level="1" data-path="preconditions.html">
+            
+                
+                    <a href="./preconditions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preconditions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="2" data-path="installation.html">
             
                 
                     <a href="./installation.html">
                 
                         <i class="fa fa-check"></i>
                         
-                            <b>1.</b>
+                            <b>2.</b>
                         
                         Installation
                     </a>
@@ -97,14 +112,14 @@
             
         </li>
     
-        <li class="chapter " data-level="2" data-path="links.html">
+        <li class="chapter " data-level="3" data-path="links.html">
             
                 
                     <a href="./links.html">
                 
                         <i class="fa fa-check"></i>
                         
-                            <b>2.</b>
+                            <b>3.</b>
                         
                         Further Reading
                     </a>
@@ -135,7 +150,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Usage</a>
+        <a href="./" >Citrus Admin UI</a>
     </h1>
 </div>
 
@@ -145,14 +160,15 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="installation">Installation</h3>
-<p>First fo all start the server web application and keep it running:</p>
-<p><code>mvn -pl citrus-admin-web spring-boot:run</code></p>
-<p>For active development and a short roundtrip you can use gulp:watch in order to automatically compile typescript sources on the fly when they change.</p>
-<p><code>mvn -pl citrus-admin-client frontend:gulp -Pgulp-watch</code></p>
-<p>If you change a source file (e.e <em>.js, </em>.ts, *.css) the sources will automatically be compiled and copied to the Maven target folder. The running
-spring-boot application is able to automatically grab the newly compiled sources. Just go to the browser and hit refresh to see the changes.
-If you change server Java sources spring-boot automatically restarts the web application so you may just hit refresh in your browser, too.</p>
+                        <h2 id="installation">Installation</h2>
+<p>The Citrus administration UI is a web application that uses Spring boot and Angular2. First of all download the latest distribution which
+is a Java JAR file located at <a href="https://labs.consol.de/" target="_blank">labs.consol.de</a>:</p>
+<p>Save the Java archive to a folder on your local machine and start the Spring boot web application. The downloaded JAR should be executable 
+from command line like this:</p>
+<p><code>java -jar citrus-admin.jar</code></p>
+<p>You will see the application starting up. Usually you will see some console log output. The web server should start within seconds. Once the application is up and running
+you can open your browser and point to &apos;<a href="http://localhost:8080" target="_blank">http://localhost:8080</a>&apos;.</p>
+<p>That&apos;s it you are ready to use the Citrus administration UI. Next thing to do is to <a href="open-project.md">open a project</a>.</p>
 
                     
                     </section>
@@ -163,7 +179,7 @@ If you change server Java sources spring-boot automatically restarts the web app
         </div>
 
         
-        <a href="./index.html" class="navigation navigation-prev " aria-label="Previous page: Introduction"><i class="fa fa-angle-left"></i></a>
+        <a href="./preconditions.html" class="navigation navigation-prev " aria-label="Previous page: Preconditions"><i class="fa fa-angle-left"></i></a>
         
         
         <a href="./links.html" class="navigation navigation-next " aria-label="Next page: Further Reading"><i class="fa fa-angle-right"></i></a>
