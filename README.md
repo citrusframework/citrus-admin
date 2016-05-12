@@ -5,6 +5,9 @@ This is a web administration user interface for the integration test framework
 Citrus [www.citrusframework.org][2] written in Angular2. Major functionality objectives
 are project and configuration management as well as test execution and reporting.
 
+See the complete [User Manual](https://christophd.github.io/citrus-admin/) for a detailed description 
+on all features ond how to use them.
+
 Preconditions
 ---------
 

@@ -1,4 +1,10 @@
-### Usage
+# Citrus Admin UI
+
+## Welcome to the Citrus administration user interface
+
+This is a web administration user interface for the integration test framework 
+Citrus [www.citrusframework.org](http://www.citrusframework.org) written in Angular2. Major functionality objectives
+are project and configuration management as well as test execution and reporting.
 
 * Clone the repository and build locally using Maven
 

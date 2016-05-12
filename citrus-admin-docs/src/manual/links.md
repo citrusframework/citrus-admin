@@ -1,4 +1,4 @@
-### Further reading
+## Further reading
 
 * The [Citrus reference manual](http://www.citrusframework.org/reference/html/) gives you a detailed description of all Citrus features.
 * Examples: 

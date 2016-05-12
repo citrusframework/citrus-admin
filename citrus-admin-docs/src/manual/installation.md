@@ -1,13 +1,14 @@
-### Installation
+## Installation
 
-First fo all start the server web application and keep it running:
+The Citrus administration UI is a web application that uses Spring boot and Angular2. First of all download the latest distribution which
+is a Java JAR file located at [labs.consol.de](https://labs.consol.de/):
 
-```mvn -pl citrus-admin-web spring-boot:run```
+Save the Java archive to a folder on your local machine and start the Spring boot web application. The downloaded JAR should be executable 
+from command line like this:
 
-For active development and a short roundtrip you can use gulp:watch in order to automatically compile typescript sources on the fly when they change.
+```java -jar citrus-admin.jar```
 
-```mvn -pl citrus-admin-client frontend:gulp -Pgulp-watch```
-
-If you change a source file (e.e *.js, *.ts, *.css) the sources will automatically be compiled and copied to the Maven target folder. The running
-spring-boot application is able to automatically grab the newly compiled sources. Just go to the browser and hit refresh to see the changes.
-If you change server Java sources spring-boot automatically restarts the web application so you may just hit refresh in your browser, too.
+You will see the application starting up. Usually you will see some console log output. The web server should start within seconds. Once the application is up and running
+you can open your browser and point to 'http://localhost:8080'.
+ 
+That's it you are ready to use the Citrus administration UI. Next thing to do is to [open a project](open-project.md).
