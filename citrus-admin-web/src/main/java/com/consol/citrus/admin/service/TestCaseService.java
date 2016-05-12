@@ -31,6 +31,7 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -290,10 +291,7 @@ public class TestCaseService {
     private TestcaseModel getJavaTestModel(Project project, TestDetail detail) {
         if (project.isMavenProject()) {
             try {
-                ClassLoader classLoader = URLClassLoader.newInstance(new URL[]{
-                        new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "classes").getURL(),
-                        new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "test-classes").getURL()
-                });
+                ClassLoader classLoader = URLClassLoader.newInstance(getTestClassLoader(project));
 
                 Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
 
@@ -348,6 +346,25 @@ public class TestCaseService {
         TestcaseModel testModel = new TestcaseModel();
         testModel.setName(detail.getClassName() + "." + detail.getMethodName());
         return testModel;
+    }
+
+    private URL[] getTestClassLoader(Project project) throws IOException {
+        List<URL> classpathUrls = new ArrayList<>();
+
+        classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "classes").getURL());
+        classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "test-classes").getURL());
+
+        File[] mavenDependencies = Maven.configureResolver()
+                .workOffline(false)
+                .resolve(project.getSettings().getBasePackage() + ":" + project.getName() + ":" + project.getVersion())
+                .withTransitivity()
+                .asFile();
+
+        for (File mavenDependency : mavenDependencies) {
+            classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
+        }
+
+        return classpathUrls.toArray(new URL[classpathUrls.size()]);
     }
 
     private TestcaseModel getTestcaseModel(TestCase testCase) {

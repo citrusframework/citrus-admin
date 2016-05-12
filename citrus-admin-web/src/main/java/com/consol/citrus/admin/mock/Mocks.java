@@ -19,6 +19,7 @@ package com.consol.citrus.admin.mock;
 import com.consol.citrus.context.TestContext;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
+import org.springframework.oxm.Marshaller;
 
 /**
  * @author Christoph Deppisch
@@ -28,6 +29,7 @@ public class Mocks {
 
     public static ApplicationContext getApplicationContextMock() {
         ApplicationContext mock = Mockito.mock(ApplicationContext.class);
+        Mockito.when(mock.getBean(Marshaller.class)).thenReturn(Mockito.mock(Marshaller.class));
         return mock;
     }
 

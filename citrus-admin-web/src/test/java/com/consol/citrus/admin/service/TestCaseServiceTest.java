@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.model.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,8 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestDetailJava() throws Exception {
         reset(project);
+        when(project.getName()).thenReturn("citrus-core");
+        when(project.getVersion()).thenReturn(Citrus.getVersion());
         when(project.isMavenProject()).thenReturn(true);
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("").getFile().getAbsolutePath());
