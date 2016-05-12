@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | Citrus Admin UI</title>
+        <title>Open project | Citrus Admin UI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="This is a web administration user interface for the integration test framework Citrus www.citrusframework.org written in Angular2. Major functionality objectivesare project and configuration management as well as test execution and reporting.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -37,8 +37,10 @@
         
     
     
-    <link rel="next" href="./preconditions.html" />
+    <link rel="next" href="./project-dashboard.html" />
     
+    
+    <link rel="prev" href="./project-new.html" />
     
 
         
@@ -47,9 +49,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="3.2"
+        data-chapter-title="Open project"
+        data-filepath="project-open.md"
         data-basepath="."
         data-revision="Thu May 12 2016 16:28:41 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -67,7 +69,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -141,7 +143,7 @@
             
         </li>
     
-        <li class="chapter " data-level="3.2" data-path="project-open.html">
+        <li class="chapter active" data-level="3.2" data-path="project-open.html">
             
                 
                     <a href="./project-open.html">
@@ -348,53 +350,57 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-admin-ui">Citrus Admin UI</h1>
-<h2 id="welcome-to-the-citrus-administration-user-interface">Welcome to the Citrus administration user interface</h2>
-<p>This is a web administration user interface for the integration test framework 
-Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a> written in Angular2. Major functionality objectives
-are project and configuration management as well as test execution and reporting.</p>
-<p><strong>NOTE:</strong> <em>This project is still in beta status and is still under construction!</em> </p>
-<h3 id="stable-features">Stable features</h3>
-<p>Consider following features to be in a stable state:</p>
+                        <h2 id="open-project">Open project</h2>
+<p>You can open any Citrus project. The only prerequisit is that you have access to the project home on your local machine. When the administration UI is
+started you have to open a project first.</p>
+<p><img src="screenshots/project-open.png" alt="Open"></p>
+<p>The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
+by setting a system environment variable at startup:</p>
+<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject-home=/Users/myaccount/path/tp/citrus/project/home</code></p>
+<p>When pre selecting a project home the project is opened automatically and the <a href="project-dashboard.html">project dashboard</a> is displayed. Now back to the project home selection if no project has bee pre selected yet.</p>
+<p>You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.</p>
+<p><img src="screenshots/project-home.png" alt="Open"></p>
+<p>Once you have specified the project home you are ready to hit the <strong>Open</strong> button. Citrus will read the project information and open the <a href="project-dashboard.html">project dashboard</a>. The administration UI is looking
+for several things in your project in order to gain information about the project. The files scanned are:</p>
 <ul>
-<li><a href="project.html">Project</a><ul>
-<li><a href="project-open.html">Open project</a></li>
-<li><a href="project-dashboard.html">Dashboard</a></li>
-<li><a href="project-settings.md">Settings</a></li>
+<li><strong>${project-home}/pom.xml</strong>: Reads information from Maven POM</li>
+<li><strong>${project-home}/src/test/resources</strong>: Reads XML test cases</li>
+<li><strong>${project-home}/src/test/resources/citrus-context.xml</strong>: Reads Spring bean configuration</li>
+<li><strong>${project-home}/src/test/java</strong>: Reads test cases</li>
 </ul>
-</li>
-<li><a href="config.md">Configuration</a><ul>
-<li><a href="config-endpoints.md">Endpoints</a></li>
-<li><a href="config-global-variables.md">Global Variables</a></li>
-<li><a href="config-namespace.md">Namespace Context</a></li>
-<li><a href="config-dictionaries.md">Data Dictionaries</a></li>
-<li><a href="config-functions.md">Functions</a></li>
-<li><a href="config-matcher.md">Validation Matcher</a></li>
-<li><a href="config-schemas.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.md">Test management</a><ul>
-<li><a href="test-search.md">Search tests</a></li>
-<li><a href="test-open.md">Open tests</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="unstable-and-heavily-under-construction">Unstable and heavily under construction</h3>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li>Project<ul>
-<li><a href="project-new.html">New project</a></li>
-<li><a href="project-statistics.md">Statistics</a></li>
-</ul>
-</li>
-<li>Test management   <ul>
-<li><a href="test-execute.md">Execute tests</a></li>
-<li><a href="test-design.md">Test design</a></li>
-<li><a href="test-reporting.md">Reporting</a></li>
-</ul>
-</li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
+<h3 id="customize-project-settings">Customize project settings</h3>
+<p>It is possible that your project uses a different folder layout for test resources and test sources (e.g. <em>src/it/resources</em> and <em>src/it/java</em>). Then the project open operation will fail with errors. We can fix this by customizing the project settings
+manually in prior to opening the project. </p>
+<p>There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:</p>
+<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject-home=/Users/myaccount/path/tp/citrus/project/home 
+-Djava.source.directory=src/it/java 
+-Dxml.source.directory=src/it/resources</code></p>
+<p>A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called <strong>citrus-project.json</strong>. When you open a Citrus project for the first time the administration UI creates this project settings file
+automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:</p>
+<pre><code>{
+  &quot;projectHome&quot; : &quot;~/Projects/Citrus/citrus-sample&quot;,
+  &quot;name&quot; : &quot;citrus-sample-project&quot;,
+  &quot;description&quot; : &quot;&quot;,
+  &quot;version&quot; : &quot;1.0.0&quot;,
+  &quot;testCount&quot; : 0,
+  &quot;settings&quot; : {
+    &quot;basePackage&quot; : &quot;com.consol.citrus&quot;,
+    &quot;citrusVersion&quot; : &quot;2.6&quot;,
+    &quot;springApplicationContext&quot; : &quot;src/it/resources/citrus-context.xml&quot;,
+    &quot;javaSrcDirectory&quot; : &quot;src/it/java/&quot;,
+    &quot;xmlSrcDirectory&quot; : &quot;src/it/resources/&quot;,
+    &quot;javaFilePattern&quot; : &quot;/**/*Test.java,/**/*IT.java&quot;,
+    &quot;xmlFilePattern&quot; : &quot;/**/*Test.xml,/**/*IT.xml&quot;,
+    &quot;build&quot; : {
+      &quot;@class&quot; : &quot;com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration&quot;,
+      &quot;type&quot; : &quot;maven&quot;,
+      &quot;properties&quot; : [ ],
+      &quot;testPlugin&quot; : &quot;maven-failsafe-plugin&quot;,
+      &quot;profiles&quot; : null
+    }
+  }
+}
+</code></pre><p>So you can force the administration UI to use these settings when opening the project. Just create the <strong>citrus-project.json</strong> file in the Citrus project home directory before opening the project. </p>
 
                     
                     </section>
@@ -405,8 +411,10 @@ are project and configuration management as well as test execution and reporting
         </div>
 
         
+        <a href="./project-new.html" class="navigation navigation-prev " aria-label="Previous page: New project"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preconditions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preconditions"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./project-dashboard.html" class="navigation navigation-next " aria-label="Next page: Dashboard"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

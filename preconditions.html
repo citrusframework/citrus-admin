@@ -53,7 +53,7 @@
         data-chapter-title="Preconditions"
         data-filepath="preconditions.md"
         data-basepath="."
-        data-revision="Thu May 12 2016 13:04:06 GMT+0200 (CEST)"
+        data-revision="Thu May 12 2016 16:28:41 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -112,14 +112,204 @@
             
         </li>
     
-        <li class="chapter " data-level="3" data-path="links.html">
+        <li class="chapter " data-level="3" data-path="project.html">
+            
+                
+                    <a href="./project.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Project
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1" data-path="project-new.html">
+            
+                
+                    <a href="./project-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.</b>
+                        
+                        New project
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="project-open.html">
+            
+                
+                    <a href="./project-open.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.</b>
+                        
+                        Open project
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="project-dashboard.html">
+            
+                
+                    <a href="./project-dashboard.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.</b>
+                        
+                        Dashboard
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="project-settings.html">
+            
+            <span><b>3.4.</b> Settings</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.5" data-path="project-statistics.html">
+            
+            <span><b>3.5.</b> Statistics</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="config.html">
+            
+            <span><b>4.</b> Configuration</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="4.1" data-path="config-endpoints.html">
+            
+            <span><b>4.1.</b> Endpoints</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="config-global-variables.html">
+            
+            <span><b>4.2.</b> Global Variables</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="config-namespace.html">
+            
+            <span><b>4.3.</b> Namespace Context</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="config-dictionaries.html">
+            
+            <span><b>4.4.</b> Data Dictionaries</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="config-functions.html">
+            
+            <span><b>4.5.</b> Functions</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.6" data-path="config-matcher.html">
+            
+            <span><b>4.6.</b> Validation Matcher</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.7" data-path="config-schemas.html">
+            
+            <span><b>4.7.</b> Schema Repositories</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="tests.html">
+            
+            <span><b>5.</b> Test management</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="5.1" data-path="test-search.html">
+            
+            <span><b>5.1.</b> Search tests</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.2" data-path="test-open.html">
+            
+            <span><b>5.2.</b> Open tests</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.3" data-path="test-execute.html">
+            
+            <span><b>5.3.</b> Execute tests</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.4" data-path="test-design.html">
+            
+            <span><b>5.4.</b> Test design</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.5" data-path="test-reporting.html">
+            
+            <span><b>5.5.</b> Reporting</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="links.html">
             
                 
                     <a href="./links.html">
                 
                         <i class="fa fa-check"></i>
                         
-                            <b>3.</b>
+                            <b>6.</b>
                         
                         Further Reading
                     </a>
@@ -162,41 +352,21 @@
                     
                         <h2 id="preconditions">Preconditions</h2>
 <p>The administration UI is in early beta status and still under construction. Following from that we have to deal with some limitations and
-trade offs until the final version is published. </p>
-<p>At the moment we are limited to supporting standard Citrus projects using Maven, 
-TestNG or JUnit and Java 7 or higher. Gradle or ANT projects are currently not supported.</p>
+trade offs until the final version is released (hopefully end 2016, keep your fingers crossed!). However the administration UI is usable and
+some features are stable.</p>
+<p>Please consider following limitations:</p>
+<h3 id="build-tools">Build tools</h3>
+<p>At the moment we are limited to supporting standard Citrus projects using Maven. Gradle or ANT projects are currently not supported. The build tool used is important because the administration UI is reading
+build information and uses Maven to execute test cases.</p>
+<h3 id="citrus-version">Citrus version</h3>
 <p>Your project should use Citrus version 2.0 or higher in order to be able to work with the administration UI. Earlier Citrus versions might work too but are
 not tested and will not get support with bugfixes.</p>
-<p>Consider following features to be in a stable state:</p>
-<ul>
-<li><a href="open-project.md">Open project</a></li>
-<li><a href="project-dashboard.md">Project dashboard</a></li>
-<li><a href="project-settings.md">Project settings</a></li>
-<li><a href="configuration.md">Configuration</a><ul>
-<li><a href="configuration.md">Endpoints</a></li>
-<li><a href="configuration.md">Global Variables</a></li>
-<li><a href="configuration.md">Namespace Context</a></li>
-<li><a href="configuration.md">Data Dictionaries</a></li>
-<li><a href="configuration.md">Function Libraries</a></li>
-<li><a href="configuration.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.md">Test management</a><ul>
-<li><a href="test-search.md">Search tests</a></li>
-<li><a href="tests.md">Show tests</a></li>
-<li><a href="test-execute.md">Execute tests</a></li>
-</ul>
-</li>
-</ul>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li><a href="new-project.md">New project</a> </li>
-<li><a href="test-design.md">Test design</a></li>
-<li><a href="test-execute.md">Messages exchanged</a></li>
-<li><a href="test-reporting.md">Test reporting</a></li>
-<li><a href="statistics.md">Statistics</a></li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
+<h3 id="browsers">Browsers</h3>
+<p>At this early state we do not support browsers other than Chrome. This does not mean that other browsers are not working with the administration UI but the features are not tested yet with other browsers. The
+Citrus development team is using Chrome so you can be sure that errors related to browser incompatibility will be fixed very soon for Chrome.</p>
+<h3 id="citrus-java-dsl">Citrus Java DSL</h3>
+<p>Citrus provides both XML and Java DSL for writing test cases. The administration UI is definitely able to read your XML test cases. The UI should also be able to read and manage your Java DSL test cases but
+this feature is not completely stable yet. There might be still some bugs and trade offs when reading Java DSL code. Please be curious and find out if the current working state is working with your project.</p>
 
                     
                     </section>
