@@ -29,7 +29,7 @@ Usage
 Development
 ---------
 
-First fo all start the server web applicaiton and keep it running:
+First fo all start the server web application and keep it running:
 
 ```mvn -pl citrus-admin-web spring-boot:run```
 

@@ -1,0 +1,39 @@
+{
+  "title": "citrus-admin",
+  "description": "citrus-admin Reference Documentation",
+  "extension": "pdf",
+  "github": "christophd/citrus-admin",
+  "githubHost": "https://github.com/",
+  "gitbook": ">=2.0.0",
+
+  "links": {
+    "home": "https://github.com/christophd/citrus-admin",
+    "about": "http://fish-pepper.org/index.html",
+    "issues": "https://github.com/christophd/citrus-admin/issues",
+    "contribute": "https://github.com/christophd/citrus-admin/blob/master/citrus-admin-docs/contributing.md",
+
+    "sharing": {
+      "twitter": "https://twitter.com/citrus_test"
+    }
+  },
+
+  "plugins": ["edit-link", "anchors", "code_tomorrow_scheme" ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/christophd/citrus-admin/edit/master/citrus-admin-docs/src/manual",
+      "label": "Edit This Page"
+    }
+  },
+
+  "pdf": {
+    "toc": true,
+    "fontSize": 12,
+    "paperSize": "a4",
+    "margin": {
+      "right": 62,
+      "left": 62,
+      "top": 36,
+      "bottom": 36
+    }
+  }
+}

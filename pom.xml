@@ -20,6 +20,7 @@
   <modules>
     <module>citrus-admin-client</module>
     <module>citrus-admin-web</module>
+    <module>citrus-admin-docs</module>
   </modules>
 
   <dependencyManagement>
@@ -186,6 +187,12 @@
             <failIfNoTests>false</failIfNoTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>1.9.4</version>
         </plugin>
       </plugins>
     </pluginManagement>
