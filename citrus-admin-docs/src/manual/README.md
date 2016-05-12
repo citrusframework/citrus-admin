@@ -6,14 +6,38 @@ This is a web administration user interface for the integration test framework
 Citrus [www.citrusframework.org](http://www.citrusframework.org) written in Angular2. Major functionality objectives
 are project and configuration management as well as test execution and reporting.
 
-* Clone the repository and build locally using Maven
+**NOTE:** *This project is still in beta status and is still under construction!* 
 
-```mvn clean install```
+### Stable features
 
-* Use Spring Boot to start administration web application
+Consider following features to be in a stable state:
 
-```mvn -pl citrus-admin-web spring-boot:run```
+* [Project](project.md)
+  - [Open project](project-open.md)
+  - [Dashboard](project-dashboard.md)
+  - [Settings](project-settings.md)
+* [Configuration](config.md)
+  - [Endpoints](config-endpoints.md)
+  - [Global Variables](config-global-variables.md)
+  - [Namespace Context](config-namespace.md)
+  - [Data Dictionaries](config-dictionaries.md)
+  - [Functions](config-functions.md)
+  - [Validation Matcher](config-matcher.md)
+  - [Schema Repositories](config-schemas.md)
+* [Test management](tests.md)
+  - [Search tests](test-search.md)
+  - [Open tests](test-open.md)
 
-* Open your browser and point to 'http://localhost:8080'
+### Unstable and heavily under construction
 
-* Select Citrus project home and open project
+Consider following features to be under construction:
+
+* Project
+  - [New project](project-new.md)
+  - [Statistics](project-statistics.md)
+* Test management   
+  - [Execute tests](test-execute.md)
+  - [Test design](test-design.md)
+  - [Reporting](test-reporting.md)
+
+Please let us know if you are missing a feature and/or like to vote for features.  
