@@ -63,7 +63,7 @@
         data-chapter-title="Open project"
         data-filepath="project-open.md"
         data-basepath="."
-        data-revision="Fri May 13 2016 15:20:33 GMT+0200 (CEST)"
+        data-revision="Fri May 13 2016 15:26:39 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -430,7 +430,7 @@ started you have to open a project first.</p>
 <p><img src="screenshots/project-open.png" alt="Open"></p>
 <p>The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:</p>
-<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home</code></p>
+<p><code>java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home citrus-admin-web-1.0.0-beta-1.jar</code></p>
 <p>When pre selecting a project home the project is opened automatically and the <a href="project-dashboard.html">project dashboard</a> is displayed. Now back to the project home selection if no project has bee pre selected yet.</p>
 <p>You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.</p>
 <p><img src="screenshots/project-home.png" alt="Open"></p>
@@ -466,9 +466,8 @@ for several things in your project in order to gain information about the projec
 <p>It is possible that your project uses a different folder layout for test resources and test sources (e.g. <em>src/it/resources</em> and <em>src/it/java</em>). Then the project open operation will fail with errors. We can fix this by customizing the project settings
 manually in prior to opening the project. </p>
 <p>There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:</p>
-<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home 
--Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources</code></p>
+<p><code>java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
+-Dxml.source.directory=src/it/resources citrus-admin-web-1.0.0-beta-1.jar</code></p>
 <p>You can set the following system properties:</p>
 <table>
 <thead>
