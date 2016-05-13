@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Preconditions | Citrus Admin UI</title>
+        <title>Preconditions | citrus-admin</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -21,6 +21,14 @@
     <link rel="stylesheet" href="gitbook/style.css">
     
         
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
         <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
         
     
@@ -32,6 +40,8 @@
         <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
         
     
+    
+        <link rel="stylesheet" href="./styles/website.css">
     
 
         
@@ -53,7 +63,7 @@
         data-chapter-title="Preconditions"
         data-filepath="preconditions.md"
         data-basepath="."
-        data-revision="Fri May 13 2016 14:14:24 GMT+0200 (CEST)"
+        data-revision="Fri May 13 2016 15:20:33 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -404,7 +414,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Citrus Admin UI</a>
+        <a href="./" >citrus-admin</a>
     </h1>
 </div>
 
@@ -414,21 +424,21 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="preconditions">Preconditions</h2>
+                        <h2 id="preconditions"><a name="preconditions" class="plugin-anchor" href="#preconditions"><span class="fa fa-link"></span></a>Preconditions</h2>
 <p>The administration UI is in early beta status and still under construction. Following from that we have to deal with some limitations and
 trade offs until the final version is released (hopefully end 2016, keep your fingers crossed!). However the administration UI is usable and
 some features are stable.</p>
 <p>Please consider following limitations:</p>
-<h3 id="build-tools">Build tools</h3>
+<h3 id="build-tools"><a name="build-tools" class="plugin-anchor" href="#build-tools"><span class="fa fa-link"></span></a>Build tools</h3>
 <p>At the moment we are limited to supporting standard Citrus projects using Maven. Gradle or ANT projects are currently not supported. The build tool used is important because the administration UI is reading
 build information and uses Maven to execute test cases.</p>
-<h3 id="citrus-version">Citrus version</h3>
+<h3 id="citrus-version"><a name="citrus-version" class="plugin-anchor" href="#citrus-version"><span class="fa fa-link"></span></a>Citrus version</h3>
 <p>Your project should use Citrus version 2.0 or higher in order to be able to work with the administration UI. Earlier Citrus versions might work too but are
 not tested and will not get support with bugfixes.</p>
-<h3 id="browsers">Browsers</h3>
+<h3 id="browsers"><a name="browsers" class="plugin-anchor" href="#browsers"><span class="fa fa-link"></span></a>Browsers</h3>
 <p>At this early state we do not support browsers other than Chrome. This does not mean that other browsers are not working with the administration UI but the features are not tested yet with other browsers. The
 Citrus development team is using Chrome so you can be sure that errors related to browser incompatibility will be fixed very soon for Chrome.</p>
-<h3 id="citrus-java-dsl">Citrus Java DSL</h3>
+<h3 id="citrus-java-dsl"><a name="citrus-java-dsl" class="plugin-anchor" href="#citrus-java-dsl"><span class="fa fa-link"></span></a>Citrus Java DSL</h3>
 <p>Citrus provides both XML and Java DSL for writing test cases. The administration UI is definitely able to read your XML test cases. The UI should also be able to read and manage your Java DSL test cases but
 this feature is not completely stable yet. There might be still some bugs and trade offs when reading Java DSL code. Please be curious and find out if the current working state is working with your project.</p>
 
@@ -453,6 +463,18 @@ this feature is not completely stable yet. There might be still some bugs and tr
 <script src="gitbook/app.js"></script>
 
     
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
     <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
     
 
@@ -470,7 +492,7 @@ this feature is not completely stable yet. There might be still some bugs and tr
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus-admin/edit/master/citrus-admin-docs/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
     gitbook.start(config);
 });
 </script>
