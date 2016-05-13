@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | Citrus Admin UI</title>
+        <title>Endpoints | Citrus Admin UI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="This is a web administration user interface for the integration test framework Citrus www.citrusframework.org written in Angular2. Major functionality objectivesare project and configuration management as well as test execution and reporting.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -37,8 +37,10 @@
         
     
     
-    <link rel="next" href="./preconditions.html" />
+    <link rel="next" href="./tests.html" />
     
+    
+    <link rel="prev" href="./config.html" />
     
 
         
@@ -47,9 +49,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="4.1"
+        data-chapter-title="Endpoints"
+        data-filepath="config-endpoints.md"
         data-basepath="."
         data-revision="Fri May 13 2016 14:14:24 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -67,7 +69,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -214,7 +216,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="4.1" data-path="config-endpoints.html">
+        <li class="chapter active" data-level="4.1" data-path="config-endpoints.html">
             
                 
                     <a href="./config-endpoints.html">
@@ -412,53 +414,20 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-admin-ui">Citrus Admin UI</h1>
-<h2 id="welcome-to-the-citrus-administration-user-interface">Welcome to the Citrus administration user interface</h2>
-<p>This is a web administration user interface for the integration test framework 
-Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a> written in Angular2. Major functionality objectives
-are project and configuration management as well as test execution and reporting.</p>
-<p><strong>NOTE:</strong> <em>This project is still in beta status and is still under construction!</em> </p>
-<h3 id="stable-features">Stable features</h3>
-<p>Consider following features to be in a stable state:</p>
-<ul>
-<li><a href="project.html">Project</a><ul>
-<li><a href="project-open.html">Open project</a></li>
-<li><a href="project-dashboard.html">Dashboard</a></li>
-<li><a href="project-settings.html">Settings</a></li>
-</ul>
-</li>
-<li><a href="config.html">Configuration</a><ul>
-<li><a href="config-endpoints.html">Endpoints</a></li>
-<li><a href="config-global-variables.md">Global Variables</a></li>
-<li><a href="config-namespace.md">Namespace Context</a></li>
-<li><a href="config-dictionaries.md">Data Dictionaries</a></li>
-<li><a href="config-functions.md">Functions</a></li>
-<li><a href="config-matcher.md">Validation Matcher</a></li>
-<li><a href="config-schemas.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.html">Test management</a><ul>
-<li><a href="test-search.html">Search tests</a></li>
-<li><a href="test-open.html">Open tests</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="unstable-and-heavily-under-construction">Unstable and heavily under construction</h3>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li>Project<ul>
-<li><a href="project-new.html">New project</a></li>
-<li><a href="project-statistics.md">Statistics</a></li>
-</ul>
-</li>
-<li>Test management   <ul>
-<li><a href="test-execute.html">Execute tests</a></li>
-<li><a href="test-design.html">Test design</a></li>
-<li><a href="test-reporting.md">Reporting</a></li>
-</ul>
-</li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
+                        <h2 id="endpoint-configuration">Endpoint configuration</h2>
+<p>Endpoints are essential in a Citrus project. They define client and server components as well as producer and consumer for different message transports.</p>
+<p><img src="screenshots/config-endpoints.png" alt="Endpoints"></p>
+<p>First of all the list of all available endpoints in the project is displayed. Each endpoint represents a message transport such as SOAP, JMS, REST, Mail, FTP and so on.
+You can add new endpoints using the <em>New</em> context menu on the right. You need to chose the endpoint type first. Then a HTML form is displayed holding the endpoint settings.</p>
+<p><img src="screenshots/config-endpoints-menu.png" alt="Menu">
+<img src="screenshots/config-endpoints-new.png" alt="New"></p>
+<p>Click save to add the new endpoint. Citrus is working with Spring XML configuration files. This means that the new endpoint component is saved as XML Spring bean to the basic 
+Spring application context file. Usually this is a file located in <em>src/test/resources/citrus-context.xml</em> in your project. After you have saved the new component you will see that a new
+entry has been added to this file.</p>
+<p>You can also edit endpoint components in the administration UI. Just click an an existing endpoint component and you will see the HTML form with all the settings to this endpoint. </p>
+<p><img src="screenshots/config-endpoints-edit.png" alt="Edit"></p>
+<p>If you save the changes Citrus will again change the Spring bean component in the XML configuration file. You can manually review the changes made. All manual changes in the Spring application context
+will also affect the administration UI. Just hit the reload button in your browser to reload the configuration.</p>
 
                     
                     </section>
@@ -469,8 +438,10 @@ are project and configuration management as well as test execution and reporting
         </div>
 
         
+        <a href="./config.html" class="navigation navigation-prev " aria-label="Previous page: Configuration"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preconditions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preconditions"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./tests.html" class="navigation navigation-next " aria-label="Next page: Test management"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | Citrus Admin UI</title>
+        <title>Open tests | Citrus Admin UI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="This is a web administration user interface for the integration test framework Citrus www.citrusframework.org written in Angular2. Major functionality objectivesare project and configuration management as well as test execution and reporting.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -37,8 +37,10 @@
         
     
     
-    <link rel="next" href="./preconditions.html" />
+    <link rel="next" href="./test-execute.html" />
     
+    
+    <link rel="prev" href="./test-search.html" />
     
 
         
@@ -47,9 +49,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="5.2"
+        data-chapter-title="Open tests"
+        data-filepath="test-open.md"
         data-basepath="."
         data-revision="Fri May 13 2016 14:14:24 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -67,7 +69,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -307,7 +309,7 @@
             
         </li>
     
-        <li class="chapter " data-level="5.2" data-path="test-open.html">
+        <li class="chapter active" data-level="5.2" data-path="test-open.html">
             
                 
                     <a href="./test-open.html">
@@ -412,53 +414,18 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-admin-ui">Citrus Admin UI</h1>
-<h2 id="welcome-to-the-citrus-administration-user-interface">Welcome to the Citrus administration user interface</h2>
-<p>This is a web administration user interface for the integration test framework 
-Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a> written in Angular2. Major functionality objectives
-are project and configuration management as well as test execution and reporting.</p>
-<p><strong>NOTE:</strong> <em>This project is still in beta status and is still under construction!</em> </p>
-<h3 id="stable-features">Stable features</h3>
-<p>Consider following features to be in a stable state:</p>
-<ul>
-<li><a href="project.html">Project</a><ul>
-<li><a href="project-open.html">Open project</a></li>
-<li><a href="project-dashboard.html">Dashboard</a></li>
-<li><a href="project-settings.html">Settings</a></li>
-</ul>
-</li>
-<li><a href="config.html">Configuration</a><ul>
-<li><a href="config-endpoints.html">Endpoints</a></li>
-<li><a href="config-global-variables.md">Global Variables</a></li>
-<li><a href="config-namespace.md">Namespace Context</a></li>
-<li><a href="config-dictionaries.md">Data Dictionaries</a></li>
-<li><a href="config-functions.md">Functions</a></li>
-<li><a href="config-matcher.md">Validation Matcher</a></li>
-<li><a href="config-schemas.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.html">Test management</a><ul>
-<li><a href="test-search.html">Search tests</a></li>
-<li><a href="test-open.html">Open tests</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="unstable-and-heavily-under-construction">Unstable and heavily under construction</h3>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li>Project<ul>
-<li><a href="project-new.html">New project</a></li>
-<li><a href="project-statistics.md">Statistics</a></li>
-</ul>
-</li>
-<li>Test management   <ul>
-<li><a href="test-execute.html">Execute tests</a></li>
-<li><a href="test-design.html">Test design</a></li>
-<li><a href="test-reporting.md">Reporting</a></li>
-</ul>
-</li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
+                        <h2 id="open-tests">Open tests</h2>
+<p>The administration UI is able to open your test cases. Both XML and Java DSL test cases are supported.</p>
+<p><strong>NOTE:</strong> Java DSL test cases might cause some problems when loading the test design view. this is because we do have to make the Java DSL code interpretation more stable.</p>
+<p>You can open the tests using the <em>Open</em> context menu. All available test cases are grouped by their package. </p>
+<p><img src="screenshots/test-open.png" alt="Open"></p>
+<p>Choose a test and open it in order to see the basic test case information such as name, author, status and description.</p>
+<p><img src="screenshots/test-info.png" alt="Info"></p>
+<p>Next to to the test case info you can view the test source code. This is either a XML test or the Java DSL code.</p>
+<p><img src="screenshots/test-sources.png" alt="Sources"></p>
+<p>At the moment these information is read only. Stay tuned for some code editing features that might come in the future. Another representation of the test sources is
+the <a href="test-design.html">test design</a> view. The design view brings the test actions to a graphical representation. </p>
+<p>Now a very powerful feature is to execute the test using the administration UI. Let&apos;s go and read about <a href="test-execute.html">test execution</a>.</p>
 
                     
                     </section>
@@ -469,8 +436,10 @@ are project and configuration management as well as test execution and reporting
         </div>
 
         
+        <a href="./test-search.html" class="navigation navigation-prev " aria-label="Previous page: Search tests"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preconditions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preconditions"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./test-execute.html" class="navigation navigation-next " aria-label="Next page: Execute tests"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

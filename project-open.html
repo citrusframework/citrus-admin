@@ -53,7 +53,7 @@
         data-chapter-title="Open project"
         data-filepath="project-open.md"
         data-basepath="."
-        data-revision="Thu May 12 2016 16:28:41 GMT+0200 (CEST)"
+        data-revision="Fri May 13 2016 14:14:24 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -175,7 +175,15 @@
     
         <li class="chapter " data-level="3.4" data-path="project-settings.html">
             
-            <span><b>3.4.</b> Settings</span>
+                
+                    <a href="./project-settings.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.4.</b>
+                        
+                        Settings
+                    </a>
             
             
         </li>
@@ -194,7 +202,15 @@
     
         <li class="chapter " data-level="4" data-path="config.html">
             
-            <span><b>4.</b> Configuration</span>
+                
+                    <a href="./config.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Configuration
+                    </a>
             
             
             <ul class="articles">
@@ -202,7 +218,15 @@
     
         <li class="chapter " data-level="4.1" data-path="config-endpoints.html">
             
-            <span><b>4.1.</b> Endpoints</span>
+                
+                    <a href="./config-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.1.</b>
+                        
+                        Endpoints
+                    </a>
             
             
         </li>
@@ -256,7 +280,15 @@
     
         <li class="chapter " data-level="5" data-path="tests.html">
             
-            <span><b>5.</b> Test management</span>
+                
+                    <a href="./tests.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test management
+                    </a>
             
             
             <ul class="articles">
@@ -264,28 +296,60 @@
     
         <li class="chapter " data-level="5.1" data-path="test-search.html">
             
-            <span><b>5.1.</b> Search tests</span>
+                
+                    <a href="./test-search.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.1.</b>
+                        
+                        Search tests
+                    </a>
             
             
         </li>
     
         <li class="chapter " data-level="5.2" data-path="test-open.html">
             
-            <span><b>5.2.</b> Open tests</span>
+                
+                    <a href="./test-open.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.2.</b>
+                        
+                        Open tests
+                    </a>
             
             
         </li>
     
         <li class="chapter " data-level="5.3" data-path="test-execute.html">
             
-            <span><b>5.3.</b> Execute tests</span>
+                
+                    <a href="./test-execute.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.3.</b>
+                        
+                        Execute tests
+                    </a>
             
             
         </li>
     
         <li class="chapter " data-level="5.4" data-path="test-design.html">
             
-            <span><b>5.4.</b> Test design</span>
+                
+                    <a href="./test-design.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.4.</b>
+                        
+                        Test design
+                    </a>
             
             
         </li>
@@ -356,25 +420,76 @@ started you have to open a project first.</p>
 <p><img src="screenshots/project-open.png" alt="Open"></p>
 <p>The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:</p>
-<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject-home=/Users/myaccount/path/tp/citrus/project/home</code></p>
+<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home</code></p>
 <p>When pre selecting a project home the project is opened automatically and the <a href="project-dashboard.html">project dashboard</a> is displayed. Now back to the project home selection if no project has bee pre selected yet.</p>
 <p>You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.</p>
 <p><img src="screenshots/project-home.png" alt="Open"></p>
 <p>Once you have specified the project home you are ready to hit the <strong>Open</strong> button. Citrus will read the project information and open the <a href="project-dashboard.html">project dashboard</a>. The administration UI is looking
 for several things in your project in order to gain information about the project. The files scanned are:</p>
-<ul>
-<li><strong>${project-home}/pom.xml</strong>: Reads information from Maven POM</li>
-<li><strong>${project-home}/src/test/resources</strong>: Reads XML test cases</li>
-<li><strong>${project-home}/src/test/resources/citrus-context.xml</strong>: Reads Spring bean configuration</li>
-<li><strong>${project-home}/src/test/java</strong>: Reads test cases</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>${project-home}/pom.xml</strong></td>
+<td>Reads information from Maven POM</td>
+</tr>
+<tr>
+<td><strong>${project-home}/src/test/resources</strong></td>
+<td>Reads XML test cases</td>
+</tr>
+<tr>
+<td><strong>${project-home}/src/test/resources/citrus-context.xml</strong></td>
+<td>Reads Spring bean configuration</td>
+</tr>
+<tr>
+<td><strong>${project-home}/src/test/java</strong></td>
+<td>Reads test cases</td>
+</tr>
+</tbody>
+</table>
 <h3 id="customize-project-settings">Customize project settings</h3>
 <p>It is possible that your project uses a different folder layout for test resources and test sources (e.g. <em>src/it/resources</em> and <em>src/it/java</em>). Then the project open operation will fail with errors. We can fix this by customizing the project settings
 manually in prior to opening the project. </p>
 <p>There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:</p>
-<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject-home=/Users/myaccount/path/tp/citrus/project/home 
+<p><code>java -jar citrus-admin-web-1.0.0-beta-1.jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home 
 -Djava.source.directory=src/it/java 
 -Dxml.source.directory=src/it/resources</code></p>
+<p>You can set the following system properties:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>project.home</td>
+<td>Preselect project on startup</td>
+</tr>
+<tr>
+<td>root.directory</td>
+<td>System root as base of all projects (default: user home directory)</td>
+</tr>
+<tr>
+<td>java.source.directory</td>
+<td>Java sources directory (default: <em>src/test/java</em>)</td>
+</tr>
+<tr>
+<td>xml.source.directory</td>
+<td>XML test sources directory (default: <em>src/test/resources</em>)</td>
+</tr>
+<tr>
+<td>spring.application.context</td>
+<td>Path to Spring application context file (default: <em>src/test/resources/citrus-context.xml</em>)</td>
+</tr>
+</tbody>
+</table>
 <p>A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called <strong>citrus-project.json</strong>. When you open a Citrus project for the first time the administration UI creates this project settings file
 automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:</p>
 <pre><code>{

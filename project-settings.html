@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | Citrus Admin UI</title>
+        <title>Settings | Citrus Admin UI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="This is a web administration user interface for the integration test framework Citrus www.citrusframework.org written in Angular2. Major functionality objectivesare project and configuration management as well as test execution and reporting.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -37,8 +37,10 @@
         
     
     
-    <link rel="next" href="./preconditions.html" />
+    <link rel="next" href="./config.html" />
     
+    
+    <link rel="prev" href="./project-dashboard.html" />
     
 
         
@@ -47,9 +49,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="3.4"
+        data-chapter-title="Settings"
+        data-filepath="project-settings.md"
         data-basepath="."
         data-revision="Fri May 13 2016 14:14:24 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -67,7 +69,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -171,7 +173,7 @@
             
         </li>
     
-        <li class="chapter " data-level="3.4" data-path="project-settings.html">
+        <li class="chapter active" data-level="3.4" data-path="project-settings.html">
             
                 
                     <a href="./project-settings.html">
@@ -412,54 +414,37 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-admin-ui">Citrus Admin UI</h1>
-<h2 id="welcome-to-the-citrus-administration-user-interface">Welcome to the Citrus administration user interface</h2>
-<p>This is a web administration user interface for the integration test framework 
-Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a> written in Angular2. Major functionality objectives
-are project and configuration management as well as test execution and reporting.</p>
-<p><strong>NOTE:</strong> <em>This project is still in beta status and is still under construction!</em> </p>
-<h3 id="stable-features">Stable features</h3>
-<p>Consider following features to be in a stable state:</p>
-<ul>
-<li><a href="project.html">Project</a><ul>
-<li><a href="project-open.html">Open project</a></li>
-<li><a href="project-dashboard.html">Dashboard</a></li>
-<li><a href="project-settings.html">Settings</a></li>
-</ul>
-</li>
-<li><a href="config.html">Configuration</a><ul>
-<li><a href="config-endpoints.html">Endpoints</a></li>
-<li><a href="config-global-variables.md">Global Variables</a></li>
-<li><a href="config-namespace.md">Namespace Context</a></li>
-<li><a href="config-dictionaries.md">Data Dictionaries</a></li>
-<li><a href="config-functions.md">Functions</a></li>
-<li><a href="config-matcher.md">Validation Matcher</a></li>
-<li><a href="config-schemas.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.html">Test management</a><ul>
-<li><a href="test-search.html">Search tests</a></li>
-<li><a href="test-open.html">Open tests</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="unstable-and-heavily-under-construction">Unstable and heavily under construction</h3>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li>Project<ul>
-<li><a href="project-new.html">New project</a></li>
-<li><a href="project-statistics.md">Statistics</a></li>
-</ul>
-</li>
-<li>Test management   <ul>
-<li><a href="test-execute.html">Execute tests</a></li>
-<li><a href="test-design.html">Test design</a></li>
-<li><a href="test-reporting.md">Reporting</a></li>
-</ul>
-</li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
-
+                        <h2 id="project-settings">Project settings</h2>
+<p>Each Citrus project has properties and settings that influence the administration UI. These properties are project names, descriptions, versions and source folders.
+You can review and change these project related settings with an HTML form on the project settings page.</p>
+<p><img src="screenshots/project-settings.png" alt="Settings"></p>
+<p>Some project settings are read only at the moment, e.g. we do not support renaming of projects yet. If you want to rename a project or change the project version you need to do this manually
+in the Maven POM configuration.</p>
+<p>If you save the project settings the administration UI will save the changes to the project settings file <strong>citrus-project.json</strong> which is located in your project home directory. This file uses the JSON syntax and looks like follows:</p>
+<pre><code> {
+   &quot;projectHome&quot; : &quot;~/Projects/Citrus/citrus-sample&quot;,
+   &quot;name&quot; : &quot;citrus-sample-project&quot;,
+   &quot;description&quot; : &quot;&quot;,
+   &quot;version&quot; : &quot;1.0.0&quot;,
+   &quot;testCount&quot; : 0,
+   &quot;settings&quot; : {
+     &quot;basePackage&quot; : &quot;com.consol.citrus&quot;,
+     &quot;citrusVersion&quot; : &quot;2.6&quot;,
+     &quot;springApplicationContext&quot; : &quot;src/it/resources/citrus-context.xml&quot;,
+     &quot;javaSrcDirectory&quot; : &quot;src/it/java/&quot;,
+     &quot;xmlSrcDirectory&quot; : &quot;src/it/resources/&quot;,
+     &quot;javaFilePattern&quot; : &quot;/**/*Test.java,/**/*IT.java&quot;,
+     &quot;xmlFilePattern&quot; : &quot;/**/*Test.xml,/**/*IT.xml&quot;,
+     &quot;build&quot; : {
+       &quot;@class&quot; : &quot;com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration&quot;,
+       &quot;type&quot; : &quot;maven&quot;,
+       &quot;properties&quot; : [ ],
+       &quot;testPlugin&quot; : &quot;maven-failsafe-plugin&quot;,
+       &quot;profiles&quot; : null
+     }
+   }
+ }
+</code></pre>
                     
                     </section>
                 
@@ -469,8 +454,10 @@ are project and configuration management as well as test execution and reporting
         </div>
 
         
+        <a href="./project-dashboard.html" class="navigation navigation-prev " aria-label="Previous page: Dashboard"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preconditions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preconditions"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./config.html" class="navigation navigation-next " aria-label="Next page: Configuration"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
