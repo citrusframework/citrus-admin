@@ -21,6 +21,10 @@ not tested and will not get support with bugfixes.
 At this early state we do not support browsers other than Chrome. This does not mean that other browsers are not working with the administration UI but the features are not tested yet with other browsers. The
 Citrus development team is using Chrome so you can be sure that errors related to browser incompatibility will be fixed very soon for Chrome.
 
+### Citrus annotations
+ 
+The administration UI is looking fo all tests in your project. It is required that you use *@CitrusTest* and *@CitrusXmlTest* annotations on your test methods. Otherwise the test cases will not be found and displayed.
+
 ### Citrus Java DSL
 
 Citrus provides both XML and Java DSL for writing test cases. The administration UI is definitely able to read your XML test cases. The UI should also be able to read and manage your Java DSL test cases but
