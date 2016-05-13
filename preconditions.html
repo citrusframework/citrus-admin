@@ -63,7 +63,7 @@
         data-chapter-title="Preconditions"
         data-filepath="preconditions.md"
         data-basepath="."
-        data-revision="Fri May 13 2016 15:26:39 GMT+0200 (CEST)"
+        data-revision="Fri May 13 2016 16:19:14 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -438,6 +438,8 @@ not tested and will not get support with bugfixes.</p>
 <h3 id="browsers"><a name="browsers" class="plugin-anchor" href="#browsers"><span class="fa fa-link"></span></a>Browsers</h3>
 <p>At this early state we do not support browsers other than Chrome. This does not mean that other browsers are not working with the administration UI but the features are not tested yet with other browsers. The
 Citrus development team is using Chrome so you can be sure that errors related to browser incompatibility will be fixed very soon for Chrome.</p>
+<h3 id="citrus-annotations"><a name="citrus-annotations" class="plugin-anchor" href="#citrus-annotations"><span class="fa fa-link"></span></a>Citrus annotations</h3>
+<p>The administration UI is looking fo all tests in your project. It is required that you use <em>@CitrusTest</em> and <em>@CitrusXmlTest</em> annotations on your test methods. Otherwise the test cases will not be found and displayed.</p>
 <h3 id="citrus-java-dsl"><a name="citrus-java-dsl" class="plugin-anchor" href="#citrus-java-dsl"><span class="fa fa-link"></span></a>Citrus Java DSL</h3>
 <p>Citrus provides both XML and Java DSL for writing test cases. The administration UI is definitely able to read your XML test cases. The UI should also be able to read and manage your Java DSL test cases but
 this feature is not completely stable yet. There might be still some bugs and trade offs when reading Java DSL code. Please be curious and find out if the current working state is working with your project.</p>
