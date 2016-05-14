@@ -21,6 +21,7 @@ import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,14 +51,9 @@ public class MavenCommand extends AbstractExecuteCommand {
     }
 
     /**
-     * Gets the value of the buildConfiguration property.
-     *
-     * @return the buildConfiguration
+     * Build the execute command.
+     * @return
      */
-    public MavenBuildConfiguration getBuildConfiguration() {
-        return buildConfiguration;
-    }
-
     protected String buildCommand() {
         StringBuilder builder = new StringBuilder();
 
@@ -75,15 +71,31 @@ public class MavenCommand extends AbstractExecuteCommand {
         return builder.toString();
     }
 
+    /**
+     * Gets the build system properties.
+     * @return
+     */
+    protected List<BuildProperty> getSystemProperties() {
+        List<BuildProperty> systemProperties = new ArrayList<>();
+
+        systemProperties.addAll(buildConfiguration.getProperties());
+        return systemProperties;
+    }
+
+    /**
+     * Gets the value of the buildConfiguration property.
+     *
+     * @return the buildConfiguration
+     */
+    public MavenBuildConfiguration getBuildConfiguration() {
+        return buildConfiguration;
+    }
+
     protected String getLifeCycleCommand() {
         return "";
     }
 
     protected String[] getActiveProfiles() {
         return new String[0];
-    }
-
-    protected List<BuildProperty> getSystemProperties() {
-        return buildConfiguration.getProperties();
     }
 }
