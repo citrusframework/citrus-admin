@@ -5,4 +5,4 @@ _/ ___\|  \   __\_  __ \  |  \/  ___/
  \___  >__||__|  |__|  |____//____  >
      \/                           \/
 
-C I T R U S  T E S T S  2.5
+C I T R U S  A D M I N  ${project.version}
