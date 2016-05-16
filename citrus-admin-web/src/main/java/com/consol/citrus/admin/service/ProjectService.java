@@ -95,8 +95,11 @@ public class ProjectService {
                     project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
 
                     String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
+                    String parentVersion = evaluate(pomDoc, "/mvn:project/mvn:parent/mvn:version", nsContext);
                     if (StringUtils.hasText(version)) {
                         project.setVersion(version);
+                    } else if (StringUtils.hasText(parentVersion)) {
+                        project.setVersion(parentVersion);
                     }
 
                     project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
