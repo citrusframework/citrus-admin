@@ -3,6 +3,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {TestDetail, TestResult} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {TestProgressComponent} from "./test.progress.component";
+import {TestMessageComponent} from "./test.message.component";
 import {LoggingOutput} from "../model/logging.output";
 import {Message} from "../model/message";
 import {Pills, Pill} from "./util/pills";
@@ -23,13 +24,11 @@ declare var moment;
     <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
         <pre *ngIf="!messages || messages?.length == 0">No messages yet!</pre>
         <div *ngFor="#message of messages">
-            <span *ngIf="message.type == 'OUTBOUND'" class="badge badge-emphasis badge-outbound"><i class="fa fa-sign-out">&nbsp;<b>Out</b></i></span>
-            <span *ngIf="message.type == 'INBOUND'" class="badge badge-emphasis badge-inbound"><i class="fa fa-sign-in">&nbsp;<b>In</b></i></span>
-            <pre [style.color]="message.type == 'OUTBOUND' ? '#000099' : '#026ebe'">{{message.data}}</pre>
+            <test-message [message]="message"></test-message>
         </div>
     </pill>
 </pills>`,
-    directives: <any> [ NgIf, NgFor, Pills, Pill, TestProgressComponent ]
+    directives: <any> [ NgIf, NgFor, Pills, Pill, TestProgressComponent, TestMessageComponent ]
 })
 export class TestExecuteComponent {
     @Input() detail: TestDetail;
