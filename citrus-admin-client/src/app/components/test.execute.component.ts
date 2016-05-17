@@ -22,10 +22,24 @@ declare var moment;
 <pills navigation="true">
     <pill pill-id="console" pill-title="Console" active="true" pill-icon="fa fa-file-text-o"><pre class="logger" [textContent]="processOutput"></pre></pill>
     <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
-        <pre *ngIf="!messages || messages?.length == 0">No messages yet!</pre>
+        <div class="row">
+            <div class="col-lg-6">
+            <h3 style="text-align: center;">Outbound</h3>
+            </div>
+            <div class="col-lg-6">
+                <h3 style="text-align: center;">Inbound</h3>
+            </div>
+        </div>
+        <hr/>
+        <div *ngIf="!messages || messages?.length == 0" class="row">
+            <div class="col-lg-12 text-center">
+                <h4>No messages yet!</h4>
+            </div>
+        </div>
         <div *ngFor="#message of messages">
             <test-message [message]="message"></test-message>
         </div>
+        <hr/>
     </pill>
 </pills>`,
     directives: <any> [ NgIf, NgFor, Pills, Pill, TestProgressComponent, TestMessageComponent ]

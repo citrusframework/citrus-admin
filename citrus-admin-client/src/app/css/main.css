@@ -397,7 +397,8 @@ pre.logger {
     width: 115px;
     height: 50px;
     border: 1px solid #ddd;
-    padding-left: 10px;
+    padding-left: 15px;
+    padding-top: 5px;
 }
 
 .message-outbound:hover,
@@ -407,17 +408,15 @@ pre.logger {
 
 .message-outbound {
     color: #3b73af;
-    margin-left: 45%;
 }
 
 .message-inbound {
     color: #026ebe;
-    margin-left: 55%;
 }
 
 .message-outbound i,
 .message-inbound i {
-    font-size: 34pt;
+    font-size: 25pt;
 }
 
 /** Progress bar */
