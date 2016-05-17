@@ -19,37 +19,25 @@ package com.consol.citrus.admin.model;
 import net.minidev.json.JSONObject;
 
 /**
- * All socket event types with proper JSON data generation.
- *
  * @author Christoph Deppisch
  */
-public enum SocketEvent {
-    PING,
-    LOG_MESSAGE,
-    TEST_START,
-    TEST_SUCCESS,
-    TEST_FAILED,
-    TEST_FINISHED,
-    TEST_SKIP,
-    TEST_ACTION_START,
-    TEST_ACTION_FINISH,
-    TEST_ACTION_SKIP,
-    PROCESS_START,
-    PROCESS_SUCCESS,
-    PROCESS_FAILED;
+public enum MessageEvent {
+
+    INBOUND,
+    OUTBOUND;
 
     /**
-     * Creates proper JSON message for socket event.
+     * Creates proper JSON object for message event.
      * @param processId the process id
      * @param pushEvent the type of event
      * @param message the event message
      * @return a json representation of the message
      */
     @SuppressWarnings("unchecked")
-    public static JSONObject createEvent(String processId, SocketEvent pushEvent, String message) {
+    public static JSONObject createEvent(String processId, MessageEvent pushEvent, String message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("processId", processId);
-        jsonObject.put("event", pushEvent.name());
+        jsonObject.put("type", pushEvent.name());
         jsonObject.put("msg", message);
         return jsonObject;
     }

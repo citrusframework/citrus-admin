@@ -16,7 +16,9 @@
 
 package com.consol.citrus.admin.process.listener;
 
+import com.consol.citrus.admin.model.MessageEvent;
 import com.consol.citrus.admin.model.SocketEvent;
+import com.consol.citrus.admin.service.ProjectService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -31,21 +33,24 @@ public class WebSocketProcessListener implements ProcessListener {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private ProjectService projectService;
+
     /** Last message data collected by multiple lines of process output */
-    private JSONObject messageDataEvent;
+    private JSONObject messageEvent;
 
     @Override
     public void onProcessActivity(String processId, String output) {
 
         // first check if we have a pending message data event to handle
-        if (messageDataEvent != null) {
+        if (messageEvent != null) {
             if (isProcessOutputLine(output)) {
                 // message data collecting is obviously finished so push event now
-                messagingTemplate.convertAndSend("/topic/log-output", messageDataEvent);
-                messageDataEvent = null; // reset data event storage
+                messagingTemplate.convertAndSend("/topic/messages", messageEvent);
+                messageEvent = null; // reset data event storage
             } else {
                 // collect another line of message data
-                messageDataEvent.put("msg", messageDataEvent.get("msg") + System.getProperty("line.separator") + output);
+                messageEvent.put("msg", messageEvent.get("msg") + System.getProperty("line.separator") + output);
             }
         }
 
@@ -63,10 +68,20 @@ public class WebSocketProcessListener implements ProcessListener {
                     "TEST ACTION " + progress[0] + "/" + progress[1]);
             event.put("progress", String.valueOf(progressValue));
             messagingTemplate.convertAndSend("/topic/log-output", event);
-        } else if (output.contains("Logger.Message_OUT")) {
-            messageDataEvent = SocketEvent.createEvent(processId, SocketEvent.OUTBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_OUT") + 20));
+        } else {
+            handleMessageEvent(processId, output);
+        }
+    }
+
+    private void handleMessageEvent(String processId, String output) {
+        if (projectService.getActiveProject().getSettings().isUseConnector()) {
+            return;
+        }
+
+        if (output.contains("Logger.Message_OUT")) {
+            messageEvent = MessageEvent.createEvent(processId, MessageEvent.OUTBOUND, output.substring(output.indexOf("Logger.Message_OUT") + 20));
         } else if (output.contains("Logger.Message_IN")) {
-            messageDataEvent = SocketEvent.createEvent(processId, SocketEvent.INBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_IN") + 19));
+            messageEvent = MessageEvent.createEvent(processId, MessageEvent.INBOUND, output.substring(output.indexOf("Logger.Message_IN") + 19));
         }
     }
 

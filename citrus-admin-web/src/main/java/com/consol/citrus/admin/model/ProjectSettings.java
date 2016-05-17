@@ -38,6 +38,8 @@ public class ProjectSettings {
     private String javaFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getJavaTestFileNamePattern().toArray());
     private String xmlFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getXmlTestFileNamePattern().toArray());
 
+    private boolean useConnector = true;
+
     private BuildConfiguration build = new MavenBuildConfiguration();
 
     /**
@@ -178,5 +180,23 @@ public class ProjectSettings {
      */
     public void setSpringApplicationContext(String springApplicationContext) {
         this.springApplicationContext = springApplicationContext;
+    }
+
+    /**
+     * Sets the useConnector property.
+     *
+     * @param useConnector
+     */
+    public void setUseConnector(boolean useConnector) {
+        this.useConnector = useConnector;
+    }
+
+    /**
+     * Gets the value of the useConnector property.
+     *
+     * @return the useConnector
+     */
+    public boolean isUseConnector() {
+        return useConnector;
     }
 }

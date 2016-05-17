@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-admin</artifactId>
+    <version>1.0.0-beta-1</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-admin-connector</artifactId>
+  <name>citrus-admin-connector</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

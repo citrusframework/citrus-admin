@@ -25,6 +25,7 @@ export class ProjectSettings {
     public xmlFilePattern: string;
     public basePackage: string;
     public citrusVersion: string;
+    public useConnector: boolean;
     public build: BuildConfiguration = new BuildConfiguration();
 }
 

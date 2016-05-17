@@ -43,6 +43,7 @@
   <modules>
     <module>citrus-admin-client</module>
     <module>citrus-admin-web</module>
+    <module>citrus-admin-connector</module>
     <module>citrus-admin-docs</module>
   </modules>
 

@@ -80,7 +80,17 @@ export class TestExecuteComponent {
                 this.processOutput += loggingOutput.msg;
                 this.handle(loggingOutput);
             });
+
+            this.stompClient.subscribe('/topic/messages', output => {
+                var message = JSON.parse(output.body);
+                console.log(message);
+                this.handleMessage(message);
+            });
         }
+    }
+
+    handleMessage(message) {
+        this.messages.push(new Message(_.uniqueId(event), message.type, message.msg, moment()));
     }
 
     handle(output: LoggingOutput) {
@@ -105,10 +115,6 @@ export class TestExecuteComponent {
             this.running = false;
             this.failed = true;
             this.completed = 100;
-        } else if ("INBOUND_MESSAGE" == output.event) {
-            this.messages.push(new Message(_.uniqueId(event), 'INBOUND', output.msg, moment()));
-        } else if ("OUTBOUND_MESSAGE" == output.event) {
-            this.messages.push(new Message(_.uniqueId(event), 'OUTBOUND', output.msg, moment()));
         } else {
             if (this.completed < 30) {
                 this.completed++;
