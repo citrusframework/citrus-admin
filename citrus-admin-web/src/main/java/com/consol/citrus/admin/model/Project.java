@@ -31,7 +31,6 @@ public class Project {
     private String name;
     private String description;
     private String version = "1.0.0";
-    private Long testCount = 0L;
 
     private ProjectSettings settings = new ProjectSettings();
 
@@ -189,24 +188,6 @@ public class Project {
      */
     public String getProjectHome() {
         return projectHome;
-    }
-
-    /**
-     * Gets the value of the testCount property.
-     *
-     * @return the testCount
-     */
-    public Long getTestCount() {
-        return testCount;
-    }
-
-    /**
-     * Sets the testCount property.
-     *
-     * @param testCount
-     */
-    public void setTestCount(Long testCount) {
-        this.testCount = testCount;
     }
 
     /**

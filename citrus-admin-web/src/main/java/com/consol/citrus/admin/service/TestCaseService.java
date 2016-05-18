@@ -252,6 +252,28 @@ public class TestCaseService {
     }
 
     /**
+     * Get total number of tests in project.
+     * @param project
+     * @return
+     */
+    public long getTestCount(Project project) {
+        long testCount = 0L;
+        try {
+            List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+            for (File sourceFile : sourceFiles) {
+                String sourceCode = FileUtils.readToString(new FileSystemResource(sourceFile));
+
+                testCount += StringUtils.countOccurrencesOf(sourceCode, "@CitrusTest");
+                testCount += StringUtils.countOccurrencesOf(sourceCode, "@CitrusXmlTest");
+            }
+        } catch (IOException e) {
+            log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
+        }
+
+        return testCount;
+    }
+
+    /**
      * Reads either XML or Java test definition to model class.
      * @param project
      * @return

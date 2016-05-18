@@ -48,6 +48,12 @@ public class TestController {
         return testCaseService.getTestPackages(projectService.getActiveProject());
     }
 
+    @RequestMapping(value = "/count", method = { RequestMethod.GET })
+    @ResponseBody
+    public long getTestCount() {
+        return testCaseService.getTestCount(projectService.getActiveProject());
+    }
+
     @RequestMapping(value="/detail", method = { RequestMethod.POST })
     @ResponseBody
     public TestDetail getTestDetail(@RequestBody Test test) {

@@ -9,6 +9,7 @@ export class TestService {
     constructor (private http: Http) {}
 
     private _serviceUrl = 'tests';
+    private _testCountUrl = this._serviceUrl + '/count';
     private _testDetailUrl = this._serviceUrl + '/detail';
     private _testSourceUrl = this._serviceUrl + '/source';
     private _testExecuteUrl = this._serviceUrl + '/execute';
@@ -16,6 +17,12 @@ export class TestService {
     getTestPackages() {
         return this.http.get(this._serviceUrl)
             .map(res => <TestPackage[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getTestCount() {
+        return this.http.get(this._testCountUrl)
+            .map(res => <number> res.text())
             .catch(this.handleError);
     }
 

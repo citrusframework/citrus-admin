@@ -35,10 +35,10 @@
 
     <div class="col-lg-4">
       <h2><i class="fa fa-cubes"></i> Tests</h2>
-      <p>Your project has <span class="badge badge-emphasis badge-citrus">{{project.testCount}}</span> test cases!</p>
+      <p>Your project has <span class="badge badge-emphasis badge-citrus">{{testCount}}</span> test cases!</p>
       <span>Latest tests:</span>
       <ul class="overview">
-        <li *ngFor="#test of project.latestTests"><i class="fa fa-file-text-o"></i> <a href="#tests/{{test.name}}" title="{{test.packageName}}.{{test.name}}">{{test.name}}</a></li>
+        <li *ngFor="#test of latestTests"><i class="fa fa-file-text-o"></i> <a href="#tests/{{test.name}}" title="{{test.packageName}}.{{test.name}}">{{test.name}}</a></li>
       </ul>
       <a class="btn btn-default" href="#tests" title="View all tests">Show all tests</a>
     </div>

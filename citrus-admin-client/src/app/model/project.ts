@@ -9,7 +9,6 @@ export class Project {
     public projectHome: string;
     public version: string;
     public description: string;
-    public testCount: number;
 
     public settings: ProjectSettings = new ProjectSettings();
 }
