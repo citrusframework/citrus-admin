@@ -20,17 +20,17 @@
       <h2><i class="fa fa-wrench"></i> Configuration</h2>
       <p>Citrus configuration items:</p>
       <ul class="overview">
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/endpoints">Endpoints</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/schemas">Schema Definitions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/functions">Functions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/validation-matcher">Validation Matcher</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/data-dictionaries">Data dictionaries</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/namespace-context">Namespaces</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/message-validators">Message Validators</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#config/global-variables">Global Variables</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=endpoints">Endpoints</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=schema-repository">Schema Definitions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=function-library">Functions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=validation-matcher">Validation Matcher</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=data-dictionary">Data dictionaries</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=namespace-context">Namespaces</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=message-validators" disabled="disabled">Message Validators</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=global-variables">Global Variables</a></li>
       </ul>
       <br/>
-      <a class="btn btn-default" href="#config" title="Show configuration page">Show configurations</a>
+      <a class="btn btn-default" href="#/config" title="Show configuration page">Show configurations</a>
     </div>
 
     <div class="col-lg-4">
@@ -38,9 +38,9 @@
       <p>Your project has <span class="badge badge-emphasis badge-citrus">{{testCount}}</span> test cases!</p>
       <span>Latest tests:</span>
       <ul class="overview">
-        <li *ngFor="#test of latestTests"><i class="fa fa-file-text-o"></i> <a href="#tests/{{test.name}}" title="{{test.packageName}}.{{test.name}}">{{test.name}}</a></li>
+        <li *ngFor="#test of latestTests"><i class="fa fa-file-text-o"></i> <a href="#/tests?name={{test.name}}" title="{{test.packageName}}.{{test.name}}">{{test.name}}</a></li>
       </ul>
-      <a class="btn btn-default" href="#tests" title="View all tests">Show all tests</a>
+      <a class="btn btn-default" href="#/tests" title="View all tests">Show all tests</a>
     </div>
 
     <div class="col-lg-4">
@@ -56,7 +56,7 @@
         <span class="badge badge-warning"><i class="fa fa-minus">&nbsp;&nbsp;<b>Skipped:</b></i></span>&nbsp;&nbsp;{{testReport.skipped}}<br/>
       </p>
       <p><span><b>Total Tests:</b> {{testReport.total}}</span></p>
-      <a class="btn btn-default" href="#stats" title="Show test reports">Show test results</a>
+      <a class="btn btn-default" href="#/stats" title="Show test reports">Show test results</a>
     </div>
   </div>
 </div>

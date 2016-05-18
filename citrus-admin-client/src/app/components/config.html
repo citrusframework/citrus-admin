@@ -8,25 +8,25 @@
 
 <div class="container">
   <pills justified="true">
-    <pill pill-id="endpoints" pill-title="Endpoints" active="true">
+    <pill pill-id="endpoints" pill-title="Endpoints" [active]="isActive('endpoints')">
       <endpoints></endpoints>
     </pill>
-    <pill pill-id="schema-repository" pill-title="Schema Definitions">
+    <pill pill-id="schema-repository" pill-title="Schema Definitions" [active]="isActive('schema-repository')">
       <schema-repository></schema-repository>
     </pill>
-    <pill pill-id="global-variables" pill-title="Global Variables">
+    <pill pill-id="global-variables" pill-title="Global Variables" [active]="isActive('global-variables')">
       <global-variables></global-variables>
     </pill>
-    <pill pill-id="function-library" pill-title="Functions">
+    <pill pill-id="function-library" pill-title="Functions" [active]="isActive('function-library')">
       <function-library></function-library>
     </pill>
-    <pill pill-id="validation-matcher" pill-title="Validation Matcher">
+    <pill pill-id="validation-matcher" pill-title="Validation Matcher" [active]="isActive('validation-matcher')">
       <validation-matcher></validation-matcher>
     </pill>
-    <pill pill-id="data-dictionary" pill-title="Data Dictionaries">
+    <pill pill-id="data-dictionary" pill-title="Data Dictionaries" [active]="isActive('data-dictionary')">
       <data-dictionary></data-dictionary>
     </pill>
-    <pill pill-id="namespace-context" pill-title="Namespace Context">
+    <pill pill-id="namespace-context" pill-title="Namespace Context" [active]="isActive('namespace-context')">
       <namespace-context></namespace-context>
     </pill>
   </pills>

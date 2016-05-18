@@ -10,6 +10,7 @@ import {FunctionLibraryComponent} from "./config/function.library.component"
 import {ValidationMatcherComponent} from "./config/validation.matcher.component"
 import {DataDictionaryComponent} from "./config/data.dictionary.component"
 import {SchemaRepositoryComponent} from "./config/schema.repository.component"
+import {RouteParams} from 'angular2/router';
 
 @Component({
     templateUrl: 'app/components/config.html',
@@ -20,5 +21,16 @@ import {SchemaRepositoryComponent} from "./config/schema.repository.component"
         SchemaRepositoryComponent]
 })
 export class ConfigurationComponent {
+    constructor(routeParams: RouteParams) {
+        if (routeParams.get('show')) {
+            this.active = routeParams.get('show');
+        }
+    }
+
+    active = 'endpoints';
     errorMessage: string;
+
+    isActive(name: string) {
+        return this.active === name;
+    }
 }

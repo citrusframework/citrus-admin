@@ -6,6 +6,7 @@ import {TestPackage, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {TestDetailComponent} from "./test.detail.component";
 import {AutoComplete} from "./util/autocomplete";
+import {RouteParams} from 'angular2/router';
 
 declare var _;
 
@@ -17,7 +18,8 @@ declare var _;
 })
 export class TestsComponent implements OnInit {
 
-    constructor(private _testService: TestService) {
+    constructor(private _testService: TestService,
+                private _routeParams: RouteParams) {
         this.packages = [];
         this.tests = [];
         this.testNames = [];
@@ -43,6 +45,10 @@ export class TestsComponent implements OnInit {
                     this.packages = packages;
                     this.tests = _.reduce(packages, function(collected, testPackage) { return collected.concat(testPackage.tests); }, []);
                     this.testNames = _.map(this.tests, function(test) { return test.name; });
+
+                    if (this._routeParams.get('name')) {
+                        this.onTestSelected(this._routeParams.get('name'));
+                    }
                 },
                 error => this.errorMessage = <any>error);
     }
