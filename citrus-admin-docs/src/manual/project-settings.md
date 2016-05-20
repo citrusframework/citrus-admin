@@ -16,7 +16,6 @@ If you save the project settings the administration UI will save the changes to 
    "name" : "citrus-sample-project",
    "description" : "",
    "version" : "1.0.0",
-   "testCount" : 0,
    "settings" : {
      "basePackage" : "com.consol.citrus",
      "citrusVersion" : "2.6",
@@ -25,6 +24,7 @@ If you save the project settings the administration UI will save the changes to 
      "xmlSrcDirectory" : "src/it/resources/",
      "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
      "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
+     "useConnector" : true,
      "build" : {
        "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
        "type" : "maven",

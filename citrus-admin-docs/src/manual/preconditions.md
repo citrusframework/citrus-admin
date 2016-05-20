@@ -6,6 +6,10 @@ some features are stable.
 
 Please consider following limitations:
 
+### Java 8
+
+The administration UI is implemented in Java 8. Following from that you need Java 8 to run it as web application on your machine.
+
 ### Build tools
 
 At the moment we are limited to supporting standard Citrus projects using Maven. Gradle or ANT projects are currently not supported. The build tool used is important because the administration UI is reading

@@ -8,7 +8,7 @@ started you have to open a project first.
 The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:
 
-```java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home citrus-admin-web-1.0.0-beta-2.jar```
+```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-2.jar```
 
 When pre selecting a project home the project is opened automatically and the [project dashboard](project-dashboard.md) is displayed. Now back to the project home selection if no project has bee pre selected yet.
 
@@ -33,8 +33,8 @@ manually in prior to opening the project.
 
 There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:
 
-```java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources citrus-admin-web-1.0.0-beta-2.jar```
+```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
+-Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-2.jar```
 
 You can set the following system properties:
 
@@ -45,6 +45,10 @@ You can set the following system properties:
 | java.source.directory   | Java sources directory (default: *src/test/java*)         |
 | xml.source.directory    | XML test sources directory (default: *src/test/resources*) |
 | spring.application.context | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
+
+You can also use Spring boot properties, e.g. a custom server port:
+
+```java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-2.jar```
 
 A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called **citrus-project.json**. When you open a Citrus project for the first time the administration UI creates this project settings file
 automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:
