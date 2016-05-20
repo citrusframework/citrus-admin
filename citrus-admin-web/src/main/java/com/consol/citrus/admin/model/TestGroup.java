@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class TestPackage {
+public class TestGroup {
 
     private String name;
     private List<Test> tests = new ArrayList<>();

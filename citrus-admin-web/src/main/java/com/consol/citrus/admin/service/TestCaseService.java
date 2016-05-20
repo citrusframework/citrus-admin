@@ -49,6 +49,7 @@ import java.net.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -67,11 +68,61 @@ public class TestCaseService {
      * @param project
      * @return
      */
-    public List<TestPackage> getTestPackages(Project project) {
-        Map<String, TestPackage> testPackages = new HashMap<>();
-        List<Test> tests = new ArrayList<>();
+    public List<TestGroup> getTestPackages(Project project) {
+        Map<String, TestGroup> testPackages = new HashMap<>();
 
         List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+        List<Test> tests = findTests(project, sourceFiles);
+
+        for (Test test : tests) {
+            if (!testPackages.containsKey(test.getPackageName())) {
+                TestGroup testPackage = new TestGroup();
+                testPackage.setName(test.getPackageName());
+                testPackages.put(test.getPackageName(), testPackage);
+            }
+
+            testPackages.get(test.getPackageName()).getTests().add(test);
+        }
+
+        return Arrays.asList(testPackages.values().toArray(new TestGroup[testPackages.size()]));
+    }
+
+    /**
+     * List test names of latest, meaning newest or last modified tests in project.
+     *
+     * @param project
+     * @return
+     */
+    public List<TestGroup> getLatest(Project project, int limit) {
+        Map<String, TestGroup> grouped = new LinkedHashMap<>();
+
+        List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+        sourceFiles = sourceFiles.stream()
+                .sorted((f1, f2) -> f1.lastModified() >= f2.lastModified() ? -1 : 1)
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        List<Test> tests = findTests(project, sourceFiles);
+        for (Test test : tests) {
+            if (!grouped.containsKey(test.getClassName())) {
+                TestGroup testGroup = new TestGroup();
+                testGroup.setName(test.getClassName());
+                grouped.put(test.getClassName(), testGroup);
+            }
+
+            grouped.get(test.getClassName()).getTests().add(test);
+        }
+
+        return Arrays.asList(grouped.values().toArray(new TestGroup[grouped.size()]));
+    }
+
+    /**
+     * Finds all tests case declarations in given source files. Method is loading tests by their annotation presence of @CitrusTest or @CitrusXmlTest.
+     * @param project
+     * @param sourceFiles
+     */
+    private List<Test> findTests(Project project, List<File> sourceFiles) {
+        List<Test> tests = new ArrayList<>();
         for (File sourceFile : sourceFiles) {
             String className = FilenameUtils.getBaseName(sourceFile.getName());
             String testPackageName = sourceFile.getPath().substring(getJavaDirectory(project).length(), sourceFile.getPath().length() - sourceFile.getName().length())
@@ -84,21 +135,11 @@ public class TestCaseService {
             tests.addAll(findTests(sourceFile, testPackageName, className));
         }
 
-        for (Test test : tests) {
-            if (!testPackages.containsKey(test.getPackageName())) {
-                TestPackage testPackage = new TestPackage();
-                testPackage.setName(test.getPackageName());
-                testPackages.put(test.getPackageName(), testPackage);
-            }
-
-            testPackages.get(test.getPackageName()).getTests().add(test);
-        }
-
-        return Arrays.asList(testPackages.values().toArray(new TestPackage[testPackages.size()]));
+        return tests;
     }
 
     /**
-     * Find all tests in give source file.
+     * Find all tests in give source file. Method is finding tests by their annotation presence of @CitrusTest or @CitrusXmlTest.
      * @param sourceFile
      * @param packageName
      * @param className

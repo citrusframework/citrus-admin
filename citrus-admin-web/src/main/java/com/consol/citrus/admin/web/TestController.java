@@ -44,8 +44,14 @@ public class TestController {
 
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public List<TestPackage> list() {
+    public List<TestGroup> list() {
         return testCaseService.getTestPackages(projectService.getActiveProject());
+    }
+
+    @RequestMapping(value = "/latest", method = { RequestMethod.GET })
+    @ResponseBody
+    public List<TestGroup> getLatest() {
+        return testCaseService.getLatest(projectService.getActiveProject(), 8);
     }
 
     @RequestMapping(value = "/count", method = { RequestMethod.GET })

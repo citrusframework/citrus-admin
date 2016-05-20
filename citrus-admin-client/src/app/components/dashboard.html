@@ -1,16 +1,16 @@
 <div class="container">
   <div class="jumbotron">
-      <h1><i class="fa fa-cube"></i> Project: {{project.name}}</h1>
+    <h1><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
 
-      <p>
-        <span><b>Projecthome:</b></span> <span>{{project.projectHome}}</span><br/>
-        <span><b>Name:</b></span> <span>{{project.name}}</span><br/>
-        <span><b>Package:</b></span> <span>{{project.settings.basePackage}}</span><br/>
-        <span><b>Version:</b></span> <span>{{project.version}}</span><br/>
-        <span><b>Description:</b></span> <span [ngSwitch]="project.description"><template [ngSwitchWhen]="''">No project description available</template><template ngSwitchDefault>{{project.description}}</template></span>
-      </p>
+    <p>
+      <span><b>Projecthome:</b></span> <span>{{project?.projectHome}}</span><br/>
+      <span><b>Name:</b></span> <span>{{project?.name}}</span><br/>
+      <span><b>Package:</b></span> <span>{{project?.settings?.basePackage}}</span><br/>
+      <span><b>Version:</b></span> <span>{{project?.version}}</span><br/>
+      <span><b>Description:</b></span> <span [ngSwitch]="project?.description"><template [ngSwitchWhen]="''">No project description available</template><template ngSwitchDefault>{{project?.description}}</template></span>
+    </p>
 
-      <a href="#/settings" class="btn btn-primary">Edit settings</a>
+    <a href="#/settings" class="btn btn-primary">Edit settings</a>
   </div>
 </div>
 
@@ -38,7 +38,22 @@
       <p>Your project has <span class="badge badge-emphasis badge-citrus">{{testCount}}</span> test cases!</p>
       <span>Latest tests:</span>
       <ul class="overview">
-        <li *ngFor="#test of latestTests"><i class="fa fa-file-text-o"></i> <a href="#/tests?name={{test.name}}" title="{{test.packageName}}.{{test.name}}">{{test.name}}</a></li>
+        <li *ngFor="#testGroup of latestTests">
+          <div *ngIf="testGroup.tests.length == 1 && testGroup.name == testGroup.tests[0].name">
+            <i class="fa fa-file-text-o"></i>
+            <a href="#/tests?name={{testGroup.tests[0].name}}" title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate : 50}}</a>
+          </div>
+          <div *ngIf="testGroup.tests.length > 1 || testGroup.name != testGroup.tests[0].name">
+            <i class="fa fa-file-text-o"></i>
+            <span title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate : 50}}</span>
+            <ul class="overview">
+              <li *ngFor="#test of testGroup.tests">
+                <i class="fa fa-caret-right"></i>
+                <a href="#/tests?name={{test.name}}" title="{{test.className}}.{{methodName}}">{{test.methodName | truncate : 30}}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
       </ul>
       <a class="btn btn-default" href="#/tests" title="View all tests">Show all tests</a>
     </div>
@@ -46,16 +61,16 @@
     <div class="col-lg-4">
       <h2><i class="fa fa-tasks"></i> Test results</h2>
       <p>
-        <b>Date:</b> {{ testReport.executionDate | date:"MM/dd/yyyy" }}<br/>
-        <b>Duration:</b> {{testReport.duration}}<br/>
-        <b>Suite Name:</b> {{testReport.suiteName}}
+        <b>Date:</b> {{ testReport?.executionDate | date:"MM/dd/yyyy" }}<br/>
+        <b>Duration:</b> {{testReport?.duration}}<br/>
+        <b>Suite Name:</b> {{testReport?.suiteName}}
       </p>
       <p>
-        <span class="badge badge-success" style="width:75px; text-align:right;"><i class="fa fa-check">&nbsp;<b>Passed:</b></i></span>&nbsp;&nbsp;{{testReport.passed}}<br/>
-        <span class="badge badge-danger" style="width:75px; text-align:right;"><i class="fa fa-times">&nbsp;&nbsp;&nbsp;<b>Failed:</b></i></span>&nbsp;&nbsp;{{testReport.failed}}<br/>
-        <span class="badge badge-warning"><i class="fa fa-minus">&nbsp;&nbsp;<b>Skipped:</b></i></span>&nbsp;&nbsp;{{testReport.skipped}}<br/>
+        <span class="badge badge-success" style="width:75px; text-align:right;"><i class="fa fa-check">&nbsp;<b>Passed:</b></i></span>&nbsp;&nbsp;{{testReport?.passed}}<br/>
+        <span class="badge badge-danger" style="width:75px; text-align:right;"><i class="fa fa-times">&nbsp;&nbsp;&nbsp;<b>Failed:</b></i></span>&nbsp;&nbsp;{{testReport?.failed}}<br/>
+        <span class="badge badge-warning"><i class="fa fa-minus">&nbsp;&nbsp;<b>Skipped:</b></i></span>&nbsp;&nbsp;{{testReport?.skipped}}<br/>
       </p>
-      <p><span><b>Total Tests:</b> {{testReport.total}}</span></p>
+      <p><span><b>Total Tests:</b> {{testReport?.total}}</span></p>
       <a class="btn btn-default" href="#/stats" title="Show test reports">Show test results</a>
     </div>
   </div>

@@ -1,7 +1,7 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
-import {TestPackage, Test, TestDetail, TestResult} from '../model/tests';
+import {TestGroup, Test, TestDetail, TestResult} from '../model/tests';
 
 @Injectable()
 export class TestService {
@@ -10,19 +10,26 @@ export class TestService {
 
     private _serviceUrl = 'tests';
     private _testCountUrl = this._serviceUrl + '/count';
+    private _testLatest = this._serviceUrl + '/latest';
     private _testDetailUrl = this._serviceUrl + '/detail';
     private _testSourceUrl = this._serviceUrl + '/source';
     private _testExecuteUrl = this._serviceUrl + '/execute';
 
     getTestPackages() {
         return this.http.get(this._serviceUrl)
-            .map(res => <TestPackage[]> res.json())
+            .map(res => <TestGroup[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getLatest() {
+        return this.http.get(this._testLatest)
+            .map(res => <TestGroup[]> res.json())
             .catch(this.handleError);
     }
 
     getTestCount() {
         return this.http.get(this._testCountUrl)
-            .map(res => <number> res.text())
+            .map(res => <number> res.json())
             .catch(this.handleError);
     }
 

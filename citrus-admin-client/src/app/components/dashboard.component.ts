@@ -6,11 +6,14 @@ import {ProjectService} from "../service/project.service";
 import {ReportService} from "../service/report.service";
 import {TestService} from "../service/test.service";
 import {TestReport} from "../model/test.report";
+import {TruncatePipe} from "../util/truncate.pipe";
+import {TestGroup} from "../model/tests";
 
 @Component({
     templateUrl: 'app/components/dashboard.html',
     providers: [ProjectService, ReportService, TestService, HTTP_PROVIDERS],
-    directives: [NgSwitch, NgFor]
+    directives: [NgSwitch, NgFor],
+    pipes: [TruncatePipe]
 })
 export class DashboardComponent implements OnInit {
 
@@ -19,20 +22,29 @@ export class DashboardComponent implements OnInit {
                 private _testService: TestService) {}
 
     errorMessage: string;
-    project = new Project();
-    testReport = new TestReport();
+    project: Project;
+    testReport: TestReport;
+    latestTests: TestGroup[];
     testCount: number;
 
     ngOnInit() {
         this.getProject();
         this.getTestReport();
         this.getTestCount();
+        this.getLatestTests();
     }
 
     getTestCount() {
         this._testService.getTestCount()
             .subscribe(
                 count => this.testCount = count,
+                error => this.errorMessage = <any>error);
+    }
+
+    getLatestTests() {
+        this._testService.getLatest()
+            .subscribe(
+                tests => this.latestTests = tests,
                 error => this.errorMessage = <any>error);
     }
 

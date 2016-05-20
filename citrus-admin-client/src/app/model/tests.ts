@@ -1,6 +1,6 @@
 import {Property} from "./property";
 
-export class TestPackage {
+export class TestGroup {
 
     constructor() {
         this.tests = [];
@@ -18,7 +18,8 @@ export class Test {
 
     public name: string;
     public className: string;
-    public methodname: string;
+    public methodName: string;
+    public methodNames: string[];
     public type: string;
     public packageName: string;
 }

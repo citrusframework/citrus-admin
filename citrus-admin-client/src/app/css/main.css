@@ -37,6 +37,21 @@ ul.properties li {
     word-wrap: break-word;
 }
 
+ul.overview {
+    padding-left: 10px;
+}
+
+ul.overview li {
+    list-style: none;
+}
+
+.truncate {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /** Code editor **/
 
 .code-editor {

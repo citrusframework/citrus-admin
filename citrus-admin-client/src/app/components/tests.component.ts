@@ -2,7 +2,7 @@ import {Component, OnInit} from 'angular2/core';
 import {NgSwitch, NgFor} from 'angular2/common';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import {Tabs, Tab} from "./util/tabs";
-import {TestPackage, Test} from "../model/tests";
+import {TestGroup, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {TestDetailComponent} from "./test.detail.component";
 import {AutoComplete} from "./util/autocomplete";
@@ -30,7 +30,7 @@ export class TestsComponent implements OnInit {
 
     activeTest: Test;
     openTests: Test[];
-    packages: TestPackage[];
+    packages: TestGroup[];
     testNames: string[];
     tests: string[];
 
