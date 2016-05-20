@@ -18,8 +18,10 @@ package com.consol.citrus.admin.mock;
 
 import com.consol.citrus.context.TestContext;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.oxm.Marshaller;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -27,14 +29,42 @@ import org.springframework.oxm.Marshaller;
  */
 public class Mocks {
 
+    /**
+     * Constructs Spring application context mock.
+     * @return
+     */
     public static ApplicationContext getApplicationContextMock() {
         ApplicationContext mock = Mockito.mock(ApplicationContext.class);
         Mockito.when(mock.getBean(Marshaller.class)).thenReturn(Mockito.mock(Marshaller.class));
         return mock;
     }
 
+    /**
+     * Constructs test context mock.
+     * @return
+     */
     public static TestContext getTestContextMock() {
         TestContext mock = Mockito.mock(TestContext.class);
         return mock;
+    }
+
+    /**
+     * Inject Spring autowired fields in target instance with mocks.
+     * @param target
+     */
+    public static void injectMocks(Object target) {
+        ReflectionUtils.doWithFields(target.getClass(),
+                field -> ReflectionUtils.setField(field, target, Mockito.mock(field.getType())),
+                field -> {
+                    if (field.isAnnotationPresent(Autowired.class)) {
+                        if (!field.isAccessible()) {
+                            ReflectionUtils.makeAccessible(field);
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                });
     }
 }

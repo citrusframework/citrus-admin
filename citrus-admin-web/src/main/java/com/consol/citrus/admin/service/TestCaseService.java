@@ -24,14 +24,12 @@ import com.consol.citrus.admin.marshal.XmlTestMarshaller;
 import com.consol.citrus.admin.mock.Mocks;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,39 +352,17 @@ public class TestCaseService {
     private TestcaseModel getJavaTestModel(Project project, TestDetail detail) {
         if (project.isMavenProject()) {
             try {
-                ClassLoader classLoader = URLClassLoader.newInstance(getTestClassLoader(project));
-
+                FileUtils.setSimulationMode(true);
+                ClassLoader classLoader = getTestClassLoader(project);
                 Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
 
-                if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass)) {
-                    TestNGCitrusTestDesigner testInstance = (TestNGCitrusTestDesigner) testClass.newInstance();
+                if (TestSimulator.class.isAssignableFrom(testClass)) {
+                    TestSimulator testInstance = (TestSimulator) testClass.newInstance();
                     Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
-                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
-                    testMethod.invoke(testInstance);
 
-                    return getTestcaseModel(testInstance.getTestCase());
-                } else if (TestNGCitrusTestRunner.class.isAssignableFrom(testClass)) {
-                    TestNGCitrusTestRunner testInstance = (TestNGCitrusTestRunner) testClass.newInstance();
-                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
-                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
-                    testMethod.invoke(testInstance);
+                    Mocks.injectMocks(testInstance);
 
-                    return getTestcaseModel(testInstance.getTestCase());
-                } else if (JUnit4CitrusTestDesigner.class.isAssignableFrom(testClass)) {
-                    JUnit4CitrusTestDesigner testInstance = (JUnit4CitrusTestDesigner) testClass.newInstance();
-                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
-                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
-                    testMethod.invoke(testInstance);
-
-                    return getTestcaseModel(testInstance.getTestCase());
-                } else if (JUnit4CitrusTestRunner.class.isAssignableFrom(testClass)) {
-                    JUnit4CitrusTestRunner testInstance = (JUnit4CitrusTestRunner) testClass.newInstance();
-                    Method testMethod = ReflectionUtils.findMethod(testClass, detail.getMethodName());
-                    testInstance.setApplicationContext(Mocks.getApplicationContextMock());
-                    testInstance.simulate(testMethod, Mocks.getTestContextMock());
+                    testInstance.simulate(testMethod, Mocks.getTestContextMock(), Mocks.getApplicationContextMock());
                     testMethod.invoke(testInstance);
 
                     return getTestcaseModel(testInstance.getTestCase());
@@ -403,6 +379,8 @@ public class TestCaseService {
                 throw new ApplicationRuntimeException("Failed to create test class instance", e);
             } catch (InvocationTargetException e) {
                 throw new ApplicationRuntimeException("Failed to invoke test method", e);
+            } finally {
+                FileUtils.setSimulationMode(false);
             }
         }
 
@@ -411,15 +389,17 @@ public class TestCaseService {
         return testModel;
     }
 
-    private URL[] getTestClassLoader(Project project) throws IOException {
+    private ClassLoader getTestClassLoader(Project project) throws IOException {
         List<URL> classpathUrls = new ArrayList<>();
 
         classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "classes").getURL());
         classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "test-classes").getURL());
 
         File[] mavenDependencies = Maven.configureResolver()
-                .workOffline(false)
-                .resolve(project.getSettings().getBasePackage() + ":" + project.getName() + ":" + project.getVersion())
+                .workOffline()
+                .loadPomFromFile(project.getMavenPomFile())
+                .importDependencies(ScopeType.COMPILE, ScopeType.TEST)
+                .resolve()
                 .withTransitivity()
                 .asFile();
 
@@ -427,7 +407,7 @@ public class TestCaseService {
             classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
         }
 
-        return classpathUrls.toArray(new URL[classpathUrls.size()]);
+        return URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]));
     }
 
     private TestcaseModel getTestcaseModel(TestCase testCase) {
