@@ -117,7 +117,8 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getVersion()).thenReturn(Citrus.getVersion());
         when(project.isMavenProject()).thenReturn(true);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("").getFile().getAbsolutePath());
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/maven").getFile().getAbsolutePath());
+        when(project.getMavenPomFile()).thenReturn(new ClassPathResource("projects/maven/pom.xml").getFile());
 
         TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.admin.javadsl", "CitrusJavaTest", "fooTest", "CitrusJavaTest.fooTest", TestType.JAVA));
 
