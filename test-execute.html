@@ -63,7 +63,7 @@
         data-chapter-title="Execute tests"
         data-filepath="test-execute.md"
         data-basepath="."
-        data-revision="Fri May 13 2016 16:19:14 GMT+0200 (CEST)"
+        data-revision="Fri May 20 2016 13:39:19 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -428,8 +428,26 @@
 <p>Test execution is a very powerful feature as it enables you to execute your tests within a browser environment almost everywhere. Just hit the <em>Run</em> button and Citrus will start a new background process that executes the
 test case immediately. At the moment we do only support Maven test execution. This means that a new Maven process is launched in background executing the test.</p>
 <p><img src="screenshots/test-execute.png" alt="Execution"></p>
-<p>As you can see the test log output is forwarded to your browser. Also the test progress and result (success or failure) is tracked by the administration UI. In near future you may
-be able to review all messages that were exchanged during the test run in the message view panel.</p>
+<p>As you can see the test log output is forwarded to your browser. Also the test progress and result (success or failure) is tracked by the administration UI. In the messages tab you are able to review all messages (inbound/outbound)
+that have been exchanged during the test run.</p>
+<p><img src="screenshots/test-messages.png" alt="Execution"></p>
+<p>The message panel displays all inbound and outbound messages. Click on the envelope to see the message content details. The mechanism for tracking inbound and outbound messages in the administration UI is working with a special message 
+listener that you have to add to your Citrus project:</p>
+<pre><code>&lt;bean class=&quot;com.consol.citrus.admin.connector.WebSocketPushMessageListener&quot;&gt;
+  &lt;property name=&quot;host&quot; value=&quot;localhost&quot;/&gt;
+  &lt;property name=&quot;port&quot; value=&quot;8080&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p>As you can see the connector is pushing message data to the administration UI using a WebSocket API on the administration UI server. The <em>host</em> and <em>port</em> properties are customizable, default values are <em>localhost</em> and <em>8080</em>. When a test is executed
+the message listener will automatically connect and push messages exchanged to the administration UI.</p>
+<p>Of course the administration UI server has to be accessible during the test run. The message listener will automatically test the server connectivity at the beginning of the test run. In case the administration UI is not accessible the message push
+feature is simply disabled. So you can continue to work with your Citrus project even if the administration UI is not started. </p>
+<p>Do not forget to add the <strong>citrus-admin-connector</strong> as dependency to the Citrus project Maven POM:</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-admin-connector&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0-beta-2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>This is how the administration UI is able to track messages exchanged during a test run. Stay tuned for more features related to the test execution and message exchange.</p>
 
                     
                     </section>
