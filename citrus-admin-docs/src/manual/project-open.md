@@ -8,7 +8,7 @@ started you have to open a project first.
 The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:
 
-```java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home citrus-admin-web-1.0.0-beta-1.jar```
+```java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home citrus-admin-web-1.0.0-beta-2.jar```
 
 When pre selecting a project home the project is opened automatically and the [project dashboard](project-dashboard.md) is displayed. Now back to the project home selection if no project has bee pre selected yet.
 
@@ -34,7 +34,7 @@ manually in prior to opening the project.
 There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:
 
 ```java -jar -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources citrus-admin-web-1.0.0-beta-1.jar```
+-Dxml.source.directory=src/it/resources citrus-admin-web-1.0.0-beta-2.jar```
 
 You can set the following system properties:
 
