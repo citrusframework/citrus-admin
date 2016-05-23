@@ -227,7 +227,9 @@ public class TestCaseService {
 
         if (testModel.getMetaInfo() != null) {
             testDetail.setAuthor(testModel.getMetaInfo().getAuthor());
-            testDetail.setLastModified(testModel.getMetaInfo().getLastUpdatedOn().getTimeInMillis());
+            if (testModel.getMetaInfo().getLastUpdatedOn() != null) {
+                testDetail.setLastModified(testModel.getMetaInfo().getLastUpdatedOn().getTimeInMillis());
+            }
         }
 
         if (test.getType().equals(TestType.JAVA)) {

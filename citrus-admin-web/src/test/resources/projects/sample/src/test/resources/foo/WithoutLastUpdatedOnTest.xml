@@ -4,13 +4,11 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="FooTest">
+  <testcase name="WithoutLastUpdatedOnTest">
     <meta-info>
       <author>Christoph</author>
       <creationdate>2011-09-05</creationdate>
       <status>DRAFT</status>
-      <last-updated-by>Christoph</last-updated-by>
-      <last-updated-on>2011-09-05T13:42:09</last-updated-on>
     </meta-info>
 
     <description>This is a sample test</description>
@@ -19,20 +17,7 @@
       <echo>
         <message>TODO: Code the test SampleIT</message>
       </echo>
-
-      <send endpoint="sampleEndpoint">
-        <message>
-          <data>Hello</data>
-        </message>
-      </send>
-
-      <send endpoint="samplePayloadEndpoint">
-        <message>
-          <payload>
-            <Test xmlns="http://www.citrusframework.org">Hello</Test>
-          </payload>
-        </message>
-      </send>
     </actions>
+
   </testcase>
 </spring:beans>
