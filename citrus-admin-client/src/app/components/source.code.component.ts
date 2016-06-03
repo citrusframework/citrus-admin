@@ -7,7 +7,9 @@ declare var ace;
 
 @Component({
     selector: "source-code",
-    template: '<pre id="{{id}}" class="code-editor">{{sourceCode}}</pre>'
+    template: `<pre id="{{id}}" class="code-editor"></pre>
+               <button class="btn btn-primary" (click)="saveSourceCode()">Save</button>
+               <button class="btn btn-primary" (click)="resetSourceCode()">Reset</button>`
 })
 export class SourceCodeComponent implements OnChanges, AfterViewInit {
     @Input('editor-id') id: string;
@@ -31,7 +33,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     }
 
     getSourceCode() {
-        this._testService.getSourceCode(this.detail, this.type)
+        this._testService.getSourceCode(this.getRelativePath())
             .subscribe(
                 sourceCode => {
                     this.sourceCode = sourceCode;
@@ -43,4 +45,26 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
                 },
                 error => this.errorMessage = <any>error);
     }
+
+
+    saveSourceCode() {
+        this._testService.updateSourceCode(this.getRelativePath(), this.editor.getValue())
+            .subscribe(error => this.errorMessage = <any>error);
+    }
+
+    resetSourceCode() {
+        this.getSourceCode();
+    }
+
+    private getRelativePath() {
+        if (this.type == "java" && this.detail.relativePath.endsWith(".xml")) {
+            //In test-detail.html, there are 2 tabs (xml and java) when detail.type=XML and they both use the same editor (with only one type: xml!).
+            //In this case, when the Java tab is selected, the java file has to be shown
+            return this.detail.relativePath.replace(".xml", ".java");
+        } else {
+            return this.detail.relativePath;
+        }
+    }
+
+
 }

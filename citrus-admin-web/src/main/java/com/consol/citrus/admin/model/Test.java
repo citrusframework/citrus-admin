@@ -16,6 +16,8 @@
 
 package com.consol.citrus.admin.model;
 
+import java.io.File;
+
 /**
  * @author Christoph Deppisch
  */
@@ -141,4 +143,17 @@ public class Test {
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
+
+    /**
+     * Gets the relative path for this test
+     * @return
+     */
+    public String getRelativePath() {
+        if (type.equals(TestType.JAVA)) {
+            return packageName.replace('.', File.separatorChar) + File.separator + className + ".java";
+        } else {
+            return packageName.replace('.', File.separatorChar) + File.separator + name + ".xml";
+        }
+    }
+
 }

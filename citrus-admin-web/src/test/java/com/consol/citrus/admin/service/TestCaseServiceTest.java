@@ -47,7 +47,9 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     public void testGetTestPackages() throws IOException {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
+        String projectHome = new ClassPathResource("projects/sample").getFile().getAbsolutePath();
+        when(project.getProjectHome()).thenReturn(projectHome);
+        when(project.getJavaDirectory()).thenReturn(projectHome + "/src/test/java/");
 
         List<TestGroup> testPackages = testCaseService.getTestPackages(project);
 
@@ -82,11 +84,13 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
+        when(project.getAbsolutePath("foo/FooTest.xml")).thenReturn(new ClassPathResource("projects/sample/src/test/resources/foo/FooTest.xml").getFile().getAbsolutePath());
 
         TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("foo", "FooTest", "fooTest", "FooTest", TestType.XML));
 
         Assert.assertEquals(testDetail.getName(), "FooTest");
         Assert.assertEquals(testDetail.getPackageName(), "foo");
+        Assert.assertEquals(testDetail.getRelativePath(), "foo/FooTest.xml");
         Assert.assertEquals(testDetail.getType(), TestType.XML);
         Assert.assertEquals(testDetail.getAuthor(), "Christoph");
         Assert.assertEquals(testDetail.getLastModified().longValue(), 1315222929000L);
@@ -119,6 +123,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         reset(project);
         when(project.getSettings()).thenReturn(new ProjectSettings());
         when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
+        when(project.getAbsolutePath("foo/WithoutLastUpdatedOnTest.xml")).thenReturn(new ClassPathResource("projects/sample/src/test/resources/foo/WithoutLastUpdatedOnTest.xml").getFile().getAbsolutePath());
 
         TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("foo", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", TestType.XML));
 
@@ -132,13 +137,16 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getVersion()).thenReturn(Citrus.getVersion());
         when(project.isMavenProject()).thenReturn(true);
         when(project.getSettings()).thenReturn(new ProjectSettings());
-        when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/maven").getFile().getAbsolutePath());
+        String projectHome = new ClassPathResource("projects/maven").getFile().getAbsolutePath();
+        when(project.getProjectHome()).thenReturn(projectHome);
+        when(project.getJavaDirectory()).thenReturn(projectHome + "projects/maven/src/test/java/");
         when(project.getMavenPomFile()).thenReturn(new ClassPathResource("projects/maven/pom.xml").getFile());
 
         TestDetail testDetail = testCaseService.getTestDetail(project, new com.consol.citrus.admin.model.Test("com.consol.citrus.admin.javadsl", "CitrusJavaTest", "fooTest", "CitrusJavaTest.fooTest", TestType.JAVA));
 
         Assert.assertEquals(testDetail.getName(), "CitrusJavaTest.fooTest");
         Assert.assertEquals(testDetail.getPackageName(), "com.consol.citrus.admin.javadsl");
+        Assert.assertEquals(testDetail.getRelativePath(), "com/consol/citrus/admin/javadsl/CitrusJavaTest.java");
         Assert.assertEquals(testDetail.getType(), TestType.JAVA);
         Assert.assertTrue(testDetail.getFile().endsWith("javadsl/CitrusJavaTest"));
         Assert.assertEquals(testDetail.getActions().size(), 1L);

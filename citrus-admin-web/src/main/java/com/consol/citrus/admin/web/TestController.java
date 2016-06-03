@@ -66,10 +66,16 @@ public class TestController {
         return testCaseService.getTestDetail(projectService.getActiveProject(), test);
     }
 
-    @RequestMapping(value="/source/{type}", method = { RequestMethod.POST })
+    @RequestMapping(value="/source", method = { RequestMethod.GET })
     @ResponseBody
-    public String getSourceCode(@RequestBody Test test, @PathVariable("type") String type) {
-        return testCaseService.getSourceCode(projectService.getActiveProject(), new TestDetail(test), TestType.valueOf(type.toUpperCase()));
+    public String getSourceCode(@RequestParam("relativePath") String relativePath) {
+        return testCaseService.getSourceCode(projectService.getActiveProject(), relativePath);
+    }
+
+    @RequestMapping(value="/source", method = { RequestMethod.PUT })
+    @ResponseBody
+    public void updateSourceCode(@RequestParam("relativePath") String relativePath, @RequestBody String newSourceCode) {
+        testCaseService.updateSourceCode(projectService.getActiveProject(), relativePath, newSourceCode);
     }
 
     @RequestMapping(value="/execute", method = { RequestMethod.POST })

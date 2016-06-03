@@ -69,7 +69,7 @@ public class TestCaseService {
     public List<TestGroup> getTestPackages(Project project) {
         Map<String, TestGroup> testPackages = new HashMap<>();
 
-        List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+        List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
         List<Test> tests = findTests(project, sourceFiles);
 
         for (Test test : tests) {
@@ -94,7 +94,7 @@ public class TestCaseService {
     public List<TestGroup> getLatest(Project project, int limit) {
         Map<String, TestGroup> grouped = new LinkedHashMap<>();
 
-        List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+        List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
         sourceFiles = sourceFiles.stream()
                 .sorted((f1, f2) -> f1.lastModified() >= f2.lastModified() ? -1 : 1)
                 .limit(limit)
@@ -123,7 +123,7 @@ public class TestCaseService {
         List<Test> tests = new ArrayList<>();
         for (File sourceFile : sourceFiles) {
             String className = FilenameUtils.getBaseName(sourceFile.getName());
-            String testPackageName = sourceFile.getPath().substring(getJavaDirectory(project).length(), sourceFile.getPath().length() - sourceFile.getName().length())
+            String testPackageName = sourceFile.getPath().substring(project.getJavaDirectory().length(), sourceFile.getPath().length() - sourceFile.getName().length())
                     .replace(File.separatorChar, '.');
 
             if (testPackageName.endsWith(".")) {
@@ -233,9 +233,9 @@ public class TestCaseService {
         }
 
         if (test.getType().equals(TestType.JAVA)) {
-            testDetail.setFile(getJavaDirectory(project) + test.getPackageName().replace('.', File.separatorChar) + File.separator + test.getClassName());
+            testDetail.setFile(project.getJavaDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + test.getClassName());
         } else {
-            testDetail.setFile(getTestDirectory(project) + test.getPackageName().replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(test.getName()));
+            testDetail.setFile(project.getXmlDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(test.getName()));
         }
 
         if (testModel.getActions() != null) {
@@ -267,29 +267,32 @@ public class TestCaseService {
 
     /**
      * Gets the source code for the given test.
-     * @param project
-     * @param detail
-     * @param type
+     * @param relativePath
      * @return
      */
-    public String getSourceCode(Project project, TestDetail detail, TestType type) {
-        String sourceFilePath;
-        if (type.equals(TestType.JAVA)) {
-            sourceFilePath = getJavaDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getClassName() + ".java";
-        } else {
-            sourceFilePath = getTestDirectory(project) + detail.getPackageName().replace('.', File.separatorChar) + File.separator + detail.getName() + ".xml";
-        }
-
+    public String getSourceCode(Project project, String relativePath) {
         try {
-            if (new File(sourceFilePath).exists()) {
-                return FileUtils.readToString(new FileInputStream(sourceFilePath));
+            String sourcePath = project.getAbsolutePath(relativePath);
+            if (new File(sourcePath).exists()) {
+                return FileUtils.readToString(new FileInputStream(sourcePath));
             } else {
-                log.warn("Unable to find source code for path: " + sourceFilePath);
+                log.warn("Unable to find source code for path: " + sourcePath);
                 return "No sources available!";
             }
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to load test case source code", e);
         }
+    }
+
+    /**
+     * Updates the source code for the given test.
+     * @param relativePath
+     * @param sourceCode
+     * @return
+     */
+    public void updateSourceCode(Project project, String relativePath, String sourceCode) {
+        String sourcePath = project.getAbsolutePath(relativePath);
+        FileUtils.writeToFile(sourceCode, new File(sourcePath));
     }
 
     /**
@@ -300,7 +303,7 @@ public class TestCaseService {
     public long getTestCount(Project project) {
         long testCount = 0L;
         try {
-            List<File> sourceFiles = FileUtils.findFiles(getJavaDirectory(project), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
+            List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
             for (File sourceFile : sourceFiles) {
                 String sourceCode = FileUtils.readToString(new FileSystemResource(sourceFile));
 
@@ -331,15 +334,14 @@ public class TestCaseService {
 
     /**
      * Get test case model from XML source code.
-     * @param project
-     * @param detail
+     * @param test
      * @return
      */
-    private TestcaseModel getXmlTestModel(Project project, TestDetail detail) {
-        String xmlSource = getSourceCode(project, detail, TestType.XML);
+    private TestcaseModel getXmlTestModel(Project project, Test test) {
+        String xmlSource = getSourceCode(project, test.getRelativePath());
 
         if (!StringUtils.hasText(xmlSource)) {
-            throw new ApplicationRuntimeException("Failed to get XML source code for test: " + detail.getPackageName() + "." + detail.getName());
+            throw new ApplicationRuntimeException("Failed to get XML source code for test: " + test.getPackageName() + "." + test.getName());
         }
 
         return ((SpringBeans) new XmlTestMarshaller().unmarshal(new StringSource(xmlSource))).getTestcase();
@@ -444,21 +446,4 @@ public class TestCaseService {
         return new ActionConverter(action.getName()).convertModel(action);
     }
 
-    /**
-     * Gets the current test directory based on project home and default test directory.
-     * @return
-     */
-    private String getTestDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
-                project.getSettings().getXmlSrcDirectory();
-    }
-
-    /**
-     * Gets the current test directory based on project home and default test directory.
-     * @return
-     */
-    private String getJavaDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator +
-                project.getSettings().getJavaSrcDirectory();
-    }
 }

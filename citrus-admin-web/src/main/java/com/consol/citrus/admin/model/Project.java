@@ -128,6 +128,35 @@ public class Project {
     }
 
     /**
+     * Gets the current test directory based on project home and default test directory.
+     * @return
+     */
+    public String getJavaDirectory() {
+        return new File(projectHome).getAbsolutePath() + System.getProperty("file.separator") + settings.getJavaSrcDirectory();
+    }
+
+    /**
+     * Gets the current test directory based on project home and default test directory.
+     * @return
+     */
+    public String getXmlDirectory() {
+        return new File(projectHome).getAbsolutePath() + System.getProperty("file.separator") + settings.getXmlSrcDirectory();
+    }
+
+    /**
+     * Gets the absolute pathname string
+     * @param relativePath
+     * @return
+     */
+    public String getAbsolutePath(String relativePath) {
+        if (relativePath.endsWith(".java")) {
+            return getJavaDirectory() + relativePath;
+        } else {
+            return getXmlDirectory() + relativePath;
+        }
+    }
+
+    /**
      * Gets the value of the name property.
      *
      * @return the name

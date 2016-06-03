@@ -2,6 +2,7 @@ import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {TestGroup, Test, TestDetail, TestResult} from '../model/tests';
+import {URLSearchParams} from "angular2/http";
 
 @Injectable()
 export class TestService {
@@ -39,9 +40,20 @@ export class TestService {
             .catch(this.handleError);
     }
 
-    getSourceCode(test: TestDetail, type: string) {
-        return this.http.post(this._testSourceUrl + '/' + type, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+    getSourceCode(relativePath: string) {
+        let params = new URLSearchParams();
+        params.set('relativePath', relativePath);
+
+        return this.http.get(this._testSourceUrl, { search: params })
             .map(res => <string> res.text())
+            .catch(this.handleError);
+    }
+
+    updateSourceCode(relativePath: string, sourceCode: string) {
+        let params = new URLSearchParams();
+        params.set('relativePath', relativePath);
+
+        return this.http.put(this._testSourceUrl, sourceCode, { search: params })
             .catch(this.handleError);
     }
 
