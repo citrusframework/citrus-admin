@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter.action.ws;
 import com.consol.citrus.admin.converter.action.AbstractTestContainerConverter;
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.model.testcase.core.*;
-import com.consol.citrus.model.testcase.ws.AssertModel;
+import com.consol.citrus.model.testcase.ws.AssertFaultModel;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import org.springframework.stereotype.Component;
 
@@ -30,14 +30,14 @@ import java.util.*;
  * @since 2.6
  */
 @Component
-public class AssertSoapFaultContainerConverter extends AbstractTestContainerConverter<AssertModel, AssertSoapFault> {
+public class AssertSoapFaultContainerConverter extends AbstractTestContainerConverter<AssertFaultModel, AssertSoapFault> {
 
     public AssertSoapFaultContainerConverter() {
         super("assert-fault");
     }
 
     @Override
-    public TestAction convert(AssertModel model) {
+    public TestAction convert(AssertFaultModel model) {
         TestAction action = new TestAction(getActionType(), getSourceModelClass());
         addActionProperties(action, model);
 
@@ -49,8 +49,8 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
     }
 
     @Override
-    public AssertModel convertModel(AssertSoapFault model) {
-        AssertModel action = new AssertModel();
+    public AssertFaultModel convertModel(AssertSoapFault model) {
+        AssertFaultModel action = new AssertFaultModel();
         action.setDescription(model.getDescription());
 
         List<Object> actions = new ArrayList<>();
@@ -63,8 +63,8 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
         return action;
     }
 
-    private void setNestedAction(AssertModel action, Object object) {
-        action.setWhen(new AssertModel.When());
+    private void setNestedAction(AssertFaultModel action, Object object) {
+        action.setWhen(new AssertFaultModel.When());
 
         if (object instanceof ActionModel) {
             action.getWhen().setAction((ActionModel) object);
@@ -139,7 +139,7 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
         }
     }
 
-    private Object getNestedAction(AssertModel model) {
+    private Object getNestedAction(AssertFaultModel model) {
         if (model.getWhen().getAction() != null) {
             return model.getWhen().getAction();
         } else if (model.getWhen().getAnt() != null) {
@@ -219,7 +219,7 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
     }
 
     @Override
-    public Class<AssertModel> getSourceModelClass() {
-        return AssertModel.class;
+    public Class<AssertFaultModel> getSourceModelClass() {
+        return AssertFaultModel.class;
     }
 }
