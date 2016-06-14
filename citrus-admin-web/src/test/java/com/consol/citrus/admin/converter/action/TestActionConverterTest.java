@@ -21,6 +21,7 @@ import com.consol.citrus.admin.converter.action.ws.AssertSoapFaultContainerConve
 import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.model.testcase.ws.AssertFaultModel;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -51,7 +52,7 @@ public class TestActionConverterTest {
                 new Object[] {new SequentialContainerConverter(), new SequentialModel(), new Sequence(), "sequential"},
                 new Object[] {new IterateContainerConverter(), new IterateModel(), new Iterate(), "iterate"},
                 new Object[] {new AssertContainerConverter(), new AssertModel(), new com.consol.citrus.container.Assert(), "assert"},
-                new Object[] {new AssertSoapFaultContainerConverter(), new com.consol.citrus.model.testcase.ws.AssertModel(), new AssertSoapFault(), "assert-fault"},
+                new Object[] {new AssertSoapFaultContainerConverter(), new AssertFaultModel(), new AssertSoapFault(), "assert-fault"},
                 new Object[] {new ActionConverter("sample"), new ActionModel(), new EchoAction(), "sample"},
         };
     }

@@ -70,8 +70,8 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
             action.getWhen().setAction((ActionModel) object);
         } else if (object instanceof AntModel) {
             action.getWhen().setAnt((AntModel) object);
-        } else if (object instanceof com.consol.citrus.model.testcase.core.AssertModel) {
-            action.getWhen().setAssert((com.consol.citrus.model.testcase.core.AssertModel) object);
+        } else if (object instanceof AssertModel) {
+            action.getWhen().setAssert((AssertModel) object);
         } else if (object instanceof CallTemplateModel) {
             action.getWhen().setCallTemplate((CallTemplateModel) object);
         } else if (object instanceof CatchModel) {
