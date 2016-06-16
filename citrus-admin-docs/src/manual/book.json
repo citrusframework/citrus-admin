@@ -4,11 +4,11 @@
   "extension": "pdf",
   "github": "christophd/citrus-admin",
   "githubHost": "https://github.com/",
-  "gitbook": ">=2.0.0",
+  "gitbook": "2.x.x",
 
   "links": {
     "home": "https://github.com/christophd/citrus-admin",
-    "about": "http://fish-pepper.org/index.html",
+    "about": "https://christophd.github.io/citrus-admin//index.html",
     "issues": "https://github.com/christophd/citrus-admin/issues",
     "contribute": "https://github.com/christophd/citrus-admin/blob/master/citrus-admin-docs/contributing.md",
 
@@ -17,7 +17,7 @@
     }
   },
 
-  "plugins": ["edit-link", "anchors", "code_tomorrow_scheme" ],
+  "plugins": ["edit-link@2.0.2", "anchors@0.6.0", "code_tomorrow_scheme@0.1.3" ],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/christophd/citrus-admin/edit/master/citrus-admin-docs/src/manual",
