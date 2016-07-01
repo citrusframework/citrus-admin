@@ -107,7 +107,7 @@
                   <outputDirectory>${project.build.directory}/checkout</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>src/manual/_book</directory>
+                      <directory>${project.build.directory}/_book</directory>
                       <includes>
                         <include>**/**</include>
                       </includes>
