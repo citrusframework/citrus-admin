@@ -42,7 +42,7 @@
       <label class="col-sm-2 control-label">Citrus <em>*</em></label>
       <div class="col-sm-10">
         <select [(ngModel)]="project.settings.citrusVersion" class="form-control">
-          <option value="2.6-SNAPSHOT">2.6-SNAPSHOT</option>
+          <option value="2.7-SNAPSHOT">2.7-SNAPSHOT</option>
           <option value="2.6">2.6</option>
           <option value="2.5.2">2.5.2</option>
           <option value="2.5.1">2.5.1</option>
@@ -104,8 +104,6 @@
       <div class="col-sm-10">
         <select [(ngModel)]="project.settings.build.type" class="form-control">
           <option value="maven">maven</option>
-          <option value="gradle">gradle</option>
-          <option value="ant">ant</option>
         </select>
       </div>
     </div>
