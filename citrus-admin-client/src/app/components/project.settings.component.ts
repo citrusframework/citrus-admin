@@ -53,4 +53,9 @@ export class ProjectSettingsComponent implements OnInit {
         this._projectService.update(this.project)
             .subscribe(error => this.errorMessage = <any>error);
     }
+
+    manageConnector() {
+        this._projectService.setConnector(this.project.settings.useConnector)
+            .subscribe(error => this.errorMessage = <any>error);
+    }
 }

@@ -18,13 +18,14 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.CollectionUtils;
+import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +42,7 @@ public class ProjectServiceTest {
     }
 
     @Test(dataProvider = "projectProvider")
-    public void testLoadAndSaveProject(String projectHome, String description) throws Exception {
+    public void testLoadAndSaveProject(String projectHome, String description, Map<String, String> properties, boolean connectorActive) throws Exception {
         if (projectService.getProjectSettingsFile(new ClassPathResource(projectHome).getFile().getCanonicalPath()).exists()) {
             if (!projectService.getProjectSettingsFile(new ClassPathResource(projectHome).getFile().getCanonicalPath()).delete()) {
                 Assert.fail();
@@ -55,33 +56,37 @@ public class ProjectServiceTest {
         Assert.assertEquals(project.getProjectHome(), new ClassPathResource(projectHome).getFile().getCanonicalPath());
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "1.0.0");
-        Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6-SNAPSHOT");
+        Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6.1-SNAPSHOT");
         Assert.assertEquals(project.getSettings().getBasePackage(), "com.consol.citrus");
+        Assert.assertEquals(project.getSettings().isUseConnector(), true);
+        Assert.assertEquals(project.getSettings().isConnectorActive(), connectorActive);
         Assert.assertEquals(project.getDescription(), description);
 
-        projectService.getActiveProject().setDescription("New description");
+        projectService.getActiveProject().getSettings().setUseConnector(false);
         projectService.saveProject(projectService.getActiveProject());
 
         projectService.load(new ClassPathResource(projectHome).getFile().getCanonicalPath());
         project = projectService.getActiveProject();
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "1.0.0");
-        Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6-SNAPSHOT");
+        Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6.1-SNAPSHOT");
         Assert.assertEquals(project.getSettings().getBasePackage(), "com.consol.citrus");
-        Assert.assertEquals(project.getDescription(), "New description");
+        Assert.assertEquals(project.getSettings().isUseConnector(), false);
+        Assert.assertEquals(project.getSettings().isConnectorActive(), connectorActive);
+        Assert.assertEquals(project.getDescription(), description);
     }
 
     @Test(dataProvider = "projectProvider")
-    public void testGetProjectProperties(String projectHome, String description) throws Exception {
+    public void testGetProjectProperties(String projectHome, String description, Map<String, String> properties, boolean connectorActive) throws Exception {
         Project testProject = new Project(new ClassPathResource(projectHome).getFile().getCanonicalPath());
 
         projectService.setActiveProject(testProject);
-        Properties properties = projectService.getProjectProperties();
+        Properties projectProperties = projectService.getProjectProperties();
 
-        Assert.assertFalse(CollectionUtils.isEmpty(properties));
-        Assert.assertEquals(properties.size(), 2L);
-        Assert.assertEquals(properties.get("project.name"), "citrus-integration-tests");
-        Assert.assertEquals(properties.get("project.description"), description);
+        Assert.assertEquals(projectProperties.size(), properties.size());
+        for (Map.Entry<String, String> propEntry : properties.entrySet()) {
+            Assert.assertEquals(projectProperties.get(propEntry.getKey()), propEntry.getValue());
+        }
     }
 
     @Test
@@ -94,6 +99,22 @@ public class ProjectServiceTest {
         Assert.assertEquals(configFile.getName(), "citrus-context.xml");
     }
 
+    @Test
+    public void testManageConnector() throws Exception {
+        Project testProject = new Project(new ClassPathResource("projects/maven").getFile().getCanonicalPath());
+        projectService.setActiveProject(testProject);
+
+        Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
+
+        projectService.addConnector();
+
+        Assert.assertTrue(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
+
+        projectService.removeConnector();
+
+        Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
+    }
+
     @Test(expectedExceptions = { ApplicationRuntimeException.class },
             expectedExceptionsMessageRegExp = "Invalid project home - not a proper Citrus project")
     public void testInvalidProjectHome() {
@@ -102,9 +123,14 @@ public class ProjectServiceTest {
 
     @DataProvider
     public Object[][] projectProvider() {
+        HashMap<String, String> defaultProjectProperties = new HashMap<>();
+        defaultProjectProperties.put("project.name", "citrus-integration-tests");
+        defaultProjectProperties.put("project.version", "v1.0");
+
         return new Object[][] {
-            new Object[] {"projects/maven", "This is a sample Citrus Maven build"},
-            new Object[] {"projects/ant", "This is a sample Citrus ANT build"}
+            new Object[] {"projects/maven", "This is a sample Citrus Maven build", defaultProjectProperties, false},
+            new Object[] {"projects/maven_connector", "This is a sample Citrus Maven build", Collections.emptyMap(), true},
+            new Object[] {"projects/ant", "This is a sample Citrus ANT build", defaultProjectProperties, false}
         };
     }
 }

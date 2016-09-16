@@ -97,6 +97,27 @@
       </div>
     </div>
 
+    <div class="form-group" *ngIf="project.settings.useConnector">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="alert alert-success" role="alert" *ngIf="project.settings.connectorActive">
+          <strong>Connector is active!</strong>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="!project.settings.connectorActive">
+          <strong>Connector is inactive!</strong>
+          <a href="#" class="alert-link" (click)="manageConnector">Add connector</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!project.settings.useConnector">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="alert alert-danger" role="alert" *ngIf="project.settings.connectorActive">
+          <strong>Connector is still active!</strong>
+          <a href="#" class="alert-link" (click)="manageConnector">Remove connector</a>
+        </div>
+      </div>
+    </div>
+
     <h3>Build:</h3>
 
     <div class="form-group">

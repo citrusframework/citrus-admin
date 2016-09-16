@@ -84,56 +84,59 @@ public class ProjectService {
             if (!validateProject(project)) {
                 throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
             }
-
-            if (project.isMavenProject()) {
-                try {
-                    String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
-                    SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                    nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
-
-                    Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
-                    project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
-
-                    String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
-                    String parentVersion = evaluate(pomDoc, "/mvn:project/mvn:parent/mvn:version", nsContext);
-                    if (StringUtils.hasText(version)) {
-                        project.setVersion(version);
-                    } else if (StringUtils.hasText(parentVersion)) {
-                        project.setVersion(parentVersion);
-                    }
-
-                    project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
-
-                    String citrusVersion = evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext);
-                    if (StringUtils.hasText(citrusVersion)) {
-                        project.getSettings().setCitrusVersion(citrusVersion);
-                    }
-
-                    project.setDescription(evaluate(pomDoc, "/mvn:project/mvn:description", nsContext));
-                } catch (IOException e) {
-                    throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
-                }
-            } else if (project.isAntProject()) {
-                try {
-                    String buildXml = FileUtils.readToString(new FileSystemResource(project.getAntBuildFile()));
-                    SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-
-                    Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
-                    project.setName(evaluate(buildDoc, "/project/@name", nsContext));
-
-                    String citrusVersion = evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext);
-                    if (StringUtils.hasText(citrusVersion)) {
-                        project.getSettings().setCitrusVersion(citrusVersion);
-                    }
-
-                    project.setDescription(evaluate(buildDoc, "/project/@description", nsContext));
-                } catch (IOException e) {
-                    throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
-                }
-            }
-
-            saveProject(project);
         }
+
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
+
+                Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
+                project.setName(evaluate(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
+
+                String version = evaluate(pomDoc, "/mvn:project/mvn:version", nsContext);
+                String parentVersion = evaluate(pomDoc, "/mvn:project/mvn:parent/mvn:version", nsContext);
+                if (StringUtils.hasText(version)) {
+                    project.setVersion(version);
+                } else if (StringUtils.hasText(parentVersion)) {
+                    project.setVersion(parentVersion);
+                }
+
+                project.getSettings().setBasePackage(evaluate(pomDoc, "/mvn:project/mvn:groupId", nsContext));
+
+                String citrusVersion = evaluate(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext);
+                if (StringUtils.hasText(citrusVersion)) {
+                    project.getSettings().setCitrusVersion(citrusVersion);
+                }
+
+                project.setDescription(evaluate(pomDoc, "/mvn:project/mvn:description", nsContext));
+
+                project.getSettings().setConnectorActive(StringUtils.hasText(evaluate(pomDoc,
+                        "/mvn:project/mvn:dependencies/mvn:dependency/mvn:artifactId[. = 'citrus-admin-connector']", nsContext)));
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
+            }
+        } else if (project.isAntProject()) {
+            try {
+                String buildXml = FileUtils.readToString(new FileSystemResource(project.getAntBuildFile()));
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+
+                Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
+                project.setName(evaluate(buildDoc, "/project/@name", nsContext));
+
+                String citrusVersion = evaluate(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext);
+                if (StringUtils.hasText(citrusVersion)) {
+                    project.getSettings().setCitrusVersion(citrusVersion);
+                }
+
+                project.setDescription(evaluate(buildDoc, "/project/@description", nsContext));
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Unable to open Apache Ant build.xml file", e);
+            }
+        }
+
+        saveProject(project);
 
         this.project = project;
         System.setProperty(Application.PROJECT_HOME, projectHomeDir);
@@ -186,7 +189,9 @@ public class ProjectService {
         File projectProperties = fileBrowserService.findFileInPath(new File(project.getProjectHome()), "citrus.properties", true);
 
         try {
-            return PropertiesLoaderUtils.loadProperties(new FileSystemResource(projectProperties));
+            if (projectProperties != null) {
+                return PropertiesLoaderUtils.loadProperties(new FileSystemResource(projectProperties));
+            }
         } catch (IOException e) {
             log.warn("Unable to read default Citrus project properties from file resource", e);
         }
@@ -260,5 +265,45 @@ public class ProjectService {
      */
     public void setActiveProject(Project project) {
         this.project = project;
+    }
+
+    /**
+     * Adds the citrus admin connector dependency to the target project Maven POM.
+     */
+    public void addConnector() {
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+
+                pomXml = pomXml.replaceAll("</dependencies>", "  <dependency>" + System.lineSeparator() +
+                        "      <groupId>com.consol.citrus</groupId>" + System.lineSeparator() +
+                        "      <artifactId>citrus-admin-connector</artifactId>" + System.lineSeparator() +
+                        "      <version>1.0.0-beta-2</version>" + System.lineSeparator() +
+                        "    </dependency>" + System.lineSeparator() +
+                        "  </dependencies>");
+
+                FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
+            }
+        }
+    }
+
+    /**
+     * Removes the citrus admin connector dependency from the target project Maven POM.
+     */
+    public void removeConnector() {
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+
+                pomXml = pomXml.replaceAll("\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-admin-connector</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*</dependency>", "");
+                pomXml = pomXml.replaceAll("\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-admin-connector</artifactId>[\\s\\n\\r]*</dependency>", "");
+
+                FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
+            }
+        }
     }
 }

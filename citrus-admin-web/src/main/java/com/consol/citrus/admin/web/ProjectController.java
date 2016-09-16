@@ -50,4 +50,14 @@ public class ProjectController {
         projectService.update(project);
         return ResponseEntity.ok().build();
     }
+
+    @RequestMapping(value = "/connector", method = RequestMethod.PUT)
+    public ResponseEntity setConnector(@RequestBody boolean enable) {
+        if (enable) {
+            projectService.addConnector();
+        } else {
+            projectService.removeConnector();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

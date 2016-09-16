@@ -21,6 +21,11 @@ export class ProjectService {
             .catch(this.handleError);
     }
 
+    setConnector(useConnector: boolean) {
+        return this.http.put(this._serviceUrl + "/connector", "" + useConnector)
+            .catch(this.handleError);
+    }
+
     private handleError (error: Response) {
         return Observable.throw(error.json() || 'Server error');
     }

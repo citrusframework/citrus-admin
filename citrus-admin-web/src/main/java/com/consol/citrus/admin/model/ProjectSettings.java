@@ -39,6 +39,7 @@ public class ProjectSettings {
     private String xmlFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getXmlTestFileNamePattern().toArray());
 
     private boolean useConnector = true;
+    private boolean connectorActive = false;
 
     private BuildConfiguration build = new MavenBuildConfiguration();
 
@@ -198,5 +199,23 @@ public class ProjectSettings {
      */
     public boolean isUseConnector() {
         return useConnector;
+    }
+
+    /**
+     * Sets the connectorActive property.
+     *
+     * @param connectorActive
+     */
+    public void setConnectorActive(boolean connectorActive) {
+        this.connectorActive = connectorActive;
+    }
+
+    /**
+     * Gets the value of the connectorActive property.
+     *
+     * @return the connectorActive
+     */
+    public boolean isConnectorActive() {
+        return connectorActive;
     }
 }
