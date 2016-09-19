@@ -21,8 +21,13 @@ export class ProjectService {
             .catch(this.handleError);
     }
 
-    setConnector(useConnector: boolean) {
-        return this.http.put(this._serviceUrl + "/connector", "" + useConnector)
+    addConnector() {
+        return this.http.get(this._serviceUrl + "/connector/add")
+            .catch(this.handleError);
+    }
+
+    removeConnector() {
+        return this.http.get(this._serviceUrl + "/connector/remove")
             .catch(this.handleError);
     }
 

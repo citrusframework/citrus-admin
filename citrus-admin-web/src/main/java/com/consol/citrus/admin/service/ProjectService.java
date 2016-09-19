@@ -275,14 +275,19 @@ public class ProjectService {
             try {
                 String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
 
-                pomXml = pomXml.replaceAll("</dependencies>", "  <dependency>" + System.lineSeparator() +
-                        "      <groupId>com.consol.citrus</groupId>" + System.lineSeparator() +
-                        "      <artifactId>citrus-admin-connector</artifactId>" + System.lineSeparator() +
-                        "      <version>1.0.0-beta-2</version>" + System.lineSeparator() +
-                        "    </dependency>" + System.lineSeparator() +
-                        "  </dependencies>");
+                if (!pomXml.contains("<artifactId>citrus-admin-connector</artifactId>")) {
+                    pomXml = pomXml.replaceAll("</dependencies>", "  <dependency>" + System.lineSeparator() +
+                            "      <groupId>com.consol.citrus</groupId>" + System.lineSeparator() +
+                            "      <artifactId>citrus-admin-connector</artifactId>" + System.lineSeparator() +
+                            "      <version>1.0.0-beta-2</version>" + System.lineSeparator() +
+                            "    </dependency>" + System.lineSeparator() +
+                            "  </dependencies>");
 
-                FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+                    FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+                }
+
+                project.getSettings().setUseConnector(true);
+                project.getSettings().setConnectorActive(true);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
@@ -301,6 +306,9 @@ public class ProjectService {
                 pomXml = pomXml.replaceAll("\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-admin-connector</artifactId>[\\s\\n\\r]*</dependency>", "");
 
                 FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+
+                project.getSettings().setUseConnector(false);
+                project.getSettings().setConnectorActive(false);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }

@@ -25,7 +25,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Version <em>*</em></label>
       <div class="col-sm-10">
-        <input [(ngModel)]="project.version" type="text" class="form-control"/>
+        <input [(ngModel)]="project.version" disabled="disabled" type="text" class="form-control"/>
       </div>
     </div>
 
@@ -33,6 +33,42 @@
       <label class="col-sm-2 control-label">Description</label>
       <div class="col-sm-10">
         <textarea [(ngModel)]="project.description" type="text" class="form-control" rows="4"></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
+      </div>
+    </div>
+
+    <h3>Connector Library</h3>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Use connector <em>*</em></label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.useConnector" type="checkbox" class="form-control"/>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="project.settings.useConnector">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="alert alert-success" role="alert" *ngIf="project.settings.connectorActive">
+          <i class="fa fa-check-square-o"></i> <strong>Connector is active!</strong>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="!project.settings.connectorActive">
+          <i class="fa fa-minus-square-o"></i> <strong>Connector is inactive!</strong>
+          <a name="openDialog" class="clickable alert-link" (click)="openDialog()">Add connector</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!project.settings.useConnector">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="alert alert-danger" role="alert" *ngIf="project.settings.connectorActive">
+          <i class="fa fa-minus-square-o"></i> <strong>Connector is still active!</strong>
+          <a name="openDialog" class="clickable alert-link" (click)="openDialog()">Remove connector</a>
+        </div>
       </div>
     </div>
 
@@ -91,30 +127,8 @@
     </div>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label">Use connector <em>*</em></label>
-      <div class="col-sm-10">
-        <input [(ngModel)]="project.settings.useConnector" type="checkbox" class="form-control"/>
-      </div>
-    </div>
-
-    <div class="form-group" *ngIf="project.settings.useConnector">
       <div class="col-sm-offset-2 col-sm-10">
-        <div class="alert alert-success" role="alert" *ngIf="project.settings.connectorActive">
-          <strong>Connector is active!</strong>
-        </div>
-        <div class="alert alert-danger" role="alert" *ngIf="!project.settings.connectorActive">
-          <strong>Connector is inactive!</strong>
-          <a href="#" class="alert-link" (click)="manageConnector">Add connector</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group" *ngIf="!project.settings.useConnector">
-      <div class="col-sm-offset-2 col-sm-10">
-        <div class="alert alert-danger" role="alert" *ngIf="project.settings.connectorActive">
-          <strong>Connector is still active!</strong>
-          <a href="#" class="alert-link" (click)="manageConnector">Remove connector</a>
-        </div>
+        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save settings</button>
       </div>
     </div>
 
@@ -170,8 +184,33 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save settings</button>
+        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save build settings</button>
       </div>
     </div>
   </form>
+
+  <div class="dialog"
+       dialog-id="dialog-connector"
+       dialog-title="Admin connector library"
+       (confirmed)="manageConnector($event)">
+    <p>Add/remove connector library from project '{{project.name}}'. The Citrus admin connector library pushes test events such as
+      success/failure reports or messages exchanged to the web admin UI. When connected the events get pushed in real time during the test runs.</p>
+
+    <h4 *ngIf="project.settings.connectorActive" class="text-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
+    <h4 *ngIf="!project.settings.connectorActive" class="text-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
+
+    <div class="box box-center">
+      <img src="app/images/brand-logo.png" />
+      <strong>citrus-admin-ui</strong>
+      <i *ngIf="project.settings.connectorActive" class="fa fa-arrows-h fa-lg text-success"></i>
+      <i *ngIf="!project.settings.connectorActive" class="fa fa-remove fa-lg text-danger"></i>
+      <img src="app/images/brand-logo.png" />
+      <strong>{{project.name}}</strong>
+    </div>
+
+    <br />
+
+    <p *ngIf="project.settings.connectorActive">This operation will remove the connectivity!</p>
+    <p *ngIf="!project.settings.connectorActive">This operation will add the connectivity!</p>
+  </div>
 </div>

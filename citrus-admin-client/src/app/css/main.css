@@ -56,6 +56,18 @@ ul.overview li {
     text-overflow: ellipsis;
 }
 
+/** Box **/
+.box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.box-center {
+    text-align: center;
+}
+
 /** Code editor **/
 
 .code-editor {
