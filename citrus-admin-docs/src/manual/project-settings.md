@@ -20,8 +20,8 @@ If you save the project settings the administration UI will save the changes to 
      "basePackage" : "com.consol.citrus",
      "citrusVersion" : "2.6",
      "springApplicationContext" : "src/it/resources/citrus-context.xml",
-     "javaSrcDirectory" : "src/it/java/",
-     "xmlSrcDirectory" : "src/it/resources/",
+     "javaSrcDirectory" : "src/test/java/",
+     "xmlSrcDirectory" : "src/test/resources/",
      "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
      "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
      "useConnector" : true,
@@ -36,7 +36,18 @@ If you save the project settings the administration UI will save the changes to 
  }
  ```
  
- ### Build configuration
+### General settings
+ 
+Each Citrus project works with Java classes and resources. These files are located in project folders inside the Maven project. Citrus admin is working with these defaults:
+
+* **src/test/java/** folder for Java test classes
+* **src/test/resources/** folder for test resources (e.g. configuration files)
+* **/\*\*/\*Test.java,/\*\*/\*IT.java** file pattern for Java test classes
+* **/\*\*/\*Test.xml,/\*\*/\*IT.xml** file pattern for XML test cases
+
+You can customize these settings according to your project setup.
+ 
+### Build configuration
  
 The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
 the build settings accordingly. By default Citrus admin uses the **maven-failsafe-plugin** to execute the Citrus tests. This causes Citrus to call
