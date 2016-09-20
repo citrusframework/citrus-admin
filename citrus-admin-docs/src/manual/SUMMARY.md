@@ -5,6 +5,7 @@
   - [Open project](project-open.md)
   - [Dashboard](project-dashboard.md)
   - [Settings](project-settings.md)
+  - [Connector](project-connector.md)
   - [Statistics](project-statistics.md)
 * [Configuration](config.md)
   - [Endpoints](config-endpoints.md)
