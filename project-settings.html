@@ -47,7 +47,7 @@
         
     
     
-    <link rel="next" href="./config.html" />
+    <link rel="next" href="./project-connector.html" />
     
     
     <link rel="prev" href="./project-dashboard.html" />
@@ -63,7 +63,7 @@
         data-chapter-title="Settings"
         data-filepath="project-settings.md"
         data-basepath="."
-        data-revision="Fri May 20 2016 13:39:19 GMT+0200 (CEST)"
+        data-revision="Tue Sep 20 2016 17:58:01 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -198,9 +198,24 @@
             
         </li>
     
-        <li class="chapter " data-level="3.5" data-path="project-statistics.html">
+        <li class="chapter " data-level="3.5" data-path="project-connector.html">
             
-            <span><b>3.5.</b> Statistics</span>
+                
+                    <a href="./project-connector.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.5.</b>
+                        
+                        Connector
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.6" data-path="project-statistics.html">
+            
+            <span><b>3.6.</b> Statistics</span>
             
             
         </li>
@@ -436,7 +451,6 @@ in the Maven POM configuration.</p>
    &quot;name&quot; : &quot;citrus-sample-project&quot;,
    &quot;description&quot; : &quot;&quot;,
    &quot;version&quot; : &quot;1.0.0&quot;,
-   &quot;testCount&quot; : 0,
    &quot;settings&quot; : {
      &quot;basePackage&quot; : &quot;com.consol.citrus&quot;,
      &quot;citrusVersion&quot; : &quot;2.6&quot;,
@@ -445,6 +459,7 @@ in the Maven POM configuration.</p>
      &quot;xmlSrcDirectory&quot; : &quot;src/it/resources/&quot;,
      &quot;javaFilePattern&quot; : &quot;/**/*Test.java,/**/*IT.java&quot;,
      &quot;xmlFilePattern&quot; : &quot;/**/*Test.xml,/**/*IT.xml&quot;,
+     &quot;useConnector&quot; : true,
      &quot;build&quot; : {
        &quot;@class&quot; : &quot;com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration&quot;,
        &quot;type&quot; : &quot;maven&quot;,
@@ -454,7 +469,20 @@ in the Maven POM configuration.</p>
      }
    }
  }
-</code></pre>
+</code></pre><h3 id="build-configuration"><a name="build-configuration" class="plugin-anchor" href="#build-configuration"><span class="fa fa-link"></span></a>Build configuration</h3>
+<p>The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
+the build settings accordingly. By default Citrus admin uses the <strong>maven-failsafe-plugin</strong> to execute the Citrus tests. This causes Citrus to call</p>
+<pre><code>&gt; mvn failsafe:integration-test
+</code></pre><p>This executes all Citrus test cases. You can change this to <strong>maven-surefire-plugin</strong> so the Maven command looks like this:</p>
+<pre><code>&gt; mvn test
+</code></pre><p>In case you need to activate Maven profiles during the build you need to add those profiles to the build settings. Each profile name that you save 
+to the build settings will result in some command line argument for the Maven build like this:</p>
+<pre><code>&gt; mvn failsafe:integration-test -PmyProfile
+</code></pre><p>Also when some system properties should be set during the Maven build you can add those properties to the build settings, too. 
+This results in command line arguments for the Maven command:</p>
+<pre><code>&gt; mvn failsafe:integration-test -DmyProperty=value
+</code></pre><p>This is how to customize the Maven build that executes the Citrus tests in a project.    </p>
+
                     
                     </section>
                 
@@ -467,7 +495,7 @@ in the Maven POM configuration.</p>
         <a href="./project-dashboard.html" class="navigation navigation-prev " aria-label="Previous page: Dashboard"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./config.html" class="navigation navigation-next " aria-label="Next page: Configuration"><i class="fa fa-angle-right"></i></a>
+        <a href="./project-connector.html" class="navigation navigation-next " aria-label="Next page: Connector"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
@@ -505,7 +533,7 @@ in the Maven POM configuration.</p>
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus-admin/edit/master/citrus-admin-docs/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus-admin/edit/master/citrus-admin-docs/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

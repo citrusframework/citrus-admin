@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-admin</title>
+        <title>Connector | citrus-admin</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Admin Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preconditions.html" />
+    <link rel="next" href="./config.html" />
     
+    
+    <link rel="prev" href="./project-settings.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="3.5"
+        data-chapter-title="Connector"
+        data-filepath="project-connector.md"
         data-basepath="."
         data-revision="Tue Sep 20 2016 17:58:01 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -196,7 +198,7 @@
             
         </li>
     
-        <li class="chapter " data-level="3.5" data-path="project-connector.html">
+        <li class="chapter active" data-level="3.5" data-path="project-connector.html">
             
                 
                     <a href="./project-connector.html">
@@ -437,53 +439,25 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-admin-ui"><a name="citrus-admin-ui" class="plugin-anchor" href="#citrus-admin-ui"><span class="fa fa-link"></span></a>Citrus Admin UI</h1>
-<h2 id="welcome-to-the-citrus-administration-user-interface"><a name="welcome-to-the-citrus-administration-user-interface" class="plugin-anchor" href="#welcome-to-the-citrus-administration-user-interface"><span class="fa fa-link"></span></a>Welcome to the Citrus administration user interface</h2>
-<p>This is a web administration user interface for the integration test framework 
-Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a> written in Angular2. Major functionality objectives
-are project and configuration management as well as test execution and reporting.</p>
-<p><strong>NOTE:</strong> <em>This project is still in beta status and is still under construction!</em> </p>
-<h3 id="stable-features"><a name="stable-features" class="plugin-anchor" href="#stable-features"><span class="fa fa-link"></span></a>Stable features</h3>
-<p>Consider following features to be in a stable state:</p>
-<ul>
-<li><a href="project.html">Project</a><ul>
-<li><a href="project-open.html">Open project</a></li>
-<li><a href="project-dashboard.html">Dashboard</a></li>
-<li><a href="project-settings.html">Settings</a></li>
-</ul>
-</li>
-<li><a href="config.html">Configuration</a><ul>
-<li><a href="config-endpoints.html">Endpoints</a></li>
-<li><a href="config-global-variables.md">Global Variables</a></li>
-<li><a href="config-namespace.md">Namespace Context</a></li>
-<li><a href="config-dictionaries.md">Data Dictionaries</a></li>
-<li><a href="config-functions.md">Functions</a></li>
-<li><a href="config-matcher.md">Validation Matcher</a></li>
-<li><a href="config-schemas.md">Schema Repositories</a></li>
-</ul>
-</li>
-<li><a href="tests.html">Test management</a><ul>
-<li><a href="test-search.html">Search tests</a></li>
-<li><a href="test-open.html">Open tests</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="unstable-and-heavily-under-construction"><a name="unstable-and-heavily-under-construction" class="plugin-anchor" href="#unstable-and-heavily-under-construction"><span class="fa fa-link"></span></a>Unstable and heavily under construction</h3>
-<p>Consider following features to be under construction:</p>
-<ul>
-<li>Project<ul>
-<li><a href="project-new.html">New project</a></li>
-<li><a href="project-statistics.md">Statistics</a></li>
-</ul>
-</li>
-<li>Test management   <ul>
-<li><a href="test-execute.html">Execute tests</a></li>
-<li><a href="test-design.html">Test design</a></li>
-<li><a href="test-reporting.md">Reporting</a></li>
-</ul>
-</li>
-</ul>
-<p>Please let us know if you are missing a feature and/or like to vote for features.  </p>
+                        <h2 id="admin-connector-library"><a name="admin-connector-library" class="plugin-anchor" href="#admin-connector-library"><span class="fa fa-link"></span></a>Admin connector library</h2>
+<p>In the previous chapter we have seen how to customize the project and build settings for the active project. Now when
+the administration UI executes some Citrus tests we can make use of a special admin-connector library that provides detailed
+information on the test run and its outcome.</p>
+<p>The admin UI tries to get test run information by parsing the logging output. We can extend this mechanism by adding a connector
+library as dependency to the target project.</p>
+<p>In general this is a Maven dependency that is added to the target project:</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-admin-connector&lt;/artifactId&gt;
+  &lt;version&gt;${citrus.admin.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>Basically this little helper library provides detailed information during the test run by pushing events to the admin UI.</p>
+<p><img src="images/project-connector.png" alt="Connector"></p>
+<p>The citrus-admin-connector is part of the Citrus project and is automatically loaded when tests are run. The connector library
+registers special test listeners and pushes information to the citrus-admin web application. This way the admin UI is able to
+display runtime information of the tests such as exchanged messages, test results and so on.</p>
+<p>You can automatically activate/deactivate the connector library in the project settings. This will automatically add or remove
+the citrus-admin-connector Maven dependency for you.</p>
 
                     
                     </section>
@@ -494,8 +468,10 @@ are project and configuration management as well as test execution and reporting
         </div>
 
         
+        <a href="./project-settings.html" class="navigation navigation-prev " aria-label="Previous page: Settings"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preconditions.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preconditions"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./config.html" class="navigation navigation-next " aria-label="Next page: Configuration"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
