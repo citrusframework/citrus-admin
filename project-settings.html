@@ -63,7 +63,7 @@
         data-chapter-title="Settings"
         data-filepath="project-settings.md"
         data-basepath="."
-        data-revision="Tue Sep 20 2016 17:58:01 GMT+0200 (CEST)"
+        data-revision="Tue Sep 20 2016 18:24:32 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -455,8 +455,8 @@ in the Maven POM configuration.</p>
      &quot;basePackage&quot; : &quot;com.consol.citrus&quot;,
      &quot;citrusVersion&quot; : &quot;2.6&quot;,
      &quot;springApplicationContext&quot; : &quot;src/it/resources/citrus-context.xml&quot;,
-     &quot;javaSrcDirectory&quot; : &quot;src/it/java/&quot;,
-     &quot;xmlSrcDirectory&quot; : &quot;src/it/resources/&quot;,
+     &quot;javaSrcDirectory&quot; : &quot;src/test/java/&quot;,
+     &quot;xmlSrcDirectory&quot; : &quot;src/test/resources/&quot;,
      &quot;javaFilePattern&quot; : &quot;/**/*Test.java,/**/*IT.java&quot;,
      &quot;xmlFilePattern&quot; : &quot;/**/*Test.xml,/**/*IT.xml&quot;,
      &quot;useConnector&quot; : true,
@@ -469,7 +469,16 @@ in the Maven POM configuration.</p>
      }
    }
  }
-</code></pre><h3 id="build-configuration"><a name="build-configuration" class="plugin-anchor" href="#build-configuration"><span class="fa fa-link"></span></a>Build configuration</h3>
+</code></pre><h3 id="general-settings"><a name="general-settings" class="plugin-anchor" href="#general-settings"><span class="fa fa-link"></span></a>General settings</h3>
+<p>Each Citrus project works with Java classes and resources. These files are located in project folders inside the Maven project. Citrus admin is working with these defaults:</p>
+<ul>
+<li><strong>src/test/java/</strong> folder for Java test classes</li>
+<li><strong>src/test/resources/</strong> folder for test resources (e.g. configuration files)</li>
+<li><strong>/**/*Test.java,/**/*IT.java</strong> file pattern for Java test classes</li>
+<li><strong>/**/*Test.xml,/**/*IT.xml</strong> file pattern for XML test cases</li>
+</ul>
+<p>You can customize these settings according to your project setup.</p>
+<h3 id="build-configuration"><a name="build-configuration" class="plugin-anchor" href="#build-configuration"><span class="fa fa-link"></span></a>Build configuration</h3>
 <p>The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
 the build settings accordingly. By default Citrus admin uses the <strong>maven-failsafe-plugin</strong> to execute the Citrus tests. This causes Citrus to call</p>
 <pre><code>&gt; mvn failsafe:integration-test
