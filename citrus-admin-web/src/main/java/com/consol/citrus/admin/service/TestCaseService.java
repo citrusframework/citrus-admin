@@ -375,14 +375,14 @@ public class TestCaseService {
                 }
             } catch (MalformedURLException e) {
                 throw new ApplicationRuntimeException("Failed to access Java classes output folder", e);
-            } catch (ClassNotFoundException e) {
-                throw new ApplicationRuntimeException("Failed to load Java test class", e);
+            } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                log.error("Failed to load Java test class", e);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to access project output folder", e);
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new ApplicationRuntimeException("Failed to create test class instance", e);
+                log.error("Failed to create test class instance", e);
             } catch (InvocationTargetException e) {
-                throw new ApplicationRuntimeException("Failed to invoke test method", e);
+                log.error("Failed to invoke test method", e);
             } finally {
                 FileUtils.setSimulationMode(false);
             }

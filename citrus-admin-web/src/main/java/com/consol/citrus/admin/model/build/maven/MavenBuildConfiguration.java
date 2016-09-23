@@ -25,8 +25,9 @@ import java.util.List;
  */
 public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
-    private String testPlugin = "maven-failsafe-plugin";
+    private String testPlugin = "maven-failsafe";
     private List<String> profiles;
+    private boolean useClean = false;
 
     public MavenBuildConfiguration() {
         super("maven");
@@ -67,10 +68,20 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
     }
 
     /**
-     * Should we use failsafe Maven plugin for test execution.
-     * @return
+     * Sets the useClean property.
+     *
+     * @param useClean
      */
-    public boolean useFailsafe() {
-        return testPlugin.equalsIgnoreCase("maven-failsafe-plugin");
+    public void setUseClean(boolean useClean) {
+        this.useClean = useClean;
+    }
+
+    /**
+     * Gets the value of the useClean property.
+     *
+     * @return the useClean
+     */
+    public boolean isUseClean() {
+        return useClean;
     }
 }

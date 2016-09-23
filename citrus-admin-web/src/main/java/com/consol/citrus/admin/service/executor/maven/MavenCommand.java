@@ -36,6 +36,7 @@ public class MavenCommand extends AbstractExecuteCommand {
     protected static final String CLEAN = "clean ";
     protected static final String PACKAGE = "package ";
     protected static final String INSTALL = "install ";
+    protected static final String VERIFY = "verify ";
 
     /** Maven build configuration */
     private final MavenBuildConfiguration buildConfiguration;

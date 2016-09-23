@@ -45,20 +45,33 @@ public class MavenRunTestsCommand extends MavenCommand {
 
     @Override
     protected String getLifeCycleCommand() {
-        if (getBuildConfiguration().useFailsafe()) {
-            return COMPILE + INTEGRATION_TEST;
+        String commandLine = getBuildConfiguration().isUseClean() ? CLEAN : "";
+        if (getBuildConfiguration().getTestPlugin().equals("maven-failsafe")) {
+            return commandLine + COMPILE + INTEGRATION_TEST;
+        } else if (getBuildConfiguration().getTestPlugin().equals("maven-surefire")) {
+            return commandLine + COMPILE + TEST;
+        } else if (getBuildConfiguration().getTestPlugin().equals("maven-verify")) {
+            return commandLine + COMPILE + VERIFY;
+        } else if (getBuildConfiguration().getTestPlugin().equals("maven-install")) {
+            return commandLine + COMPILE + INSTALL;
         } else {
-            return COMPILE + TEST;
+            return commandLine + getBuildConfiguration().getTestPlugin();
         }
     }
 
     @Override
     protected List<BuildProperty> getSystemProperties() {
+        BuildProperty utTestNameProperty = new BuildProperty("test", test.getClassName() + "#" + test.getMethodName());
+        BuildProperty itTestNameProperty = new BuildProperty("it.test", test.getClassName() + "#" + test.getMethodName());
+
         List<BuildProperty> properties = super.getSystemProperties();
-        if (StringUtils.hasText(test.getName()) && getBuildConfiguration().useFailsafe()) {
-            properties.add(new BuildProperty("it.test", test.getClassName() + "#" + test.getMethodName()));
+        if (StringUtils.hasText(test.getName()) && getBuildConfiguration().getTestPlugin().equals("maven-failsafe")) {
+            properties.add(itTestNameProperty);
+        } else if (StringUtils.hasText(test.getName()) && getBuildConfiguration().getTestPlugin().equals("maven-surefire")) {
+            properties.add(utTestNameProperty);
         } else if (StringUtils.hasText(test.getName())) {
-            properties.add(new BuildProperty("test", test.getClassName() + "#" + test.getMethodName()));
+            properties.add(utTestNameProperty);
+            properties.add(itTestNameProperty);
         }
 
         return properties;
