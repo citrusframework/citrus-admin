@@ -35,6 +35,10 @@ ul.properties {
     padding-left: 40px;
 }
 
+ul.endpoint-properties {
+    padding-left: 0px;
+}
+
 ul.properties li {
     list-style: none;
     word-break: break-all;
@@ -367,6 +371,10 @@ pre.logger {
 
 .label-citrus, .badge-citrus {
     background-color: #fcc300;
+}
+
+.label-endpoint, .badge-endpoint {
+    font-size: 95%;
 }
 
 .label-jms, .badge-jms {
