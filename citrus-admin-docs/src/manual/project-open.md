@@ -72,7 +72,7 @@ automatically. But now we want to create this file manually in order to set cust
       "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
       "type" : "maven",
       "properties" : [ ],
-      "testPlugin" : "maven-failsafe-plugin",
+      "testPlugin" : "maven-failsafe",
       "profiles" : null
     }
   }

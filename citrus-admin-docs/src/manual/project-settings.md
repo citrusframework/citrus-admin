@@ -29,7 +29,7 @@ If you save the project settings the administration UI will save the changes to 
        "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
        "type" : "maven",
        "properties" : [ ],
-       "testPlugin" : "maven-failsafe-plugin",
+       "testPlugin" : "maven-failsafe",
        "profiles" : null
      }
    }
@@ -50,11 +50,11 @@ You can customize these settings according to your project setup.
 ### Build configuration
  
 The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
-the build settings accordingly. By default Citrus admin uses the **maven-failsafe-plugin** to execute the Citrus tests. This causes Citrus to call
+the build settings accordingly. By default Citrus admin uses the **maven-failsafe** to execute the Citrus tests. This causes Citrus to call
 
     > mvn failsafe:integration-test
     
-This executes all Citrus test cases. You can change this to **maven-surefire-plugin** so the Maven command looks like this:
+This executes all Citrus test cases. You can change this to **maven-surefire** so the Maven command looks like this:
  
     > mvn test
     
