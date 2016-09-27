@@ -37,7 +37,7 @@ public class HttpClientConverter extends AbstractEndpointConverter<HttpClientMod
     public EndpointModel convert(HttpClientModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("requestUrl", model));
+        endpointModel.add(property("requestUrl", model, true));
         endpointModel.add(property("requestMethod", model, HttpMethod.POST.name())
                 .options(getHttpMethodOptions()));
         endpointModel.add(property("errorStrategy", model, ErrorHandlingStrategy.PROPAGATE.getName())

@@ -31,8 +31,8 @@ public class SshClientConverter extends AbstractEndpointConverter<SshClientModel
     public EndpointModel convert(SshClientModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("host", model, "localhost"));
-        endpointModel.add(property("port", model, "2222"));
+        endpointModel.add(property("host", model, "localhost", true));
+        endpointModel.add(property("port", model, "2222", true));
         endpointModel.add(property("user", model));
         endpointModel.add(property("password", model));
         endpointModel.add(property("strictHostChecking", model, "false")

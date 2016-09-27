@@ -32,9 +32,9 @@ public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpo
     public EndpointModel convert(VertxEndpointModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("host", model));
-        endpointModel.add(property("port", model));
-        endpointModel.add(property("address", model));
+        endpointModel.add(property("host", model, true));
+        endpointModel.add(property("port", model, true));
+        endpointModel.add(property("address", model, true));
         endpointModel.add(property("pollingInterval", model, "500"));
 
         endpointModel.add(property("messageConverter", model)

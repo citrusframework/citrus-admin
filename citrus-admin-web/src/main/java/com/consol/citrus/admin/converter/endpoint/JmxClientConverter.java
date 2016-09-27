@@ -32,7 +32,7 @@ public class JmxClientConverter extends AbstractEndpointConverter<JmxClientModel
     public EndpointModel convert(JmxClientModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("serverUrl", model));
+        endpointModel.add(property("serverUrl", model, "platform", true));
         endpointModel.add(property("username", model));
         endpointModel.add(property("password", model));
         endpointModel.add(property("autoReconnect", model));

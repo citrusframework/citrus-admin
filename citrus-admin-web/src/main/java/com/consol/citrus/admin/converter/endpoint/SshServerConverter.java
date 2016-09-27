@@ -35,7 +35,7 @@ public class SshServerConverter extends AbstractEndpointConverter<SshServerModel
     public EndpointModel convert(SshServerModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("port", model));
+        endpointModel.add(property("port", model, true));
         endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
         endpointModel.add(property("hostKeyPath", model));

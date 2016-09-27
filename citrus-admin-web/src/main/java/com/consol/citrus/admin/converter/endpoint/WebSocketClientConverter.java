@@ -32,7 +32,7 @@ public class WebSocketClientConverter extends AbstractEndpointConverter<WebSocke
     public EndpointModel convert(WebSocketClientModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("url", model));
+        endpointModel.add(property("url", model, true));
         endpointModel.add(property("pollingInterval", model, "500"));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));

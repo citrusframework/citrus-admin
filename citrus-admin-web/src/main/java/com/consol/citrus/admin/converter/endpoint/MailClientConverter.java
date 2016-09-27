@@ -32,8 +32,8 @@ public class MailClientConverter extends AbstractEndpointConverter<MailClientMod
     public EndpointModel convert(MailClientModel model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
-        endpointModel.add(property("host", model));
-        endpointModel.add(property("port", model, "25"));
+        endpointModel.add(property("host", model, true));
+        endpointModel.add(property("port", model, "25", true));
         endpointModel.add(property("protocol", model, JavaMailSenderImpl.DEFAULT_PROTOCOL));
         endpointModel.add(property("username", model));
         endpointModel.add(property("password", model));

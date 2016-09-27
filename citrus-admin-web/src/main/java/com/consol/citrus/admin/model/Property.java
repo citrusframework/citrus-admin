@@ -32,6 +32,8 @@ public class Property {
     private String optionKey;
     private List<String> options;
 
+    private boolean required = false;
+
     /**
      * Default constructor basically used when constructing from json object.
      */
@@ -45,12 +47,14 @@ public class Property {
      * @param fieldName
      * @param displayName
      * @param value
+     * @param required
      */
-    public Property(String id, String fieldName, String displayName, String value) {
+    public Property(String id, String fieldName, String displayName, String value, boolean required) {
         this.id = id;
         this.fieldName = fieldName;
         this.displayName = displayName;
         this.value = value;
+        this.required = required;
     }
 
     /**
@@ -183,5 +187,23 @@ public class Property {
      */
     public void setOptionKey(String optionKey) {
         this.optionKey = optionKey;
+    }
+
+    /**
+     * Gets the required nature.
+     *
+     * @return
+     */
+    public boolean isRequired() {
+        return required;
+    }
+
+    /**
+     * Sets the required nature.
+     *
+     * @param required
+     */
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

@@ -32,7 +32,7 @@ public class CamelEndpointConverter extends AbstractEndpointConverter<CamelEndpo
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
 
         endpointModel.add(property("camelContext", model));
-        endpointModel.add(property("endpointUri", model));
+        endpointModel.add(property("endpointUri", model, true));
 
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
