@@ -179,16 +179,30 @@
   </div>
 </form>
 
-<div *ngIf="!newRepository && !selectedRepository && !newGlobalSchema && !selectedGlobalSchema" class="list-group">
-  <div *ngIf="repositories.length == 0" class="list-group-item"><i class="fa fa-times"></i> No schema repositories defined</div>
+<div *ngIf="!newRepository && !selectedRepository && !newGlobalSchema && !selectedGlobalSchema">
+  <div *ngIf="repositories.length == 0" class="panel panel-default">
+    <div class="panel-body">
+      <i class="fa fa-times"></i> No schema repositories defined
+    </div>
+  </div>
 
-  <div *ngFor="#repository of repositories" class="list-group-item clickable" (click)="selectRepository(repository)">
-    <a class="pull-right" (click)="removeRepository(repository, $event)" name="remove" title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
-    <span class="label label-primary"><i class="fa fa-copy"></i></span>&nbsp;<span><b>{{repository.id}}</b></span>
-    <ul class="properties">
-      <li><b>schemas:</b> <span *ngFor="#schema of repository.schemas?.schemas">&nbsp;{{schema.id}}&nbsp;|</span></li>
-      <li><b>references:</b> <span *ngFor="#reference of repository.schemas?.references">&nbsp;{{reference.schema}}&nbsp;|</span></li>
-    </ul>
+  <div *ngFor="#repository of repositories" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a class="clickable" (click)="selectRepository(repository)" name="edit" title="Edit repository">{{repository.id}}</a>
+        <a class="clickable pull-right" (click)="removeRepository(repository, $event)" name="remove" title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <ul class="properties endpoint-properties">
+        <li><b>schemas:</b> <span *ngFor="#schema of repository.schemas?.schemas">&nbsp;{{schema.id}}&nbsp;|</span></li>
+        <li><b>references:</b> <span *ngFor="#reference of repository.schemas?.references">&nbsp;{{reference.schema}}&nbsp;|</span></li>
+      </ul>
+    </div>
+    <div class="panel-footer">
+      <span class="label label-primary"><i class="fa fa-copy"></i> schema-repository</span>
+      <a class="clickable pull-right" (click)="selectRepository(repository)" name="edit" title="Edit repository"><i class="fa fa-edit"></i></a>
+    </div>
   </div>
 </div>
 
@@ -254,15 +268,28 @@ should always be reused in multiple repositories otherwise please define the sch
   </div>
 </form>
 
-<div *ngIf="!newRepository && !selectedRepository && !newGlobalSchema && !selectedGlobalSchema" class="list-group">
-  <div *ngIf="schemas.length == 0" class="list-group-item"><i class="fa fa-times"></i> No schemas defined</div>
+<div *ngIf="!newRepository && !selectedRepository && !newGlobalSchema && !selectedGlobalSchema">
+  <div *ngIf="schemas.length == 0" class="panel panel-default">
+    <div class="panel-body">
+      <i class="fa fa-times"></i> No global schemas defined
+    </div>
+  </div>
 
-  <div *ngFor="#schema of schemas" class="list-group-item clickable" (click)="selectGlobalSchema(schema)">
-    <a class="pull-right" (click)="removeGlobalSchema(schema, $event)" name="remove" title="Remove schema"><i class="fa fa-times" style="color: #A50000;"></i></a>
-    <span class="label label-primary"><i class="fa fa-file-text-o"></i></span>&nbsp;
-    <span><b>{{schema.id}}</b></span>
-    <ul class="properties">
-      <li><b>location:</b> {{schema.location}}</li>
-    </ul>
+  <div *ngFor="#schema of schemas" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a class="clickable" (click)="selectGlobalSchema(schema)" name="edit" title="Edit schema">{{schema.id}}</a>
+        <a class="clickable pull-right" (click)="removeGlobalSchema(schema, $event)" name="remove" title="Remove schema"><i class="fa fa-times" style="color: #A50000;"></i></a>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <ul class="properties endpoint-properties">
+        <li><b>location:</b> {{schema.location}}</li>
+      </ul>
+    </div>
+    <div class="panel-footer">
+      <span class="label label-primary"><i class="fa fa-file-text-o"></i> schema</span>
+      <a class="clickable pull-right" (click)="selectGlobalSchema(schema)" name="edit" title="Edit schema"><i class="fa fa-edit"></i></a>
+    </div>
   </div>
 </div>
