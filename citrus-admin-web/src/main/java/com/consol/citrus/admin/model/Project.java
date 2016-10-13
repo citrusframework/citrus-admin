@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.model;
 
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class Project {
     private ProjectSettings settings = new ProjectSettings();
 
     /** Citrus project information as Json file */
-    private static final String PROJECT_INFO_FILENAME = "citrus-project.info";
+    public static final String PROJECT_INFO_FILENAME = "citrus-project.json";
 
     /**
      * Default constructor.
@@ -233,5 +235,21 @@ public class Project {
      */
     public ProjectSettings getSettings() {
         return settings;
+    }
+
+    /**
+     * Load settings from project info file.
+     */
+    public void loadSettings() {
+        try {
+            Project project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(getProjectInfoFile());
+
+            setName(project.getName());
+            setDescription(project.getDescription());
+            setSettings(project.getSettings());
+            setVersion(project.getVersion());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read project settings file", e);
+        }
     }
 }

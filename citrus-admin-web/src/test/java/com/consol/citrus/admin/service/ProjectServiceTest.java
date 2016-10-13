@@ -43,17 +43,19 @@ public class ProjectServiceTest {
 
     @Test(dataProvider = "projectProvider")
     public void testLoadAndSaveProject(String projectHome, String description, Map<String, String> properties, boolean connectorActive) throws Exception {
-        if (projectService.getProjectSettingsFile(new ClassPathResource(projectHome).getFile().getCanonicalPath()).exists()) {
-            if (!projectService.getProjectSettingsFile(new ClassPathResource(projectHome).getFile().getCanonicalPath()).delete()) {
+        String home = new ClassPathResource(projectHome).getFile().getCanonicalPath();
+        Project existing = new Project(home);
+        if (existing.getProjectInfoFile().exists()) {
+            if (!existing.getProjectInfoFile().delete()) {
                 Assert.fail();
             }
         }
 
-        projectService.load(new ClassPathResource(projectHome).getFile().getCanonicalPath());
+        projectService.load(home);
 
         Project project = projectService.getActiveProject();
         Assert.assertNotNull(project);
-        Assert.assertEquals(project.getProjectHome(), new ClassPathResource(projectHome).getFile().getCanonicalPath());
+        Assert.assertEquals(project.getProjectHome(), home);
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "1.0.0");
         Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.6.1-SNAPSHOT");
@@ -65,7 +67,7 @@ public class ProjectServiceTest {
         projectService.getActiveProject().getSettings().setUseConnector(false);
         projectService.saveProject(projectService.getActiveProject());
 
-        projectService.load(new ClassPathResource(projectHome).getFile().getCanonicalPath());
+        projectService.load(home);
         project = projectService.getActiveProject();
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "1.0.0");

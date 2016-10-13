@@ -69,21 +69,11 @@ public class ProjectService {
      * @return
      */
     public void load(String projectHomeDir) {
-        Project project = null;
-        if (getProjectSettingsFile(projectHomeDir).exists()) {
-            try {
-                project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(getProjectSettingsFile(projectHomeDir));
-            } catch (IOException e) {
-                log.error("Failed to read project settings file", e);
-            }
-        }
-
-        if (project == null) {
-            project = new Project(projectHomeDir);
-
-            if (!validateProject(project)) {
-                throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
-            }
+        Project project = new Project(projectHomeDir);
+        if (project.getProjectInfoFile().exists()) {
+            project.loadSettings();
+        } else if (!validateProject(project)) {
+            throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
         }
 
         if (project.isMavenProject()) {
@@ -164,21 +154,12 @@ public class ProjectService {
      * @param project
      */
     public void saveProject(Project project) {
-        try (FileOutputStream fos = new FileOutputStream(getProjectSettingsFile(project.getProjectHome()))) {
+        try (FileOutputStream fos = new FileOutputStream(project.getProjectInfoFile())) {
             fos.write(Jackson2ObjectMapperBuilder.json().build().writer().withDefaultPrettyPrinter().writeValueAsBytes(project));
             fos.flush();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Unable to open project info file", e);
         }
-    }
-
-    /**
-     * Gets file pointer to project info file in project home directory.
-     * @param projectHome
-     * @return
-     */
-    public File getProjectSettingsFile(String projectHome) {
-        return new File(projectHome + System.getProperty("file.separator") + "citrus-project.json");
     }
 
     /**

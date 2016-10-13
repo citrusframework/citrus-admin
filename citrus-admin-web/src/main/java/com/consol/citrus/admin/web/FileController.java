@@ -47,7 +47,12 @@ public class FileController {
         String[] folders = fileBrowserService.getFolders(new File(directory));
 
         ModelAndView view = new ModelAndView("filetree");
-        view.addObject("valid", projectService.validateProject(new Project(fileBrowserService.separatorsToUnix(directory))));
+        Project project = new Project(fileBrowserService.separatorsToUnix(directory));
+        if (project.getProjectInfoFile().exists()) {
+            project.loadSettings();
+        }
+
+        view.addObject("valid", projectService.validateProject(project));
         view.addObject("folders", folders);
         view.addObject("baseDir", fileBrowserService.separatorsToUnix(directory));
 
