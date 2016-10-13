@@ -23,8 +23,7 @@ export class SetupComponent implements AfterViewInit {
             expandSpeed: 1,
             collapseSpeed: 1
         }, function(file) {
-            this.projectHome = file;
-            jQuery('#file-tree').hide();
+            console.log(file);
         });
 
         return undefined;

@@ -1,3 +1,4 @@
 <ul class="jqueryFileTree" style="display: none;" xmlns:th="http://www.thymeleaf.org">
   <li th:each="folder : ${folders}" class="directory collapsed"><a href="#" th:rel="${baseDir} + ${folder} + '/'" th:text="${folder}"></a></li>
+  <li th:if="${valid}" class="ext_citrus"><a name="open-project" th:rel="${baseDir}" th:text="citrus-project" class="clickable"></a></li>
 </ul>

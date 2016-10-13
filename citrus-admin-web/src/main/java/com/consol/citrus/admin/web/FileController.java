@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.Application;
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.service.FileBrowserService;
+import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,9 @@ public class FileController {
     @Autowired
     private FileBrowserService fileBrowserService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @RequestMapping(value = "browse", method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView browse(@RequestParam("dir") String dir) {
@@ -42,6 +47,7 @@ public class FileController {
         String[] folders = fileBrowserService.getFolders(new File(directory));
 
         ModelAndView view = new ModelAndView("filetree");
+        view.addObject("valid", projectService.validateProject(new Project(fileBrowserService.separatorsToUnix(directory))));
         view.addObject("folders", folders);
         view.addObject("baseDir", fileBrowserService.separatorsToUnix(directory));
 

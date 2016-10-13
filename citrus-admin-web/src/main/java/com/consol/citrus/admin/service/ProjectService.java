@@ -216,7 +216,7 @@ public class ProjectService {
      *
      * @param project
      */
-    private boolean validateProject(Project project) {
+    public boolean validateProject(Project project) {
         File homeDir = new File(project.getProjectHome());
 
         try {
