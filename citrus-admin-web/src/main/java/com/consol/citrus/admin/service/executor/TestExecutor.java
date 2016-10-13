@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service.executor;
 
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.Test;
 
 /**
@@ -26,8 +27,9 @@ public interface TestExecutor {
     /**
      * Run test and throw exception when failed.
      * @param test
+     * @param project
      * @return the processId
      * @throws Exception
      */
-    String execute(Test test) throws Exception;
+    String execute(Test test, Project project) throws Exception;
 }

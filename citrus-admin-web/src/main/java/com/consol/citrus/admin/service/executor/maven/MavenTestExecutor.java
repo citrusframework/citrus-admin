@@ -24,7 +24,6 @@ import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.process.*;
 import com.consol.citrus.admin.process.listener.LoggingProcessListener;
 import com.consol.citrus.admin.process.listener.WebSocketProcessListener;
-import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.executor.TestExecutor;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +42,12 @@ public class MavenTestExecutor implements TestExecutor {
 
     @Autowired
     private ProcessMonitor processMonitor;
-    @Autowired
-    private ProjectService projectService;
 
     @Override
-    public String execute(Test test) throws ParseException {
-        Project activeProject = projectService.getActiveProject();
-        File projectHome = new File(activeProject.getProjectHome());
+    public String execute(Test test, Project project) throws ParseException {
+        File projectHome = new File(project.getProjectHome());
 
-        BuildConfiguration buildConfiguration = activeProject.getSettings().getBuild();
+        BuildConfiguration buildConfiguration = project.getSettings().getBuild();
         if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
             throw new ApplicationRuntimeException("Unable to execute Maven command with non-maven build configuration: " + buildConfiguration.getClass());
         }

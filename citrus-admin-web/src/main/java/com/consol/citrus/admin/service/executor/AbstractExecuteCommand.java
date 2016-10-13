@@ -66,7 +66,7 @@ public abstract class AbstractExecuteCommand {
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.directory(workingDirectory);
 
-        LOG.trace("Returning ProcessBuilder for command:" + commands);
+        LOG.debug("Process builder commands: " + commands);
         return pb;
     }
 

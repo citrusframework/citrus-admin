@@ -53,7 +53,7 @@ public class MavenRunTestsCommand extends MavenCommand {
         } else if (getBuildConfiguration().getTestPlugin().equals("maven-verify")) {
             return commandLine + COMPILE + VERIFY;
         } else if (getBuildConfiguration().getTestPlugin().equals("maven-install")) {
-            return commandLine + COMPILE + INSTALL;
+            return commandLine + INSTALL;
         } else {
             return commandLine + getBuildConfiguration().getTestPlugin();
         }

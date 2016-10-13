@@ -19,6 +19,8 @@ package com.consol.citrus.admin.service.executor.maven;
 import com.consol.citrus.admin.model.build.BuildProperty;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,9 +36,11 @@ public class MavenCommand extends AbstractExecuteCommand {
     protected static final String TEST = "surefire:test ";
     protected static final String INTEGRATION_TEST = "failsafe:integration-test ";
     protected static final String CLEAN = "clean ";
-    protected static final String PACKAGE = "package ";
     protected static final String INSTALL = "install ";
     protected static final String VERIFY = "verify ";
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(MavenCommand.class);
 
     /** Maven build configuration */
     private final MavenBuildConfiguration buildConfiguration;
@@ -68,6 +72,8 @@ public class MavenCommand extends AbstractExecuteCommand {
         for (String profile: getActiveProfiles()) {
             builder.append(String.format("-P%s ", profile));
         }
+
+        log.debug("Using Maven command: " + builder.toString());
 
         return builder.toString();
     }

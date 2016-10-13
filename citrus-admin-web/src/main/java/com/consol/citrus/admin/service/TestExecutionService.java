@@ -54,7 +54,7 @@ public class TestExecutionService {
         result.setTestCase(test);
 
         try {
-            String processId = testExecutor.execute(test);
+            String processId = testExecutor.execute(test, project);
 
             result.setProcessId(processId);
             result.setSuccess(true);
