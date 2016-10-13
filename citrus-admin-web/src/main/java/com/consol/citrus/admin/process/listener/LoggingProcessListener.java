@@ -49,7 +49,9 @@ public class LoggingProcessListener implements ProcessListener {
 
     @Override
     public void onProcessOutput(String processId, String output) {
-        System.out.println(output);
+        if (log.isTraceEnabled()) {
+            System.out.println(output);
+        }
     }
 
     @Override
