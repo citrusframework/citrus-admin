@@ -23,7 +23,7 @@ export class SetupComponent implements AfterViewInit {
             expandSpeed: 1,
             collapseSpeed: 1
         }, function(file) {
-            console.log(file);
+            jQuery('li.ext_citrus').toggleClass('selected');
         });
 
         return undefined;

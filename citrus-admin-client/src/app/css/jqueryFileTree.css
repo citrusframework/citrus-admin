@@ -92,6 +92,7 @@ ul.jqueryFileTree a:hover {
 
 .jqueryFileTree li.ext_citrus { background: url(icons/filetree/citrus.png) left top no-repeat; }
 
-li.ext_citrus > a { font-weight: bold; }
+li.selected > a { font-weight: bold; }
 li.expanded ~ li.collapsed { display: none; }
+li.expanded ~ li.ext_citrus { display: none; }
 ul.jqueryFileTree li.expanded > a { font-weight: bold; }
