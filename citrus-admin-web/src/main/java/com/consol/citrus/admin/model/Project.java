@@ -133,6 +133,7 @@ public class Project {
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
+    @JsonIgnore
     public String getJavaDirectory() {
         return new File(projectHome).getAbsolutePath() + System.getProperty("file.separator") + settings.getJavaSrcDirectory();
     }
@@ -141,6 +142,7 @@ public class Project {
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
+    @JsonIgnore
     public String getXmlDirectory() {
         return new File(projectHome).getAbsolutePath() + System.getProperty("file.separator") + settings.getXmlSrcDirectory();
     }

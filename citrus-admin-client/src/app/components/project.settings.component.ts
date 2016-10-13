@@ -4,6 +4,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {Project} from "../model/project";
 import {ProjectService} from "../service/project.service";
 import {Dialog} from "./util/dialog";
+import {Pills, Pill} from "./util/pills";
 import {BuildProperty} from "../model/build.property";
 
 declare var jQuery:any;
@@ -11,7 +12,7 @@ declare var jQuery:any;
 @Component({
     templateUrl: 'app/components/project-settings.html',
     providers: [ProjectService, HTTP_PROVIDERS],
-    directives: [NgSwitch, NgFor, Dialog]
+    directives: [NgSwitch, NgFor, Dialog, Pills, Pill]
 })
 export class ProjectSettingsComponent implements OnInit {
 
@@ -62,12 +63,21 @@ export class ProjectSettingsComponent implements OnInit {
     }
 
     manageConnector() {
-        if (this.project.settings.useConnector) {
-            this._projectService.addConnector()
-                .subscribe(error => this.errorMessage = <any>error);
-        } else {
+        if (this.project.settings.connectorActive) {
             this._projectService.removeConnector()
-                .subscribe(error => this.errorMessage = <any>error);
+                .subscribe(
+                    response => {
+                        this.project.settings.useConnector = false;
+                        this.project.settings.connectorActive = false;
+                    },
+                    error => this.errorMessage = <any>error);
+        } else {
+            this._projectService.addConnector()
+                .subscribe(response => {
+                        this.project.settings.useConnector = true;
+                        this.project.settings.connectorActive = true;
+                    },
+                    error => this.errorMessage = <any>error);
         }
 
         this.getProject();

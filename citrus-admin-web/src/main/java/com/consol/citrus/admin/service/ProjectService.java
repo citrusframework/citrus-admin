@@ -269,6 +269,7 @@ public class ProjectService {
 
                 project.getSettings().setUseConnector(true);
                 project.getSettings().setConnectorActive(true);
+                saveProject(project);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
@@ -290,6 +291,7 @@ public class ProjectService {
 
                 project.getSettings().setUseConnector(false);
                 project.getSettings().setConnectorActive(false);
+                saveProject(project);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
