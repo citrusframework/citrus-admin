@@ -32,7 +32,7 @@ Do not forget to add the **citrus-admin-connector** as dependency to the Citrus 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin-connector</artifactId>
-  <version>1.0.0-beta-2</version>
+  <version>1.0.0-beta-3</version>
 </dependency>
 ```
 
