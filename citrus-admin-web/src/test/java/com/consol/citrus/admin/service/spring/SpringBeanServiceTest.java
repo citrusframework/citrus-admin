@@ -16,7 +16,9 @@
 
 package com.consol.citrus.admin.service.spring;
 
+import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
 import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
+import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -47,17 +49,23 @@ public class SpringBeanServiceTest {
 
         SchemaRepositoryModel schemaRepository = new SchemaRepositoryModelBuilder().withId("x").addSchemaReference("1").addSchemaReference("2").build();
 
+        SpringBean springBean = new SpringBean();
+        springBean.setId("listener");
+        springBean.setClazz(WebSocketPushMessageListener.class.getName());
+
         File tempFile = createTempContextFile("citrus-context-add");
 
         springBeanConfigService.addBeanDefinition(tempFile, xsdSchema1);
         springBeanConfigService.addBeanDefinition(tempFile, xsdSchema2);
         springBeanConfigService.addBeanDefinition(tempFile, schemaRepository);
+        springBeanConfigService.addBeanDefinition(tempFile, springBean);
 
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
         Assert.assertTrue(result.contains("<citrus:schema id=\"1\" location=\"l1\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<citrus:schema id=\"2\" location=\"l2\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<citrus:schema-repository id=\"x\">"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<bean class=\"" + WebSocketPushMessageListener.class.getName() + "\" id=\"listener\"/>"), "Failed to validate " + result);
     }
 
     @Test

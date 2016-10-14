@@ -18,8 +18,11 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
+import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -39,6 +42,7 @@ import org.w3c.dom.Document;
 import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -48,10 +52,14 @@ import java.util.Properties;
 public class ProjectService {
 
     @Autowired
-    protected FileBrowserService fileBrowserService;
+    private FileBrowserService fileBrowserService;
 
     /** Current project actively opened in Citrus admin */
     private Project project;
+
+    /** Spring bean service*/
+    @Autowired
+    private SpringBeanService springBeanService;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ProjectService.class);
@@ -270,6 +278,13 @@ public class ProjectService {
                 project.getSettings().setUseConnector(true);
                 project.getSettings().setConnectorActive(true);
                 saveProject(project);
+
+                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), WebSocketPushMessageListener.class.getSimpleName(), SpringBean.class) == null) {
+                    SpringBean pushMessageListener = new SpringBean();
+                    pushMessageListener.setId(WebSocketPushMessageListener.class.getSimpleName());
+                    pushMessageListener.setClazz(WebSocketPushMessageListener.class.getName());
+                    springBeanService.addBeanDefinition(getProjectContextConfigFile(), pushMessageListener);
+                }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
@@ -292,9 +307,32 @@ public class ProjectService {
                 project.getSettings().setUseConnector(false);
                 project.getSettings().setConnectorActive(false);
                 saveProject(project);
+
+                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), WebSocketPushMessageListener.class.getName());
+                for (String listenerBean : listenerBeans) {
+                    springBeanService.removeBeanDefinition(getProjectContextConfigFile(), listenerBean);
+                }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
         }
+    }
+
+    /**
+     * Sets the fileBrowserService property.
+     *
+     * @param fileBrowserService
+     */
+    public void setFileBrowserService(FileBrowserService fileBrowserService) {
+        this.fileBrowserService = fileBrowserService;
+    }
+
+    /**
+     * Sets the springBeanService property.
+     *
+     * @param springBeanService
+     */
+    public void setSpringBeanService(SpringBeanService springBeanService) {
+        this.springBeanService = springBeanService;
     }
 }
