@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebSocketProcessListener implements ProcessListener {
 
+    private static final String TOPIC_LOG_OUTPUT = "/topic/log-output";
+    private static final String TOPIC_MESSAGES = "/topic/messages";
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -46,7 +48,7 @@ public class WebSocketProcessListener implements ProcessListener {
         if (messageEvent != null) {
             if (isProcessOutputLine(output)) {
                 // message data collecting is obviously finished so push event now
-                messagingTemplate.convertAndSend("/topic/messages", messageEvent);
+                messagingTemplate.convertAndSend(TOPIC_MESSAGES, messageEvent);
                 messageEvent = null; // reset data event storage
             } else {
                 // collect another line of message data
@@ -55,11 +57,11 @@ public class WebSocketProcessListener implements ProcessListener {
         }
 
         if (output.contains("STARTING TEST")) {
-            messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
+            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
         } else if (output.contains("TEST SUCCESS")) {
-            messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
+            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
         } else if (output.contains("TEST FAILED")) {
-            messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
+            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
         } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
             String[] progress = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1)).split("/");
             long progressValue = Math.round((Double.valueOf(progress[0]) / Double.valueOf(progress[1])) * 100);
@@ -67,7 +69,7 @@ public class WebSocketProcessListener implements ProcessListener {
             JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,
                     "TEST ACTION " + progress[0] + "/" + progress[1]);
             event.put("progress", String.valueOf(progressValue));
-            messagingTemplate.convertAndSend("/topic/log-output", event);
+            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, event);
         } else {
             handleMessageEvent(processId, output);
         }
@@ -87,27 +89,27 @@ public class WebSocketProcessListener implements ProcessListener {
 
     @Override
     public void onProcessOutput(String processId, String output) {
-        messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.LOG_MESSAGE, output));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.LOG_MESSAGE, output));
     }
 
     @Override
     public void onProcessStart(String processId) {
-        messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.PROCESS_START, "process started"));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_START, "process started" + System.lineSeparator()));
     }
 
     @Override
     public void onProcessSuccess(String processId) {
-        messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.PROCESS_SUCCESS, "process completed successfully"));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_SUCCESS, "process completed successfully" + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, int exitCode) {
-        messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, Throwable e) {
-        messagingTemplate.convertAndSend("/topic/log-output", SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage() + System.lineSeparator()));
     }
 
     /**

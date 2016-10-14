@@ -32,12 +32,10 @@ import java.util.List;
 public class MavenCommand extends AbstractExecuteCommand {
 
     protected static final String MVN = "mvn ";
+    protected static final String CLEAN = "clean ";
     protected static final String COMPILE = "compile ";
     protected static final String TEST = "surefire:test ";
     protected static final String INTEGRATION_TEST = "failsafe:integration-test ";
-    protected static final String CLEAN = "clean ";
-    protected static final String INSTALL = "install ";
-    protected static final String VERIFY = "verify ";
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MavenCommand.class);

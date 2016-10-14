@@ -209,12 +209,12 @@ public class ProjectService {
         File homeDir = new File(project.getProjectHome());
 
         try {
-            Assert.isTrue(homeDir.exists());
-            Assert.isTrue(new File(homeDir, project.getSettings().getJavaSrcDirectory()).exists());
-            Assert.isTrue(new File(homeDir, project.getSettings().getXmlSrcDirectory()).exists());
-            Assert.isTrue(new File(homeDir, project.getSettings().getSpringApplicationContext()).exists());
+            Assert.isTrue(homeDir.exists(), "Invalid project home directory");
+            Assert.isTrue(new File(homeDir, project.getSettings().getJavaSrcDirectory()).exists(), "Missing Java source directory");
+            Assert.isTrue(new File(homeDir, project.getSettings().getXmlSrcDirectory()).exists(), "Missing resources directory");
+            Assert.isTrue(new File(homeDir, project.getSettings().getSpringApplicationContext()).exists(), "Missing Spring application context file");
         } catch (IllegalArgumentException e) {
-            log.warn("Project home validation failed", e);
+            log.warn("Project home validation failed: " + e.getLocalizedMessage());
             return false;
         }
 

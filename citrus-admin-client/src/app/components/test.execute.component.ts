@@ -89,7 +89,6 @@ export class TestExecuteComponent {
         if (this.stompClient) {
             this.stompClient.subscribe('/topic/log-output', output => {
                 var loggingOutput: LoggingOutput = JSON.parse(output.body);
-                console.log(loggingOutput);
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
                 this.processOutput += loggingOutput.msg;
                 this.handle(loggingOutput);
@@ -130,7 +129,7 @@ export class TestExecuteComponent {
             this.failed = true;
             this.completed = 100;
         } else {
-            if (this.completed < 30) {
+            if (this.completed < 11) {
                 this.completed++;
             }
         }

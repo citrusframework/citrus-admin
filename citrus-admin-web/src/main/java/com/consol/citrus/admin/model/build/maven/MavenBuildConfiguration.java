@@ -18,15 +18,14 @@ package com.consol.citrus.admin.model.build.maven;
 
 import com.consol.citrus.admin.model.build.AbstractBuildConfiguration;
 
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  */
 public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
     private String testPlugin = "maven-failsafe";
-    private List<String> profiles;
+    private String command;
+    private String profiles;
     private boolean useClean = false;
 
     public MavenBuildConfiguration() {
@@ -37,7 +36,7 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
      * Sets the active profiles.
      * @param profiles
      */
-    public void setProfiles(List<String> profiles) {
+    public void setProfiles(String profiles) {
         this.profiles = profiles;
     }
 
@@ -45,7 +44,7 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
      * Gets the active profiles.
      * @return
      */
-    public List<String> getProfiles() {
+    public String getProfiles() {
         return profiles;
     }
 
@@ -83,5 +82,23 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
      */
     public boolean isUseClean() {
         return useClean;
+    }
+
+    /**
+     * Sets the command property.
+     *
+     * @param command
+     */
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    /**
+     * Gets the value of the command property.
+     *
+     * @return the command
+     */
+    public String getCommand() {
+        return command;
     }
 }

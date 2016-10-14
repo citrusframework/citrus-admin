@@ -21,6 +21,7 @@ export class ProjectSettingsComponent implements OnInit {
     errorMessage: string;
     project: Project = new Project();
 
+    useCustomCommand: boolean = false;
     dialogOpen: boolean = false;
 
     propertyName: string;
@@ -54,6 +55,10 @@ export class ProjectSettingsComponent implements OnInit {
     }
 
     saveSettings() {
+        if (!this.useCustomCommand) {
+            this.project.settings.build.command = "";
+        }
+
         this._projectService.update(this.project)
             .subscribe(error => this.errorMessage = <any>error);
     }

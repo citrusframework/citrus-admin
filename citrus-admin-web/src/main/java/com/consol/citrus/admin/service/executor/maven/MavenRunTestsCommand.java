@@ -46,17 +46,15 @@ public class MavenRunTestsCommand extends MavenCommand {
     @Override
     protected String getLifeCycleCommand() {
         String commandLine = getBuildConfiguration().isUseClean() ? CLEAN : "";
-        if (getBuildConfiguration().getTestPlugin().equals("maven-failsafe")) {
+        if (StringUtils.hasText(getBuildConfiguration().getCommand())) {
+            return commandLine + getBuildConfiguration().getCommand() + " ";
+        } else if (getBuildConfiguration().getTestPlugin().equals("maven-failsafe")) {
             return commandLine + COMPILE + INTEGRATION_TEST;
         } else if (getBuildConfiguration().getTestPlugin().equals("maven-surefire")) {
             return commandLine + COMPILE + TEST;
-        } else if (getBuildConfiguration().getTestPlugin().equals("maven-verify")) {
-            return commandLine + COMPILE + VERIFY;
-        } else if (getBuildConfiguration().getTestPlugin().equals("maven-install")) {
-            return commandLine + INSTALL;
-        } else {
-            return commandLine + getBuildConfiguration().getTestPlugin();
         }
+
+        return commandLine;
     }
 
     @Override
@@ -75,5 +73,10 @@ public class MavenRunTestsCommand extends MavenCommand {
         }
 
         return properties;
+    }
+
+    @Override
+    protected String[] getActiveProfiles() {
+        return StringUtils.commaDelimitedListToStringArray(getBuildConfiguration().getProfiles());
     }
 }
