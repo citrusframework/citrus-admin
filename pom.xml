@@ -11,7 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>1.3.6.RELEASE</spring.boot.version>
+    <spring.boot.version>1.3.8.RELEASE</spring.boot.version>
     <citrus.version>2.6.1-SNAPSHOT</citrus.version>
     <slf4j.version>1.7.21</slf4j.version>
     <testng.version>6.9.10</testng.version>
