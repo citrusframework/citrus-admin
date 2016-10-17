@@ -20,30 +20,30 @@
         </div>
       </fieldset>
     </form>
+  </div>
 
-    <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <strong>Error!</strong>&nbsp;<span [textContent]="error.message"></span>
-    </div>
+  <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Error!</strong>&nbsp;<span [textContent]="error.message"></span>
+  </div>
 
-    <div id="dialog-file-tree" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
+  <div id="dialog-file-tree" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h3 class="modal-title">Select project home</h3>
-          </div>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Select project home</h3>
+        </div>
 
-          <div class="modal-body">
-            <p>Please select Citrus project home directory and confirm.</p>
-            <div id="file-tree" class="file-tree"></div>
-          </div>
+        <div class="modal-body">
+          <p>Please select Citrus project home directory and confirm.</p>
+          <div id="file-tree" class="file-tree"></div>
+        </div>
 
-          <div class="modal-footer">
-            <button (click)="select()" name="dialog-select" class="btn btn-primary">Select</button>
-            <button (click)="close()" name="dialog-close" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+        <div class="modal-footer">
+          <button (click)="select()" name="dialog-select" class="btn btn-primary">Select</button>
+          <button (click)="close()" name="dialog-close" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
