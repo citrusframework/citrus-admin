@@ -156,7 +156,8 @@ public class TestCaseService {
                 test.setClassName(className);
                 test.setPackageName(packageName);
 
-                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start(), sourceCode.indexOf('{', matcher.start())));
+                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start()));
+                snippet = snippet.substring(0, snippet.indexOf("){"));
                 String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
                 methodName = methodName.substring(0, methodName.indexOf("("));
                 test.setMethodName(methodName);

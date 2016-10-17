@@ -60,7 +60,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testPackages.get(1).getName(), "foo");
         Assert.assertEquals(testPackages.get(1).getTests().size(), 2L);
         Assert.assertEquals(testPackages.get(2).getName(), "javadsl");
-        Assert.assertEquals(testPackages.get(2).getTests().size(), 2L);
+        Assert.assertEquals(testPackages.get(2).getTests().size(), 4L);
 
         Assert.assertEquals(testPackages.get(0).getTests().get(0).getName(), "BarTest");
         Assert.assertEquals(testPackages.get(0).getTests().get(0).getClassName(), "BarTest");
@@ -77,6 +77,13 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testPackages.get(2).getTests().get(1).getName(), "BarJavaTest");
         Assert.assertEquals(testPackages.get(2).getTests().get(1).getClassName(), "CitrusJavaTest");
         Assert.assertEquals(testPackages.get(2).getTests().get(1).getMethodName(), "barTest");
+
+        Assert.assertEquals(testPackages.get(2).getTests().get(2).getName(), "DataProviderJavaTest.fooProviderTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(2).getClassName(), "DataProviderJavaTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(2).getMethodName(), "fooProviderTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(3).getName(), "BarProviderTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(3).getClassName(), "DataProviderJavaTest");
+        Assert.assertEquals(testPackages.get(2).getTests().get(3).getMethodName(), "barProviderTest");
     }
 
     @Test

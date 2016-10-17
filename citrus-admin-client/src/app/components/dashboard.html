@@ -49,7 +49,7 @@
             <ul class="overview">
               <li *ngFor="#test of testGroup.tests">
                 <i class="fa fa-caret-right"></i>
-                <a href="#/tests?name={{test.name}}" title="{{test.className}}.{{methodName}}">{{test.methodName | truncate : 30}}</a>
+                <a href="#/tests?name={{test.name}}" title="{{test.className}}.{{test.methodName}}">{{test.methodName | truncate : 30}}</a>
               </li>
             </ul>
           </div>
