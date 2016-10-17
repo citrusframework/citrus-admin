@@ -27,7 +27,7 @@ a.alert-link {
 }
 
 .clickable-hover:hover {
-    background: #eff6fb;
+    background: #efefef;
 }
 
 ul.properties {
@@ -434,38 +434,14 @@ pre.logger {
 
 /** Message */
 
-.message-outbound,
-.message-inbound {
-    background-color: #eff6fb;
-    border-radius: 15px;
-    width: 115px;
-    height: 50px;
-    border: 1px solid #ddd;
-    padding-left: 15px;
-    padding-top: 5px;
-}
-
-.message-outbound:hover,
-.message-inbound:hover {
-    background-color: #e3effc;
-}
-
-.message-outbound {
-    color: #3b73af;
-}
-
-.message-inbound {
-    color: #026ebe;
-}
-
-.message-outbound i,
-.message-inbound i {
-    font-size: 25pt;
+.test-message {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
 /** Progress bar */
 
 .progress {
+    margin-top: 10px;
     border: 1px solid #dddddd;
 }
 
@@ -527,7 +503,7 @@ i.channel {
 }
 
 .list-group-item:focus, .list-group-item:hover {
-    background-color: #eff6fb;
+    background-color: #efefef;
 }
 
 /** Drop Down Menu **/

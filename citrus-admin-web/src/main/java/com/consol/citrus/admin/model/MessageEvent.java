@@ -30,15 +30,15 @@ public enum MessageEvent {
      * Creates proper JSON object for message event.
      * @param processId the process id
      * @param pushEvent the type of event
-     * @param message the event message
+     * @param messageData the event message data
      * @return a json representation of the message
      */
     @SuppressWarnings("unchecked")
-    public static JSONObject createEvent(String processId, MessageEvent pushEvent, String message) {
+    public static JSONObject createEvent(String processId, MessageEvent pushEvent, String messageData) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("processId", processId);
         jsonObject.put("type", pushEvent.name());
-        jsonObject.put("msg", message);
+        jsonObject.put("msg", messageData);
         return jsonObject;
     }
 }
