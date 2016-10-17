@@ -7,14 +7,19 @@ import {TestService} from "../service/test.service";
 import {TestDetailComponent} from "./test.detail.component";
 import {AutoComplete} from "./util/autocomplete";
 import {RouteParams} from 'angular2/router';
+import {Dialog} from "./util/dialog";
 
 declare var _;
+declare var jQuery:any;
 
 @Component({
+    host: {
+        '(document:keyup)': 'handleKeyUp($event)',
+    },
     templateUrl: 'app/components/tests.html',
     providers: [TestService, HTTP_PROVIDERS],
     directives: [NgSwitch, NgFor, Tabs, Tab,
-        TestDetailComponent, AutoComplete]
+        TestDetailComponent, AutoComplete, Dialog]
 })
 export class TestsComponent implements OnInit {
 
@@ -75,10 +80,24 @@ export class TestsComponent implements OnInit {
         this.open(_.find(this.tests, function(test){ return test.name === name }));
     }
 
+    openTestList() {
+        jQuery('#dialog-list-tests').modal();
+    }
+
+    closeTestList() {
+        jQuery('#dialog-list-tests').modal('hide');
+    }
+
     open(test: Test) {
         if (this.openTests.indexOf(test) < 0) {
             this.activeTest = test;
             this.openTests.push(test);
+        }
+    }
+
+    handleKeyUp(event) {
+        if (event && event.key == "O") {
+            this.openTestList();
         }
     }
 }

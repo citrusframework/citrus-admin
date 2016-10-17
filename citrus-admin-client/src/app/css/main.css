@@ -299,6 +299,11 @@ pre.logger {
 }
 
 /** Buttons **/
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+    opacity: .85;
+    background-color: #ccc;
+    border-color: #ccc;
+}
 
 .btn-primary {
     color: #ffffff;
