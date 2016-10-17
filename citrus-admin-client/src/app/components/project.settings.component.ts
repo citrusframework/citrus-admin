@@ -34,7 +34,12 @@ export class ProjectSettingsComponent implements OnInit {
     getProject() {
         this._projectService.getActiveProject()
             .subscribe(
-                project => this.project = project,
+                project => {
+                    this.project = project;
+                    if (this.project.settings.build.command) {
+                        this.useCustomCommand = true;
+                    }
+                },
                 error => this.errorMessage = <any>error);
     }
 
