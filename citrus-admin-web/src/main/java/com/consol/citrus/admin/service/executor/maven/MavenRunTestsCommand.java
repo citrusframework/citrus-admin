@@ -74,9 +74,4 @@ public class MavenRunTestsCommand extends MavenCommand {
 
         return properties;
     }
-
-    @Override
-    protected String[] getActiveProfiles() {
-        return StringUtils.commaDelimitedListToStringArray(getBuildConfiguration().getProfiles());
-    }
 }

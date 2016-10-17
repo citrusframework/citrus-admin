@@ -67,9 +67,7 @@ public class MavenCommand extends AbstractExecuteCommand {
             builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
         }
 
-        for (String profile: getActiveProfiles()) {
-            builder.append(String.format("-P%s ", profile));
-        }
+        builder.append(String.format("-P%s ", getActiveProfiles()));
 
         log.debug("Using Maven command: " + builder.toString());
 
@@ -100,7 +98,7 @@ public class MavenCommand extends AbstractExecuteCommand {
         return "";
     }
 
-    protected String[] getActiveProfiles() {
-        return new String[0];
+    protected String getActiveProfiles() {
+        return getBuildConfiguration().getProfiles();
     }
 }
