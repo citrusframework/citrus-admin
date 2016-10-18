@@ -6,19 +6,22 @@ import {ProjectService} from "../service/project.service";
 import {Dialog} from "./util/dialog";
 import {Pills, Pill} from "./util/pills";
 import {BuildProperty} from "../model/build.property";
+import {AlertService} from "../service/alert.service";
+import {Alert} from "../model/alert";
+import {AlertConsole} from "./alert.console";
 
 declare var jQuery:any;
+declare var _:any;
 
 @Component({
     templateUrl: 'app/components/project-settings.html',
     providers: [ProjectService, HTTP_PROVIDERS],
-    directives: [NgSwitch, NgFor, Dialog, Pills, Pill]
+    directives: [NgSwitch, NgFor, Dialog, Pills, Pill, AlertConsole]
 })
 export class ProjectSettingsComponent implements OnInit {
 
-    constructor(private _projectService: ProjectService) {}
+    constructor(private _projectService: ProjectService, private _alertService: AlertService) {}
 
-    errorMessage: string;
     project: Project = new Project();
 
     useCustomCommand: boolean = false;
@@ -40,7 +43,7 @@ export class ProjectSettingsComponent implements OnInit {
                         this.useCustomCommand = true;
                     }
                 },
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     addProperty() {
@@ -65,7 +68,8 @@ export class ProjectSettingsComponent implements OnInit {
         }
 
         this._projectService.update(this.project)
-            .subscribe(error => this.errorMessage = <any>error);
+            .subscribe(response => this.notifySuccess("Settings successfully saved"),
+                error => this.notifyError(<any>error));
     }
 
     openDialog() {
@@ -80,16 +84,24 @@ export class ProjectSettingsComponent implements OnInit {
                         this.project.settings.useConnector = false;
                         this.project.settings.connectorActive = false;
                     },
-                    error => this.errorMessage = <any>error);
+                    error => this.notifyError(<any>error));
         } else {
             this._projectService.addConnector()
                 .subscribe(response => {
                         this.project.settings.useConnector = true;
                         this.project.settings.connectorActive = true;
                     },
-                    error => this.errorMessage = <any>error);
+                    error => this.notifyError(<any>error));
         }
 
         this.getProject();
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

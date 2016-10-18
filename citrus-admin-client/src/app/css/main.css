@@ -17,6 +17,11 @@ a.alert-link {
     text-decoration: underline;
 }
 
+.alert-console {
+    display: block;
+    min-height: 1.5em;
+}
+
 .ajax-loader {
     margin-left: 10px;
     vertical-align: middle;
@@ -356,7 +361,6 @@ pre.logger {
 .label, .badge {
     text-shadow: none;
     font-weight: normal;
-    background-color: #333;
 }
 
 .label-header, .badge-header {

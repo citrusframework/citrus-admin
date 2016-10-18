@@ -7,6 +7,7 @@ import {ProjectSettingsComponent} from './project.settings.component';
 import {ConfigurationComponent} from './configuration.component';
 import {TestsComponent} from './tests.component';
 import {ComingComponent} from "./coming.component";
+import {LogComponent} from "./log.component";
 
 @Component({
     selector: 'app',
@@ -20,6 +21,7 @@ import {ComingComponent} from "./coming.component";
     {path:'/tests', name: 'Tests', component: TestsComponent},
     {path:'/stats', name: 'Stats', component: ComingComponent},
     {path:'/new', name: 'New', component: ComingComponent},
-    {path:'/about', name: 'About', component: ComingComponent}
+    {path:'/about', name: 'About', component: ComingComponent},
+    {path:'/log', name: 'Log', component: LogComponent}
 ])
 export class AppComponent { }
