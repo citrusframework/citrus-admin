@@ -40,9 +40,9 @@ gulp.task('sourcecopy', function() {
         .pipe(gulp.dest(outputDir + 'app/images'));
 
     // copy css sources
-    gulp.src('./bower_components/bootstrap/css/bootstrap.min.css')
+    gulp.src('./bower_components/bootstrap/dist/css/bootstrap.min.css')
         .pipe(gulp.dest(outputDir + 'app/css'));
-    gulp.src('./bower_components/bootstrap/css/bootstrap.min.css.map')
+    gulp.src('./bower_components/bootstrap/dist/css/bootstrap.min.css.map')
         .pipe(gulp.dest(outputDir + 'app/css'));
     gulp.src('./bower_components/font-awesome/css/font-awesome.min.css')
         .pipe(gulp.dest(outputDir + 'app/css'));
@@ -66,7 +66,7 @@ gulp.task('sourcecopy', function() {
         .pipe(gulp.dest(outputDir + 'app/lib'));
     gulp.src('./bower_components/moment/moment.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));
-    gulp.src('./bower_components/bootstrap/js/bootstrap.min.js')
+    gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js')
         .pipe(gulp.dest(outputDir + 'app/lib'));
 
     // copy angular dependencies

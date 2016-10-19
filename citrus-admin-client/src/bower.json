@@ -18,8 +18,8 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "components/bootstrap#~3.3.6",
-    "jquery": "components/jquery#~2.2.0",
+    "bootstrap": "3.3.7",
+    "jquery": "2.2.4",
     "jquery-ui": "1.11.4",
     "underscore": "1.8.3",
     "moment": "2.11.2",
