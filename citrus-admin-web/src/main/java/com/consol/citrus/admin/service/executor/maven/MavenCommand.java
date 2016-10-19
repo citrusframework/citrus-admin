@@ -21,6 +21,7 @@ import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +68,9 @@ public class MavenCommand extends AbstractExecuteCommand {
             builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
         }
 
-        builder.append(String.format("-P%s ", getActiveProfiles()));
+        if (StringUtils.hasText(getActiveProfiles())) {
+            builder.append(String.format("-P%s ", getActiveProfiles()));
+        }
 
         log.debug("Using Maven command: " + builder.toString());
 

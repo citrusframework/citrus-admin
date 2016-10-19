@@ -25,7 +25,7 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
     private String testPlugin = "maven-failsafe";
     private String command;
-    private String profiles;
+    private String profiles = "";
     private boolean useClean = false;
 
     public MavenBuildConfiguration() {
