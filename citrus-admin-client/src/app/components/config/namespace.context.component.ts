@@ -1,6 +1,8 @@
 import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {NamespaceContext, Namespace} from "../../model/namespace.context";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     selector: 'namespace-context',
@@ -9,12 +11,12 @@ import {NamespaceContext, Namespace} from "../../model/namespace.context";
 })
 export class NamespaceContextComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _configService: ConfigService,
+                private _alertService: AlertService) {
         this.namespaceContext = new NamespaceContext();
         this.newNamespace = new Namespace();
     }
 
-    errorMessage: string;
     newNamespace: Namespace;
     namespaceContext: NamespaceContext;
 
@@ -26,7 +28,7 @@ export class NamespaceContextComponent implements OnInit {
         this._configService.getNamespaceContext()
             .subscribe(
                 namespaceContext => this.namespaceContext = namespaceContext,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     addNamespace() {
@@ -34,17 +36,23 @@ export class NamespaceContextComponent implements OnInit {
 
         this._configService.updateNamespaceContext(this.namespaceContext)
             .subscribe(
-                response => { this.newNamespace = new Namespace() },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created namespace '" + this.newNamespace.uri + "'");
+                    this.newNamespace = new Namespace();
+                },
+                error => this.notifyError(<any>error));
     }
 
-    removeNamespace(variable: Namespace, event) {
-        this.namespaceContext.namespaces.splice(this.namespaceContext.namespaces.indexOf(variable), 1);
+    removeNamespace(namespace: Namespace, event) {
+        this.namespaceContext.namespaces.splice(this.namespaceContext.namespaces.indexOf(namespace), 1);
 
         this._configService.updateNamespaceContext(this.namespaceContext)
             .subscribe(
-                response => { this.newNamespace = new Namespace() },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.newNamespace = new Namespace();
+                    this.notifySuccess("Removed namespace '" + namespace.uri + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -52,5 +60,13 @@ export class NamespaceContextComponent implements OnInit {
 
     cancel() {
         this.newNamespace = new Namespace();
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

@@ -2,6 +2,8 @@ import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {Variable} from "../../model/variable";
 import {GlobalVariables} from "../../model/global.variables";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     selector: 'global-variables',
@@ -10,12 +12,12 @@ import {GlobalVariables} from "../../model/global.variables";
 })
 export class GlobalVariablesComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _configService: ConfigService,
+                private _alertService: AlertService) {
         this.globalVariables = new GlobalVariables();
         this.newVariable = new Variable();
     }
 
-    errorMessage: string;
     newVariable: Variable;
     globalVariables: GlobalVariables;
 
@@ -27,7 +29,7 @@ export class GlobalVariablesComponent implements OnInit {
         this._configService.getGlobalVariables()
             .subscribe(
                 globalVariables => this.globalVariables = globalVariables,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     addVariable() {
@@ -35,8 +37,11 @@ export class GlobalVariablesComponent implements OnInit {
 
         this._configService.updateGlobalVariables(this.globalVariables)
             .subscribe(
-                response => { this.newVariable = new Variable() },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created variable '" + this.newVariable.name + "'");
+                    this.newVariable = new Variable();
+                },
+                error => this.notifyError(<any>error));
     }
 
     removeVariable(variable: Variable, event) {
@@ -44,8 +49,11 @@ export class GlobalVariablesComponent implements OnInit {
 
         this._configService.updateGlobalVariables(this.globalVariables)
             .subscribe(
-                response => { this.newVariable = new Variable() },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.newVariable = new Variable();
+                    this.notifySuccess("Removed variable '" + variable.name + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -53,5 +61,13 @@ export class GlobalVariablesComponent implements OnInit {
 
     cancel() {
         this.newVariable = new Variable();
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

@@ -467,6 +467,18 @@ pre.logger {
     display: inline-block;
 }
 
+i.success:before {
+    content: "\f058";
+}
+
+i.warning:before {
+    content: "\f071";
+}
+
+i.danger:before {
+    content: "\f06a";
+}
+
 i.citrus {
     color: #fcc300;
 }

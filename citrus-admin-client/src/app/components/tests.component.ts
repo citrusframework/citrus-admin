@@ -8,6 +8,8 @@ import {TestDetailComponent} from "./test.detail.component";
 import {AutoComplete} from "./util/autocomplete";
 import {RouteParams} from 'angular2/router';
 import {Dialog} from "./util/dialog";
+import {Alert} from "../model/alert";
+import {AlertService} from "../service/alert.service";
 
 declare var _;
 declare var jQuery:any;
@@ -24,14 +26,13 @@ declare var jQuery:any;
 export class TestsComponent implements OnInit {
 
     constructor(private _testService: TestService,
+                private _alertService: AlertService,
                 private _routeParams: RouteParams) {
         this.packages = [];
         this.tests = [];
         this.testNames = [];
         this.openTests = [];
     }
-
-    errorMessage: string;
 
     activeTest: Test;
     openTests: Test[];
@@ -55,7 +56,7 @@ export class TestsComponent implements OnInit {
                         this.onTestSelected(this._routeParams.get('name'));
                     }
                 },
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     onTabClosed(tab: Tab) {
@@ -99,5 +100,9 @@ export class TestsComponent implements OnInit {
         if (event && event.key == "O") {
             this.openTestList();
         }
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

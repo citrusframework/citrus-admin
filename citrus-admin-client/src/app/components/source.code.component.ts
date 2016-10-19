@@ -2,6 +2,8 @@ import {Component,  Input, OnChanges, AfterViewInit} from 'angular2/core';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import {TestDetail} from "../model/tests";
 import {TestService} from "../service/test.service";
+import {Alert} from "../model/alert";
+import {AlertService} from "../service/alert.service";
 
 declare var ace;
 
@@ -16,9 +18,9 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     @Input() type = "xml";
     @Input() detail: TestDetail;
 
-    constructor(private _testService: TestService) {}
+    constructor(private _testService: TestService,
+                private _alertService: AlertService) {}
 
-    errorMessage: string;
     sourceCode = 'Loading sources ...';
     editor: any;
 
@@ -43,17 +45,21 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
                         this.editor.resize();
                     }
                 },
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
 
     saveSourceCode() {
         this._testService.updateSourceCode(this.getRelativePath(), this.editor.getValue())
-            .subscribe(error => this.errorMessage = <any>error);
+            .subscribe(error => this.notifyError(<any>error));
     }
 
     resetSourceCode() {
         this.getSourceCode();
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 
     private getRelativePath() {
@@ -65,6 +71,4 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
             return this.detail.relativePath;
         }
     }
-
-
 }

@@ -1,6 +1,8 @@
 import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {FunctionLibrary, Function} from "../../model/function.library";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     selector: 'function-library',
@@ -9,12 +11,12 @@ import {FunctionLibrary, Function} from "../../model/function.library";
 })
 export class FunctionLibraryComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _configService: ConfigService,
+                private _alertService: AlertService) {
         this.libraries = [];
         this.newFunction = new Function();
     }
 
-    errorMessage: string;
     newFunction: Function;
     newLibrary: FunctionLibrary;
     selectedLibrary: FunctionLibrary;
@@ -28,7 +30,7 @@ export class FunctionLibraryComponent implements OnInit {
         this._configService.getFunctionLibraries()
             .subscribe(
                 libraries => this.libraries = libraries,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     selectLibrary(endpoint: FunctionLibrary) {
@@ -38,8 +40,11 @@ export class FunctionLibraryComponent implements OnInit {
     removeLibrary(library: FunctionLibrary, event) {
         this._configService.deleteComponent(library.id)
             .subscribe(
-                response => this.libraries.splice(this.libraries.indexOf(library), 1),
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.libraries.splice(this.libraries.indexOf(library), 1);
+                    this.notifySuccess("Removed function library '" + library.id + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -70,15 +75,21 @@ export class FunctionLibraryComponent implements OnInit {
     createLibrary() {
         this._configService.createFunctionLibrary(this.newLibrary)
             .subscribe(
-                response => { this.libraries.push(this.newLibrary); this.newLibrary = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created new function library '" + this.newLibrary.id + "'");
+                    this.libraries.push(this.newLibrary); this.newLibrary = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     saveLibrary() {
         this._configService.updateFunctionLibrary(this.selectedLibrary)
             .subscribe(
-                response => { this.selectedLibrary = undefined },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Successfully saved function library '" + this.selectedLibrary.id + "'");
+                    this.selectedLibrary = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     cancel() {
@@ -88,5 +99,13 @@ export class FunctionLibraryComponent implements OnInit {
         } else {
             this.newLibrary = undefined;
         }
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

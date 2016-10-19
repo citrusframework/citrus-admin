@@ -10,11 +10,11 @@ declare var _:any;
     template: `<div *ngIf="type == 'detailed'">
     <div *ngFor="#alert of alerts" class="alert alert-{{alert.type}} alert-dismissible" role="alert">
         <button type="button" class="close" (click)="clearAlert(alert)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>{{alert.type}}:</strong>&nbsp;<span [textContent]="alert.message"></span>
+        <strong><i class="fa {{alert.type}}"></i>&nbsp;{{alert.type}}:</strong>&nbsp;<span [textContent]="alert.message"></span>&nbsp;<a *ngIf="alert.link" class="alert-link" href="{{alert.link.url}}">{{alert.link.name}}</a>
     </div>
 </div>
 <div *ngIf="type == 'labels'">
-    <a *ngFor="#alert of alerts" href="#/log" style="float: left;"><span class="label label-{{alert.type}}">{{alert.type}}</span></a>
+    <a *ngFor="#alert of alerts" href="#/log" style="float: left;"><span class="label label-{{alert.type}}"><i class="fa {{alert.type}}"></i>&nbsp;{{alert.type}}</span></a>
 </div>`,
     directives: [NgFor]
 })
@@ -42,9 +42,11 @@ export class AlertConsole {
         this.alerts.push(alert);
 
         if (alert.autoClear) {
+            var delay = alert.type == 'warning' ? 10000 : 2500;
+
             _.delay(() => {
                 this.alerts = this.alerts.filter(existing => existing != alert);
-            }, 2000);
+            }, delay);
         }
     }
 

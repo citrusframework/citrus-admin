@@ -8,6 +8,8 @@ import {LoggingOutput} from "../model/logging.output";
 import {Message} from "../model/message";
 import {Pills, Pill} from "./util/pills";
 import {NgFor, NgIf} from "angular2/common";
+import {Alert} from "../model/alert";
+import {AlertService} from "../service/alert.service";
 
 declare var SockJS;
 declare var Stomp;
@@ -33,7 +35,8 @@ declare var moment;
 export class TestExecuteComponent {
     @Input() detail: TestDetail;
 
-    constructor(private _testService: TestService) {
+    constructor(private _testService: TestService,
+                private _alertService: AlertService) {
         this.stompClient = Stomp.over(new SockJS('/logging'));
         this.stompClient.connect({}, frame => {
             if (frame) {
@@ -46,7 +49,6 @@ export class TestExecuteComponent {
     running = false;
     completed = 0;
     failed = false;
-    errorMessage: string;
     stompClient: any;
 
     finishedActions = 0;
@@ -68,7 +70,7 @@ export class TestExecuteComponent {
                 result => {
                     this.result = result;
                 },
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     subscribe() {
@@ -119,5 +121,9 @@ export class TestExecuteComponent {
                 this.completed++;
             }
         }
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

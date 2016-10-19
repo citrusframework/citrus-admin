@@ -13,6 +13,6 @@
 
   <div *ngFor="#alert of alerts" class="alert alert-{{alert.type}} alert-dismissible" role="alert">
     <button type="button" class="close" (click)="clearAlert(alert)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>{{alert.type}}!</strong>&nbsp;<span [textContent]="alert.message"></span>
+    <strong><i class="fa {{alert.type}}"></i>&nbsp;{{alert.type}}:</strong>&nbsp;<span [textContent]="alert.message"></span>&nbsp;<a *ngIf="alert.link" class="alert-link" href="{{alert.link.url}}">{{alert.link.name}}</a>
   </div>
 </div>

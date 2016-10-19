@@ -8,7 +8,7 @@
 
 <div class="container">
   <pills justified="true">
-    <pill pill-id="project" pill-title="Project" active="true">
+    <pill pill-id="project" pill-title="Project" [active]="active == 'project'">
       <form class="form-horizontal">
         <h3>Project Settings</h3>
         <div class="form-group">
@@ -46,7 +46,7 @@
         </div>
       </form>
     </pill>
-    <pill pill-id="connect" pill-title="Connector">
+    <pill pill-id="connector" pill-title="Connector" [active]="active == 'connector'">
       <h3>Connector Library</h3>
 
       <p>The Citrus admin connector is a little helper library that provides detailed information during the test run by pushing events to the admin UI.
@@ -72,7 +72,7 @@
         </div>
       </form>
     </pill>
-    <pill pill-id="sources" pill-title="Sources">
+    <pill pill-id="sources" pill-title="Sources" [active]="active == 'sources'">
       <form class="form-horizontal">
         <h3>Sources</h3>
         <div class="form-group">
@@ -135,7 +135,7 @@
         </div>
       </form>
     </pill>
-    <pill pill-id="build" pill-title="Build">
+    <pill pill-id="build" pill-title="Build" [active]="active == 'build'">
       <form class="form-horizontal">
         <h3>Build Settings</h3>
         <div class="form-group">

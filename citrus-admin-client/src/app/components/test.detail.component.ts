@@ -7,6 +7,8 @@ import {TestService} from "../service/test.service";
 import {SourceCodeComponent} from "./source.code.component";
 import {TestDesignerComponent} from "./design/test.designer.component";
 import {TestExecuteComponent} from "./test.execute.component";
+import {Alert} from "../model/alert";
+import {AlertService} from "../service/alert.service";
 
 @Component({
     selector: "test-detail",
@@ -18,10 +20,10 @@ export class TestDetailComponent implements OnChanges {
 
     @Input() test: Test;
 
-    constructor(private _testService: TestService) {
+    constructor(private _testService: TestService,
+                private _alertService: AlertService) {
     }
 
-    errorMessage: string;
     detail: TestDetail;
 
     ngOnChanges() {
@@ -36,6 +38,10 @@ export class TestDetailComponent implements OnChanges {
         this._testService.getTestDetail(this.test)
             .subscribe(
                 detail => this.detail = detail,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

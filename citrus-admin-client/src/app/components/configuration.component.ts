@@ -11,6 +11,7 @@ import {ValidationMatcherComponent} from "./config/validation.matcher.component"
 import {DataDictionaryComponent} from "./config/data.dictionary.component"
 import {SchemaRepositoryComponent} from "./config/schema.repository.component"
 import {RouteParams} from 'angular2/router';
+import {AlertConsole} from "./alert.console";
 
 @Component({
     templateUrl: 'app/components/config.html',
@@ -18,7 +19,7 @@ import {RouteParams} from 'angular2/router';
     directives: [NgIf, NgFor, NgModel, Pills, Pill,
         EndpointsComponent, GlobalVariablesComponent, NamespaceContextComponent,
         FunctionLibraryComponent, ValidationMatcherComponent, DataDictionaryComponent,
-        SchemaRepositoryComponent]
+        SchemaRepositoryComponent, AlertConsole]
 })
 export class ConfigurationComponent {
     constructor(routeParams: RouteParams) {
@@ -28,7 +29,6 @@ export class ConfigurationComponent {
     }
 
     active = 'endpoints';
-    errorMessage: string;
 
     isActive(name: string) {
         return this.active === name;

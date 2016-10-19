@@ -3,6 +3,8 @@ import {EndpointService} from '../../service/endpoint.service';
 import {SpringBeanService} from "../../service/springbean.service";
 import {Endpoint} from "../../model/endpoint";
 import {Property} from "../../model/property";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 declare var jQuery:any;
 
@@ -13,12 +15,13 @@ declare var jQuery:any;
 })
 export class EndpointsComponent implements OnInit {
 
-    constructor(private _endpointService: EndpointService, private _springBeanService: SpringBeanService) {
+    constructor(private _endpointService: EndpointService,
+                private _springBeanService: SpringBeanService,
+                private _alertService: AlertService) {
         this.endpoints = [];
         this.endpointTypes = [];
     }
 
-    errorMessage: string;
     newEndpoint: Endpoint;
     selectedEndpoint: Endpoint;
     endpoints: Endpoint[];
@@ -34,14 +37,14 @@ export class EndpointsComponent implements OnInit {
         this._endpointService.getEndpointTypes()
             .subscribe(
                 types => this.endpointTypes = types,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     getEndpoints() {
         this._endpointService.getEndpoints()
             .subscribe(
                 endpoints => this.endpoints = endpoints,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     selectEndpoint(endpoint: Endpoint) {
@@ -52,14 +55,17 @@ export class EndpointsComponent implements OnInit {
         this._endpointService.getEndpointType(type)
             .subscribe(
                 endpoint => this.newEndpoint = endpoint,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     removeEndpoint(endpoint: Endpoint, event) {
         this._endpointService.deleteEndpoint(endpoint.id)
             .subscribe(
-                response => this.endpoints.splice(this.endpoints.indexOf(endpoint), 1),
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.endpoints.splice(this.endpoints.indexOf(endpoint), 1);
+                    this.notifySuccess("Removed endpoint '" + endpoint.id + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -68,15 +74,21 @@ export class EndpointsComponent implements OnInit {
     createEndpoint() {
         this._endpointService.createEndpoint(this.newEndpoint)
             .subscribe(
-                response => { this.endpoints.push(this.newEndpoint); this.newEndpoint = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created new endpoint '" + this.newEndpoint.id + "'");
+                    this.endpoints.push(this.newEndpoint); this.newEndpoint = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     saveEndpoint() {
         this._endpointService.updateEndpoint(this.selectedEndpoint)
             .subscribe(
-                response => { this.selectedEndpoint = undefined },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Successfully saved endpoint '" + this.selectedEndpoint.id + "'");
+                    this.selectedEndpoint = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     searchBeans(property: Property) {
@@ -98,7 +110,7 @@ export class EndpointsComponent implements OnInit {
                         jQuery('ul.option-search').append('<li><a name="none" class="disabled">No beans found!</a></li>');
                     }
                 },
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     cancel() {
@@ -108,5 +120,13 @@ export class EndpointsComponent implements OnInit {
         } else {
             this.newEndpoint = undefined;
         }
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

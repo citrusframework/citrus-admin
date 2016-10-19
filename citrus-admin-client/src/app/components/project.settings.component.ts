@@ -9,6 +9,7 @@ import {BuildProperty} from "../model/build.property";
 import {AlertService} from "../service/alert.service";
 import {Alert} from "../model/alert";
 import {AlertConsole} from "./alert.console";
+import {RouteParams} from 'angular2/router';
 
 declare var jQuery:any;
 declare var _:any;
@@ -20,8 +21,15 @@ declare var _:any;
 })
 export class ProjectSettingsComponent implements OnInit {
 
-    constructor(private _projectService: ProjectService, private _alertService: AlertService) {}
+    constructor(private _projectService: ProjectService,
+                private _alertService: AlertService,
+                routeParams: RouteParams) {
+        if (routeParams.get('show')) {
+            this.active = routeParams.get('show');
+        }
+    }
 
+    active = 'project';
     project: Project = new Project();
 
     useCustomCommand: boolean = false;

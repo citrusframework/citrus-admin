@@ -1,6 +1,8 @@
 import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {SchemaRepository, Schema, SchemaReference} from "../../model/schema.repository";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     selector: 'schema-repository',
@@ -9,14 +11,14 @@ import {SchemaRepository, Schema, SchemaReference} from "../../model/schema.repo
 })
 export class SchemaRepositoryComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _configService: ConfigService,
+                private _alertService: AlertService) {
         this.repositories = [];
         this.schemas = [];
         this.newSchema = new Schema();
         this.newSchemaReference = new SchemaReference();
     }
 
-    errorMessage: string;
     newSchema: Schema;
     newSchemaReference: SchemaReference;
     newRepository: SchemaRepository;
@@ -35,14 +37,14 @@ export class SchemaRepositoryComponent implements OnInit {
         this._configService.getSchemaRepositories()
             .subscribe(
                 repositories => { this.repositories = repositories; this.getSchemas()},
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     getSchemas() {
         this._configService.getSchemas()
             .subscribe(
                 schemas => this.schemas = schemas.filter(schema => this.repositories.filter(repository => repository.schemas.schemas.filter(candidate => candidate.id == schema.id).length > 0).length == 0),
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     initRepository() {
@@ -56,15 +58,21 @@ export class SchemaRepositoryComponent implements OnInit {
     createRepository() {
         this._configService.createSchemaRepository(this.newRepository)
             .subscribe(
-                response => { this.repositories.push(this.newRepository); this.newRepository = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created new schema repository '" + this.newRepository.id + "'");
+                    this.repositories.push(this.newRepository); this.newRepository = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     removeRepository(selected: SchemaRepository, event) {
         this._configService.deleteComponent(selected.id)
             .subscribe(
-                response => this.repositories.splice(this.repositories.indexOf(selected), 1),
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.repositories.splice(this.repositories.indexOf(selected), 1);
+                    this.notifySuccess("Removed schema repository '" + selected.id + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -73,8 +81,11 @@ export class SchemaRepositoryComponent implements OnInit {
     saveRepository() {
         this._configService.updateSchemaRepository(this.selectedRepository)
             .subscribe(
-                response => { this.selectedRepository = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Successfully saved schema repository '" + this.selectedRepository.id + "'");
+                    this.selectedRepository = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     initGlobalSchema() {
@@ -88,15 +99,21 @@ export class SchemaRepositoryComponent implements OnInit {
     createGlobalSchema() {
         this._configService.createSchema(this.newGlobalSchema)
             .subscribe(
-                response => { this.schemas.push(this.newGlobalSchema); this.newGlobalSchema = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created new schema '" + this.newGlobalSchema.id + "'");
+                    this.schemas.push(this.newGlobalSchema); this.newGlobalSchema = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     removeGlobalSchema(selected: Schema, event) {
         this._configService.deleteComponent(selected.id)
             .subscribe(
-                response => this.schemas.splice(this.schemas.indexOf(selected), 1),
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.schemas.splice(this.schemas.indexOf(selected), 1);
+                    this.notifySuccess("Removed schema '" + selected.id + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -105,8 +122,11 @@ export class SchemaRepositoryComponent implements OnInit {
     saveGlobalSchema() {
         this._configService.updateSchema(this.selectedGlobalSchema)
             .subscribe(
-                response => { this.selectedGlobalSchema = undefined },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Successfully saved schema '" + this.selectedGlobalSchema.id + "'");
+                    this.selectedGlobalSchema = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     removeSchema(selected: Schema) {
@@ -162,5 +182,13 @@ export class SchemaRepositoryComponent implements OnInit {
 
         this.newSchema = new Schema();
         this.newSchemaReference = new SchemaReference();
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }

@@ -1,6 +1,8 @@
 import {Component, OnInit} from 'angular2/core';
 import {ConfigService} from '../../service/config.service';
 import {DataDictionary, Mapping} from "../../model/data.dictionary";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     selector: 'data-dictionary',
@@ -9,13 +11,13 @@ import {DataDictionary, Mapping} from "../../model/data.dictionary";
 })
 export class DataDictionaryComponent implements OnInit {
 
-    constructor(private _configService: ConfigService) {
+    constructor(private _configService: ConfigService,
+                private _alertService: AlertService) {
         this.dictionaries = [];
         this.newMapping = new Mapping();
         this.newDictionaryType = "xpath";
     }
 
-    errorMessage: string;
     newMapping: Mapping;
     newDictionaryType: string;
     newDictionary: DataDictionary;
@@ -30,7 +32,7 @@ export class DataDictionaryComponent implements OnInit {
         this._configService.getDataDictionaries()
             .subscribe(
                 dictionaries => this.dictionaries = dictionaries,
-                error => this.errorMessage = <any>error);
+                error => this.notifyError(<any>error));
     }
 
     selectDictionary(endpoint: DataDictionary) {
@@ -40,8 +42,11 @@ export class DataDictionaryComponent implements OnInit {
     removeDictionary(library: DataDictionary, event) {
         this._configService.deleteComponent(library.id)
             .subscribe(
-                response => this.dictionaries.splice(this.dictionaries.indexOf(library), 1),
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.dictionaries.splice(this.dictionaries.indexOf(library), 1);
+                    this.notifySuccess("Removed data dictionary '" + library.id + "'");
+                },
+                error => this.notifyError(<any>error));
 
         event.stopPropagation();
         return false;
@@ -72,15 +77,21 @@ export class DataDictionaryComponent implements OnInit {
     createDictionary() {
         this._configService.createDataDictionary(this.newDictionaryType, this.newDictionary)
             .subscribe(
-                response => { this.dictionaries.push(this.newDictionary); this.newDictionary = undefined; },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Created new data dictionary '" + this.newDictionary.id + "'");
+                    this.dictionaries.push(this.newDictionary); this.newDictionary = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     saveDictionary() {
         this._configService.updateDataDictionary(this.selectedDictionary)
             .subscribe(
-                response => { this.selectedDictionary = undefined },
-                error => this.errorMessage = <any>error);
+                response => {
+                    this.notifySuccess("Successfully saved data dictionary '" + this.selectedDictionary.id + "'");
+                    this.selectedDictionary = undefined;
+                },
+                error => this.notifyError(<any>error));
     }
 
     cancel() {
@@ -90,5 +101,13 @@ export class DataDictionaryComponent implements OnInit {
         } else {
             this.newDictionary = undefined;
         }
+    }
+
+    notifySuccess(message: string) {
+        this._alertService.add(new Alert("success", message, true));
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", error.message, false));
     }
 }
