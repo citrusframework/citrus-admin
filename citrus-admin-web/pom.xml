@@ -15,6 +15,7 @@
   <name>citrus-admin-web</name>
 
   <properties>
+    <server.port>9090</server.port>
     <project.home></project.home>
   </properties>
 
@@ -45,6 +46,9 @@
           <profiles>
             <profile>dev</profile>
           </profiles>
+          <arguments>
+            <argument>--server.port=${server.port}</argument>
+          </arguments>
           <jvmArguments>-Dproject.home=${project.home}</jvmArguments>
         </configuration>
       </plugin>
