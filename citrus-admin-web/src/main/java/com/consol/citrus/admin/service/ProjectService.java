@@ -21,6 +21,7 @@ import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -30,6 +31,7 @@ import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -60,6 +62,9 @@ public class ProjectService {
     /** Spring bean service*/
     @Autowired
     private SpringBeanService springBeanService;
+
+    @Autowired
+    private Environment environment;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ProjectService.class);
@@ -283,6 +288,13 @@ public class ProjectService {
                     SpringBean pushMessageListener = new SpringBean();
                     pushMessageListener.setId(WebSocketPushMessageListener.class.getSimpleName());
                     pushMessageListener.setClazz(WebSocketPushMessageListener.class.getName());
+
+                    if (!environment.getProperty("local.server.port", "8080").equals("8080")) {
+                        Property portProperty = new Property();
+                        portProperty.setName("port");
+                        portProperty.setValue(environment.getProperty("local.server.port"));
+                        pushMessageListener.getProperties().add(portProperty);
+                    }
                     springBeanService.addBeanDefinition(getProjectContextConfigFile(), pushMessageListener);
                 }
             } catch (IOException e) {
@@ -334,5 +346,14 @@ public class ProjectService {
      */
     public void setSpringBeanService(SpringBeanService springBeanService) {
         this.springBeanService = springBeanService;
+    }
+
+    /**
+     * Sets the environment property.
+     *
+     * @param environment
+     */
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 }

@@ -24,8 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.*;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 /**
  * @author Christoph Deppisch
@@ -70,7 +69,7 @@ public class WebSocketPushMessageListener implements MessageListener, Initializi
                     disabled = true;
                 }
             }
-        } catch (ResourceAccessException e) {
+        } catch (RestClientException e) {
             log.error("Failed to push message to citrus-admin connector", e);
         }
     }
@@ -81,7 +80,7 @@ public class WebSocketPushMessageListener implements MessageListener, Initializi
         try {
             ResponseEntity response = getRestTemplate().getForEntity(statusUrl, String.class);
             disabled = !response.getStatusCode().equals(HttpStatus.OK);
-        } catch (ResourceAccessException e) {
+        } catch (RestClientException e) {
             log.warn(String.format("Failed to connect to citrus-admin connector: '%s' - disabling citrus-admin connector features", statusUrl));
             disabled = true;
         }

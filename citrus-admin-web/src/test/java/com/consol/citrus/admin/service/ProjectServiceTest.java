@@ -23,6 +23,7 @@ import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.util.FileUtils;
 import org.mockito.Mockito;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -41,12 +42,14 @@ public class ProjectServiceTest {
     private ProjectService projectService;
     private FileBrowserService fileBrowserService = new FileBrowserService();
     private SpringBeanService springBeanService = Mockito.mock(SpringBeanService.class);
+    private Environment environment = Mockito.mock(Environment.class);
 
     @BeforeMethod
     public void setup() {
         projectService = new ProjectService();
         projectService.setFileBrowserService(fileBrowserService);
         projectService.setSpringBeanService(springBeanService);
+        projectService.setEnvironment(environment);
     }
 
     @Test(dataProvider = "projectProvider")
@@ -117,6 +120,7 @@ public class ProjectServiceTest {
         Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
         when(springBeanService.getBeanDefinition(any(File.class), eq(WebSocketPushMessageListener.class.getSimpleName()), eq(SpringBean.class))).thenReturn(null);
+        when(environment.getProperty("local.server.port", "8080")).thenReturn("8080");
         projectService.addConnector();
 
         Assert.assertTrue(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
