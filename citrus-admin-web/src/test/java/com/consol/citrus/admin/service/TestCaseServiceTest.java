@@ -62,28 +62,23 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testPackages.get(2).getName(), "javadsl");
         Assert.assertEquals(testPackages.get(2).getTests().size(), 4L);
 
-        Assert.assertEquals(testPackages.get(0).getTests().get(0).getName(), "BarTest");
-        Assert.assertEquals(testPackages.get(0).getTests().get(0).getClassName(), "BarTest");
-        Assert.assertEquals(testPackages.get(0).getTests().get(0).getMethodName(), "barTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(0).getName(), "FooTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(0).getClassName(), "FooTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(0).getMethodName(), "FooTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(1).getName(), "WithoutLastUpdatedOnTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(1).getClassName(), "WithoutLastUpdatedOnTest");
-        Assert.assertEquals(testPackages.get(1).getTests().get(1).getMethodName(), "withoutLastUpdatedOnTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(0).getName(), "CitrusJavaTest.fooTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(0).getClassName(), "CitrusJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(0).getMethodName(), "fooTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(1).getName(), "BarJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(1).getClassName(), "CitrusJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(1).getMethodName(), "barTest");
+        assertTestPresent(testPackages.get(0).getTests(), "BarTest", "BarTest", "barTest");
+        assertTestPresent(testPackages.get(1).getTests(), "FooTest", "FooTest", "FooTest");
+        assertTestPresent(testPackages.get(1).getTests(), "WithoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest");
+        assertTestPresent(testPackages.get(2).getTests(), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
+        assertTestPresent(testPackages.get(2).getTests(), "BarJavaTest", "CitrusJavaTest", "barTest");
+        assertTestPresent(testPackages.get(2).getTests(), "DataProviderJavaTest.fooProviderTest", "DataProviderJavaTest", "fooProviderTest");
+        assertTestPresent(testPackages.get(2).getTests(), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
+    }
 
-        Assert.assertEquals(testPackages.get(2).getTests().get(2).getName(), "DataProviderJavaTest.fooProviderTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(2).getClassName(), "DataProviderJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(2).getMethodName(), "fooProviderTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(3).getName(), "BarProviderTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(3).getClassName(), "DataProviderJavaTest");
-        Assert.assertEquals(testPackages.get(2).getTests().get(3).getMethodName(), "barProviderTest");
+    private void assertTestPresent(List<com.consol.citrus.admin.model.Test> tests, String name, String className, String methodName) {
+        for (com.consol.citrus.admin.model.Test test : tests) {
+            if (test.getName().equals(name) && test.getClassName().equals(className) && test.getMethodName().equals(methodName)) {
+                return;
+            }
+        }
+
+        Assert.fail(String.format("Missing test: name='%s', className='%s', methodName='%s'", name, className, methodName));
     }
 
     @Test
