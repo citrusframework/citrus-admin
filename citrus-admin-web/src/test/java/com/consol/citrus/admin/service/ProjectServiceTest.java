@@ -119,19 +119,19 @@ public class ProjectServiceTest {
 
         Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
-        when(springBeanService.getBeanDefinition(any(File.class), eq(WebSocketPushMessageListener.class.getSimpleName()), eq(SpringBean.class))).thenReturn(null);
+        when(springBeanService.getBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getSimpleName()), eq(SpringBean.class))).thenReturn(null);
         when(environment.getProperty("local.server.port", "8080")).thenReturn("8080");
         projectService.addConnector();
 
         Assert.assertTrue(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
-        when(springBeanService.getBeanNames(any(File.class), eq(WebSocketPushMessageListener.class.getName()))).thenReturn(Collections.singletonList(WebSocketPushMessageListener.class.getSimpleName()));
+        when(springBeanService.getBeanNames(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getName()))).thenReturn(Collections.singletonList(WebSocketPushMessageListener.class.getSimpleName()));
         projectService.removeConnector();
 
         Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
-        verify(springBeanService).addBeanDefinition(any(File.class), any(SpringBean.class));
-        verify(springBeanService).removeBeanDefinition(any(File.class), eq(WebSocketPushMessageListener.class.getSimpleName()));
+        verify(springBeanService).addBeanDefinition(any(File.class), eq(testProject), any(SpringBean.class));
+        verify(springBeanService).removeBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getSimpleName()));
     }
 
     @Test(expectedExceptions = { ApplicationRuntimeException.class },

@@ -18,8 +18,8 @@ package com.consol.citrus.admin.service.spring;
 
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
-import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.filter.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -55,9 +55,6 @@ public class SpringBeanService {
     @Autowired
     private SpringBeanMarshaller springBeanMarshaller;
 
-    @Autowired
-    private ProjectService projectService;
-
     /** XSLT transformer factory */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
@@ -80,10 +77,10 @@ public class SpringBeanService {
 
     /**
      * Reads file import locations from Spring bean application context.
-     * @param configFile
+     * @param project
      * @return
      */
-    public List<File> getConfigImports(File configFile) {
+    public List<File> getConfigImports(File configFile, Project project) {
         LSParser parser = XMLUtils.createLSParser();
 
         GetSpringImportsFilter filter = new GetSpringImportsFilter(configFile);
@@ -96,20 +93,20 @@ public class SpringBeanService {
     /**
      * Finds bean definition element by id and type in Spring application context and
      * performs unmarshalling in order to return JaxB object.
-     * @param configFile
+     * @param project
      * @param id
      * @param type
      * @return
      */
-    public <T> T getBeanDefinition(File configFile, String id, Class<T> type) {
+    public <T> T getBeanDefinition(File configFile, Project project, String id, Class<T> type) {
         LSParser parser = XMLUtils.createLSParser();
 
         GetSpringBeanFilter filter = new GetSpringBeanFilter(id, type);
         parser.setFilter(filter);
 
-        List<File> configFiles = new ArrayList<File>();
+        List<File> configFiles = new ArrayList<>();
         configFiles.add(configFile);
-        configFiles.addAll(getConfigImports(configFile));
+        configFiles.addAll(getConfigImports(configFile, project));
 
         for (File file : configFiles) {
             parser.parseURI(file.toURI().toString());
@@ -125,28 +122,28 @@ public class SpringBeanService {
     /**
      * Finds all bean definition elements by type in Spring application context and
      * performs unmarshalling in order to return a list of JaxB object.
-     * @param configFile
+     * @param project
      * @param type
      * @return
      */
-    public <T> List<T> getBeanDefinitions(File configFile, Class<T> type) {
-        return getBeanDefinitions(configFile, type, null);
+    public <T> List<T> getBeanDefinitions(File configFile, Project project, Class<T> type) {
+        return getBeanDefinitions(configFile, project, type, null);
     }
 
     /**
      * Finds all bean definition elements by type and attribute values in Spring application context and
      * performs unmarshalling in order to return a list of JaxB object.
-     * @param configFile
+     * @param project
      * @param type
      * @param attributes
      * @return
      */
-    public <T> List<T> getBeanDefinitions(File configFile, Class<T> type, Map<String, String> attributes) {
+    public <T> List<T> getBeanDefinitions(File configFile, Project project, Class<T> type, Map<String, String> attributes) {
         List<T> beanDefinitions = new ArrayList<T>();
 
-        List<File> importedFiles = getConfigImports(configFile);
+        List<File> importedFiles = getConfigImports(configFile, project);
         for (File importLocation : importedFiles) {
-            beanDefinitions.addAll(getBeanDefinitions(importLocation, type, attributes));
+            beanDefinitions.addAll(getBeanDefinitions(importLocation, project, type, attributes));
         }
 
         LSParser parser = XMLUtils.createLSParser();
@@ -164,12 +161,12 @@ public class SpringBeanService {
 
     /**
      * Find all Spring bean definitions in application context for given bean type.
-     * @param configFile
+     * @param project
      * @param beanType
      * @return
      */
-    public List<String> getBeanNames(File configFile, String beanType) {
-        List<SpringBean> beanDefinitions = getBeanDefinitions(configFile, SpringBean.class, Collections.singletonMap("class", beanType));
+    public List<String> getBeanNames(File configFile, Project project, String beanType) {
+        List<SpringBean> beanDefinitions = getBeanDefinitions(configFile, project, SpringBean.class, Collections.singletonMap("class", beanType));
 
         List<String> beanNames = new ArrayList<String>();
         for (SpringBean beanDefinition : beanDefinitions) {
@@ -181,10 +178,10 @@ public class SpringBeanService {
 
     /**
      * Method adds a new Spring bean definition to the XML application context file.
-     * @param configFile
+     * @param project
      * @param jaxbElement
      */
-    public void addBeanDefinition(File configFile, Object jaxbElement) {
+    public void addBeanDefinition(File configFile, Project project, Object jaxbElement) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -195,12 +192,12 @@ public class SpringBeanService {
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
             transformer.setParameter("bean_content", getXmlContent(jaxbElement)
-                    .replaceAll("(?m)^(.)", getTabs(1) + "$1"));
+                    .replaceAll("(?m)^(.)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
 
             //transform
             StringResult result = new StringResult();
             transformer.transform(xmlSource, result);
-            FileUtils.writeToFile(format(result.toString()), configFile);
+            FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), configFile);
             return;
         } catch (IOException e) {
             throw new ApplicationRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
@@ -212,19 +209,19 @@ public class SpringBeanService {
     /**
      * Method removes a Spring bean definition from the XML application context file. Bean definition is
      * identified by its id or bean name.
-     * @param configFile
+     * @param project
      * @param id
      */
-    public void removeBeanDefinition(File configFile, String id) {
+    public void removeBeanDefinition(File configFile, Project project, String id) {
         Source xsltSource;
         Source xmlSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/delete-bean.xsl").getInputStream());
             xsltSource.setSystemId("delete-bean");
 
-            List<File> configFiles = new ArrayList<File>();
+            List<File> configFiles = new ArrayList<>();
             configFiles.add(configFile);
-            configFiles.addAll(getConfigImports(configFile));
+            configFiles.addAll(getConfigImports(configFile, project));
 
             for (File file : configFiles) {
                 xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
@@ -236,7 +233,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(format(result.toString()), file);
+                FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
                 return;
             }
         } catch (IOException e) {
@@ -248,19 +245,19 @@ public class SpringBeanService {
 
     /**
      * Method removes all Spring bean definitions of given type from the XML application context file.
-     * @param configFile
+     * @param project
      * @param type
      */
-    public void removeBeanDefinitions(File configFile, Class<?> type) {
+    public void removeBeanDefinitions(File configFile, Project project, Class<?> type) {
         Source xsltSource;
         Source xmlSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/delete-bean-type.xsl").getInputStream());
             xsltSource.setSystemId("delete-bean");
 
-            List<File> configFiles = new ArrayList<File>();
+            List<File> configFiles = new ArrayList<>();
             configFiles.add(configFile);
-            configFiles.addAll(getConfigImports(configFile));
+            configFiles.addAll(getConfigImports(configFile, project));
 
             for (File file : configFiles) {
                 xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
@@ -276,7 +273,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(format(result.toString()), file);
+                FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
                 return;
             }
         } catch (IOException e) {
@@ -289,20 +286,20 @@ public class SpringBeanService {
     /**
      * Method updates an existing Spring bean definition in a XML application context file. Bean definition is
      * identified by its id or bean name.
-     * @param configFile
+     * @param project
      * @param id
      * @param jaxbElement
      */
-    public void updateBeanDefinition(File configFile, String id, Object jaxbElement) {
+    public void updateBeanDefinition(File configFile, Project project, String id, Object jaxbElement) {
         Source xsltSource;
         Source xmlSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/update-bean.xsl").getInputStream());
             xsltSource.setSystemId("update-bean");
 
-            List<File> configFiles = new ArrayList<File>();
+            List<File> configFiles = new ArrayList<>();
             configFiles.add(configFile);
-            configFiles.addAll(getConfigImports(configFile));
+            configFiles.addAll(getConfigImports(configFile, project));
 
             LSParser parser = XMLUtils.createLSParser();
             GetSpringBeanFilter getBeanFilter = new GetSpringBeanFilter(id, jaxbElement.getClass());
@@ -317,13 +314,13 @@ public class SpringBeanService {
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
                     transformer.setParameter("bean_id", id);
                     transformer.setParameter("bean_content", getXmlContent(jaxbElement)
-                            .replaceAll("(?m)^(\\s<)", getTabs(1) + "$1")
-                            .replaceAll("(?m)^(</)", getTabs(1) + "$1"));
+                            .replaceAll("(?m)^(\\s<)", getTabs(1, project.getSettings().getTabSize()) + "$1")
+                            .replaceAll("(?m)^(</)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
 
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(format(result.toString()), file);
+                    FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
                     return;
                 }
             }
@@ -338,20 +335,20 @@ public class SpringBeanService {
      * Method updates existing Spring bean definitions in a XML application context file. Bean definition is
      * identified by its type defining class.
      *
-     * @param configFile
+     * @param project
      * @param type
      * @param jaxbElement
      */
-    public void updateBeanDefinitions(File configFile, Class<?> type, Object jaxbElement) {
+    public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object jaxbElement) {
         Source xsltSource;
         Source xmlSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/update-bean-type.xsl").getInputStream());
             xsltSource.setSystemId("update-bean");
 
-            List<File> configFiles = new ArrayList<File>();
+            List<File> configFiles = new ArrayList<>();
             configFiles.add(configFile);
-            configFiles.addAll(getConfigImports(configFile));
+            configFiles.addAll(getConfigImports(configFile, project));
 
             LSParser parser = XMLUtils.createLSParser();
             GetSpringBeansFilter getBeanFilter = new GetSpringBeansFilter(type, null);
@@ -370,13 +367,13 @@ public class SpringBeanService {
                     transformer.setParameter("bean_element", beanElement);
                     transformer.setParameter("bean_namespace", beanNamespace);
                     transformer.setParameter("bean_content", getXmlContent(jaxbElement)
-                            .replaceAll("(?m)^(\\s<)", getTabs(1) + "$1")
-                            .replaceAll("(?m)^(</)", getTabs(1) + "$1"));
+                            .replaceAll("(?m)^(\\s<)", getTabs(1, project.getSettings().getTabSize()) + "$1")
+                            .replaceAll("(?m)^(</)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
 
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(format(result.toString()), file);
+                    FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
                     return;
                 }
             }
@@ -423,21 +420,24 @@ public class SpringBeanService {
      * Do final formatting with Spring bean XML configuration content.
      * Removes empty double lines and formats schemaLocation attribute value with new lines.
      * @param content
+     * @param tabSize
      * @return
      */
-    private String format(String content) {
-        return content.replaceAll("(?m)(^\\s*$)+", "").replaceAll("\\.xsd\\s", ".xsd\n" + getTabs(3));
+    private String format(String content, int tabSize) {
+        return content.replaceAll("(?m)(^\\s*$)+", "").replaceAll("\\.xsd\\s", ".xsd\n" + getTabs(3, tabSize));
     }
 
     /**
      * Construct tabs according to project settings.
+     * @param amount
+     * @param tabSize
      * @return
      */
-    private String getTabs(int amount) {
+    private String getTabs(int amount, int tabSize) {
         StringBuilder tabs = new StringBuilder();
 
-        for (int i = 1; i <= projectService.getActiveProject().getSettings().getTabSize(); i++) {
-            for (int k = 1; k <= amount; k++) {
+        for (int i = 1; i <= amount; i++) {
+            for (int k = 1; k <= tabSize; k++) {
                 tabs.append(" ");
             }
         }
@@ -462,14 +462,5 @@ public class SpringBeanService {
      */
     public void setSpringBeanMarshaller(SpringBeanMarshaller springBeanMarshaller) {
         this.springBeanMarshaller = springBeanMarshaller;
-    }
-
-    /**
-     * Sets the projectService property.
-     *
-     * @param projectService
-     */
-    public void setProjectService(ProjectService projectService) {
-        this.projectService = projectService;
     }
 }

@@ -42,36 +42,36 @@ public class SpringBeanController {
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
     public void createBean(@RequestBody SpringBean bean) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), bean);
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), bean);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateBean(@PathVariable("id") String id, @RequestBody SpringBean bean) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, bean);
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, bean);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteBean(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
     }
 
     @RequestMapping(value = "/{type}", method = {RequestMethod.GET})
     @ResponseBody
     public List<SpringBean> listBeans(@PathVariable("type") String type) {
-        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", type));
+        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SpringBean.class, Collections.singletonMap("class", type));
     }
 
     @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public SpringBean getBean(@PathVariable("type") String type, @PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, SpringBean.class);
+        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, SpringBean.class);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     public List<String> search(@RequestBody String type) {
-        return springBeanService.getBeanNames(projectService.getProjectContextConfigFile(), type);
+        return springBeanService.getBeanNames(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), type);
     }
 }

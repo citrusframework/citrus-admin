@@ -48,19 +48,19 @@ public class EndpointController {
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
     public void createEndpoint(@RequestBody EndpointModel endpointDefinition) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), convertToModel(endpointDefinition));
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), convertToModel(endpointDefinition));
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointModel endpointDefinition) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, convertToModel(endpointDefinition));
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, convertToModel(endpointDefinition));
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteEndpoint(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
     }
 
     @RequestMapping(method = {RequestMethod.GET})
@@ -68,7 +68,7 @@ public class EndpointController {
     public List<?> listEndpoints() {
         List<EndpointModel> endpoints = new ArrayList<>();
         for (EndpointConverter converter : endpointConverter) {
-            List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), converter.getSourceModelClass());
+            List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), converter.getSourceModelClass());
             for (Object endpoint : models) {
                 endpoints.add(converter.convert(endpoint));
             }
@@ -81,7 +81,7 @@ public class EndpointController {
     @ResponseBody
     public Object getEndpoint(@PathVariable("id") String id) {
         for (EndpointConverter converter : endpointConverter) {
-            Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, converter.getSourceModelClass());
+            Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, converter.getSourceModelClass());
             if (model != null) {
                 return converter.convert(model);
             }

@@ -284,7 +284,7 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(true);
                 saveProject(project);
 
-                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), WebSocketPushMessageListener.class.getSimpleName(), SpringBean.class) == null) {
+                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), getActiveProject(), WebSocketPushMessageListener.class.getSimpleName(), SpringBean.class) == null) {
                     SpringBean pushMessageListener = new SpringBean();
                     pushMessageListener.setId(WebSocketPushMessageListener.class.getSimpleName());
                     pushMessageListener.setClazz(WebSocketPushMessageListener.class.getName());
@@ -295,7 +295,7 @@ public class ProjectService {
                         portProperty.setValue(environment.getProperty("local.server.port"));
                         pushMessageListener.getProperties().add(portProperty);
                     }
-                    springBeanService.addBeanDefinition(getProjectContextConfigFile(), pushMessageListener);
+                    springBeanService.addBeanDefinition(getProjectContextConfigFile(), getActiveProject(), pushMessageListener);
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
@@ -320,9 +320,9 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(false);
                 saveProject(project);
 
-                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), WebSocketPushMessageListener.class.getName());
+                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), getActiveProject(), WebSocketPushMessageListener.class.getName());
                 for (String listenerBean : listenerBeans) {
-                    springBeanService.removeBeanDefinition(getProjectContextConfigFile(), listenerBean);
+                    springBeanService.removeBeanDefinition(getProjectContextConfigFile(), getActiveProject(), listenerBean);
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
