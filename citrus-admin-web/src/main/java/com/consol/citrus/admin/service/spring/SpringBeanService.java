@@ -18,8 +18,9 @@ package com.consol.citrus.admin.service.spring;
 
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
-import com.consol.citrus.admin.service.spring.filter.*;
 import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.admin.service.spring.filter.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
@@ -52,7 +53,10 @@ public class SpringBeanService {
     public static final String UNABLE_TO_READ_TRANSFORMATION_SOURCE = "Unable to read update bean definition transformation source";
 
     @Autowired
-    protected SpringBeanMarshaller springBeanMarshaller;
+    private SpringBeanMarshaller springBeanMarshaller;
+
+    @Autowired
+    private ProjectService projectService;
 
     /** XSLT transformer factory */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -190,12 +194,13 @@ public class SpringBeanService {
 
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
-            transformer.setParameter("bean_content", getXmlContent(jaxbElement));
+            transformer.setParameter("bean_content", getXmlContent(jaxbElement)
+                    .replaceAll("(?m)^(.)", getTabs(1) + "$1"));
 
             //transform
             StringResult result = new StringResult();
             transformer.transform(xmlSource, result);
-            FileUtils.writeToFile(result.toString(), configFile);
+            FileUtils.writeToFile(format(result.toString()), configFile);
             return;
         } catch (IOException e) {
             throw new ApplicationRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
@@ -231,7 +236,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(result.toString(), file);
+                FileUtils.writeToFile(format(result.toString()), file);
                 return;
             }
         } catch (IOException e) {
@@ -271,7 +276,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(result.toString(), file);
+                FileUtils.writeToFile(format(result.toString()), file);
                 return;
             }
         } catch (IOException e) {
@@ -311,12 +316,14 @@ public class SpringBeanService {
                     //create transformer
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
                     transformer.setParameter("bean_id", id);
-                    transformer.setParameter("bean_content", getXmlContent(jaxbElement));
+                    transformer.setParameter("bean_content", getXmlContent(jaxbElement)
+                            .replaceAll("(?m)^(\\s<)", getTabs(1) + "$1")
+                            .replaceAll("(?m)^(</)", getTabs(1) + "$1"));
 
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(result.toString(), file);
+                    FileUtils.writeToFile(format(result.toString()), file);
                     return;
                 }
             }
@@ -362,12 +369,14 @@ public class SpringBeanService {
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
                     transformer.setParameter("bean_element", beanElement);
                     transformer.setParameter("bean_namespace", beanNamespace);
-                    transformer.setParameter("bean_content", getXmlContent(jaxbElement));
+                    transformer.setParameter("bean_content", getXmlContent(jaxbElement)
+                            .replaceAll("(?m)^(\\s<)", getTabs(1) + "$1")
+                            .replaceAll("(?m)^(</)", getTabs(1) + "$1"));
 
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(result.toString(), file);
+                    FileUtils.writeToFile(format(result.toString()), file);
                     return;
                 }
             }
@@ -389,10 +398,6 @@ public class SpringBeanService {
 
         springBeanMarshaller.marshal(jaxbElement, jaxbContent);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Formatting bean definition: " + jaxbContent);
-        }
-
         Source xsltSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/format-bean.xsl").getInputStream());
@@ -401,6 +406,10 @@ public class SpringBeanService {
             //transform
             StringResult result = new StringResult();
             transformer.transform(new StringSource(jaxbContent.toString()), result);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Created bean definition:\n" + result.toString());
+            }
 
             return result.toString();
         } catch (IOException e) {
@@ -411,6 +420,32 @@ public class SpringBeanService {
     }
 
     /**
+     * Do final formatting with Spring bean XML configuration content.
+     * Removes empty double lines and formats schemaLocation attribute value with new lines.
+     * @param content
+     * @return
+     */
+    private String format(String content) {
+        return content.replaceAll("(?m)(^\\s*$)+", "").replaceAll("\\.xsd\\s", ".xsd\n" + getTabs(3));
+    }
+
+    /**
+     * Construct tabs according to project settings.
+     * @return
+     */
+    private String getTabs(int amount) {
+        StringBuilder tabs = new StringBuilder();
+
+        for (int i = 1; i <= projectService.getActiveProject().getSettings().getTabSize(); i++) {
+            for (int k = 1; k <= amount; k++) {
+                tabs.append(" ");
+            }
+        }
+
+        return tabs.toString();
+    }
+
+    /**
      * Creates a DOM element node from JAXB element.
      * @param element
      * @return
@@ -418,5 +453,23 @@ public class SpringBeanService {
     private <T> T createJaxbObjectFromElement(Element element) {
         LSSerializer serializer = XMLUtils.createLSSerializer();
         return (T) springBeanMarshaller.unmarshal(new StreamSource(new StringReader(serializer.writeToString(element))));
+    }
+
+    /**
+     * Sets the springBeanMarshaller property.
+     *
+     * @param springBeanMarshaller
+     */
+    public void setSpringBeanMarshaller(SpringBeanMarshaller springBeanMarshaller) {
+        this.springBeanMarshaller = springBeanMarshaller;
+    }
+
+    /**
+     * Sets the projectService property.
+     *
+     * @param projectService
+     */
+    public void setProjectService(ProjectService projectService) {
+        this.projectService = projectService;
     }
 }

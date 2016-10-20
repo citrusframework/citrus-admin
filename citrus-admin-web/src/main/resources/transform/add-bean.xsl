@@ -20,9 +20,8 @@
   <xsl:param name="bean_content" />
 
   <xsl:template name="add-bean">
-    <xsl:text>
-      </xsl:text><xsl:value-of select="$bean_content"/><xsl:text>
-    </xsl:text>
+    <xsl:value-of select="$bean_content"/><xsl:text>
+</xsl:text>
   </xsl:template>
 
   <xsl:template name="update-bean"></xsl:template>

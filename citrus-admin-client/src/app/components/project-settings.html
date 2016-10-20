@@ -130,6 +130,13 @@
         </div>
 
         <div class="form-group">
+          <label class="col-sm-2 control-label">Tab size <em>*</em></label>
+          <div class="col-sm-2">
+            <input [(ngModel)]="project.settings.tabSize" type="text" class="form-control"/>
+          </div>
+        </div>
+
+        <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
           </div>

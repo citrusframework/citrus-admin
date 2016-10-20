@@ -26,9 +26,9 @@
 &lt;<xsl:value-of select="name(.)"/><xsl:call-template name="namespaces"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/><xsl:call-template name="add-bean"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:when test="@id = $bean_id"><xsl:call-template name="update-bean"/></xsl:when>
       <xsl:when test="@name = $bean_id"><xsl:call-template name="update-bean"/></xsl:when>
-      <xsl:when test="child::*">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
-      <xsl:when test="text()">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>&gt;<xsl:value-of select="text()"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
-      <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>/&gt;</xsl:otherwise>
+      <xsl:when test="child::*">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
+      <xsl:when test="text()">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:value-of select="text()"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
+      <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>/&gt;</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   
@@ -45,6 +45,15 @@
         </xsl:choose>
       </xsl:if>
     </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="element-namespaces">
+    <xsl:if test="not(parent::node()/namespace::*[. = namespace-uri(current())])">
+      <xsl:choose>
+        <xsl:when test="contains(name(.), ':')"><xsl:text> </xsl:text>xmlns:<xsl:value-of select="substring-before(name(.), ':')"/>=&quot;<xsl:value-of select="namespace-uri(.)"/>&quot;</xsl:when>
+        <xsl:otherwise><xsl:text> </xsl:text>xmlns=&quot;<xsl:value-of select="namespace-uri(.)"/>&quot;</xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="attributes">

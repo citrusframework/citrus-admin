@@ -41,6 +41,8 @@ public class ProjectSettings {
     private boolean useConnector = true;
     private boolean connectorActive = false;
 
+    private int tabSize = 2;
+
     private BuildConfiguration build = new MavenBuildConfiguration();
 
     /**
@@ -217,5 +219,23 @@ public class ProjectSettings {
      */
     public boolean isConnectorActive() {
         return connectorActive;
+    }
+
+    /**
+     * Sets the tabSize property.
+     *
+     * @param tabSize
+     */
+    public void setTabSize(int tabSize) {
+        this.tabSize = tabSize;
+    }
+
+    /**
+     * Gets the value of the tabSize property.
+     *
+     * @return the tabSize
+     */
+    public int getTabSize() {
+        return tabSize;
     }
 }

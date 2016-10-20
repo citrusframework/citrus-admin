@@ -18,9 +18,12 @@ package com.consol.citrus.admin.service.spring;
 
 import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
 import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.util.FileUtils;
+import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -29,17 +32,23 @@ import org.testng.annotations.Test;
 import java.io.*;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 /**
  * @author Christoph Deppisch
  */
 public class SpringBeanServiceTest {
 
     private SpringBeanService springBeanConfigService = new SpringBeanService();
+    private ProjectService projectService = Mockito.mock(ProjectService.class);
 
     @BeforeMethod
     public void beforeMethod() {
-        springBeanConfigService.springBeanMarshaller = new SpringBeanMarshaller();
+        springBeanConfigService.setSpringBeanMarshaller(new SpringBeanMarshaller());
+        springBeanConfigService.setProjectService(projectService);
         springBeanConfigService.init();
+
+        when(projectService.getActiveProject()).thenReturn(new Project());
     }
 
     @Test

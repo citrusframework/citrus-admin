@@ -26,6 +26,7 @@ export class ProjectSettings {
     public citrusVersion: string;
     public useConnector: boolean;
     public connectorActive: boolean;
+    public tabSize: number;
     public build: BuildConfiguration = new BuildConfiguration();
 }
 
