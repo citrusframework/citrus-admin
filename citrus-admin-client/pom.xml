@@ -15,30 +15,39 @@
   <name>citrus-admin-client</name>
 
   <build>
-    <resources>
-      <resource>
-        <directory>${project.basedir}/src/node_modules</directory>
-        <includes>
-          <include>es6-promise/**</include>
-          <include>es6-shim/**</include>
-          <include>systemjs/**</include>
-          <include>reflect-metadata/**</include>
-          <include>rxjs/**</include>
-          <include>zone/**</include>
-          <include>angular2/**</include>
-          <include>stompjs/**</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>${project.basedir}/src/bower_components</directory>
-      </resource>
-    </resources>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>static/app/**</include>
+            <include>static/node_modules/@angular/**/bundles/*</include>
+            <include>static/node_modules/bootstrap/dist/css/bootstrap.min.css</include>
+            <include>static/node_modules/bootstrap/dist/js/bootstrap.min.js</include>
+            <include>static/node_modules/core-js/client/shim.min.js</include>
+            <include>static/node_modules/font-awesome/css/font-awesome.min.css</include>
+            <include>static/node_modules/font-awesome/fonts/**</include>
+            <include>static/node_modules/jquery/dist/jquery.min.js</include>
+            <include>static/node_modules/jquery-ui-bundle/jquery-ui.min.css</include>
+            <include>static/node_modules/jquery-ui-bundle/jquery-ui.min.js</include>
+            <include>static/node_modules/moment/moment.js</include>
+            <include>static/node_modules/reflect-metadata/Reflect.js</include>
+            <include>static/node_modules/rxjs/*.js</include>
+            <include>static/node_modules/rxjs/**/*.js</include>
+            <include>static/node_modules/stompjs/lib/stomp.js</include>
+            <include>static/node_modules/systemjs/dist/system.src.js</include>
+            <include>static/node_modules/underscore/underscore-min.js</include>
+            <include>static/node_modules/zone.js/dist/zone.js</include>
+            <include>static/*.*</include>
+          </includes>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <configuration>
-          <workingDirectory>src</workingDirectory>
+          <workingDirectory>src/main/resources/static</workingDirectory>
           <installDirectory>target</installDirectory>
         </configuration>
         <executions>
@@ -48,8 +57,8 @@
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
-              <nodeVersion>v5.9.1</nodeVersion>
-              <npmVersion>3.8.5</npmVersion>
+              <nodeVersion>v6.9.0</nodeVersion>
+              <npmVersion>3.10.8</npmVersion>
             </configuration>
           </execution>
           <execution>
@@ -67,26 +76,15 @@
               <arguments>rebuild node-sass</arguments>
             </configuration>
           </execution>
-          <execution>
-            <id>bower-build</id>
-            <goals>
-              <goal>bower</goal>
-            </goals>
-          </execution>
+          <!--
           <execution>
             <id>gulp-build</id>
             <goals>
               <goal>gulp</goal>
             </goals>
           </execution>
+          -->
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <outputDirectory>${project.build.directory}/node_modules</outputDirectory>
-        </configuration>
       </plugin>
     </plugins>
   </build>

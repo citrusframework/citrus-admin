@@ -15,7 +15,6 @@ bin
 .pmd
 logs
 node_modules
-bower_components
 typings
 coverage
 **/app/**/*.js
