@@ -76,48 +76,8 @@
               <arguments>rebuild node-sass</arguments>
             </configuration>
           </execution>
-          <!--
-          <execution>
-            <id>gulp-build</id>
-            <goals>
-              <goal>gulp</goal>
-            </goals>
-          </execution>
-          -->
         </executions>
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>gulp-watch</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <configuration>
-              <arguments>watch</arguments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jasmine-server</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <configuration>
-              <arguments>test</arguments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 </project>
