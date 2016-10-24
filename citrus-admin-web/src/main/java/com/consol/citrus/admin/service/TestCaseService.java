@@ -29,11 +29,11 @@ import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.instrument.classloading.ShadowingClassLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -359,7 +359,7 @@ public class TestCaseService {
             try {
                 FileUtils.setSimulationMode(true);
                 ClassLoader classLoader = getTestClassLoader(project);
-                Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
+                Class<?> testClass = new ShadowingClassLoader(classLoader).loadClass(detail.getPackageName() + "." + detail.getClassName());
 
                 if (TestSimulator.class.isAssignableFrom(testClass)) {
                     TestSimulator testInstance = (TestSimulator) testClass.newInstance();
@@ -403,7 +403,7 @@ public class TestCaseService {
         File[] mavenDependencies = Maven.configureResolver()
                 .workOffline()
                 .loadPomFromFile(project.getMavenPomFile())
-                .importDependencies(ScopeType.COMPILE, ScopeType.TEST)
+                .importRuntimeAndTestDependencies()
                 .resolve()
                 .withTransitivity()
                 .asFile();

@@ -4,6 +4,8 @@ import {TestService} from "../service/test.service";
 import {Alert} from "../model/alert";
 import {AlertService} from "../service/alert.service";
 
+declare var jQuery:any;
+
 @Component({
     selector: "test-detail",
     templateUrl: 'app/components/test-detail.html'
@@ -30,7 +32,12 @@ export class TestDetailComponent implements OnChanges {
         this._testService.getTestDetail(this.test)
             .subscribe(
                 detail => this.detail = detail,
-                error => this.notifyError(<any>error));
+                error => {
+                    this.notifyError(<any>error);
+
+                    // close tab as error usually makes it unusable
+                    jQuery('li.active > button.close').click();
+                });
     }
 
     notifyError(error: any) {

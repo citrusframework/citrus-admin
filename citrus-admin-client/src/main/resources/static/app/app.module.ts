@@ -36,6 +36,7 @@ import { Pills, Pill } from './components/util/pills';
 import { SidebarMenu, MenuItem } from './components/util/sidebar';
 import { Tabs, Tab } from './components/util/tabs';
 import { AlertConsole } from './components/alert.console';
+import { AlertDialog } from './components/alert.dialog';
 import { TruncatePipe } from "./util/truncate.pipe";
 import { AlertService } from "./service/alert.service";
 import { ConfigService } from "./service/config.service";
@@ -86,6 +87,7 @@ import { TestService } from "./service/test.service";
         Tabs,
         Tab,
         AlertConsole,
+        AlertDialog,
         TruncatePipe
     ],
     providers: [
