@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.instrument.classloading.ShadowingClassLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -359,7 +358,7 @@ public class TestCaseService {
             try {
                 FileUtils.setSimulationMode(true);
                 ClassLoader classLoader = getTestClassLoader(project);
-                Class<?> testClass = new ShadowingClassLoader(classLoader).loadClass(detail.getPackageName() + "." + detail.getClassName());
+                Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
 
                 if (TestSimulator.class.isAssignableFrom(testClass)) {
                     TestSimulator testInstance = (TestSimulator) testClass.newInstance();
