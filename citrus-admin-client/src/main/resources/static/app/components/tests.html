@@ -7,7 +7,7 @@
     </div>
     <div class="col-lg-4">
       <form>
-        <autocomplete id="search-test" addon="search" placeholder="TestName" minLength="1" [items]="testNames" (selected)="onTestSelected($event)"></autocomplete>
+        <autocomplete id="search-test" addon="search" icon="file-text-o" placeholder="TestName" minLength="1" [items]="testNames" (selected)="onTestSelected($event)"></autocomplete>
       </form>
     </div>
   </div>
@@ -24,9 +24,9 @@
     <ul class="dropdown-menu">
       <li *ngIf="packages.length == 0" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
       <li *ngFor="let package of packages" role="presentation" class="dropdown-submenu pull-left">
-        <a role="menuitem" name="tests" class="clickable">{{package.name}}</a>
+        <a role="menuitem" name="tests" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
         <ul class="dropdown-menu" role="menu">
-          <li *ngFor="let test of package.tests" role="presentation"><a role="menuitem" (click)="open(test)" name="{{test.name}}" class="clickable">{{test.name}}</a></li>
+          <li *ngFor="let test of package.tests" role="presentation"><a role="menuitem" (click)="open(test)" name="{{test.name}}" class="clickable"><i class="fa fa-file-text-o"></i> {{test.name  | truncate:40}}</a></li>
         </ul>
       </li>
     </ul>
@@ -46,16 +46,7 @@
        dialog-id="dialog-list-tests"
        dialog-title="List of tests"
        dialog-confirm="no">
-    <div *ngIf="packages.length == 0" class="list-group-item">
-      <h4><i class="fa fa-cubes"></i> No tests found</h4>
-    </div>
-
-    <div *ngFor="let package of packages">
-      <h4><i class="fa fa-cubes"></i> {{package.name}}</h4>
-      <ul class="list-group">
-        <li *ngFor="let test of package.tests" class="list-group-item clickable" (click)="open(test);closeTestList()"><span>{{test.name}}</span></li>
-      </ul>
-    </div>
+    <test-listgroup [groups]="packages" (selected)="open($event);closeTestList()"></test-listgroup>
   </div>
 </div>
 

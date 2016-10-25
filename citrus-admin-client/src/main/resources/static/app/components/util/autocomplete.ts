@@ -9,9 +9,9 @@ import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/cor
   <input id="{{id}}" type="text" autocomplete="off" placeholder="{{placeholder}}" class="form-control" [(ngModel)]="query" (keyup)="filter()">
   <span *ngIf="addon" class="input-group-addon clickable" (click)="showAll()"><i class="fa fa-{{addon}} fa-white"></i></span>
 </div>
-<ul class="dropdown-menu" [style.display]="suggestions?.length > 0 ? 'block': 'none'" role="menu" aria-labelledby="dLabel">
+<ul class="dropdown-menu autocomplete" [style.display]="suggestions?.length > 0 ? 'block': 'none'" role="menu" aria-labelledby="dLabel">
     <li *ngFor="let suggestion of suggestions">
-        <a name="{{suggestion}}" class="clickable" (click)="select(suggestion)">{{suggestion}}</a>
+        <a name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
     </li>
 </ul>`
 })
@@ -19,6 +19,7 @@ export class AutoComplete {
     @Output() selected = new EventEmitter(true);
 
     @Input() id: string;
+    @Input() icon: string;
     @Input() placeholder: string = "";
     @Input() items: string[] = [];
     @Input() addon: string;

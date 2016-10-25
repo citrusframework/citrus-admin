@@ -23,6 +23,7 @@ import { TestDetailComponent } from './components/test.detail.component';
 import { TestExecuteComponent } from './components/test.execute.component';
 import { TestMessageComponent } from './components/test.message.component';
 import { TestProgressComponent } from './components/test.progress.component';
+import { TestListGroupComponent } from './components/test.listgroup.component';
 import { TestsComponent } from './components/tests.component';
 import { TestActionComponent } from './components/design/test.action.component';
 import { TestContainerComponent } from './components/design/test.container.component';
@@ -72,6 +73,7 @@ import { TestService } from "./service/test.service";
         TestExecuteComponent,
         TestMessageComponent,
         TestProgressComponent,
+        TestListGroupComponent,
         TestsComponent,
         TestActionComponent,
         TestContainerComponent,

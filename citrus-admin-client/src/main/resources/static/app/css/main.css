@@ -528,6 +528,21 @@ i.channel {
 
 /** List groups **/
 
+.group-heading {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fafafa;
+    margin-bottom: 2px;
+}
+
+.group-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+
 .list-group {
     margin-top: 5px;
     margin-bottom: 10px;
@@ -542,6 +557,12 @@ i.channel {
 }
 
 /** Drop Down Menu **/
+
+.dropdown-menu.autocomplete {
+    max-height: 650px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
 
 .dropdown-submenu{
     position: relative;
