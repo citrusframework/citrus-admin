@@ -20,17 +20,17 @@
       <h2><i class="fa fa-wrench"></i> Configuration</h2>
       <p>Citrus configuration items:</p>
       <ul class="overview">
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=endpoints">Endpoints</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=schema-repository">Schema Definitions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=function-library">Functions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=validation-matcher">Validation Matcher</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=data-dictionary">Data dictionaries</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=namespace-context">Namespaces</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=message-validators" disabled="disabled">Message Validators</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a href="#/config?show=global-variables">Global Variables</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/endpoints">Endpoints</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/schema-repository">Schema Definitions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/function-library">Functions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/validation-matcher">Validation Matcher</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/data-dictionary">Data dictionaries</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/namespace-context">Namespaces</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/message-validators" disabled="disabled">Message Validators</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/global-variables">Global Variables</a></li>
       </ul>
       <br/>
-      <a class="btn btn-default" href="#/config" title="Show configuration page">Show configurations</a>
+      <a class="btn btn-default" href="#/configuration" title="Show configuration page">Show configurations</a>
     </div>
 
     <div class="col-lg-4">
@@ -41,11 +41,11 @@
         <li *ngFor="let testGroup of latestTests">
           <div *ngIf="testGroup.tests.length == 1 && testGroup.name == testGroup.tests[0].name">
             <i class="fa fa-file-text-o"></i>
-            <a href="#/tests/{{testGroup.tests[0].name}}" title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:50}}</a>
+            <a href="#/tests/{{testGroup.tests[0].name}}" title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</a>
           </div>
           <div *ngIf="testGroup.tests.length > 1 || testGroup.name != testGroup.tests[0].name">
             <i class="fa fa-file-text-o"></i>
-            <span title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:50}}</span>
+            <span title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</span>
             <ul class="overview">
               <li *ngFor="let test of testGroup.tests">
                 <i class="fa fa-caret-right"></i>
