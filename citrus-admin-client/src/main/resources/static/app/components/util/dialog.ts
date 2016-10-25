@@ -10,7 +10,7 @@ declare var jQuery:any;
     template: `<div id="{{name}}" class="modal fade">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">
+      <div *ngIf="title" class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h3 class="modal-title">{{title}}</h3>
       </div>
@@ -30,7 +30,7 @@ export class Dialog {
     @Output() closed = new EventEmitter(true);
 
     @Input("dialog-id") name: string;
-    @Input("dialog-title") title: string = "Dialog";
+    @Input("dialog-title") title: string;
     @Input("dialog-close") showClose: string = "yes";
     @Input("dialog-confirm") showConfirm: string = "yes";
 

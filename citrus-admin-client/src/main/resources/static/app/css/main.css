@@ -77,6 +77,25 @@ ul.overview li {
     text-align: center;
 }
 
+/** Modal dialog **/
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 600px;
+        margin: 150px auto;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-lg {
+        width: 900px;
+    }
+}
+
+.modal-backdrop {
+    background-color: #ccc;
+}
+
 /** Code editor **/
 
 .code-editor {

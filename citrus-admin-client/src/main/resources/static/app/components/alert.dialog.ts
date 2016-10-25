@@ -7,7 +7,7 @@ declare var _:any;
 
 @Component({
     selector: 'div.alert-dialog',
-    template: `<div class="dialog" dialog-id="alert-dialog" dialog-title="Alert" dialog-close="no">
+    template: `<div class="dialog" dialog-id="alert-dialog" dialog-close="no">
     <h3>Sorry! Something happend while processing your request</h3>
     <div class="alert alert-{{alert?.type}}" role="alert">
         <strong><i class="fa {{alert?.type}}"></i>&nbsp;{{alert?.type}}:</strong>&nbsp;<span [textContent]="alert?.message"></span>&nbsp;<a *ngIf="alert?.link" class="alert-link" href="{{alert?.link.url}}">{{alert?.link.name}}</a>
@@ -15,6 +15,8 @@ declare var _:any;
 </div>`
 })
 export class AlertDialog {
+
+    @Input("errors-only") errorsOnly: boolean = true;
 
     private alert: Alert;
     private addSubscription: any;
@@ -25,7 +27,11 @@ export class AlertDialog {
     ngOnInit() {
         this.addSubscription = this._alertService.alertAdd$.subscribe(
             alert => {
-                if (alert.type == 'danger') {
+                if (this.errorsOnly) {
+                    if (alert.type == 'danger') {
+                        this.showAlert(alert);
+                    }
+                } else {
                     this.showAlert(alert);
                 }
             });
