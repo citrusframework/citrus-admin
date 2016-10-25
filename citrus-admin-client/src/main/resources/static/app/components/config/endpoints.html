@@ -34,7 +34,7 @@
     <label class="col-sm-2 control-label">{{property.displayName}}</label>
     <div class="col-sm-10">
       <div *ngIf="property.optionKey" class="input-group">
-        <input [(ngModel)]="property.value" class="form-control" type="text" name="propertyValiue"/>
+        <input [(ngModel)]="property.value" class="form-control" type="text" name="{{property.displayName}}"/>
         <div class="btn-group input-group-btn">
           <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
             <i class="fa fa-search"></i>
@@ -48,7 +48,7 @@
         <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
       </select>
 
-      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control"  name="propertyValueInput"/>
+      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control"  name="{{property.displayName}}"/>
     </div>
   </div>
 
@@ -81,7 +81,7 @@
     <label class="col-sm-2 control-label">{{property.displayName}}</label>
     <div class="col-sm-10">
       <div *ngIf="property.optionKey" class="input-group">
-        <input [(ngModel)]="property.value" class="form-control" type="text" name="propertyValueInput"/>
+        <input [(ngModel)]="property.value" class="form-control" type="text" name="{{property.displayName}}"/>
         <div class="btn-group input-group-btn">
           <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
             <i class="fa fa-search"></i>
@@ -91,11 +91,11 @@
         </div>
       </div>
 
-      <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" name="propertyValueSelect">
+      <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" name="{{property.displayName}}">
         <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
       </select>
 
-      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control" name="propertyValueInput"/>
+      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control" name="{{property.displayName}}"/>
     </div>
   </div>
 
