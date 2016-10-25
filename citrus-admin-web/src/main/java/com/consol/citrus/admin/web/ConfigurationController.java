@@ -25,6 +25,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -129,7 +130,14 @@ public class ConfigurationController {
     @RequestMapping(value = "/schema", method = {RequestMethod.GET})
     @ResponseBody
     public List<SchemaModel> listSchemas() {
-        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SchemaModel.class);
+        List<SchemaModel> schemas = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SchemaModel.class);
+        for (int i = 0; i < schemas.size(); i++) {
+            if (!StringUtils.hasText(schemas.get(i).getId())) {
+                schemas.get(i).setId("schema" + (i + 1));
+            }
+        }
+
+        return schemas;
     }
 
     @RequestMapping(value = "/schema/{id}", method = {RequestMethod.GET})
