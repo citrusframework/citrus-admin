@@ -43,7 +43,6 @@ public class WebSocketProcessListener implements ProcessListener {
 
     @Override
     public void onProcessActivity(String processId, String output) {
-
         // first check if we have a pending message data event to handle
         if (messageEvent != null) {
             if (isProcessOutputLine(output)) {
@@ -63,12 +62,9 @@ public class WebSocketProcessListener implements ProcessListener {
         } else if (output.contains("TEST FAILED")) {
             messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
         } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
-            String[] progress = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1)).split("/");
-            long progressValue = Math.round((Double.valueOf(progress[0]) / Double.valueOf(progress[1])) * 100);
-
+            String actionIndex = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1));
             JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,
-                    "TEST ACTION " + progress[0] + "/" + progress[1]);
-            event.put("progress", String.valueOf(progressValue));
+                    "TEST ACTION " + actionIndex.trim());
             messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, event);
         } else {
             handleMessageEvent(processId, output);
