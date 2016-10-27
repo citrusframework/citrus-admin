@@ -11,7 +11,8 @@ import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/cor
 </div>
 <ul class="dropdown-menu autocomplete" [style.display]="suggestions?.length > 0 ? 'block': 'none'" role="menu" aria-labelledby="dLabel">
     <li *ngFor="let suggestion of suggestions">
-        <a name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
+        <a *ngIf="suggestion == 'No elements found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> 
+        <a *ngIf="suggestion != 'No elements found'" name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
     </li>
 </ul>`
 })
@@ -40,6 +41,10 @@ export class AutoComplete {
             this.suggestions = this.items.filter(item => {
                 return substrRegex.test(item);
             } );
+
+            if (this.suggestions.length == 0) {
+                this.suggestions = [ "No elements found" ];
+            }
         } else {
             this.suggestions = [];
         }
