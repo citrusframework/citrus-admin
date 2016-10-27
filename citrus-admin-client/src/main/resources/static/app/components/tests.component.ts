@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {Tabs, Tab} from "./util/tabs";
+import {ActivatedRoute, Router} from '@angular/router';
+import {Tab} from "./util/tabs";
 import {TestGroup, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {Alert} from "../model/alert";
@@ -19,7 +19,8 @@ export class TestsComponent implements OnInit {
 
     constructor(private _testService: TestService,
                 private _alertService: AlertService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _router: Router) {
         this.packages = [];
         this.tests = [];
         this.testNames = [];
@@ -66,6 +67,7 @@ export class TestsComponent implements OnInit {
         var test = this.openTests.find(test => test.name === tab.id);
         if (test) {
             this.activeTest = test;
+            this._router.navigate(['/tests', test.name]);
         }
     }
 
@@ -83,9 +85,13 @@ export class TestsComponent implements OnInit {
 
     open(test: Test) {
         if (this.openTests.indexOf(test) < 0) {
-            this.activeTest = test;
             this.openTests.push(test);
+        } else {
+            jQuery('ul.nav-tabs').find("a[name = '" + test.name + "']").tab('show');
         }
+
+        this._router.navigate(['/tests', test.name]);
+        this.activeTest = test;
     }
 
     handleKeyUp(event) {
