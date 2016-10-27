@@ -29,7 +29,7 @@ export class TestListGroupComponent {
     activeGroup: string = "";
 
     activate(groupName : string) {
-        if (this.activeGroup.length > 1 && this.activeGroup == groupName) {
+        if (this.groups.length > 1 && this.activeGroup == groupName) {
             this.activeGroup = "";
         } else {
             this.activeGroup = groupName;
@@ -37,7 +37,7 @@ export class TestListGroupComponent {
     }
 
     isActive(groupName: string) {
-        return this.activeGroup.length == 1 || this.activeGroup == groupName;
+        return this.groups.length == 1 || this.activeGroup == groupName;
     }
 
     open(test: Test) {
