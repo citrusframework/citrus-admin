@@ -10,10 +10,10 @@ import { ConfigurationComponent }   from './components/configuration.component';
 import { TestsComponent }   from './components/tests.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'settings', component: ProjectSettingsComponent},
-    { path: 'settings/:activeTab', component: ProjectSettingsComponent},
+    { path: '', redirectTo: '/project', pathMatch: 'full' },
+    { path: 'project', component: DashboardComponent },
+    { path: 'project/settings', component: ProjectSettingsComponent},
+    { path: 'project/settings/:activeTab', component: ProjectSettingsComponent},
     { path: 'configuration', component: ConfigurationComponent},
     { path: 'configuration/:activeTab', component: ConfigurationComponent},
     { path: 'tests', component: TestsComponent},

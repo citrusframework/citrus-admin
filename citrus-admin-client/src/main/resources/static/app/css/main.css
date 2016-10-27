@@ -186,6 +186,7 @@ pre.logger {
     box-shadow: none;
 }
 
+.navbar .nav > li > a.active,
 .navbar .nav > li > a:hover {
     color: #ffffff;
     background-color: rgba(255,255,255,0.2);
