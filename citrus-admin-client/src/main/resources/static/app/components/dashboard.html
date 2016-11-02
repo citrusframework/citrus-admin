@@ -62,16 +62,16 @@
       <h2><i class="fa fa-tasks"></i> Test results</h2>
       <p>
         <b>Date:</b> {{ testReport?.executionDate | date:"MM/dd/yyyy" }}<br/>
-        <b>Duration:</b> {{testReport?.duration}}<br/>
+        <b>Duration:</b> {{testReport?.duration / 1000 }} s<br/>
         <b>Suite Name:</b> {{testReport?.suiteName}}
       </p>
       <p>
-        <span class="badge badge-success" style="width:75px; text-align:right;"><i class="fa fa-check">&nbsp;<b>Passed:</b></i></span>&nbsp;&nbsp;{{testReport?.passed}}<br/>
-        <span class="badge badge-danger" style="width:75px; text-align:right;"><i class="fa fa-times">&nbsp;&nbsp;&nbsp;<b>Failed:</b></i></span>&nbsp;&nbsp;{{testReport?.failed}}<br/>
-        <span class="badge badge-warning"><i class="fa fa-minus">&nbsp;&nbsp;<b>Skipped:</b></i></span>&nbsp;&nbsp;{{testReport?.skipped}}<br/>
+        Passed:&nbsp; <span class="badge badge-success test-result"><i class="fa fa-check"></i>&nbsp;&nbsp;{{testReport?.passed}} | {{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span><br/>
+        Failed:&nbsp;&nbsp;&nbsp; <span class="badge badge-danger test-result"><i class="fa fa-times"></i>&nbsp;&nbsp;{{testReport?.failed}} | {{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span><br/>
+        Skipped: <span class="badge badge-warning test-result"><i class="fa fa-minus"></i>&nbsp;&nbsp;{{testReport?.skipped}} | {{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span><br/>
       </p>
-      <p><span><b>Total Tests:</b> {{testReport?.total}}</span></p>
-      <a class="btn btn-default" href="#/stats" title="Show test reports">Show test results</a>
+      <p><span><b>Total:</b> {{testReport?.total}}</span></p>
+      <a class="btn btn-default" href="#/report" title="Show test reports">Show test results</a>
     </div>
   </div>
 </div>

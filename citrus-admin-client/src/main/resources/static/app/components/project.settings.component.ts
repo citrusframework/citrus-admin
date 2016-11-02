@@ -2,12 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {Project} from "../model/project";
 import {ProjectService} from "../service/project.service";
-import {Dialog} from "./util/dialog";
-import {Pills, Pill} from "./util/pills";
 import {BuildProperty} from "../model/build.property";
 import {AlertService} from "../service/alert.service";
 import {Alert} from "../model/alert";
-import {AlertConsole} from "./alert.console";
 
 declare var jQuery:any;
 declare var _:any;

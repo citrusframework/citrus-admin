@@ -444,6 +444,10 @@ pre.logger {
     background-color: #b06db8;
 }
 
+.badge-primary {
+    background-color: #0096D6;
+}
+
 .badge-success {
     background-color: #5cb85c;
 }
@@ -454,6 +458,11 @@ pre.logger {
 
 .badge-danger {
     background-color: #d9534f;
+}
+
+.badge.test-result {
+    min-width: 7em;
+    text-align: left;
 }
 
 /** Message */

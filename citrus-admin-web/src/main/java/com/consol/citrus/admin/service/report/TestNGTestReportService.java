@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service.report;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -26,11 +25,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
+import org.springframework.util.xml.DomUtils;
+import org.w3c.dom.*;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -51,6 +52,7 @@ public class TestNGTestReportService implements TestReportService {
         if (hasTestResults(activeProject)) {
             try {
                 Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
+                report.setProjectName(activeProject.getName());
                 report.setSuiteName(XPathUtils.evaluateAsString(testResults, "/testng-results/suite[1]/@name", null));
                 report.setDuration(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/suite[1]/@duration-ms", null)));
 
@@ -64,6 +66,30 @@ public class TestNGTestReportService implements TestReportService {
                 report.setFailed(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@failed", null)));
                 report.setSkipped(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@skipped", null)));
                 report.setTotal(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@total", null)));
+
+                NodeList testClasses = XPathUtils.evaluateAsNodeList(testResults, "testng-results/suite[1]/test/class", null);
+                for (int i = 0; i < testClasses.getLength(); i++) {
+                    Element testClass = (Element) testClasses.item(i);
+
+                    List<Element> testMethods = DomUtils.getChildElementsByTagName(testClass, "test-method");
+                    for (Element testMethod : testMethods) {
+                        if (!testMethod.hasAttribute("is-config") || testMethod.getAttribute("is-config").equals("false")) {
+                            TestResult result = new TestResult();
+                            Test test = new Test();
+
+                            test.setClassName(testClass.getAttribute("name"));
+                            test.setMethodName(testMethod.getAttribute("name"));
+                            test.setPackageName(test.getClassName().substring(0, test.getClassName().lastIndexOf('.')));
+                            test.setName(test.getClassName().substring(test.getClassName().lastIndexOf('.') + 1) + "." + test.getMethodName());
+                            test.setType(TestType.JAVA);
+
+                            result.setTest(test);
+                            result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
+                            report.getResults().add(result);
+                        }
+                    }
+                }
+
             } catch (IOException e) {
                 log.error("Failed to read test results file", e);
             }

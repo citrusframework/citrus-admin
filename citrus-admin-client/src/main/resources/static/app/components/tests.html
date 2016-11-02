@@ -46,7 +46,7 @@
        dialog-id="dialog-list-tests"
        dialog-title="List of tests"
        dialog-confirm="no">
-    <test-listgroup [groups]="packages" (selected)="open($event);closeTestList()"></test-listgroup>
+    <test-listgroup [test-groups]="packages" (selected)="open($event);closeTestList()"></test-listgroup>
   </div>
 </div>
 

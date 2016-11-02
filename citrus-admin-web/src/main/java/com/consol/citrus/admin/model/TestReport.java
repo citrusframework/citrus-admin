@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.model;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -24,6 +24,7 @@ import java.util.Date;
 public class TestReport {
 
     private Date executionDate = new Date();
+    private String projectName;
     private String suiteName;
     private long passed;
     private long skipped;
@@ -33,6 +34,24 @@ public class TestReport {
     private long duration;
 
     private String groups;
+
+    private List<TestResult> results = new ArrayList<>();
+
+    /**
+     * Sets the project name.
+     * @param projectName
+     */
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    /**
+     * Gets the project name.
+     * @return
+     */
+    public String getProjectName() {
+        return projectName;
+    }
 
     /**
      * Gets the execution date.
@@ -160,5 +179,21 @@ public class TestReport {
      */
     public void setGroups(String groups) {
         this.groups = groups;
+    }
+
+    /**
+     * Sets the test results.
+     * @param results
+     */
+    public void setResults(List<TestResult> results) {
+        this.results = results;
+    }
+
+    /**
+     * Gets the test results.
+     * @return
+     */
+    public List<TestResult> getResults() {
+        return results;
     }
 }

@@ -3,13 +3,13 @@ import {TestGroup, Test} from "../model/tests";
 
 @Component({
     selector: "test-listgroup",
-    template: `<div *ngIf="groups.length == 0">
+    template: `<div *ngIf="testGroups.length == 0">
   <div class="group-heading">
     <h3 class="group-title"><i class="fa fa-cubes"></i> No tests found</h3>
   </div>
 </div>
 
-<div *ngFor="let group of groups">
+<div *ngFor="let group of testGroups">
   <div (click)="activate(group.name)" class="group-heading clickable">
     <h3 class="group-title"><i class="fa fa-cubes"></i> {{group.name}} <i *ngIf="isActive(group.name)" class="fa fa-caret-down pull-right"></i></h3>
   </div>
@@ -22,14 +22,14 @@ import {TestGroup, Test} from "../model/tests";
 })
 export class TestListGroupComponent {
 
-    @Input() groups: TestGroup[] = [];
+    @Input("test-groups") testGroups: TestGroup[] = [];
 
     @Output() selected = new EventEmitter(true);
 
     activeGroup: string = "";
 
     activate(groupName : string) {
-        if (this.groups.length > 1 && this.activeGroup == groupName) {
+        if (this.testGroups.length > 1 && this.activeGroup == groupName) {
             this.activeGroup = "";
         } else {
             this.activeGroup = groupName;
@@ -37,7 +37,7 @@ export class TestListGroupComponent {
     }
 
     isActive(groupName: string) {
-        return this.groups.length == 1 || this.activeGroup == groupName;
+        return this.testGroups.length == 1 || this.activeGroup == groupName;
     }
 
     open(test: Test) {

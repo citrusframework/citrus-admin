@@ -8,6 +8,7 @@ import { ComingComponent }   from './components/coming.component';
 import { ProjectSettingsComponent }   from './components/project.settings.component';
 import { ConfigurationComponent }   from './components/configuration.component';
 import { TestsComponent }   from './components/tests.component';
+import { TestReportComponent } from "./components/test.report.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/project', pathMatch: 'full' },
@@ -18,7 +19,7 @@ const routes: Routes = [
     { path: 'configuration/:activeTab', component: ConfigurationComponent},
     { path: 'tests', component: TestsComponent},
     { path: 'tests/:name', component: TestsComponent},
-    { path: 'stats', component: ComingComponent},
+    { path: 'report', component: TestReportComponent},
     { path: 'new', component: ComingComponent},
     { path: 'about', component: ComingComponent },
     { path: 'log', component: LogComponent },
