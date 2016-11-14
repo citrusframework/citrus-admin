@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.boot.version>1.3.8.RELEASE</spring.boot.version>
-    <citrus.version>2.6.2-SNAPSHOT</citrus.version>
+    <citrus.version>2.6.2</citrus.version>
     <slf4j.version>1.7.21</slf4j.version>
     <testng.version>6.9.10</testng.version>
     <skip.gpg>false</skip.gpg>
