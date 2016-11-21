@@ -25,7 +25,6 @@
       <xsl:when test="local-name(.) = 'beans'">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;<xsl:value-of select="name(.)"/><xsl:call-template name="namespaces"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/><xsl:call-template name="add-bean"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:when test="@id = $bean_id"><xsl:call-template name="update-bean"/></xsl:when>
-      <xsl:when test="@name = $bean_id"><xsl:call-template name="update-bean"/></xsl:when>
       <xsl:when test="child::*">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:when test="text()">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:value-of select="text()"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>/&gt;</xsl:otherwise>

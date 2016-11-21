@@ -18,4 +18,8 @@
     
     <bean name="deleteMeName" class="com.consol.citrus.SampleClass"/>
     <bean name="preserveMeName" class="com.consol.citrus.SampleClass"/>
+
+    <bean id="someBean" class="com.consol.citrus.SampleClass">
+        <property name="deleteMe" value="some"/>
+    </bean>
 </beans>

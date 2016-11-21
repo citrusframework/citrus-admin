@@ -49,7 +49,7 @@ public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (added == null && (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
+        if (added == null && (isEqualById(element, elementId))) {
             if (element.getNextSibling() != null) {
                 added = element.getParentNode().insertBefore(element.getOwnerDocument().importNode(beanDefinition, true), element.getNextSibling());
             } else {

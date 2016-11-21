@@ -87,7 +87,8 @@ public class SpringBeanServiceTest {
         Assert.assertTrue(result.contains("name=\"preserveMeName\""), "Failed to validate " + result);
 
         Assert.assertFalse(result.contains("<bean id=\"deleteMe\""), "Failed to validate " + result);
-        Assert.assertFalse(result.contains("<bean name=\"deleteMeName\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<bean name=\"deleteMeName\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<property name=\"deleteMe\" value=\"some\"/>"), "Failed to validate " + result);
     }
 
     @Test
@@ -101,6 +102,7 @@ public class SpringBeanServiceTest {
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
         Assert.assertTrue(result.contains("<citrus:schema id=\"helloSchema\" location=\"newLocation\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<property name=\"helloSchema\" value=\"some\"/>"), "Failed to validate " + result);
     }
 
     @Test

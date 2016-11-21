@@ -14,4 +14,8 @@
     <citrus:schema id="fooSchema"
                    location="classpath:com/consol/citrus/demo/foo.xsd" />
 
+    <bean id="someBean" class="com.consol.citrus.SampleClass">
+        <property name="helloSchema" value="some"/>
+    </bean>
+
 </beans>
