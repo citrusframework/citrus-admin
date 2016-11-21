@@ -36,6 +36,8 @@ public class Application {
     public static final String JAVA_SRC_DIRECTORY = "java.source.directory";
     public static final String XML_SRC_DIRECTORY = "xml.source.directory";
 
+    public static final String MVN_HOME_DIRECTORY = "maven.home.directory";
+
     /**
      * Gets the root directory from system property. By default user.home system
      * property setting is used as root.

@@ -16,13 +16,17 @@
 
 package com.consol.citrus.admin.model.build.maven;
 
+import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.model.build.AbstractBuildConfiguration;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  */
 public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
+    private final String mavenHome;
     private String testPlugin = "maven-failsafe";
     private String command;
     private String profiles = "";
@@ -30,6 +34,26 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
 
     public MavenBuildConfiguration() {
         super("maven");
+
+        if (System.getProperty(Application.MVN_HOME_DIRECTORY) != null) {
+            mavenHome = System.getProperty(Application.MVN_HOME_DIRECTORY);
+        } else if (StringUtils.hasText(System.getenv("MAVEN_HOME"))) {
+            mavenHome = System.getenv("MAVEN_HOME");
+        } else if (StringUtils.hasText(System.getenv("M2_HOME"))) {
+            mavenHome = System.getenv("M2_HOME");
+        } else {
+            mavenHome = "";
+        }
+    }
+
+    /**
+     * Gets the value of the mavenHome property.
+     *
+     * @return the mavenHome
+     */
+    @JsonIgnore
+    public String getMavenHome() {
+        return mavenHome;
     }
 
     /**

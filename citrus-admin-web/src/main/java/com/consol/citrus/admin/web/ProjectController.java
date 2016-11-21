@@ -39,6 +39,12 @@ public class ProjectController {
         return projectService.getActiveProject();
     }
 
+    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProjectHome() {
+        return projectService.getActiveProject().getProjectHome();
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity open(@RequestParam("projecthome") String projecthome) {
         projectService.load(projecthome);

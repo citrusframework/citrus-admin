@@ -33,47 +33,56 @@ manually in prior to opening the project.
 
 There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:
 
-```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-3.jar```
+```
+java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
+-Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-3.jar
+```
 
 You can set the following system properties:
 
-| Property                | Description                           |
-| ----------------------- | ------------------------------------- |
-| project.home            | Preselect project on startup          |
-| root.directory          | System root as base of all projects (default: user home directory) |
-| java.source.directory   | Java sources directory (default: *src/test/java*)         |
-| xml.source.directory    | XML test sources directory (default: *src/test/resources*) |
+| Property                   | Description                           |
+| -------------------------- | ------------------------------------- |
+| server.port                | Web server port                       |
+| project.home               | Preselect project on startup          |
+| root.directory             | System root as base of all projects (default: user home directory) |
+| java.source.directory      | Java sources directory (default: *src/test/java*)         |
+| xml.source.directory       | XML test sources directory (default: *src/test/resources*) |
 | spring.application.context | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
+| maven.home.directory       | Path to Maven home that should be used in admin UI (when not set environment variable MAVEN_HOME or M2_HOME is used as default) |
 
 You can also use Spring boot properties, e.g. a custom server port:
 
-```java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-3.jar```
+```
+java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-3.jar
+```
 
 A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called **citrus-project.json**. When you open a Citrus project for the first time the administration UI creates this project settings file
 automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:
  
 ```
 {
-  "projectHome" : "~/Projects/Citrus/citrus-sample",
   "name" : "citrus-sample-project",
   "description" : "",
   "version" : "1.0.0",
-  "testCount" : 0,
   "settings" : {
-    "basePackage" : "com.consol.citrus",
-    "citrusVersion" : "2.6",
-    "springApplicationContext" : "src/it/resources/citrus-context.xml",
-    "javaSrcDirectory" : "src/it/java/",
-    "xmlSrcDirectory" : "src/it/resources/",
+    "basePackage" : "com.consol.citrus.samples",
+    "citrusVersion" : "2.6.2",
+    "springApplicationContext" : "src/test/resources/citrus-context.xml",
+    "javaSrcDirectory" : "src/test/java/",
+    "xmlSrcDirectory" : "src/test/resources/",
     "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
     "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
+    "useConnector" : true,
+    "connectorActive" : true,
+    "tabSize" : 2,
     "build" : {
       "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
       "type" : "maven",
       "properties" : [ ],
       "testPlugin" : "maven-failsafe",
-      "profiles" : null
+      "command" : null,
+      "profiles" : "",
+      "useClean" : false
     }
   }
 }

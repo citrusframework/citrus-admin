@@ -60,8 +60,12 @@ public class MavenCommand extends AbstractExecuteCommand {
      */
     protected String buildCommand() {
         StringBuilder builder = new StringBuilder();
+        if (StringUtils.hasText(buildConfiguration.getMavenHome())) {
+            builder.append(buildConfiguration.getMavenHome() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + MVN);
+        } else {
+            builder.append(MVN);
+        }
 
-        builder.append(MVN);
         builder.append(getLifeCycleCommand());
 
         for (BuildProperty propertyEntry: getSystemProperties()) {
