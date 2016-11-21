@@ -109,7 +109,7 @@ pre {
 pre.logger {
     height: 700px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     font-size: 12px;
 }
 
