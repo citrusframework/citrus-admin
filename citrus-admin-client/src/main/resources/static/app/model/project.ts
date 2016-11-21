@@ -6,7 +6,6 @@ export class Project {
     constructor() {}
 
     public name: string;
-    public projectHome: string;
     public version: string;
     public description: string;
 

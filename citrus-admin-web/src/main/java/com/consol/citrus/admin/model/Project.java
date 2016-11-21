@@ -29,7 +29,7 @@ import java.io.IOException;
  */
 public class Project {
 
-    private String projectHome;
+    private final String projectHome;
     private String name;
     private String description;
     private String version = "1.0.0";
@@ -44,6 +44,7 @@ public class Project {
      */
     public Project() {
         super();
+        this.projectHome = "";
     }
 
     /**
@@ -148,6 +149,16 @@ public class Project {
     }
 
     /**
+     * Gets the value of the projectHome property.
+     *
+     * @return the projectHome
+     */
+    @JsonIgnore
+    public String getProjectHome() {
+        return projectHome;
+    }
+
+    /**
      * Gets the absolute pathname string
      * @param relativePath
      * @return
@@ -212,15 +223,6 @@ public class Project {
      */
     public void setVersion(String version) {
         this.version = version;
-    }
-
-    /**
-     * Gets the value of the projectHome property.
-     *
-     * @return the projectHome
-     */
-    public String getProjectHome() {
-        return projectHome;
     }
 
     /**
