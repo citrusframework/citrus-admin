@@ -42,7 +42,7 @@ public class MailServerConverter extends AbstractEndpointConverter<MailServerMod
                 .options(TRUE, FALSE));
         endpointModel.add(property("autoAccept", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointModel.add(property("splitMultipart", model, TRUE)
+        endpointModel.add(property("splitMultipart", model, FALSE)
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
