@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 @Test
 public class FooTest extends TestNGCitrusTestDesigner {
 
+    //@CitrusXmlTest(name = "DisabledXmlTest")
     @CitrusXmlTest
     public void FooTest() {
     }

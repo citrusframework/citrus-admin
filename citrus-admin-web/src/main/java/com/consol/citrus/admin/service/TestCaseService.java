@@ -148,7 +148,7 @@ public class TestCaseService {
         try {
             String sourceCode = FileUtils.readToString(new FileSystemResource(sourceFile));
 
-            Matcher matcher = Pattern.compile("@CitrusTest").matcher(sourceCode);
+            Matcher matcher = Pattern.compile("[^/\\*]\\s@CitrusTest").matcher(sourceCode);
             while (matcher.find()) {
                 Test test = new Test();
                 test.setType(TestType.JAVA);
@@ -172,7 +172,7 @@ public class TestCaseService {
                 tests.add(test);
             }
 
-            matcher = Pattern.compile("@CitrusXmlTest").matcher(sourceCode);
+            matcher = Pattern.compile("[^/\\*]\\s@CitrusXmlTest").matcher(sourceCode);
             while (matcher.find()) {
                 Test test = new Test();
                 test.setType(TestType.XML);

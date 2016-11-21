@@ -26,13 +26,24 @@ import org.testng.annotations.Test;
 @Test
 public class CitrusJavaTest extends TestNGCitrusTestDesigner {
 
+    /** @CitrusTest(name = "DisabledTest") */
     @CitrusTest
     public void fooTest() {
         echo("Hello FooTest");
     }
 
     @CitrusTest(name = "BarJavaTest")
+    //@CitrusTest(name = "OtherName")
     public void barTest() {
         echo("Hello BarTest");
     }
+
+    //@CitrusTest(name = "AnotherDisabledTest")
+
+   /**
+    * @CitrusTest(name = "OtherDisabledTest")
+    *  public void disabledTest() {
+    *    echo("Hello BarTest");
+    * }
+    */
 }
