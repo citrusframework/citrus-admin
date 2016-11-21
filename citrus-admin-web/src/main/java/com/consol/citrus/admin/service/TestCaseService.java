@@ -66,7 +66,7 @@ public class TestCaseService {
      * @return
      */
     public List<TestGroup> getTestPackages(Project project) {
-        Map<String, TestGroup> testPackages = new HashMap<>();
+        Map<String, TestGroup> testPackages = new LinkedHashMap<>();
 
         List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
         List<Test> tests = findTests(project, sourceFiles);
@@ -179,7 +179,8 @@ public class TestCaseService {
                 test.setClassName(className);
                 test.setPackageName(packageName);
 
-                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start(), sourceCode.indexOf('{', matcher.start())));
+                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start()));
+                snippet = snippet.substring(0, snippet.indexOf('{', snippet.indexOf("publicvoid")));
                 String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
                 methodName = methodName.substring(0, methodName.indexOf("("));
                 test.setMethodName(methodName);
@@ -194,6 +195,18 @@ public class TestCaseService {
                     test.setName(explicitName);
                 } else {
                     test.setName(methodName);
+                }
+
+                if (snippet.contains("packageScan=\"")) {
+                    String packageScan = snippet.substring(snippet.indexOf("packageScan=\"") + 13);
+                    packageScan = packageScan.substring(0, packageScan.indexOf("\""));
+                    test.setPackageName(packageScan);
+                }
+
+                if (snippet.contains("packageName=\"")) {
+                    String explicitPackageName = snippet.substring(snippet.indexOf("packageName=\"") + 13);
+                    explicitPackageName = explicitPackageName.substring(0, explicitPackageName.indexOf("\""));
+                    test.setPackageName(explicitPackageName);
                 }
 
                 tests.add(test);

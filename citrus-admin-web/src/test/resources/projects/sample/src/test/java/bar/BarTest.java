@@ -29,4 +29,20 @@ public class BarTest extends TestNGCitrusTestDesigner {
     @CitrusXmlTest(name = "BarTest")
     public void barTest() {
     }
+
+    @CitrusXmlTest(name = { "Bar2Test" })
+    public void bar2Test() {
+    }
+
+    @CitrusXmlTest(name="BarPackageTest", packageName = "com.consol.citrus.bar")
+    public void barPackageTest() {
+    }
+
+    @CitrusXmlTest(packageName = "com.consol.citrus.bar")
+    public void barPackageNameTest() {
+    }
+
+    @CitrusXmlTest(packageScan = "com.consol.citrus.bar.scan")
+    public void barPackageScanTest() {
+    }
 }

@@ -54,21 +54,29 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         List<TestGroup> testPackages = testCaseService.getTestPackages(project);
 
         Assert.assertNotNull(testPackages);
-        Assert.assertEquals(testPackages.size(), 3L);
-        Assert.assertEquals(testPackages.get(0).getName(), "bar");
-        Assert.assertEquals(testPackages.get(0).getTests().size(), 1L);
+        Assert.assertEquals(testPackages.size(), 5L);
+        Assert.assertEquals(testPackages.get(0).getName(), "javadsl");
+        Assert.assertEquals(testPackages.get(0).getTests().size(), 4L);
         Assert.assertEquals(testPackages.get(1).getName(), "foo");
         Assert.assertEquals(testPackages.get(1).getTests().size(), 2L);
-        Assert.assertEquals(testPackages.get(2).getName(), "javadsl");
-        Assert.assertEquals(testPackages.get(2).getTests().size(), 4L);
+        Assert.assertEquals(testPackages.get(2).getName(), "bar");
+        Assert.assertEquals(testPackages.get(2).getTests().size(), 2L);
+        Assert.assertEquals(testPackages.get(3).getName(), "com.consol.citrus.bar");
+        Assert.assertEquals(testPackages.get(3).getTests().size(), 2L);
+        Assert.assertEquals(testPackages.get(4).getName(), "com.consol.citrus.bar.scan");
+        Assert.assertEquals(testPackages.get(4).getTests().size(), 1L);
 
-        assertTestPresent(testPackages.get(0).getTests(), "BarTest", "BarTest", "barTest");
+        assertTestPresent(testPackages.get(0).getTests(), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
+        assertTestPresent(testPackages.get(0).getTests(), "BarJavaTest", "CitrusJavaTest", "barTest");
+        assertTestPresent(testPackages.get(0).getTests(), "DataProviderJavaTest.fooProviderTest", "DataProviderJavaTest", "fooProviderTest");
+        assertTestPresent(testPackages.get(0).getTests(), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
         assertTestPresent(testPackages.get(1).getTests(), "FooTest", "FooTest", "FooTest");
         assertTestPresent(testPackages.get(1).getTests(), "WithoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest");
-        assertTestPresent(testPackages.get(2).getTests(), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
-        assertTestPresent(testPackages.get(2).getTests(), "BarJavaTest", "CitrusJavaTest", "barTest");
-        assertTestPresent(testPackages.get(2).getTests(), "DataProviderJavaTest.fooProviderTest", "DataProviderJavaTest", "fooProviderTest");
-        assertTestPresent(testPackages.get(2).getTests(), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
+        assertTestPresent(testPackages.get(2).getTests(), "BarTest", "BarTest", "barTest");
+        assertTestPresent(testPackages.get(2).getTests(), "Bar2Test", "BarTest", "bar2Test");
+        assertTestPresent(testPackages.get(3).getTests(), "BarPackageTest", "BarTest", "barPackageTest");
+        assertTestPresent(testPackages.get(3).getTests(), "barPackageNameTest", "BarTest", "barPackageNameTest");
+        assertTestPresent(testPackages.get(4).getTests(), "barPackageScanTest", "BarTest", "barPackageScanTest");
     }
 
     private void assertTestPresent(List<com.consol.citrus.admin.model.Test> tests, String name, String className, String methodName) {
