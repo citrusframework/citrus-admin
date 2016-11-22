@@ -40,6 +40,14 @@
     <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
   </div>
 
+  <div>
+    <h3>Recent projects</h3>
+    <ul class="list-group">
+      <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
+      <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
+    </ul>
+  </div>
+
   <div id="dialog-settings" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">

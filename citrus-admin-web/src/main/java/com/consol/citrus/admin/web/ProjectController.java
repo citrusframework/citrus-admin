@@ -62,6 +62,12 @@ public class ProjectController {
         return new Project().getSettings();
     }
 
+    @RequestMapping(value = "/recent", method = RequestMethod.GET)
+    @ResponseBody
+    public String[] getRecentProjects() {
+        return projectService.getRecentProjects();
+    }
+
     @RequestMapping(value = "/settings/default", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity saveProjectSettings(@RequestBody ProjectSettings settings) {

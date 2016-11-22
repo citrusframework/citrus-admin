@@ -45,8 +45,7 @@ import org.w3c.dom.Document;
 import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -59,6 +58,9 @@ public class ProjectService {
 
     /** Current project actively opened in Citrus admin */
     private Project project;
+
+    /** Holds in memory list of recently opened projects */
+    private List<String> recentlyOpened = new ArrayList<>();
 
     /** Spring bean service*/
     @Autowired
@@ -143,6 +145,13 @@ public class ProjectService {
         saveProject(project);
 
         this.project = project;
+        if (!this.recentlyOpened.contains(projectHomeDir)) {
+            if (projectHomeDir.endsWith("/")) {
+                this.recentlyOpened.add(projectHomeDir.substring(0, projectHomeDir.length() - 1));
+            } else {
+                this.recentlyOpened.add(projectHomeDir);
+            }
+        }
         System.setProperty(Application.PROJECT_HOME, projectHomeDir);
     }
 
@@ -366,5 +375,13 @@ public class ProjectService {
      */
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+
+    /**
+     * Gets the recently opened projects.
+     * @return
+     */
+    public String[] getRecentProjects() {
+        return recentlyOpened.toArray(new String[recentlyOpened.size()]);
     }
 }

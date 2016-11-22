@@ -25,4 +25,7 @@ export class ProjectSetupService {
         return this.http.post(this._serviceUrl + "/settings/default", settings);
     }
 
+    getRecentProjects() {
+        return this.http.get(this._serviceUrl + "/recent");
+    }
 }

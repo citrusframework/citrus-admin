@@ -15,6 +15,7 @@ export class SetupComponent implements OnInit {
 
     projectHome: string;
     settings: ProjectSettings = new ProjectSettings();
+    recentlyOpened: string[] = [];
     success: string;
     error: any;
 
@@ -32,6 +33,13 @@ export class SetupComponent implements OnInit {
         this._projectSetupService.getProjectHome()
             .subscribe(
                 response => this.projectHome = response.text(),
+                error => this.error = error.json());
+
+        this._projectSetupService.getRecentProjects()
+            .subscribe(
+                response => {
+                    this.recentlyOpened = response.json();
+                },
                 error => this.error = error.json());
 
         this._projectSetupService.getDefaultProjectSettings()
@@ -83,7 +91,13 @@ export class SetupComponent implements OnInit {
     }
 
     onSubmit() {
-        this._projectSetupService.openProject(this.projectHome)
+        if (this.projectHome) {
+            this.open(this.projectHome);
+        }
+    }
+
+    open(projectHome: string) {
+        this._projectSetupService.openProject(projectHome)
             .subscribe(
                 success => window.location.href = "/",
                 error => this.error = error.json());
