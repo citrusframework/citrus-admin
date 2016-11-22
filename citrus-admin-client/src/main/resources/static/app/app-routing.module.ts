@@ -1,6 +1,6 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {LocationStrategy, HashLocationStrategy} from '@angular/common';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { DashboardComponent }   from './components/dashboard.component';
 import { LogComponent }   from './components/log.component';

@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.ProjectSettings;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,15 +40,38 @@ public class ProjectController {
         return projectService.getActiveProject();
     }
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     @ResponseBody
     public String getProjectHome() {
-        return projectService.getActiveProject().getProjectHome();
+        return projectService.getActiveProject() != null ? projectService.getActiveProject().getProjectHome() : "";
+    }
+
+    @RequestMapping(value = "/settings", method = RequestMethod.GET)
+    @ResponseBody
+    public ProjectSettings getProjectSettings() {
+        if (projectService.getActiveProject() != null) {
+            return projectService.getActiveProject().getSettings();
+        }
+
+        return getDefaultProjectSettings();
+    }
+
+    @RequestMapping(value = "/settings/default", method = RequestMethod.GET)
+    @ResponseBody
+    public ProjectSettings getDefaultProjectSettings() {
+        return new Project().getSettings();
+    }
+
+    @RequestMapping(value = "/settings/default", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity saveProjectSettings(@RequestBody ProjectSettings settings) {
+        projectService.applySettings(settings);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity open(@RequestParam("projecthome") String projecthome) {
-        projectService.load(projecthome);
+    public ResponseEntity open(@RequestBody String projectHome) {
+        projectService.load(projectHome);
         return ResponseEntity.ok().build();
     }
 

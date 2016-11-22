@@ -1,21 +1,24 @@
-import {Component, AfterViewInit} from '@angular/core';
-import {NgModel} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {ProjectSetupService} from "../service/project.setup.service";
+import {ProjectSettings} from "../model/project";
 
 declare var jQuery:any;
 
 @Component({
     selector: 'setup',
-    templateUrl: 'app/components/open.project.html'
+    templateUrl: 'app/components/setup-project.html'
 })
-export class SetupComponent implements AfterViewInit {
+export class SetupComponent implements OnInit {
 
-    constructor() {
+    constructor(private _projectSetupService: ProjectSetupService) {
     }
 
-    projectHome:string;
-    error:any;
+    projectHome: string;
+    settings: ProjectSettings = new ProjectSettings();
+    success: string;
+    error: any;
 
-    ngAfterViewInit() {
+    ngOnInit() {
         jQuery('#file-tree').fileTree({
             root: '/',
             script: 'file/browse',
@@ -26,7 +29,15 @@ export class SetupComponent implements AfterViewInit {
             jQuery('li.ext_citrus').toggleClass('selected');
         });
 
-        return undefined;
+        this._projectSetupService.getProjectHome()
+            .subscribe(
+                response => this.projectHome = response.text(),
+                error => this.error = error.json());
+
+        this._projectSetupService.getDefaultProjectSettings()
+            .subscribe(
+                response => this.settings = response.json(),
+                error => this.error = error.json());
     }
 
     browse() {
@@ -35,6 +46,22 @@ export class SetupComponent implements AfterViewInit {
 
     close() {
         jQuery('#dialog-file-tree').modal('hide');
+    }
+
+    showSettings() {
+        jQuery('#dialog-settings').modal();
+    }
+
+    hideSettings() {
+        jQuery('#dialog-settings').modal('hide');
+    }
+
+    saveSettings() {
+        this._projectSetupService.saveDefaultProjectSettings(this.settings)
+            .subscribe(
+                success => this.success = "Settings saved successfully",
+                error => this.error = error.json());
+        this.hideSettings();
     }
 
     select() {
@@ -51,17 +78,14 @@ export class SetupComponent implements AfterViewInit {
         this.error = undefined;
     }
 
+    clearSuccess() {
+        this.success = undefined;
+    }
+
     onSubmit() {
-        jQuery.ajax({
-            url: "project",
-            type: 'POST',
-            data: encodeURI("projecthome=" + this.projectHome),
-            success: function (response) {
-                window.location.href = "/";
-            },
-            error: response => {
-                this.error = response.responseJSON;
-            }
-        });
+        this._projectSetupService.openProject(this.projectHome)
+            .subscribe(
+                success => window.location.href = "/",
+                error => this.error = error.json());
     }
 }

@@ -31,7 +31,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public ProjectSetupInterceptor getProjectSetupInterceptor() {
         ProjectSetupInterceptor interceptor = new ProjectSetupInterceptor();
         interceptor.setRedirect("/setup");
-        interceptor.setExcludes(new String[] {"/static/*", "/app/*", "/templates/*", "/file/browse", "/project", "/error"});
+        interceptor.setExcludes(new String[] {"/static/*", "/app/*", "/templates/*", "/file/browse", "/project", "/project/home", "/project/settings", "/error"});
         return interceptor;
     }
 

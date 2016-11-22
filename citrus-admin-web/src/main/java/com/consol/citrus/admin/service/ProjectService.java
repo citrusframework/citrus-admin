@@ -21,6 +21,7 @@ import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.ProjectSettings;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
@@ -328,6 +329,16 @@ public class ProjectService {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
             }
         }
+    }
+
+    /**
+     * Sets new settings as defaults.
+     * @param settings
+     */
+    public void applySettings(ProjectSettings settings) {
+        System.setProperty(Application.JAVA_SRC_DIRECTORY, settings.getJavaSrcDirectory());
+        System.setProperty(Application.XML_SRC_DIRECTORY, settings.getXmlSrcDirectory());
+        System.setProperty(Application.SPRING_APPLICATION_CONTEXT, settings.getSpringApplicationContext());
     }
 
     /**
