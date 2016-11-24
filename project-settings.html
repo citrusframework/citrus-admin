@@ -63,7 +63,7 @@
         data-chapter-title="Settings"
         data-filepath="project-settings.md"
         data-basepath="."
-        data-revision="Tue Sep 20 2016 18:28:50 GMT+0200 (CEST)"
+        data-revision="Thu Nov 24 2016 16:35:05 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -464,7 +464,9 @@ in the Maven POM configuration.</p>
        &quot;@class&quot; : &quot;com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration&quot;,
        &quot;type&quot; : &quot;maven&quot;,
        &quot;properties&quot; : [ ],
-       &quot;testPlugin&quot; : &quot;maven-failsafe-plugin&quot;,
+       &quot;testPlugin&quot; : &quot;maven-failsafe&quot;,
+       &quot;useClean&quot; : false,
+       &quot;command&quot; : null,
        &quot;profiles&quot; : null
      }
    }
@@ -480,16 +482,16 @@ in the Maven POM configuration.</p>
 <p>You can customize these settings according to your project setup.</p>
 <h3 id="build-configuration"><a name="build-configuration" class="plugin-anchor" href="#build-configuration"><span class="fa fa-link"></span></a>Build configuration</h3>
 <p>The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
-the build settings accordingly. By default Citrus admin uses the <strong>maven-failsafe-plugin</strong> to execute the Citrus tests. This causes Citrus to call</p>
-<pre><code>&gt; mvn failsafe:integration-test
-</code></pre><p>This executes all Citrus test cases. You can change this to <strong>maven-surefire-plugin</strong> so the Maven command looks like this:</p>
-<pre><code>&gt; mvn test
+the build settings accordingly. By default Citrus admin uses the <strong>maven-failsafe</strong> to execute the Citrus tests. This causes Citrus to call</p>
+<pre><code>&gt; mvn compile failsafe:integration-test
+</code></pre><p>This executes all Citrus test cases. You can change this to <strong>maven-surefire</strong> so the Maven command looks like this:</p>
+<pre><code>&gt; mvn compile surefire:test
 </code></pre><p>In case you need to activate Maven profiles during the build you need to add those profiles to the build settings. Each profile name that you save 
 to the build settings will result in some command line argument for the Maven build like this:</p>
-<pre><code>&gt; mvn failsafe:integration-test -PmyProfile
+<pre><code>&gt; mvn compile failsafe:integration-test -PmyProfile
 </code></pre><p>Also when some system properties should be set during the Maven build you can add those properties to the build settings, too. 
 This results in command line arguments for the Maven command:</p>
-<pre><code>&gt; mvn failsafe:integration-test -DmyProperty=value
+<pre><code>&gt; mvn compile failsafe:integration-test -DmyProperty=value
 </code></pre><p>This is how to customize the Maven build that executes the Citrus tests in a project.    </p>
 
                     

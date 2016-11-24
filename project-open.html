@@ -63,7 +63,7 @@
         data-chapter-title="Open project"
         data-filepath="project-open.md"
         data-basepath="."
-        data-revision="Tue Sep 20 2016 18:28:50 GMT+0200 (CEST)"
+        data-revision="Thu Nov 24 2016 16:35:05 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -445,7 +445,7 @@ started you have to open a project first.</p>
 <p><img src="screenshots/project-open.png" alt="Open"></p>
 <p>The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:</p>
-<p><code>java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-2.jar</code></p>
+<p><code>java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-4.jar</code></p>
 <p>When pre selecting a project home the project is opened automatically and the <a href="project-dashboard.html">project dashboard</a> is displayed. Now back to the project home selection if no project has bee pre selected yet.</p>
 <p>You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.</p>
 <p><img src="screenshots/project-home.png" alt="Open"></p>
@@ -481,9 +481,9 @@ for several things in your project in order to gain information about the projec
 <p>It is possible that your project uses a different folder layout for test resources and test sources (e.g. <em>src/it/resources</em> and <em>src/it/java</em>). Then the project open operation will fail with errors. We can fix this by customizing the project settings
 manually in prior to opening the project. </p>
 <p>There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:</p>
-<p><code>java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-2.jar</code></p>
-<p>You can set the following system properties:</p>
+<pre><code>java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
+-Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-4.jar
+</code></pre><p>You can set the following system properties:</p>
 <table>
 <thead>
 <tr>
@@ -492,6 +492,10 @@ manually in prior to opening the project. </p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>server.port</td>
+<td>Web server port</td>
+</tr>
 <tr>
 <td>project.home</td>
 <td>Preselect project on startup</td>
@@ -512,32 +516,39 @@ manually in prior to opening the project. </p>
 <td>spring.application.context</td>
 <td>Path to Spring application context file (default: <em>src/test/resources/citrus-context.xml</em>)</td>
 </tr>
+<tr>
+<td>maven.home.directory</td>
+<td>Path to Maven home that should be used in admin UI (when not set environment variable MAVEN_HOME or M2_HOME is used as default)</td>
+</tr>
 </tbody>
 </table>
 <p>You can also use Spring boot properties, e.g. a custom server port:</p>
-<p><code>java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-2.jar</code></p>
-<p>A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called <strong>citrus-project.json</strong>. When you open a Citrus project for the first time the administration UI creates this project settings file
+<pre><code>java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-4.jar
+</code></pre><p>A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called <strong>citrus-project.json</strong>. When you open a Citrus project for the first time the administration UI creates this project settings file
 automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:</p>
 <pre><code>{
-  &quot;projectHome&quot; : &quot;~/Projects/Citrus/citrus-sample&quot;,
   &quot;name&quot; : &quot;citrus-sample-project&quot;,
   &quot;description&quot; : &quot;&quot;,
   &quot;version&quot; : &quot;1.0.0&quot;,
-  &quot;testCount&quot; : 0,
   &quot;settings&quot; : {
-    &quot;basePackage&quot; : &quot;com.consol.citrus&quot;,
-    &quot;citrusVersion&quot; : &quot;2.6&quot;,
-    &quot;springApplicationContext&quot; : &quot;src/it/resources/citrus-context.xml&quot;,
-    &quot;javaSrcDirectory&quot; : &quot;src/it/java/&quot;,
-    &quot;xmlSrcDirectory&quot; : &quot;src/it/resources/&quot;,
+    &quot;basePackage&quot; : &quot;com.consol.citrus.samples&quot;,
+    &quot;citrusVersion&quot; : &quot;2.6.2&quot;,
+    &quot;springApplicationContext&quot; : &quot;src/test/resources/citrus-context.xml&quot;,
+    &quot;javaSrcDirectory&quot; : &quot;src/test/java/&quot;,
+    &quot;xmlSrcDirectory&quot; : &quot;src/test/resources/&quot;,
     &quot;javaFilePattern&quot; : &quot;/**/*Test.java,/**/*IT.java&quot;,
     &quot;xmlFilePattern&quot; : &quot;/**/*Test.xml,/**/*IT.xml&quot;,
+    &quot;useConnector&quot; : true,
+    &quot;connectorActive&quot; : true,
+    &quot;tabSize&quot; : 2,
     &quot;build&quot; : {
       &quot;@class&quot; : &quot;com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration&quot;,
       &quot;type&quot; : &quot;maven&quot;,
       &quot;properties&quot; : [ ],
-      &quot;testPlugin&quot; : &quot;maven-failsafe-plugin&quot;,
-      &quot;profiles&quot; : null
+      &quot;testPlugin&quot; : &quot;maven-failsafe&quot;,
+      &quot;command&quot; : null,
+      &quot;profiles&quot; : &quot;&quot;,
+      &quot;useClean&quot; : false
     }
   }
 }
