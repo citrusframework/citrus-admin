@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.consol.citrus</groupId>
     <artifactId>citrus-admin</artifactId>
-    <version>1.0.0-beta-3</version>
+    <version>1.0.0-beta-4</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

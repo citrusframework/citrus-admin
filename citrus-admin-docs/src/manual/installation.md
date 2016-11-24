@@ -6,7 +6,7 @@ is a Java JAR file located at [labs.consol.de/maven/repository](https://labs.con
 Save the Java archive to a folder on your local machine and start the Spring boot web application. The downloaded JAR should be executable 
 from command line like this:
 
-```java -jar citrus-admin-web-1.0.0-beta-3.jar```
+```java -jar citrus-admin-web-1.0.0-beta-4.jar```
 
 You will see the application starting up. Usually you will see some console log output. The web server should start within seconds. Once the application is up and running
 you can open your browser and point to 'http://localhost:8080'.

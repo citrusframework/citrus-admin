@@ -283,7 +283,7 @@ public class ProjectService {
                     pomXml = pomXml.replaceAll("</dependencies>", "  <dependency>" + System.lineSeparator() +
                             "      <groupId>com.consol.citrus</groupId>" + System.lineSeparator() +
                             "      <artifactId>citrus-admin-connector</artifactId>" + System.lineSeparator() +
-                            "      <version>1.0.0-beta-3</version>" + System.lineSeparator() +
+                            "      <version>1.0.0-beta-4</version>" + System.lineSeparator() +
                             "    </dependency>" + System.lineSeparator() +
                             "  </dependencies>");
 
