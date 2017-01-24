@@ -140,7 +140,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         mappings.put("mappings", mappingsArray);
         dictionary.put("id", "xmlDataDictionary");
         dictionary.put("mappings", mappings);
-        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT.toString());
 
         controller.createDataDictionary("xml", dictionary);
 
@@ -153,7 +153,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         Assert.assertEquals(xmlDataDictionary.getMappings().getMappings().size(), 1L);
         Assert.assertEquals(xmlDataDictionary.getMappings().getMappings().get(0).getPath(), "root");
         Assert.assertEquals(xmlDataDictionary.getMappings().getMappings().get(0).getValue(), "foo");
-        Assert.assertEquals(xmlDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        Assert.assertEquals(xmlDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT.toString());
 
         dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.STARTS_WITH.toString());
         controller.updateDataDictionary(dictionary);
@@ -186,7 +186,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         mappings.put("mappings", mappingsArray);
         dictionary.put("id", "jsonDataDictionary");
         dictionary.put("mappings", mappings);
-        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT.toString());
 
         controller.createDataDictionary("json", dictionary);
 
@@ -199,7 +199,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         Assert.assertEquals(jsonDataDictionary.getMappings().getMappings().size(), 1L);
         Assert.assertEquals(jsonDataDictionary.getMappings().getMappings().get(0).getPath(), "$.root");
         Assert.assertEquals(jsonDataDictionary.getMappings().getMappings().get(0).getValue(), "foo");
-        Assert.assertEquals(jsonDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        Assert.assertEquals(jsonDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT.toString());
 
         dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.STARTS_WITH.toString());
         controller.updateDataDictionary(dictionary);
@@ -232,7 +232,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         mappings.put("mappings", mappingsArray);
         dictionary.put("id", "xpathDataDictionary");
         dictionary.put("mappings", mappings);
-        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.EXACT.toString());
 
         controller.createDataDictionary("xpath", dictionary);
 
@@ -245,7 +245,7 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
         Assert.assertEquals(xpathDataDictionary.getMappings().getMappings().size(), 1L);
         Assert.assertEquals(xpathDataDictionary.getMappings().getMappings().get(0).getPath(), "/root");
         Assert.assertEquals(xpathDataDictionary.getMappings().getMappings().get(0).getValue(), "foo");
-        Assert.assertEquals(xpathDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT_MATCH.toString());
+        Assert.assertEquals(xpathDataDictionary.getMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT.toString());
 
         dictionary.put("mappingStrategy", DataDictionary.PathMappingStrategy.STARTS_WITH.toString());
         controller.updateDataDictionary(dictionary);

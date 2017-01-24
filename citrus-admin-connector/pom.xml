@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.consol.citrus</groupId>
     <artifactId>citrus-admin</artifactId>
-    <version>1.0.0-beta-4</version>
+    <version>1.0.0-beta-5</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -48,8 +48,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

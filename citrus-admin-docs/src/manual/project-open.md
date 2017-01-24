@@ -8,7 +8,7 @@ started you have to open a project first.
 The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:
 
-```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-4.jar```
+```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-5.jar```
 
 When pre selecting a project home the project is opened automatically and the [project dashboard](project-dashboard.md) is displayed. Now back to the project home selection if no project has bee pre selected yet.
 
@@ -35,7 +35,7 @@ There are two different approaches to customizing the project settings: First of
 
 ```
 java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-4.jar
+-Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-5.jar
 ```
 
 You can set the following system properties:
@@ -53,7 +53,7 @@ You can set the following system properties:
 You can also use Spring boot properties, e.g. a custom server port:
 
 ```
-java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-4.jar
+java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-5.jar
 ```
 
 A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called **citrus-project.json**. When you open a Citrus project for the first time the administration UI creates this project settings file
@@ -66,7 +66,7 @@ automatically. But now we want to create this file manually in order to set cust
   "version" : "1.0.0",
   "settings" : {
     "basePackage" : "com.consol.citrus.samples",
-    "citrusVersion" : "2.6.2",
+    "citrusVersion" : "2.7-SNAPSHOT",
     "springApplicationContext" : "src/test/resources/citrus-context.xml",
     "javaSrcDirectory" : "src/test/java/",
     "xmlSrcDirectory" : "src/test/resources/",
