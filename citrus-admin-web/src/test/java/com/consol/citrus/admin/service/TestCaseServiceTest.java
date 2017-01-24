@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -52,19 +53,13 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getJavaDirectory()).thenReturn(projectHome + "/src/test/java/");
 
         List<TestGroup> testPackages = testCaseService.getTestPackages(project);
-
         Assert.assertNotNull(testPackages);
         Assert.assertEquals(testPackages.size(), 5L);
-        Assert.assertEquals(testPackages.get(0).getName(), "javadsl");
-        Assert.assertEquals(testPackages.get(0).getTests().size(), 4L);
-        Assert.assertEquals(testPackages.get(1).getName(), "foo");
-        Assert.assertEquals(testPackages.get(1).getTests().size(), 2L);
-        Assert.assertEquals(testPackages.get(2).getName(), "bar");
-        Assert.assertEquals(testPackages.get(2).getTests().size(), 2L);
-        Assert.assertEquals(testPackages.get(3).getName(), "com.consol.citrus.bar");
-        Assert.assertEquals(testPackages.get(3).getTests().size(), 2L);
-        Assert.assertEquals(testPackages.get(4).getName(), "com.consol.citrus.bar.scan");
-        Assert.assertEquals(testPackages.get(4).getTests().size(), 1L);
+        assertTestPackage(testPackages, "javadsl", 4L);
+        assertTestPackage(testPackages, "foo", 2L);
+        assertTestPackage(testPackages, "bar", 2L);
+        assertTestPackage(testPackages, "com.consol.citrus.bar", 2L);
+        assertTestPackage(testPackages, "com.consol.citrus.bar.scan", 1L);
 
         assertTestPresent(testPackages.get(0).getTests(), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
         assertTestPresent(testPackages.get(0).getTests(), "BarJavaTest", "CitrusJavaTest", "barTest");
@@ -79,6 +74,28 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         assertTestPresent(testPackages.get(4).getTests(), "barPackageScanTest", "BarTest", "barPackageScanTest");
     }
 
+    /**
+     * Finds package by name and validates test list size.
+     * @param testPackages
+     * @param name
+     * @param size
+     */
+    private void assertTestPackage(List<TestGroup> testPackages, String name, long size) {
+        Optional<TestGroup> testGroup = testPackages.stream()
+                                                    .filter(group -> group.getName().equals(name))
+                                                    .findFirst();
+
+        Assert.assertTrue(testGroup.isPresent(), "Missing test package with name: " + name);
+        Assert.assertEquals(testGroup.get().getTests().size(), size);
+    }
+
+    /**
+     * Checks that test is present in list.
+     * @param tests
+     * @param name
+     * @param className
+     * @param methodName
+     */
     private void assertTestPresent(List<com.consol.citrus.admin.model.Test> tests, String name, String className, String methodName) {
         for (com.consol.citrus.admin.model.Test test : tests) {
             if (test.getName().equals(name) && test.getClassName().equals(className) && test.getMethodName().equals(methodName)) {
