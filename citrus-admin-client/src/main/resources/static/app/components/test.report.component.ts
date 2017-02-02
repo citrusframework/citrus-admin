@@ -3,6 +3,8 @@ import {TestReport} from "../model/test.report";
 import {ReportService} from "../service/report.service";
 import {AlertService} from "../service/alert.service";
 import {Router} from "@angular/router";
+import {Test} from "../model/tests";
+import {Alert} from "../model/alert";
 
 @Component({
     templateUrl: "app/components/test-report.html"

@@ -1,3 +1,4 @@
+import {TestResult} from "./tests";
 export class TestReport {
 
     constructor() {}

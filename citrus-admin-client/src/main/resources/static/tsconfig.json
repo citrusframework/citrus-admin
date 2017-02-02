@@ -6,7 +6,13 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "lib": [
+      "es6", "DOM"
+    ],
     "removeComments": false,
     "noImplicitAny": false
-  }
+  },
+  "include": [
+    "./app/**/*"
+  ]
 }
