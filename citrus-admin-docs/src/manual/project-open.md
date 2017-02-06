@@ -66,7 +66,7 @@ automatically. But now we want to create this file manually in order to set cust
   "version" : "1.0.0",
   "settings" : {
     "basePackage" : "com.consol.citrus.samples",
-    "citrusVersion" : "2.7-SNAPSHOT",
+    "citrusVersion" : "2.7.1-SNAPSHOT",
     "springApplicationContext" : "src/test/resources/citrus-context.xml",
     "javaSrcDirectory" : "src/test/java/",
     "xmlSrcDirectory" : "src/test/resources/",
