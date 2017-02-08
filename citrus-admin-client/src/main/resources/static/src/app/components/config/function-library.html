@@ -1,0 +1,119 @@
+<h2 class="page-header">
+  <span><i class="fa fa-unlink"></i> Function Libraries</span>
+  <div class="btn-group pull-right">
+    <button [disabled]="selectedLibrary" (click)="initLibrary()" type="button" class="btn btn-default dropdown-toggle">New</button>
+  </div>
+</h2>
+
+<p>Functions are used inside a test case in order to provide more dynamic values such as the current date, timestamps, random numbers and so on. The functions
+  have a name and are grouped in a function library. Citrus provides a default function library but you can easily write your own functions and put them in a custom library in
+  order to extend the framework capabilities.</p>
+
+<p>Your project defines <span class="badge badge-emphasis badge-citrus">{{libraries.length}}</span> custom function libraries. See all available libraries listed below:</p>
+
+<br/>
+
+<form *ngIf="newLibrary" class="form-horizontal">
+  <h3>New Library</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="newLibrary.id" placeholder="Name" type="text" class="form-control" name="newLibraryId"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Prefix <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="newLibrary.prefix" placeholder="Prefix" type="text" class="form-control" name="newLibraryPrefix"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Functions</label>
+    <div class="col-sm-3">
+      <input [(ngModel)]="newFunction.name" type="text" class="form-control" name="newFunctionName"/>
+    </div>
+    <div class="col-sm-6">
+      <input [(ngModel)]="newFunction.clazz" placeholder="Implementation Class" type="text" class="form-control" name="newFunctionClazz"/>
+    </div>
+    <div class="col-sm-1">
+      <button (click)="addFunction()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="list-group">
+        <div *ngFor="let function of newLibrary.functions" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b> class={{function.clazz}}&nbsp;<a class="pull-right" name="remove-function" title="Remove function" (click)="removeFunction(function)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="createLibrary()" type="submit">Create</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<form *ngIf="selectedLibrary" class="form-horizontal">
+  <h3>Edit Library</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="selectedLibrary.id" type="text" class="form-control" name="selectedLibraryId"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Prefix <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="selectedLibrary.prefix" placeholder="Prefix" type="text" class="form-control" name="selectedLibraryPrefix"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Functions</label>
+    <div class="col-sm-3">
+      <input [(ngModel)]="newFunction.name" type="text" class="form-control" name="newFunctionName"/>
+    </div>
+    <div class="col-sm-6">
+      <input [(ngModel)]="newFunction.clazz" placeholder="Implementation Class" type="text" class="form-control" name="newFunctionClazz"/>
+    </div>
+    <div class="col-sm-1">
+      <button (click)="addFunction()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="list-group">
+        <div *ngFor="let function of selectedLibrary.functions" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b> class={{function.clazz}}&nbsp;<a class="pull-right" name="remove-function" title="Remove function" (click)="removeFunction(function)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="saveLibrary()" type="submit">Save</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="!newLibrary && !selectedLibrary" class="list-group">
+  <div *ngIf="libraries.length == 0" class="list-group-item"><i class="fa fa-times"></i> No function libraries defined</div>
+
+  <div *ngFor="let library of libraries" class="list-group-item clickable" (click)="selectLibrary(library)">
+    <a class="pull-right" (click)="removeLibrary(library, $event)" name="remove" title="Remove library"><i class="fa fa-times" style="color: #A50000;"></i></a>
+    <span class="label label-primary"><i class="fa fa-unlink"></i></span>&nbsp;
+    <span><b>{{library.id}} ({{library.prefix}})</b></span>
+    <ul class="properties">
+      <li *ngFor="let function of library.functions"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{function.name}}()</b></li>
+    </ul>
+  </div>
+</div>

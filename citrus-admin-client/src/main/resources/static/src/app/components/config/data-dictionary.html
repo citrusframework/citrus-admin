@@ -1,0 +1,159 @@
+<h2 class="page-header">
+  <span><i class="fa fa-book"></i> Data Dictionaries</span>
+  <div class="btn-group pull-right">
+    <button [disabled]="selectedDictionary" (click)="initDictionary()" type="button" class="btn btn-default dropdown-toggle">New</button>
+  </div>
+</h2>
+
+<p>A data dictionary defines a list of key value mappings that are valid to all test cases and all messages sent and received across Citrus. The data dictionary is asked for
+  translation of message elements. If the message element is defined in a data dictionary the respective dictionary value is set in the message. This is a way of centralized message
+  adjustments in Citrus. The mapping keys in a data dictionary can be XPath expressions, Json paths and normal XML node paths. Every time a message is sent or received the data dictionary matching
+  the mapping key will apply to the message value before validation takes place.</p>
+
+<p>Your project defines <span class="badge badge-emphasis badge-citrus">{{dictionaries.length}}</span> custom data dictionaries. See all available dictionaries listed below:</p>
+
+<br/>
+
+<form *ngIf="newDictionary" class="form-horizontal">
+  <h3>New Dictionary</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="newDictionary.id" placeholder="Name" type="text" class="form-control" name="id"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="newDictionaryType" class="form-control" name="type">
+        <option value="xpath">xpath</option>
+        <option value="xml">xml</option>
+        <option value="json">json</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Global scope <em>*</em></label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="newDictionary.globalScope" class="form-control" placeholder="GlobalScope" name="globalScope">
+        <option value="true" selected="selected">true</option>
+        <option value="false">false</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Mapping Strategy <em>*</em></label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="newDictionary.mappingStrategy" class="form-control" placeholder="MappingStrategy" name="mappingStrategy">
+        <option value="EXACT_MATCH" selected="selected">EXACT</option>
+        <option value="STARTS_WITH">STARTS_WITH</option>
+        <option value="ENDS_WITH">ENDS_WITH</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Mappings</label>
+    <div class="col-sm-3">
+      <input [(ngModel)]="newMapping.path" placeholder="Path expression" type="text" class="form-control" name="path"/>
+    </div>
+    <div class="col-sm-6">
+      <input [(ngModel)]="newMapping.value" placeholder="Value" type="text" class="form-control" name="value"/>
+    </div>
+    <div class="col-sm-1">
+      <button (click)="addMapping()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="list-group">
+        <div *ngFor="let mapping of newDictionary.mappings.mappings" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{mapping.path}}()</b> value={{mapping.value}}&nbsp;<a class="pull-right" name="remove-mapping" title="Remove mapping" (click)="removeMapping(mapping)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="createDictionary()" type="submit">Create</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<form *ngIf="selectedDictionary" class="form-horizontal">
+  <h3>Edit Dictionary</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="selectedDictionary.id" type="text" class="form-control" name="selectedId"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Global scope <em>*</em></label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="selectedDictionary.globalScope" class="form-control" placeholder="GlobalScope" name="selectedGlobalScope">
+        <option value="true">true</option>
+        <option value="false">false</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Mapping Strategy <em>*</em></label>
+    <div class="col-sm-10">
+      <select [(ngModel)]="selectedDictionary.mappingStrategy" class="form-control" placeholder="MappingStrategy" name="selectedMappingStrategy">
+        <option value="EXACT_MATCH">EXACT_MATCH</option>
+        <option value="STARTS_WITH">STARTS_WITH</option>
+        <option value="ENDS_WITH">ENDS_WITH</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Mappings</label>
+    <div class="col-sm-3">
+      <input [(ngModel)]="newMapping.path" placeholder="Path expression" type="text" class="form-control" name="newPath"/>
+    </div>
+    <div class="col-sm-6">
+      <input [(ngModel)]="newMapping.value" placeholder="Value" type="text" class="form-control" name="newValue"/>
+    </div>
+    <div class="col-sm-1">
+      <button (click)="addMapping()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="list-group">
+        <div *ngFor="let mapping of selectedDictionary.mappings.mappings" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{mapping.path}}()</b> value={{mapping.value}}&nbsp;<a class="pull-right" name="remove-mapping" title="Remove mapping" (click)="removeMapping(mapping)"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="saveDictionary()" type="submit">Save</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="!newDictionary && !selectedDictionary" class="list-group">
+  <div *ngIf="dictionaries.length == 0" class="list-group-item"><i class="fa fa-times"></i> No data dictionaries defined</div>
+
+  <div *ngFor="let dictionary of dictionaries" class="list-group-item clickable" (click)="selectDictionary(dictionary)">
+    <a class="pull-right" (click)="removeDictionary(dictionary, $event)" name="remove" title="Remove dictionary"><i class="fa fa-times" style="color: #A50000;"></i></a>
+    <span class="label label-primary"><i class="fa fa-book"></i></span>&nbsp;
+    <span><b>{{dictionary.id}}</b></span>
+    <ul class="properties">
+      <li *ngFor="let mapping of dictionary.mappings.mappings"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{mapping.path}}()</b></li>
+    </ul>
+  </div>
+</div>
