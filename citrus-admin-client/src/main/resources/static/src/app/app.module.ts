@@ -9,14 +9,14 @@ import { HeaderComponent } from './components/header.component';
 import { LogComponent } from './components/log.component';
 import { ComingComponent } from './components/coming.component';
 
-import { ConfigurationComponent } from './components/configuration.component';
-import { DataDictionaryComponent } from './components/config/data.dictionary.component';
-import { EndpointsComponent } from './components/config/endpoints.component';
-import { FunctionLibraryComponent } from './components/config/function.library.component';
-import { GlobalVariablesComponent } from './components/config/global.variables.component';
-import { NamespaceContextComponent } from './components/config/namespace.context.component';
-import { SchemaRepositoryComponent } from './components/config/schema.repository.component';
-import { ValidationMatcherComponent } from './components/config/validation.matcher.component';
+import { ConfigurationComponent } from './components/configuration/configuration.component';
+import { DataDictionaryComponent } from './components/configuration/data-dictionary/data.dictionary.component';
+import { EndpointsComponent } from './components/configuration/endpoints/endpoints.component';
+import { FunctionLibraryComponent } from './components/configuration/function-library/function.library.component';
+import { GlobalVariablesComponent } from './components/configuration/global-variables/global.variables.component';
+import { NamespaceContextComponent } from './components/configuration/namespace-context/namespace.context.component';
+import { SchemaRepositoryComponent } from './components/configuration/schema-repository/schema.repository.component';
+import { ValidationMatcherComponent } from './components/configuration/validation-matcher/validation.matcher.component';
 
 import { SourceCodeComponent } from './components/source.code.component';
 import { TestDetailComponent } from './components/test.detail.component';

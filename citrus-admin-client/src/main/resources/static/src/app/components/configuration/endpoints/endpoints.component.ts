@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {EndpointService} from '../../service/endpoint.service';
-import {SpringBeanService} from "../../service/springbean.service";
-import {Endpoint} from "../../model/endpoint";
-import {Property} from "../../model/property";
-import {Alert} from "../../model/alert";
-import {AlertService} from "../../service/alert.service";
+import {EndpointService} from '../../../service/endpoint.service';
+import {SpringBeanService} from "../../../service/springbean.service";
+import {Endpoint} from "../../../model/endpoint";
+import {Property} from "../../../model/property";
+import {Alert} from "../../../model/alert";
+import {AlertService} from "../../../service/alert.service";
 
 declare var jQuery:any;
 

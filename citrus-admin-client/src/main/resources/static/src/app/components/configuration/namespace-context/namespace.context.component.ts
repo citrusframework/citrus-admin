@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../../service/config.service';
-import {NamespaceContext, Namespace} from "../../model/namespace.context";
-import {Alert} from "../../model/alert";
-import {AlertService} from "../../service/alert.service";
+import {ConfigService} from '../../../service/config.service';
+import {NamespaceContext, Namespace} from "../../../model/namespace.context";
+import {Alert} from "../../../model/alert";
+import {AlertService} from "../../../service/alert.service";
 
 @Component({
     selector: 'namespace-context',

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../../service/config.service';
-import {DataDictionary, Mapping} from "../../model/data.dictionary";
-import {Alert} from "../../model/alert";
-import {AlertService} from "../../service/alert.service";
+import {ConfigService} from '../../../service/config.service';
+import {DataDictionary, Mapping} from "../../../model/data.dictionary";
+import {Alert} from "../../../model/alert";
+import {AlertService} from "../../../service/alert.service";
 
 @Component({
     selector: 'data-dictionary',
