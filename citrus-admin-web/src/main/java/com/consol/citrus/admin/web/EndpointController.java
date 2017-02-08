@@ -33,7 +33,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/endpoints")
+@RequestMapping("api/endpoints")
 public class EndpointController {
 
     @Autowired

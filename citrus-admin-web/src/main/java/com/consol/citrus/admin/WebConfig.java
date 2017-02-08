@@ -17,9 +17,16 @@
 package com.consol.citrus.admin;
 
 import com.consol.citrus.admin.web.ProjectSetupInterceptor;
+import org.springframework.boot.autoconfigure.web.ErrorViewResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -28,26 +35,26 @@ import org.springframework.web.servlet.config.annotation.*;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
+    public ErrorViewResolver supportPathBasedLocationStrategyWithoutHashes() {
+        return (HttpServletRequest req, HttpStatus status, Map<String, Object> model) -> status == HttpStatus.NOT_FOUND
+                ? new ModelAndView("index.html", Collections.emptyMap(), HttpStatus.OK)
+                : null;
+    }
+
+    @Bean
     public ProjectSetupInterceptor getProjectSetupInterceptor() {
         ProjectSetupInterceptor interceptor = new ProjectSetupInterceptor();
         interceptor.setRedirect("/setup");
-        interceptor.setExcludes(new String[] {"/static/*",
-                                                "/app/*",
-                                                "/templates/*",
-                                                "/file/browse",
-                                                "/project",
-                                                "/project/home",
-                                                "/project/recent",
-                                                "/project/settings",
-                                                "/project/settings/default",
-                                                "/error"});
+        interceptor.setExcludes(new String[]{
+                "/assets/*",
+                "/api/*",
+        });
         return interceptor;
     }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/home").setViewName("forward:/index.html");
-        registry.addViewController("/setup").setViewName("forward:/setup.html");
+        registry.addViewController("/setup").setViewName("forward:/index.html");
     }
 
     @Override

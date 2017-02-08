@@ -30,7 +30,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/report")
+@RequestMapping("api/report")
 public class ReportController {
 
     @Autowired
@@ -43,9 +43,11 @@ public class ReportController {
     @ResponseBody
     public TestReport getLatest() {
         Project project = projectService.getActiveProject();
-        for (TestReportService reportService : testReportService) {
-            if (reportService.hasTestResults(project)) {
-                return reportService.getLatest(project);
+        if(null != project) {
+            for (TestReportService reportService : testReportService) {
+                if (reportService.hasTestResults(project)) {
+                    return reportService.getLatest(project);
+                }
             }
         }
 

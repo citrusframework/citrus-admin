@@ -5,21 +5,27 @@
   },
   "apps": [
     {
-      "root": "./",
+      "root": "src/",
       "outDir": "dist",
       "assets": [
-        "assets"
-      ],
+  "assets"
+],
       "index": "index.html",
-      "main": "app/main.ts",
+      "main": "main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
-      "prefix": "app",
       "styles": [
-        "styles.css"
+        "assets/css/jQueryFileTree.css",
+        "assets/css/main.css",
+        "styles.less"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.min.js",
+        "assets/file/jqueryFileTree.js",
+        "../node_modules/bootstrap/js/modal.js",
+        "../node_modules/bootstrap/js/tab.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
@@ -62,5 +68,8 @@
       "pipe": true,
       "service": true
     }
+  },
+  "warnings": {
+    "packageDeprecation": false
   }
 }

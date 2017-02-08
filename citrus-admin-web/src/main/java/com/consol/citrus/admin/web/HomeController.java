@@ -34,10 +34,6 @@ public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
-        if (projectService.getActiveProject() == null) {
-            return "redirect:/setup";
-        }
-
         return "forward:/index.html";
     }
 }
