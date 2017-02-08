@@ -26,7 +26,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WebSocketController {
 
-    @MessageMapping("/logging")
+    @MessageMapping("api/logging")
     @SendTo("/topic/log-output")
     public String output() throws Exception {
         return "Log output listener - OK";

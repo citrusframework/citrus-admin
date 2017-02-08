@@ -30,7 +30,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/beans")
+@RequestMapping("api/beans")
 public class SpringBeanController {
 
     @Autowired

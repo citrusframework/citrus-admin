@@ -31,7 +31,7 @@ import java.io.File;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/file")
+@RequestMapping("api/file")
 public class FileController {
 
     @Autowired

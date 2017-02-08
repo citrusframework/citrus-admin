@@ -1,100 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+    <parent>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-admin</artifactId>
+        <version>1.0.0-beta-5</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <groupId>com.consol.citrus</groupId>
-    <artifactId>citrus-admin</artifactId>
-    <version>1.0.0-beta-5</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <artifactId>citrus-admin-client</artifactId>
+    <name>citrus-admin-client</name>
 
-  <groupId>com.consol.citrus</groupId>
-  <artifactId>citrus-admin-client</artifactId>
-  <name>citrus-admin-client</name>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>static/app/**</include>
-            <include>static/node_modules/@angular/**/bundles/*</include>
-            <include>static/node_modules/bootstrap/dist/css/bootstrap.min.css</include>
-            <include>static/node_modules/bootstrap/dist/js/bootstrap.min.js</include>
-            <include>static/node_modules/core-js/client/shim.min.js</include>
-            <include>static/node_modules/font-awesome/css/font-awesome.min.css</include>
-            <include>static/node_modules/font-awesome/fonts/**</include>
-            <include>static/node_modules/jquery/dist/jquery.min.js</include>
-            <include>static/node_modules/jquery-ui-bundle/jquery-ui.min.css</include>
-            <include>static/node_modules/jquery-ui-bundle/jquery-ui.min.js</include>
-            <include>static/node_modules/moment/moment.js</include>
-            <include>static/node_modules/reflect-metadata/Reflect.js</include>
-            <include>static/node_modules/rxjs/*.js</include>
-            <include>static/node_modules/rxjs/**/*.js</include>
-            <include>static/node_modules/stompjs/lib/stomp.js</include>
-            <include>static/node_modules/systemjs/dist/system.src.js</include>
-            <include>static/node_modules/underscore/underscore-min.js</include>
-            <include>static/node_modules/zone.js/dist/zone.js</include>
-            <include>static/*.*</include>
-          </includes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <configuration>
-          <workingDirectory>src/main/resources/static</workingDirectory>
-          <installDirectory>target</installDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <id>node-npm-setup</id>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>v6.9.5</nodeVersion>
-              <npmVersion>3.10.10</npmVersion>
-            </configuration>
-          </execution>
-          <execution>
-            <id>npm-install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>rebuild-node-sass</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>rebuild node-sass</arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
-  <profiles>
-    <profile>
-      <id>tscw</id>
-      <build>
+    <build>
         <plugins>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <configuration>
-              <arguments>run tsc:w</arguments>
-            </configuration>
-          </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>${pom.basedir}/src/main/resources/static/dist/</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <configuration>
+                    <workingDirectory>src/main/resources/static</workingDirectory>
+                    <installDirectory>target</installDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>node-npm-setup</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v6.9.5</nodeVersion>
+                            <npmVersion>3.10.10</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>ng-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-      </build>
-    </profile>
-  </profiles>
+        <!-- -->
+        <resources>
+            <resource>
+                <directory>src/main/resources/static/dist/</directory>
+            </resource>
+        </resources>
+        <!-- -->
+    </build>
+
+    <profiles>
+        <profile>
+            <id>development</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run serve</arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -36,7 +36,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/config")
+@RequestMapping("api/config")
 public class ConfigurationController {
 
     @Autowired

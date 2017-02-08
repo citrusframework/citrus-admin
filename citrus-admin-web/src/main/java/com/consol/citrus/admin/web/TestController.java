@@ -30,7 +30,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/tests")
+@RequestMapping("api/tests")
 public class TestController {
 
     @Autowired

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     @Autowired

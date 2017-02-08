@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("connector")
+@RequestMapping("api/connector")
 public class ConnectorController {
 
     @Autowired

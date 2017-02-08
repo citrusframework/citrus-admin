@@ -20,6 +20,7 @@ import com.consol.citrus.admin.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +45,10 @@ public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
     private static Logger log = LoggerFactory.getLogger(ProjectSetupInterceptor.class);
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (projectService.getActiveProject() == null
+        if ((projectService.getActiveProject() == null
                 && !request.getRequestURI().startsWith(request.getContextPath() + redirect)
                 && !request.getRequestURI().startsWith(redirect)
-                && !isExcluded(request.getRequestURI(), request.getContextPath())) {
+                && !isExcluded(request.getRequestURI(), request.getContextPath()))) {
             log.debug("Intercept " + request.getRequestURI() + " as project home is not set properly");
             log.debug("Redirecting to " + request.getContextPath() + redirect);
             response.sendRedirect(request.getContextPath() + redirect);
