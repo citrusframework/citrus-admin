@@ -36,13 +36,15 @@ First fo all start the server web application and keep it running:
 
 ```mvn -pl citrus-admin-web spring-boot:run```
 
-For active development and a short roundtrip you can use gulp:watch in order to automatically compile typescript sources on the fly when they change.
+For active development and a short roundtrip you can use the angular-cli dev-server in order to automatically compile typescript sources on the fly when they change.
 
-```mvn -pl citrus-admin-client frontend:gulp -Pgulp-watch```
+```mvn -pl citrus-admin-client frontend:npm -P development```
 
 If you change a source file (e.e *.js, *.ts, *.css) the sources will automatically be compiled and copied to the Maven target folder. The running
 spring-boot application is able to automatically grab the newly compiled sources. Just go to the browser and hit refresh to see the changes.
 If you change server Java sources spring-boot automatically restarts the web application so you may just hit refresh in your browser, too.
+
+The development server is running on its own port 4200. To avoid cors issues a api proxy to the backend is provided out of the box. You can configure the proxy settings in [proxy.conf.json](citrus-admin-client/src/main/resources/static/proxy.conf.json). 
 
 Resources
 ---------
