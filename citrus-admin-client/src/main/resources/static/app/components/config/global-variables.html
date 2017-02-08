@@ -1,0 +1,30 @@
+<h2 class="page-header">
+  <span><i class="fa fa-file-code-o"></i> Global Variables</span>
+</h2>
+
+<p>Global variables are normal test variables that are valid for all test cases. You should put in here constant values that are used across all test cases. Inside the test case you can use
+  those global variables with the usual variable expression syntax.</p>
+
+<br/>
+
+<form>
+  <div class="row">
+    <div class="col-xs-3">
+      <input [(ngModel)]="newVariable.name" placeholder="Name" type="text" class="form-control" name="newVariableName"/>
+    </div>
+
+    <div class="col-xs-5">
+      <input [(ngModel)]="newVariable.value" placeholder="Value" type="text" class="form-control" name="newVariableValue"/>
+    </div>
+
+    <button class="btn btn-primary" (click)="addVariable()" type="submit"><i class="fa fa-plus"></i> Add</button>
+    <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
+  </div>
+</form>
+
+<br/>
+
+<div class="list-group">
+  <div *ngIf="globalVariables.variables.length == 0" class="list-group-item"><i class="fa fa-times"></i> No variables defined</div>
+  <div *ngFor="let variable of globalVariables.variables" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{variable.name}}</b> = {{variable.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeVariable(variable, $event)" name="remove" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="jumbotron">
+    <h1><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
+
+    <p>
+      <span><b>Name:</b></span> <span>{{project?.name}}</span><br/>
+      <span><b>Package:</b></span> <span>{{project?.settings?.basePackage}}</span><br/>
+      <span><b>Version:</b></span> <span>{{project?.version}}</span><br/>
+      <span><b>Description:</b></span> <span [ngSwitch]="project?.description"><template *ngSwitchCase="''">No project description available</template><template *ngSwitchDefault>{{project?.description}}</template></span>
+    </p>
+
+    <a href="#/project/settings" class="btn btn-primary">Edit settings</a>
+  </div>
+</div>
+
+<div class="container content">
+  <div class="row">
+    <div class="col-lg-4">
+      <h2><i class="fa fa-wrench"></i> Configuration</h2>
+      <p>Citrus configuration items:</p>
+      <ul class="overview">
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/endpoints">Endpoints</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/schema-repository">Schema Definitions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/function-library">Functions</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/validation-matcher">Validation Matcher</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/data-dictionary">Data dictionaries</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/namespace-context">Namespaces</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/message-validators" disabled="disabled">Message Validators</a></li>
+        <li><i class="fa fa-angle-double-right"></i> <a href="#/configuration/global-variables">Global Variables</a></li>
+      </ul>
+      <br/>
+      <a class="btn btn-default" href="#/configuration" title="Show configuration page">Show configurations</a>
+    </div>
+
+    <div class="col-lg-4">
+      <h2><i class="fa fa-cubes"></i> Tests</h2>
+      <p>Your project has <span class="badge badge-emphasis badge-citrus">{{testCount}}</span> test cases!</p>
+      <span>Latest tests:</span>
+      <ul class="overview">
+        <li *ngFor="let testGroup of latestTests">
+          <div *ngIf="testGroup.tests.length == 1 && testGroup.name == testGroup.tests[0].name">
+            <i class="fa fa-file-text-o"></i>
+            <a href="#/tests/{{testGroup.tests[0].name}}" title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</a>
+          </div>
+          <div *ngIf="testGroup.tests.length > 1 || testGroup.name != testGroup.tests[0].name">
+            <i class="fa fa-file-text-o"></i>
+            <span title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</span>
+            <ul class="overview">
+              <li *ngFor="let test of testGroup.tests">
+                <i class="fa fa-caret-right"></i>
+                <a href="#/tests/{{test.name}}" title="{{test.className}}.{{test.methodName}}">{{test.methodName | truncate:30}}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <a class="btn btn-default" href="#/tests" title="View all tests">Show all tests</a>
+    </div>
+
+    <div class="col-lg-4">
+      <h2><i class="fa fa-tasks"></i> Test results</h2>
+      <p>
+        <b>Date:</b> {{ testReport?.executionDate | date:"MM/dd/yyyy" }}<br/>
+        <b>Duration:</b> {{testReport?.duration / 1000 }} s<br/>
+        <b>Suite Name:</b> {{testReport?.suiteName}}
+      </p>
+      <p>
+        Passed:&nbsp; <span class="badge badge-success test-result"><i class="fa fa-check"></i>&nbsp;&nbsp;{{testReport?.passed}} | {{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span><br/>
+        Failed:&nbsp;&nbsp;&nbsp; <span class="badge badge-danger test-result"><i class="fa fa-times"></i>&nbsp;&nbsp;{{testReport?.failed}} | {{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span><br/>
+        Skipped: <span class="badge badge-warning test-result"><i class="fa fa-minus"></i>&nbsp;&nbsp;{{testReport?.skipped}} | {{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span><br/>
+      </p>
+      <p><span><b>Total:</b> {{testReport?.total}}</span></p>
+      <a class="btn btn-default" href="#/report" title="Show test reports">Show test results</a>
+    </div>
+  </div>
+</div>

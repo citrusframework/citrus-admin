@@ -1,0 +1,134 @@
+<h2 class="page-header">
+  <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
+  <div class="btn-group pull-right">
+    <button [disabled]="selectedEndpoint" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li *ngFor="let type of endpointTypes" (click)="getEndpointType(type)" ><a name="{{type}}" class="clickable"><span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span> {{type}}</a></li>
+    </ul>
+  </div>
+</h2>
+
+<p>Endpoint components create producer and consumers for sending and receiving messages to/from various endpoint destinations. Endpoint components can be of synchronous and asynchronous nature and get referenced in test cases
+  when sending and receiving messages.</p>
+
+<br/>
+
+<form *ngIf="newEndpoint" class="form-horizontal">
+  <h3>New Endpoint</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="type" value="{{newEndpoint.type}}" type="text" disabled="disabled" class="form-control"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="newEndpoint.id" type="text" class="form-control" name="newEndpointId"/>
+    </div>
+  </div>
+
+  <div *ngFor="let property of newEndpoint.properties" class="form-group">
+    <label class="col-sm-2 control-label">{{property.displayName}}</label>
+    <div class="col-sm-10">
+      <div *ngIf="property.optionKey" class="input-group">
+        <input [(ngModel)]="property.value" class="form-control" type="text" name="{{property.displayName}}"/>
+        <div class="btn-group input-group-btn">
+          <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
+            <i class="fa fa-search"></i>
+          </button>
+          <ul class="dropdown-menu option-search">
+          </ul>
+        </div>
+      </div>
+
+      <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" name="propertyValueSelect">
+        <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
+      </select>
+
+      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control"  name="{{property.displayName}}"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="createEndpoint()" type="submit">Create</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<form *ngIf="selectedEndpoint" class="form-horizontal">
+  <h3>Edit Endpoint</h3>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="type" value="{{selectedEndpoint.type}}" type="text" disabled="disabled" class="form-control"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="selectedEndpoint.id" type="text" class="form-control" name="selectedEndpointId"/>
+    </div>
+  </div>
+
+  <div *ngFor="let property of selectedEndpoint.properties" class="form-group">
+    <label class="col-sm-2 control-label">{{property.displayName}}</label>
+    <div class="col-sm-10">
+      <div *ngIf="property.optionKey" class="input-group">
+        <input [(ngModel)]="property.value" class="form-control" type="text" name="{{property.displayName}}"/>
+        <div class="btn-group input-group-btn">
+          <button class="btn btn-option-search dropdown-toggle" data-toggle="dropdown" (click)="searchBeans(property)">
+            <i class="fa fa-search"></i>
+          </button>
+          <ul class="dropdown-menu option-search">
+          </ul>
+        </div>
+      </div>
+
+      <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" name="{{property.displayName}}">
+        <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
+      </select>
+
+      <input *ngIf="!property.optionKey && !property.options" [(ngModel)]="property.value" type="text" class="form-control" name="{{property.displayName}}"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" (click)="saveEndpoint()" type="submit">Save</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="!newEndpoint && !selectedEndpoint">
+  <div *ngIf="endpoints.length == 0" class="panel panel-default">
+    <div class="panel-body">
+      <i class="fa fa-times"></i> No endpoints defined
+    </div>
+  </div>
+
+  <div *ngFor="let endpoint of endpoints" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a class="clickable" (click)="selectEndpoint(endpoint)" name="edit" title="Edit endpoint">{{endpoint.id}}</a>
+        <a class="clickable pull-right" (click)="removeEndpoint(endpoint, $event)" name="remove" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <ul class="properties endpoint-properties">
+        <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
+      </ul>
+    </div>
+    <div class="panel-footer">
+      <span class="label label-endpoint label-{{endpoint.type}}"><i class="fa fa-share-alt-square"></i> {{endpoint.type}}</span>
+      <a class="clickable pull-right" (click)="selectEndpoint(endpoint)" name="edit" title="Edit endpoint"><i class="fa fa-edit"></i></a>
+    </div>
+  </div>
+</div>
