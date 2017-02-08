@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../../service/config.service';
-import {SchemaRepository, Schema, SchemaReference} from "../../model/schema.repository";
-import {Alert} from "../../model/alert";
-import {AlertService} from "../../service/alert.service";
+import {ConfigService} from '../../../service/config.service';
+import {SchemaRepository, Schema, SchemaReference} from "../../../model/schema.repository";
+import {Alert} from "../../../model/alert";
+import {AlertService} from "../../../service/alert.service";
 
 @Component({
     selector: 'schema-repository',
