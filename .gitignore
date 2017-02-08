@@ -14,10 +14,4 @@ bin
 .codepro
 .pmd
 logs
-node_modules
-typings
 coverage
-**/app/**/*.js
-**/app/**/*.js.map
-**/test/**/*.js
-**/test/**/*.js.map

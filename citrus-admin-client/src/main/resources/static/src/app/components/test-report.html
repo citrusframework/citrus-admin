@@ -1,0 +1,64 @@
+<div class="container content-header">
+  <div>
+    <h1>
+      <i class="fa fa-tasks"></i> Test report <small>Latest test results</small>
+    </h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="content-nav">
+    <span>These are the latest test results for the active project.</span>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <b>Project:</b> {{report.projectName}}
+        </li>
+        <li class="list-group-item">
+          <b>Suite Name:</b> {{report.suiteName}}
+        </li>
+        <li class="list-group-item">
+          <b>Date:</b> {{ report.executionDate | date:"MM/dd/yyyy" }}<br/>
+        </li>
+        <li class="list-group-item">
+          <b>Duration:</b> {{report.duration / 1000 }} s<br/>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-lg-6">
+      <ul class="list-group">
+        <li class="list-group-item">
+          Total
+          <span class="pull-right"><b>{{report.total}}</b></span>
+        </li>
+        <li class="list-group-item">
+          <span class="badge badge-success test-result"><i class="fa fa-check"></i> &nbsp;{{report.passed}} | {{report.total > 0 ? report.passed / report.total * 100 : 0}} %</span>
+          Passed
+        </li>
+        <li class="list-group-item">
+          <span class="badge badge-danger test-result"><i class="fa fa-times"></i> &nbsp;{{report.failed}} | {{report.total > 0 ? report.failed / report.total * 100 : 0}} %</span>
+          Failed
+        </li>
+        <li class="list-group-item">
+          <span class="badge badge-warning test-result"><i class="fa fa-minus"></i> &nbsp;{{report.skipped}} | {{report.total > 0 ? report.skipped / report.total * 100 : 0}} %</span>
+          Skipped
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Test results</h3>
+
+  <ul class="list-group">
+    <li *ngIf="report.results.length == 0" class="list-group-item"><i class="fa fa-file-text-o"></i> No tests found</li>
+    <li *ngFor="let result of report.results" [class]="result.success ? 'list-group-item list-group-item-success clickable' : 'list-group-item list-group-item-danger clickable'" (click)="open(result.test)">
+      <span><i class="fa fa-file-text-o"></i> <b>{{result.test.name}}</b></span>
+      <span class="pull-right" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
+    </li>
+  </ul>
+</div>
+
