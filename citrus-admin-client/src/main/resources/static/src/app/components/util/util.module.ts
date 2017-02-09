@@ -18,8 +18,6 @@ const components = [
     MenuItemComponent
 ]
 
-console.log('CMP', components);
-
 @NgModule({
     imports: [
         FormsModule,
@@ -29,4 +27,4 @@ console.log('CMP', components);
     exports: components,
 
 })
-export class UtilModule {}
+export class UtilComponentsModule {}

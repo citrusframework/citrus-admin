@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Project} from "../model/project";
-import {ProjectService} from "../service/project.service";
-import {ReportService} from "../service/report.service";
-import {TestService} from "../service/test.service";
-import {TestReport} from "../model/test.report";
-import {TestGroup} from "../model/tests";
-import {Alert, Link} from "../model/alert";
-import {AlertService} from "../service/alert.service";
+import {Project} from "../../model/project";
+import {ProjectService} from "../../service/project.service";
+import {ReportService} from "../../service/report.service";
+import {TestService} from "../../service/test.service";
+import {TestReport} from "../../model/test.report";
+import {TestGroup} from "../../model/tests";
+import {Alert, Link} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 @Component({
     templateUrl: 'dashboard.html',

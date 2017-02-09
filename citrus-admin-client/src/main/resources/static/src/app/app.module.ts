@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
-import { DashboardComponent } from './components/dashboard.component';
+import { DashboardComponent } from './components/project/dashboard.component';
 import { HeaderComponent } from './components/header.component';
 import { SidebarComponent } from './components/sidebar.component';
 import { LogComponent } from './components/log.component';
@@ -24,23 +24,16 @@ import { TestContainerComponent } from './components/design/test.container.compo
 import { TestDesignerComponent } from './components/design/test.designer.component';
 import { TestTransitionComponent } from './components/design/test.transition.component';
 
-import { ProjectSettingsComponent } from './components/project.settings.component';
 import { AlertConsole } from './components/alert.console';
 import { AlertDialog } from './components/alert.dialog';
 import { TruncatePipe } from "./util/truncate.pipe";
-import { AlertService } from "./service/alert.service";
-import { ConfigService } from "./service/config.service";
-import { EndpointService } from "./service/endpoint.service";
-import { ProjectService } from "./service/project.service";
-import { ReportService } from "./service/report.service";
-import { SpringBeanService } from "./service/springbean.service";
-import { TestService } from "./service/test.service";
-import {ProjectSetupService} from "./service/project.setup.service";
 import {FileSelectComponent} from "./components/file-select/file-select.component";
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
-import {UtilModule} from "./components/util/util.module";
-import {CanActivateRoutes} from "./service/can-activate-routes";
+import {UtilComponentsModule} from "./components/util/util.module";
+import {ServiceModule} from "./service/service.module";
+import {ProjectModule} from "./components/project/project.module";
+import {UtilModule} from "./util/util.module";
 
 @NgModule({
     imports: [
@@ -49,11 +42,13 @@ import {CanActivateRoutes} from "./service/can-activate-routes";
         FormsModule,
         AppRoutingModule,
         ConfigurationModule,
-        UtilModule
+        UtilComponentsModule,
+        UtilModule,
+        ServiceModule,
+        ProjectModule
     ],
     declarations: [
         AppComponent,
-        DashboardComponent,
         HeaderComponent,
         SidebarComponent,
         LogComponent,
@@ -71,23 +66,12 @@ import {CanActivateRoutes} from "./service/can-activate-routes";
         TestContainerComponent,
         TestDesignerComponent,
         TestTransitionComponent,
-        ProjectSettingsComponent,
         AlertConsole,
         AlertDialog,
-        TruncatePipe,
         SetupComponent,
         FileSelectComponent
     ],
     providers: [
-        CanActivateRoutes,
-        AlertService,
-        ConfigService,
-        EndpointService,
-        ProjectService,
-        ReportService,
-        SpringBeanService,
-        TestService,
-        ProjectSetupService
     ],
     bootstrap: [AppComponent]
 })
