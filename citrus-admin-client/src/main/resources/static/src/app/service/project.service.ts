@@ -32,7 +32,7 @@ export class ProjectService {
     }
 
     private handleError (error: Response) {
-        return Observable.throw(error.json() || 'Server error');
+        return Observable.throw(error || 'Server error');
     }
 
 }

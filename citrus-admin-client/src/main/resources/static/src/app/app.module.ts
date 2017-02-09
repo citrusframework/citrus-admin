@@ -40,6 +40,7 @@ import {FileSelectComponent} from "./components/file-select/file-select.componen
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
 import {UtilModule} from "./components/util/util.module";
+import {CanActivateRoutes} from "./service/can-activate-routes";
 
 @NgModule({
     imports: [
@@ -78,6 +79,7 @@ import {UtilModule} from "./components/util/util.module";
         FileSelectComponent
     ],
     providers: [
+        CanActivateRoutes,
         AlertService,
         ConfigService,
         EndpointService,

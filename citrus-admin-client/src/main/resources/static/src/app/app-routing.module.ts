@@ -7,11 +7,12 @@ import { ComingComponent }   from './components/coming.component';
 import { ProjectSettingsComponent }   from './components/project.settings.component';
 import { TestsComponent }   from './components/tests.component';
 import { TestReportComponent } from "./components/test.report.component";
-import { SetupComponent } from "./components/setup.component";
+import {SetupComponent} from "./components/setup.component";
+import {CanActivateRoutes} from "./service/can-activate-routes";
 
 const routes: Routes = [
     { path: '', redirectTo: '/project', pathMatch: 'full' },
-    { path: 'project', component: DashboardComponent },
+    { path: 'project', component: DashboardComponent, canActivate:[CanActivateRoutes] },
     { path: 'project/settings', component: ProjectSettingsComponent},
     { path: 'project/settings/:activeTab', component: ProjectSettingsComponent},
     { path: 'tests', component: TestsComponent},
