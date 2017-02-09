@@ -9,15 +9,6 @@ import { HeaderComponent } from './components/header.component';
 import { LogComponent } from './components/log.component';
 import { ComingComponent } from './components/coming.component';
 
-import { ConfigurationComponent } from './components/configuration/configuration.component';
-import { DataDictionaryComponent } from './components/configuration/data-dictionary/data.dictionary.component';
-import { EndpointsComponent } from './components/configuration/endpoints/endpoints.component';
-import { FunctionLibraryComponent } from './components/configuration/function-library/function.library.component';
-import { GlobalVariablesComponent } from './components/configuration/global-variables/global.variables.component';
-import { NamespaceContextComponent } from './components/configuration/namespace-context/namespace.context.component';
-import { SchemaRepositoryComponent } from './components/configuration/schema-repository/schema.repository.component';
-import { ValidationMatcherComponent } from './components/configuration/validation-matcher/validation.matcher.component';
-
 import { SourceCodeComponent } from './components/source.code.component';
 import { TestDetailComponent } from './components/test.detail.component';
 import { TestExecuteComponent } from './components/test.execute.component';
@@ -32,11 +23,6 @@ import { TestDesignerComponent } from './components/design/test.designer.compone
 import { TestTransitionComponent } from './components/design/test.transition.component';
 
 import { ProjectSettingsComponent } from './components/project.settings.component';
-import { AutoComplete } from './components/util/autocomplete';
-import { Dialog } from './components/util/dialog';
-import { Pills, Pill } from './components/util/pills';
-import { SidebarMenu, MenuItem } from './components/util/sidebar';
-import { Tabs, Tab } from './components/util/tabs';
 import { AlertConsole } from './components/alert.console';
 import { AlertDialog } from './components/alert.dialog';
 import { TruncatePipe } from "./util/truncate.pipe";
@@ -50,13 +36,17 @@ import { TestService } from "./service/test.service";
 import {ProjectSetupService} from "./service/project.setup.service";
 import {FileSelectComponent} from "./components/file-select/file-select.component";
 import {SetupComponent} from "./components/setup.component";
+import {ConfigurationModule} from "./components/configuration/configuration.module";
+import {UtilModule} from "./components/util/util.module";
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpModule,
         FormsModule,
-        AppRoutingModule
+        AppRoutingModule,
+        ConfigurationModule,
+        UtilModule
     ],
     declarations: [
         AppComponent,
@@ -64,14 +54,6 @@ import {SetupComponent} from "./components/setup.component";
         HeaderComponent,
         LogComponent,
         ComingComponent,
-        ConfigurationComponent,
-        DataDictionaryComponent,
-        EndpointsComponent,
-        FunctionLibraryComponent,
-        GlobalVariablesComponent,
-        NamespaceContextComponent,
-        SchemaRepositoryComponent,
-        ValidationMatcherComponent,
         SourceCodeComponent,
         TestDetailComponent,
         TestExecuteComponent,
@@ -85,14 +67,6 @@ import {SetupComponent} from "./components/setup.component";
         TestDesignerComponent,
         TestTransitionComponent,
         ProjectSettingsComponent,
-        AutoComplete,
-        Dialog,
-        Pills,
-        Pill,
-        SidebarMenu,
-        MenuItem,
-        Tabs,
-        Tab,
         AlertConsole,
         AlertDialog,
         TruncatePipe,

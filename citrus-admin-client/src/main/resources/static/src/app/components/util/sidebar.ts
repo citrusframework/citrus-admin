@@ -17,17 +17,17 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     </div>
   `
 })
-export class SidebarMenu {
+export class SidebarMenuComponent {
     @Output() selected = new EventEmitter(true);
 
-    items: MenuItem[];
+    items: MenuItemComponent[];
 
     constructor() {
         this.items = [];
     }
 
-    select(item: MenuItem, event:MouseEvent) {
-        this.items.forEach((item: MenuItem) => {
+    select(item: MenuItemComponent, event:MouseEvent) {
+        this.items.forEach((item: MenuItemComponent) => {
             item.active = false;
         });
         item.active = true;
@@ -38,7 +38,7 @@ export class SidebarMenu {
         return false;
     }
 
-    addMenuItem(item: MenuItem) {
+    addMenuItem(item: MenuItemComponent) {
         this.items.push(item);
     }
 }
@@ -51,13 +51,13 @@ export class SidebarMenu {
     </div>
   `
 })
-export class MenuItem {
+export class MenuItemComponent {
     @Input('item-id') id: string;
     @Input('item-title') title: string;
     @Input('item-icon') icon: string;
     @Input() active: boolean;
 
-    constructor(items: SidebarMenu){
+    constructor(items: SidebarMenuComponent){
         items.addMenuItem(this);
     }
 }

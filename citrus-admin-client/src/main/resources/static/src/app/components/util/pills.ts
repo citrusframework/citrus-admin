@@ -14,7 +14,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     <ng-content></ng-content>
   `
 })
-export class Pills {
+export class PillsComponent {
     @Input() navigation: boolean;
     @Input() justified: boolean;
     @Input() stacked: boolean;
@@ -22,7 +22,7 @@ export class Pills {
 
     @Output() selected = new EventEmitter(true);
 
-    pills: Pill[];
+    pills: PillComponent[];
 
     constructor() {
         this.pills = [];
@@ -32,8 +32,8 @@ export class Pills {
         this.pullRight = false;
     }
 
-    select(pill: Pill, event:MouseEvent) {
-        this.pills.forEach((pill: Pill) => {
+    select(pill: PillComponent, event:MouseEvent) {
+        this.pills.forEach((pill: PillComponent) => {
             pill.active = false;
         });
         pill.active = true;
@@ -44,7 +44,7 @@ export class Pills {
         return false;
     }
 
-    addPill(pill: Pill) {
+    addPill(pill: PillComponent) {
         this.pills.push(pill);
     }
 }
@@ -57,13 +57,13 @@ export class Pills {
     </div>
   `
 })
-export class Pill {
+export class PillComponent {
     @Input('pill-id') id: string;
     @Input('pill-title') title: string;
     @Input('pill-icon') icon: string;
     @Input() active: boolean;
 
-    constructor(pills: Pills){
+    constructor(pills: PillsComponent){
         pills.addPill(this);
     }
 }

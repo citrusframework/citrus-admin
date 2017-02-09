@@ -1,20 +1,36 @@
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router, NavigationEnd, NavigationStart} from '@angular/router';
+
+const MenuEntry = (name:string, link:string[]) => ({name, link});
 
 @Component({
     templateUrl: 'config.html'
 })
 export class ConfigurationComponent {
-    constructor(private route: ActivatedRoute) {
-        let activeTabParam: string = route.snapshot.params['activeTab'];
-        if (activeTabParam != null) {
-            this.active = activeTabParam;
-        }
+
+    menuEntries = [
+        MenuEntry('Endpoints', ['endpoints']),
+        MenuEntry('Schema Definitions', ['schema-definition']),
+        MenuEntry('Global Variables', ['global-variables']),
+        MenuEntry('Functions', ['functions']),
+        MenuEntry('Validation Matcher', ['validation-matcher']),
+        MenuEntry('Data dictionaries', ['data-dictionaries']),
+        MenuEntry('Namespaces', ['namespaces'])
+    ]
+
+    constructor(private route: ActivatedRoute,
+        private router:Router
+    ) {
+        router.navigate(['configuration/endpoints'])
+        router.events
+            .filter(e => e instanceof NavigationStart)
+            .filter((e:NavigationStart) => e.url === '/configuration')
+            .subscribe(e => {
+                router.navigate(['configuration/endpoints'])
+            })
     }
 
-    active = 'endpoints';
-
     isActive(name: string) {
-        return this.active === name;
+        return this.router.isActive('configuration/' +name, false);
     }
 }

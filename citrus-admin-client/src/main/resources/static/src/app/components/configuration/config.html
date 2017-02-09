@@ -7,6 +7,7 @@
 </div>
 
 <div class="container">
+<!--
   <pills justified="true">
     <pill pill-id="endpoints" pill-title="Endpoints" [active]="isActive('endpoints')">
       <endpoints></endpoints>
@@ -30,6 +31,15 @@
       <namespace-context></namespace-context>
     </pill>
   </pills>
-
+  -->
+  <div>
+    <ul class="nav nav-pills nav-justified">
+      <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link[0])">
+        <a [routerLink]="entry.link">{{entry.name}}</a>
+      </li>
+    </ul>
+  </div>
+  <div [class.clearfix]="navigation && pullRight"></div>
+  <router-outlet></router-outlet>
   <div class="alert-console" type="detailed"></div>
 </div>
