@@ -25,7 +25,7 @@ declare var jQuery:any;
   </div>
 </div>`
 })
-export class Dialog {
+export class DialogComponent {
     @Output() confirmed = new EventEmitter(true);
     @Output() closed = new EventEmitter(true);
 

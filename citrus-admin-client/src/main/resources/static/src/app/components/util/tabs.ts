@@ -12,21 +12,21 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     <ng-content></ng-content>
   `
 })
-export class Tabs {
+export class TabsComponent {
 
     @Input() dynamic: boolean;
 
     @Output() closed = new EventEmitter(false);
     @Output() selected = new EventEmitter(true);
 
-    tabs: Tab[];
+    tabs: TabComponent[];
 
     constructor() {
         this.tabs = [];
     }
 
-    select(tab: Tab) {
-        this.tabs.forEach((tab: Tab) => {
+    select(tab: TabComponent) {
+        this.tabs.forEach((tab: TabComponent) => {
             tab.active = false;
         });
         tab.active = true;
@@ -34,7 +34,7 @@ export class Tabs {
         this.selected.emit(tab);
     }
 
-    close(tab: Tab) {
+    close(tab: TabComponent) {
         this.tabs.splice(this.tabs.indexOf(tab), 1);
         this.closed.emit(tab);
 
@@ -43,9 +43,9 @@ export class Tabs {
         }
     }
 
-    addTab(tab: Tab) {
+    addTab(tab: TabComponent) {
         if (this.dynamic) {
-            this.tabs.forEach((tab: Tab) => {
+            this.tabs.forEach((tab: TabComponent) => {
                 tab.active = false;
             });
             tab.active = true;
@@ -65,14 +65,14 @@ export class Tabs {
     </div>
   `
 })
-export class Tab {
+export class TabComponent {
     @Input('tab-id') id: string;
     @Input('tab-title') title: string;
     @Input() closable: boolean;
 
     active: boolean;
 
-    constructor(tabs: Tabs){
+    constructor(tabs: TabsComponent){
         tabs.addTab(this);
     }
 }

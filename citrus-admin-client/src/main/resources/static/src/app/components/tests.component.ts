@@ -1,6 +1,6 @@
 import {Component, OnInit, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Tab} from "./util/tabs";
+import {TabComponent} from "./util/tabs";
 import {TestGroup, Test} from "../model/tests";
 import {TestService} from "../service/test.service";
 import {Alert} from "../model/alert";
@@ -54,7 +54,7 @@ export class TestsComponent implements OnInit {
                 error => this.notifyError(<any>error));
     }
 
-    onTabClosed(tab: Tab) {
+    onTabClosed(tab: TabComponent) {
         var test = this.openTests.find(test => test.name === tab.id);
         if (test) {
             this.openTests.splice(this.openTests.indexOf(test), 1);
@@ -66,7 +66,7 @@ export class TestsComponent implements OnInit {
         }
     }
 
-    onTabSelected(tab: Tab) {
+    onTabSelected(tab: TabComponent) {
         var test = this.openTests.find(test => test.name === tab.id);
         if (test) {
             this.activeTest = test;

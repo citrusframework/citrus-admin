@@ -5,7 +5,6 @@ import { DashboardComponent }   from './components/dashboard.component';
 import { LogComponent }   from './components/log.component';
 import { ComingComponent }   from './components/coming.component';
 import { ProjectSettingsComponent }   from './components/project.settings.component';
-import { ConfigurationComponent }   from './components/configuration/configuration.component';
 import { TestsComponent }   from './components/tests.component';
 import { TestReportComponent } from "./components/test.report.component";
 import { SetupComponent } from "./components/setup.component";
@@ -15,8 +14,6 @@ const routes: Routes = [
     { path: 'project', component: DashboardComponent },
     { path: 'project/settings', component: ProjectSettingsComponent},
     { path: 'project/settings/:activeTab', component: ProjectSettingsComponent},
-    { path: 'configuration', component: ConfigurationComponent},
-    { path: 'configuration/:activeTab', component: ConfigurationComponent},
     { path: 'tests', component: TestsComponent},
     { path: 'tests/:name', component: TestsComponent},
     { path: 'report', component: TestReportComponent},

@@ -16,7 +16,7 @@ import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/cor
     </li>
 </ul>`
 })
-export class AutoComplete {
+export class AutoCompleteComponent {
     @Output() selected = new EventEmitter(true);
 
     @Input() id: string;

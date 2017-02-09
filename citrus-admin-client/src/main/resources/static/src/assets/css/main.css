@@ -314,7 +314,7 @@ pre.logger {
     background-color: rgba(255,255,255,0.2);
 }
 
-/** Tab navigation **/
+/** TabComponent navigation **/
 
 .nav-tabs > li > a {
     color: #404040;
@@ -352,7 +352,7 @@ pre.logger {
     filter: alpha(opacity=50);
 }
 
-/** Nav Pills **/
+/** Nav PillsComponent **/
 
 .nav-pills > li + li {
     margin-left: 0px;
