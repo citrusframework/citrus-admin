@@ -78,8 +78,8 @@ public class ProjectSetupInterceptorTest {
             new Object[] {"/assets/images", "", null, false},
             new Object[] {"/assets/setup", "", null, false},
             new Object[] {"/templates/filetree.html", "", null, false},
-            new Object[] {"/file/browse", "", null, false},
-            new Object[] {"/project", "", null, false},
+            new Object[] {"/api/file/browse", "", null, false},
+            new Object[] {"/api/project", "", null, false},
             new Object[] {"/foo", "", null, true},
             new Object[] {"/foo/bar", "", null, true},
             new Object[] {"/setup", "", activeProject, false},
@@ -87,8 +87,8 @@ public class ProjectSetupInterceptorTest {
             new Object[] {"/assets/images", "", activeProject, false},
             new Object[] {"/assets/setup", "", activeProject, false},
             new Object[] {"/templates/filetree.html", "", activeProject, false},
-            new Object[] {"/file/browse", "", activeProject, false},
-            new Object[] {"/project", "", activeProject, false},
+            new Object[] {"/api/file/browse", "", activeProject, false},
+            new Object[] {"/api/project", "", activeProject, false},
             new Object[] {"/foo", "", activeProject, false},
             new Object[] {"/foo/bar", "", activeProject, false}
         };

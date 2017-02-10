@@ -49,9 +49,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 "/assets/*",
                 "/api/*",
                 "/templates/*",
-                "/file/browse",
-                "/project",
-                "/project/*",
                 "/error"
         });
         return interceptor;
