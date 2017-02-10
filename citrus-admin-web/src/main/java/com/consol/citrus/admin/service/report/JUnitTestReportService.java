@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service.report;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -26,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
+import org.springframework.util.xml.DomUtils;
+import org.w3c.dom.*;
 
 import java.io.IOException;
 
@@ -54,6 +54,33 @@ public class JUnitTestReportService implements TestReportService {
                 report.setSkipped(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testsuite/@skipped", null)));
                 report.setTotal(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testsuite/@tests", null)));
                 report.setPassed(report.getTotal() - report.getSkipped() - report.getFailed());
+
+                NodeList testCases = XPathUtils.evaluateAsNodeList(testResults, "/testsuite/testcase", null);
+                for (int i = 0; i < testCases.getLength(); i++) {
+                    Element testCase = (Element) testCases.item(i);
+                    TestResult result = new TestResult();
+                    Test test = new Test();
+
+                    test.setClassName(testCase.getAttribute("classname"));
+                    test.setMethodName(testCase.getAttribute("name"));
+                    test.setPackageName(test.getClassName().substring(0, test.getClassName().lastIndexOf('.')));
+                    test.setName(test.getClassName().substring(test.getClassName().lastIndexOf('.') + 1) + "." + test.getMethodName());
+                    test.setType(TestType.JAVA);
+
+                    result.setTest(test);
+
+                    Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");
+                    if (failureElement != null) {
+                        result.setSuccess(false);
+                        result.setErrorMessage(failureElement.getAttribute("message"));
+                        result.setErrorCause(failureElement.getAttribute("type"));
+                        result.setStackTrace(DomUtils.getTextValue(failureElement).trim());
+                    } else {
+                        result.setSuccess(true);
+                    }
+
+                    report.getResults().add(result);
+                }
             } catch (IOException e) {
                 log.error("Failed to read test results file", e);
             }

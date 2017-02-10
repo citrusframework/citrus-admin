@@ -4,4 +4,10 @@
   </properties>
   <testcase name="test_1" classname="com.consol.citrus.samples.Test_1_IT" time="4.000"/>
   <testcase name="test_2" classname="com.consol.citrus.samples.Test_2_IT" time="5.000"/>
+  <testcase name="test_3" classname="com.consol.citrus.samples.Test_3_IT" time="6.000">
+    <failure message="Test case failed" type="com.consol.citrus.exceptions.TestCaseFailedException">com.consol.citrus.exceptions.TestCaseFailedException: Test case failed
+      Caused by: com.consol.citrus.exceptions.ValidationException: Validation failed: Node value not equal for element 'foo', expected 'true' but was 'false'
+      Caused by: java.lang.IllegalArgumentException: Node value not equal for element 'foo', expected 'true' but was 'false'
+    </failure>
+  </testcase>
 </testsuite>

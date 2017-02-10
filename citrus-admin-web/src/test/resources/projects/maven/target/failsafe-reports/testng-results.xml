@@ -5,5 +5,34 @@
   <suite name="Sample test suite" duration-ms="9000" started-at="2016-01-01T00:00:00Z" finished-at="2016-01-01T00:00:09Z">
     <groups>
     </groups>
+    <test name="Surefire test" duration-ms="6675" started-at="2017-02-10T12:58:13Z" finished-at="2017-02-10T12:58:20Z">
+      <class name="com.consol.citrus.samples.Test_1_IT">
+        <test-method status="PASS" signature="test_1()[pri:0, instance:com.consol.citrus.samples.Test_1_IT@50a638b5]" name="test_1" duration-ms="4000" started-at="2017-02-10T12:00:00Z" finished-at="2017-02-10T12:00:04Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method>
+      </class>
+      <class name="com.consol.citrus.samples.Test_2_IT">
+        <test-method status="PASS" signature="test_2()[pri:0, instance:com.consol.citrus.samples.Test_2_IT@50a638b5]" name="test_2" duration-ms="5000" started-at="2017-02-10T12:00:05Z" finished-at="2017-02-10T12:00:10Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method>
+      </class>
+      <class name="com.consol.citrus.samples.Test_3_IT">
+        <test-method status="FAIL" signature="test_3()[pri:0, instance:com.consol.citrus.samples.Test_3_IT@50a638b5]" name="test_3" duration-ms="6000" started-at="2017-02-10T12:00:10Z" finished-at="2017-02-10T12:00:16Z">
+          <exception class="com.consol.citrus.exceptions.TestCaseFailedException">
+            <message>
+              <![CDATA[Test case failed]]>
+            </message>
+            <full-stacktrace>com.consol.citrus.exceptions.TestCaseFailedException: Test case failed
+              Caused by: com.consol.citrus.exceptions.ValidationException: Validation failed: Node value not equal for element 'foo', expected 'true' but was 'false'
+              Caused by: java.lang.IllegalArgumentException: Node value not equal for element 'foo', expected 'true' but was 'false'
+            </full-stacktrace>
+          </exception>
+          <reporter-output>
+          </reporter-output>
+        </test-method>
+      </class>
+    </test>
   </suite> <!-- Surefire suite -->
 </testng-results>

@@ -173,14 +173,14 @@ pre.logger {
 }
 
 .navbar .nav .active > a, .navbar .nav .active > a:hover, .navbar .nav .active > a:focus {
-    color: #404040 !important;
+    color: #ffffff !important;
     background-color: rgba(255,255,255,0.2);
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
 .navbar .nav > li > a.router-link-active, .navbar .nav > li > a.router-link-active:hover, .navbar .nav > li > a.router-link-active:focus {
-    color: #404040 !important;
+    color: #ffffff !important;
     background-color: rgba(255,255,255,0.2);
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -188,7 +188,7 @@ pre.logger {
 
 .navbar .nav > li > a.active,
 .navbar .nav > li > a:hover {
-    color: #404040;
+    color: #ffffff;
     background-color: rgba(255,255,255,0.2);
 }
 
@@ -564,6 +564,10 @@ i.channel {
 
 .list-group-item:focus, .list-group-item:hover {
     background-color: #efefef;
+}
+
+.list-group-item-success, .list-group-item-danger {
+    background-color: #fff;
 }
 
 /** Drop Down Menu **/

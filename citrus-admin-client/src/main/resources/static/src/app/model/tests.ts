@@ -60,7 +60,8 @@ export class TestResult {
     public test: Test;
     public success: boolean;
     public stackTrace: string;
-    public failureStack: string;
+    public errorMessage: string;
+    public errorCause: string;
 
     public processId: string;
 }

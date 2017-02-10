@@ -58,6 +58,11 @@
     <li *ngFor="let result of report.results" [class]="result.success ? 'list-group-item list-group-item-success clickable' : 'list-group-item list-group-item-danger clickable'" (click)="open(result.test)">
       <span><i class="fa fa-file-text-o"></i> <b>{{result.test.name}}</b></span>
       <span class="pull-right" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
+      <div *ngIf="result.errorCause" class="error-details">
+        <h3 [textContent]="result.errorCause"></h3>
+        <h4 [textContent]="result.errorMessage"></h4>
+        <pre [textContent]="result.stackTrace"></pre>
+      </div>
     </li>
   </ul>
 </div>

@@ -19,7 +19,6 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.process.ProcessMonitor;
 import com.consol.citrus.admin.service.executor.TestExecutor;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,10 +83,8 @@ public class TestExecutionService {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         e.printStackTrace(new PrintStream(os));
+        result.setErrorMessage(e.getMessage());
+        result.setErrorCause(e.getClass().getName());
         result.setStackTrace("Caused by: " + os.toString());
-
-        if (e instanceof CitrusRuntimeException) {
-            result.setFailureStack(((CitrusRuntimeException)e).getFailureStackAsString());
-        }
     }
 }

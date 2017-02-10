@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service.report;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.model.*;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,5 +43,33 @@ public class TestNGTestReportServiceTest {
         Assert.assertEquals(report.getPassed(), 10L);
         Assert.assertEquals(report.getFailed(), 5L);
         Assert.assertEquals(report.getSkipped(), 1L);
+
+        Assert.assertEquals(report.getResults().size(), 3L);
+
+        TestResult testResult = report.getResults().get(0);
+        Assert.assertEquals(testResult.getTest().getClassName(), "com.consol.citrus.samples.Test_1_IT");
+        Assert.assertEquals(testResult.getTest().getName(), "Test_1_IT.test_1");
+        Assert.assertEquals(testResult.getTest().getMethodName(), "test_1");
+        Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
+        Assert.assertTrue(testResult.isSuccess());
+        Assert.assertNull(testResult.getErrorCause());
+
+        testResult = report.getResults().get(1);
+        Assert.assertEquals(testResult.getTest().getClassName(), "com.consol.citrus.samples.Test_2_IT");
+        Assert.assertEquals(testResult.getTest().getName(), "Test_2_IT.test_2");
+        Assert.assertEquals(testResult.getTest().getMethodName(), "test_2");
+        Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
+        Assert.assertTrue(testResult.isSuccess());
+        Assert.assertNull(testResult.getErrorCause());
+
+        testResult = report.getResults().get(2);
+        Assert.assertEquals(testResult.getTest().getClassName(), "com.consol.citrus.samples.Test_3_IT");
+        Assert.assertEquals(testResult.getTest().getName(), "Test_3_IT.test_3");
+        Assert.assertEquals(testResult.getTest().getMethodName(), "test_3");
+        Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
+        Assert.assertFalse(testResult.isSuccess());
+        Assert.assertEquals(testResult.getErrorCause(), "com.consol.citrus.exceptions.TestCaseFailedException");
+        Assert.assertEquals(testResult.getErrorMessage(), "Test case failed");
+        Assert.assertNotNull(testResult.getStackTrace());
     }
 }

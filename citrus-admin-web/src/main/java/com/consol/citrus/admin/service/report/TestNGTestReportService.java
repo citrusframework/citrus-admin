@@ -85,11 +85,26 @@ public class TestNGTestReportService implements TestReportService {
 
                             result.setTest(test);
                             result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
+
+                            Element exceptionElement = DomUtils.getChildElementByTagName(testMethod, "exception");
+                            if (exceptionElement != null) {
+                                Element messageElement = DomUtils.getChildElementByTagName(exceptionElement, "message");
+                                if (messageElement != null) {
+                                    result.setErrorMessage(DomUtils.getTextValue(messageElement).trim());
+                                }
+
+                                result.setErrorCause(exceptionElement.getAttribute("class"));
+
+                                Element stackTraceElement = DomUtils.getChildElementByTagName(exceptionElement, "full-stacktrace");
+                                if (stackTraceElement != null) {
+                                    result.setStackTrace(DomUtils.getTextValue(stackTraceElement).trim());
+                                }
+                            }
+
                             report.getResults().add(result);
                         }
                     }
                 }
-
             } catch (IOException e) {
                 log.error("Failed to read test results file", e);
             }

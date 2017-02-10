@@ -23,8 +23,10 @@ public class TestResult {
 
     private Test test;
     private boolean success;
+
+    private String errorMessage;
+    private String errorCause;
     private String stackTrace;
-    private String failureStack;
 
     private String processId;
 
@@ -71,20 +73,6 @@ public class TestResult {
     }
 
     /**
-     * @return
-     */
-    public String getFailureStack() {
-        return failureStack;
-    }
-
-    /**
-     * @param value
-     */
-    public void setFailureStack(String value) {
-        this.failureStack = value;
-    }
-
-    /**
      * Sets the processId property.
      *
      * @param processId
@@ -100,5 +88,41 @@ public class TestResult {
      */
     public String getProcessId() {
         return processId;
+    }
+
+    /**
+     * Sets the errorMessage.
+     *
+     * @param errorMessage
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    /**
+     * Gets the errorMessage.
+     *
+     * @return
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * Gets the errorCause.
+     *
+     * @return
+     */
+    public String getErrorCause() {
+        return errorCause;
+    }
+
+    /**
+     * Sets the errorCause.
+     *
+     * @param errorCause
+     */
+    public void setErrorCause(String errorCause) {
+        this.errorCause = errorCause;
     }
 }
