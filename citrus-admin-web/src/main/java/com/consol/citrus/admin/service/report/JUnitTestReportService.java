@@ -46,6 +46,7 @@ public class JUnitTestReportService implements TestReportService {
         if (hasTestResults(activeProject)) {
             try {
                 Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
+                report.setProjectName(activeProject.getName());
                 report.setSuiteName(XPathUtils.evaluateAsString(testResults, "/testsuite/@name", null));
                 report.setDuration(Math.round(Double.valueOf(XPathUtils.evaluateAsString(testResults, "/testsuite/@time", null)) * 1000));
 

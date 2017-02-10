@@ -19,12 +19,11 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.TestReport;
 import com.consol.citrus.admin.service.ProjectService;
-import com.consol.citrus.admin.service.report.TestReportService;
+import com.consol.citrus.admin.service.report.JUnitTestReportService;
+import com.consol.citrus.admin.service.report.TestNGTestReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -37,17 +36,20 @@ public class ReportController {
     private ProjectService projectService;
 
     @Autowired
-    private List<TestReportService> testReportService;
+    private TestNGTestReportService testNGTestReportService;
+
+    @Autowired
+    private JUnitTestReportService junitTestReportService;
 
     @RequestMapping(value = "/latest", method = RequestMethod.GET)
     @ResponseBody
     public TestReport getLatest() {
         Project project = projectService.getActiveProject();
-        if(null != project) {
-            for (TestReportService reportService : testReportService) {
-                if (reportService.hasTestResults(project)) {
-                    return reportService.getLatest(project);
-                }
+        if (null != project) {
+            if (testNGTestReportService.hasTestResults(project)) {
+                return testNGTestReportService.getLatest(project);
+            } else if (junitTestReportService.hasTestResults(project)) {
+                return junitTestReportService.getLatest(project);
             }
         }
 

@@ -65,7 +65,7 @@ public class TestNGTestReportService implements TestReportService {
                 report.setPassed(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@passed", null)));
                 report.setFailed(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@failed", null)));
                 report.setSkipped(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@skipped", null)));
-                report.setTotal(Long.valueOf(XPathUtils.evaluateAsString(testResults, "/testng-results/@total", null)));
+                report.setTotal(report.getPassed() + report.getFailed() + report.getSkipped());
 
                 NodeList testClasses = XPathUtils.evaluateAsNodeList(testResults, "testng-results/suite[1]/test/class", null);
                 for (int i = 0; i < testClasses.getLength(); i++) {

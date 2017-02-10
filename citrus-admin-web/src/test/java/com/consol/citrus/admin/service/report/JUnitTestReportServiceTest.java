@@ -36,6 +36,7 @@ public class JUnitTestReportServiceTest {
         Assert.assertTrue(service.hasTestResults(project));
 
         TestReport report = service.getLatest(project);
+        Assert.assertEquals(report.getProjectName(), project.getName());
         Assert.assertEquals(report.getSuiteName(), "Sample test suite");
         Assert.assertEquals(report.getDuration(), 9000L);
         Assert.assertEquals(report.getTotal(), 16L);

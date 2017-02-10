@@ -36,6 +36,7 @@ public class TestNGTestReportServiceTest {
         Assert.assertTrue(service.hasTestResults(project));
 
         TestReport report = service.getLatest(project);
+        Assert.assertEquals(report.getProjectName(), project.getName());
         Assert.assertEquals(report.getSuiteName(), "Sample test suite");
         Assert.assertEquals(report.getDuration(), 9000L);
         Assert.assertEquals(report.getExecutionDate().getTime(), 1451602800000L);
