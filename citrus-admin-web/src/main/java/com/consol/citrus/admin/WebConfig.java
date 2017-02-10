@@ -48,6 +48,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         interceptor.setExcludes(new String[]{
                 "/assets/*",
                 "/api/*",
+                "/templates/*",
+                "/file/browse",
+                "/project",
+                "/project/*",
+                "/error"
         });
         return interceptor;
     }
