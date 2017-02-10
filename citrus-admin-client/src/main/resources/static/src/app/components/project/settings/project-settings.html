@@ -18,28 +18,4 @@
   <router-outlet></router-outlet>
 
   <div class="alert-console" type="detailed"></div>
-
-  <div class="dialog"
-       dialog-id="dialog-connector"
-       dialog-title="Admin connector library"
-       (confirmed)="manageConnector($event)">
-    <p>Add/remove connector library from project '{{project.name}}'. When connected events get pushed in real time during the test runs.</p>
-
-    <h4 *ngIf="project.settings.connectorActive" class="text-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
-    <h4 *ngIf="!project.settings.connectorActive" class="text-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
-
-    <div class="box box-center">
-      <img src="app/images/brand-logo.png" />
-      <strong>citrus-admin-ui</strong>
-      <i *ngIf="project.settings.connectorActive" class="fa fa-arrows-h fa-lg text-success"></i>
-      <i *ngIf="!project.settings.connectorActive" class="fa fa-remove fa-lg text-danger"></i>
-      <img src="app/images/brand-logo.png" />
-      <strong>{{project.name}}</strong>
-    </div>
-
-    <br />
-
-    <p *ngIf="project.settings.connectorActive">This operation will remove the connectivity!</p>
-    <p *ngIf="!project.settings.connectorActive">This operation will add the connectivity!</p>
-  </div>
 </div>

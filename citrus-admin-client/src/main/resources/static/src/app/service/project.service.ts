@@ -30,6 +30,10 @@ export class ProjectService {
     }
 
     update(project: Project) {
+        if(project === this.cachedProject) {
+            this.cachedProject = null;
+            this.cachedObservable = null;
+        }
         return this.http.put(this._serviceUrl, JSON.stringify(project), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
             .catch(this.handleError);
     }

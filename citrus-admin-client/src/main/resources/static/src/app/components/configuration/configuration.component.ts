@@ -22,8 +22,8 @@ export class ConfigurationComponent {
     constructor(private route: ActivatedRoute,
         private router:Router
     ) {
-        router.navigate(['configuration/endpoints'])
         router.events
+            .startWith(new NavigationStart(42, '/configuration'))
             .filter(e => e instanceof NavigationStart)
             .filter((e:NavigationStart) => e.url === '/configuration')
             .subscribe(e => {

@@ -1,19 +1,16 @@
 import {Component} from "@angular/core";
 import {ProjectService} from "../../../../service/project.service";
-import {Project} from "../../../../model/project";
+import {ProjectSettingBase} from "../ProjectSettingBase";
+import {AlertService} from "../../../../service/alert.service";
 @Component({
     selector: 'build',
     templateUrl: 'build.html'
 })
-export class BuildComponent {
-
-    project:Project = new Project();
-
+export class BuildComponent extends ProjectSettingBase{
     constructor(
-        private projectService:ProjectService
-    ) {}
-
-    ngOnInit() {
-        this.projectService.getActiveProject().subscribe(p => this.project = p)
+        private projectService:ProjectService,
+        private alertService:AlertService
+    ) {
+        super(projectService, alertService)
     }
 }
