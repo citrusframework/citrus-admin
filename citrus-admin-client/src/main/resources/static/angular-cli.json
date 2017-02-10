@@ -16,9 +16,9 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
       "styles": [
+        "styles.less",
         "assets/css/jQueryFileTree.css",
-        "assets/css/main.css",
-        "styles.less"
+        "assets/css/main.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
