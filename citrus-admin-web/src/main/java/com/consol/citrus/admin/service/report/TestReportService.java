@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service.report;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.model.*;
 
 /**
  * @author Christoph Deppisch
@@ -29,6 +28,14 @@ public interface TestReportService {
      * @return
      */
     TestReport getLatest(Project activeProject);
+
+    /**
+     * Loads latest test result for given test.
+     * @param activeProject
+     * @param test
+     * @return
+     */
+    TestResult getLatest(Project activeProject, Test test);
 
     /**
      * Checks whether test results are available in active project.

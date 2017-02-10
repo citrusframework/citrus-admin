@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -49,6 +50,26 @@ public class TestNGTestReportService implements TestReportService {
 
     @Autowired
     private TestCaseService testCaseService;
+
+    @Override
+    public TestResult getLatest(Project activeProject, Test test) {
+        TestResult result = new TestResult();
+        result.setTest(test);
+        if (hasTestResults(activeProject)) {
+            try {
+                Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
+                Node testClass = XPathUtils.evaluateAsNode(testResults, "/testng-results/suite[1]/test/class[@name = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
+                Element testMethod = (Element) XPathUtils.evaluateAsNode(testClass, "test-method[@name='" + test.getMethodName() + "']", null);
+                fillResult(result, testMethod);
+            } catch (CitrusRuntimeException e) {
+                log.warn("No results found for test: " + test.getPackageName() + "." + test.getClassName() + "#" + test.getMethodName());
+            } catch (IOException e) {
+                log.error("Failed to read test results file", e);
+            }
+        }
+
+        return result;
+    }
 
     @Override
     public TestReport getLatest(Project activeProject) {
@@ -86,22 +107,7 @@ public class TestNGTestReportService implements TestReportService {
 
                             Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
                             result.setTest(test);
-                            result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
-
-                            Element exceptionElement = DomUtils.getChildElementByTagName(testMethod, "exception");
-                            if (exceptionElement != null) {
-                                Element messageElement = DomUtils.getChildElementByTagName(exceptionElement, "message");
-                                if (messageElement != null) {
-                                    result.setErrorMessage(DomUtils.getTextValue(messageElement).trim());
-                                }
-
-                                result.setErrorCause(exceptionElement.getAttribute("class"));
-
-                                Element stackTraceElement = DomUtils.getChildElementByTagName(exceptionElement, "full-stacktrace");
-                                if (stackTraceElement != null) {
-                                    result.setStackTrace(DomUtils.getTextValue(stackTraceElement).trim());
-                                }
-                            }
+                            fillResult(result, testMethod);
 
                             report.getResults().add(result);
                         }
@@ -113,6 +119,30 @@ public class TestNGTestReportService implements TestReportService {
         }
 
         return report;
+    }
+
+    /**
+     * Fills result object with test method information.
+     * @param result
+     * @param testMethod
+     */
+    private void fillResult(TestResult result, Element testMethod) {
+        result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
+
+        Element exceptionElement = DomUtils.getChildElementByTagName(testMethod, "exception");
+        if (exceptionElement != null) {
+            Element messageElement = DomUtils.getChildElementByTagName(exceptionElement, "message");
+            if (messageElement != null) {
+                result.setErrorMessage(DomUtils.getTextValue(messageElement).trim());
+            }
+
+            result.setErrorCause(exceptionElement.getAttribute("class"));
+
+            Element stackTraceElement = DomUtils.getChildElementByTagName(exceptionElement, "full-stacktrace");
+            if (stackTraceElement != null) {
+                result.setStackTrace(DomUtils.getTextValue(stackTraceElement).trim());
+            }
+        }
     }
 
     @Override
@@ -136,5 +166,14 @@ public class TestNGTestReportService implements TestReportService {
      */
     private Resource getTestResultsFile(Project activeProject) {
         return new FileSystemResource(activeProject.getProjectHome() + "/target/failsafe-reports/testng-results.xml");
+    }
+
+    /**
+     * Sets the testCaseService.
+     *
+     * @param testCaseService
+     */
+    public void setTestCaseService(TestCaseService testCaseService) {
+        this.testCaseService = testCaseService;
     }
 }

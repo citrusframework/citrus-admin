@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -45,6 +46,25 @@ public class JUnitTestReportService implements TestReportService {
     private TestCaseService testCaseService;
 
     @Override
+    public TestResult getLatest(Project activeProject, Test test) {
+        TestResult result = new TestResult();
+        result.setTest(test);
+        if (hasTestResults(activeProject)) {
+            try {
+                Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
+                Element testCase = (Element) XPathUtils.evaluateAsNode(testResults, "/testsuite/testcase[@classname = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
+                fillResult(result, testCase);
+            } catch (CitrusRuntimeException e) {
+                log.warn("No results found for test: " + test.getPackageName() + "." + test.getClassName() + "#" + test.getMethodName());
+            } catch (IOException e) {
+                log.error("Failed to read test results file", e);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public TestReport getLatest(Project activeProject) {
         TestReport report = new TestReport();
 
@@ -70,16 +90,7 @@ public class JUnitTestReportService implements TestReportService {
 
                     Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
                     result.setTest(test);
-
-                    Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");
-                    if (failureElement != null) {
-                        result.setSuccess(false);
-                        result.setErrorMessage(failureElement.getAttribute("message"));
-                        result.setErrorCause(failureElement.getAttribute("type"));
-                        result.setStackTrace(DomUtils.getTextValue(failureElement).trim());
-                    } else {
-                        result.setSuccess(true);
-                    }
+                    fillResult(result, testCase);
 
                     report.getResults().add(result);
                 }
@@ -89,6 +100,23 @@ public class JUnitTestReportService implements TestReportService {
         }
 
         return report;
+    }
+
+    /**
+     * Fills result object with test case information.
+     * @param result
+     * @param testCase
+     */
+    private void fillResult(TestResult result, Element testCase) {
+        Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");
+        if (failureElement != null) {
+            result.setSuccess(false);
+            result.setErrorMessage(failureElement.getAttribute("message"));
+            result.setErrorCause(failureElement.getAttribute("type"));
+            result.setStackTrace(DomUtils.getTextValue(failureElement).trim());
+        } else {
+            result.setSuccess(true);
+        }
     }
 
     @Override
@@ -112,5 +140,14 @@ public class JUnitTestReportService implements TestReportService {
      */
     private Resource getTestResultsFile(Project activeProject) {
         return new FileSystemResource(activeProject.getProjectHome() + "/target/failsafe-reports/TEST-TestSuite.xml");
+    }
+
+    /**
+     * Sets the testCaseService.
+     *
+     * @param testCaseService
+     */
+    public void setTestCaseService(TestCaseService testCaseService) {
+        this.testCaseService = testCaseService;
     }
 }

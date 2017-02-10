@@ -21,6 +21,7 @@ import { ValidationMatcherComponent } from './components/config/validation.match
 import { SourceCodeComponent } from './components/source.code.component';
 import { TestDetailComponent } from './components/test.detail.component';
 import { TestExecuteComponent } from './components/test.execute.component';
+import { TestResultComponent } from './components/test.result.component';
 import { TestMessageComponent } from './components/test.message.component';
 import { TestProgressComponent } from './components/test.progress.component';
 import { TestListGroupComponent } from './components/test.listgroup.component';
@@ -75,6 +76,7 @@ import {SetupComponent} from "./components/setup.component";
         SourceCodeComponent,
         TestDetailComponent,
         TestExecuteComponent,
+        TestResultComponent,
         TestMessageComponent,
         TestProgressComponent,
         TestListGroupComponent,

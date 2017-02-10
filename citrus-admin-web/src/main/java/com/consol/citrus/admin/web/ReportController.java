@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.report.JUnitTestReportService;
 import com.consol.citrus.admin.service.report.TestNGTestReportService;
@@ -54,5 +53,22 @@ public class ReportController {
         }
 
         return new TestReport();
+    }
+
+    @RequestMapping(value="/result", method = { RequestMethod.POST })
+    @ResponseBody
+    public TestResult getTestResult(@RequestBody Test test) {
+        Project project = projectService.getActiveProject();
+        if (null != project) {
+            if (testNGTestReportService.hasTestResults(project)) {
+                return testNGTestReportService.getLatest(project, test);
+            } else if (junitTestReportService.hasTestResults(project)) {
+                return junitTestReportService.getLatest(project, test);
+            }
+        }
+
+        TestResult result = new TestResult();
+        result.setTest(test);
+        return result;
     }
 }

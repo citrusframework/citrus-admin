@@ -62,6 +62,6 @@
     <test-execute *ngIf="detail" [detail]="detail"></test-execute>
   </pill>
   <pill pill-id="test-results" pill-title="Results" pill-icon="fa fa-tasks">
-    <h3>Test Results</h3>
+    <test-result *ngIf="detail" [test]="test"></test-result>
   </pill>
 </pills>

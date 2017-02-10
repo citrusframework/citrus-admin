@@ -7,7 +7,11 @@
     </groups>
     <test name="Surefire test" duration-ms="6675" started-at="2017-02-10T12:58:13Z" finished-at="2017-02-10T12:58:20Z">
       <class name="com.consol.citrus.samples.Test_1_IT">
-        <test-method status="PASS" signature="test_1()[pri:0, instance:com.consol.citrus.samples.Test_1_IT@50a638b5]" name="test_1" duration-ms="4000" started-at="2017-02-10T12:00:00Z" finished-at="2017-02-10T12:00:04Z">
+        <test-method status="PASS" signature="prepareTest()[pri:0, instance:com.consol.citrus.samples.Test_1_IT@50a638b5]" name="prepateTest" is-config="true" duration-ms="1" started-at="2017-02-10T12:00:00Z" finished-at="2017-02-10T12:00:01Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method>
+        <test-method status="PASS" signature="test_1()[pri:0, instance:com.consol.citrus.samples.Test_1_IT@50a638b5]" name="test_1" duration-ms="4000" started-at="2017-02-10T12:00:01Z" finished-at="2017-02-10T12:00:05Z">
           <reporter-output>
           </reporter-output>
         </test-method>
