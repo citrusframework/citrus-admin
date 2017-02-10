@@ -125,12 +125,22 @@
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-kubernetes</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-rmi</artifactId>
         <version>${citrus.version}</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-jmx</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-selenium</artifactId>
         <version>${citrus.version}</version>
       </dependency>
 

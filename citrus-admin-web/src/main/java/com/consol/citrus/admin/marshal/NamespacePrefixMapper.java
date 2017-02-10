@@ -39,8 +39,10 @@ public class NamespacePrefixMapper extends com.sun.xml.bind.marshaller.Namespace
         namespaceMappings.put("http://www.citrusframework.org/schema/ftp/config", "citrus-ftp");
         namespaceMappings.put("http://www.citrusframework.org/schema/mail/config", "citrus-mail");
         namespaceMappings.put("http://www.citrusframework.org/schema/docker/config", "citrus-docker");
+        namespaceMappings.put("http://www.citrusframework.org/schema/kubernetes/config", "citrus-k8s");
         namespaceMappings.put("http://www.citrusframework.org/schema/jmx/config", "citrus-jmx");
         namespaceMappings.put("http://www.citrusframework.org/schema/rmi/config", "citrus-rmi");
+        namespaceMappings.put("http://www.citrusframework.org/schema/selenium/config", "citrus-selenium");
         namespaceMappings.put("http://www.citrusframework.org/schema/testcase", "citrus-test");
     }
 
