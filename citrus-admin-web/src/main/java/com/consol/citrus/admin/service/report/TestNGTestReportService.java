@@ -17,11 +17,13 @@
 package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,9 @@ public class TestNGTestReportService implements TestReportService {
 
     /** Date format */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+
+    @Autowired
+    private TestCaseService testCaseService;
 
     @Override
     public TestReport getLatest(Project activeProject) {
@@ -75,14 +80,11 @@ public class TestNGTestReportService implements TestReportService {
                     for (Element testMethod : testMethods) {
                         if (!testMethod.hasAttribute("is-config") || testMethod.getAttribute("is-config").equals("false")) {
                             TestResult result = new TestResult();
-                            Test test = new Test();
+                            String packageName = testClass.getAttribute("name").substring(0, testClass.getAttribute("name").lastIndexOf('.'));
+                            String className = testClass.getAttribute("name").substring(packageName.length() + 1);
+                            String methodName = testMethod.getAttribute("name");
 
-                            test.setClassName(testClass.getAttribute("name"));
-                            test.setMethodName(testMethod.getAttribute("name"));
-                            test.setPackageName(test.getClassName().substring(0, test.getClassName().lastIndexOf('.')));
-                            test.setName(test.getClassName().substring(test.getClassName().lastIndexOf('.') + 1) + "." + test.getMethodName());
-                            test.setType(TestType.JAVA);
-
+                            Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
                             result.setTest(test);
                             result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
 

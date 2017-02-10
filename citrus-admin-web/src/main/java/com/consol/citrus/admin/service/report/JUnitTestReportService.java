@@ -17,11 +17,13 @@
 package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class JUnitTestReportService implements TestReportService {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JUnitTestReportService.class);
+
+    @Autowired
+    private TestCaseService testCaseService;
 
     @Override
     public TestReport getLatest(Project activeProject) {
@@ -59,14 +64,11 @@ public class JUnitTestReportService implements TestReportService {
                 for (int i = 0; i < testCases.getLength(); i++) {
                     Element testCase = (Element) testCases.item(i);
                     TestResult result = new TestResult();
-                    Test test = new Test();
+                    String packageName = testCase.getAttribute("classname").substring(0, testCase.getAttribute("classname").lastIndexOf('.'));
+                    String className = testCase.getAttribute("classname").substring(packageName.length() + 1);
+                    String methodName = testCase.getAttribute("name");
 
-                    test.setClassName(testCase.getAttribute("classname"));
-                    test.setMethodName(testCase.getAttribute("name"));
-                    test.setPackageName(test.getClassName().substring(0, test.getClassName().lastIndexOf('.')));
-                    test.setName(test.getClassName().substring(test.getClassName().lastIndexOf('.') + 1) + "." + test.getMethodName());
-                    test.setType(TestType.JAVA);
-
+                    Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
                     result.setTest(test);
 
                     Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");

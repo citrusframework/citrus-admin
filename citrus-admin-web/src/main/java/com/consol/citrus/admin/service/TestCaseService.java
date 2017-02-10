@@ -114,6 +114,32 @@ public class TestCaseService {
     }
 
     /**
+     * Finds test for given package, class and method name.
+     * @param project
+     * @param packageName
+     * @param className
+     * @param methodName
+     * @return
+     */
+    public Test findTest(Project project, String packageName, String className, String methodName) {
+        FileSystemResource sourceFile = new FileSystemResource(project.getJavaDirectory() + packageName.replace('.', File.separatorChar) + System.getProperty("file.separator") + className + ".java");
+        if (!sourceFile.exists()) {
+            throw new ApplicationRuntimeException("Unable to find test source file: " + className + " in " + project.getJavaDirectory());
+        }
+
+        Optional<Test> test = findTests(sourceFile.getFile(), packageName, className)
+                .stream()
+                .filter(candidate -> methodName.equals(candidate.getMethodName())).findFirst();
+
+        if (test.isPresent()) {
+            return test.get();
+        } else {
+            throw new ApplicationRuntimeException("Unable to find test: " + className + "." + methodName);
+        }
+
+    }
+
+    /**
      * Finds all tests case declarations in given source files. Method is loading tests by their annotation presence of @CitrusTest or @CitrusXmlTest.
      * @param project
      * @param sourceFiles
