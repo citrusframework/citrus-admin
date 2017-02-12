@@ -18,6 +18,7 @@
   <bean class="com.consol.citrus.admin.service.ProjectService"/>
   <bean class="com.consol.citrus.admin.service.FileBrowserService"/>
   <bean class="com.consol.citrus.admin.service.TestExecutionService"/>
+  <bean class="com.consol.citrus.admin.service.report.JUnitTestReportService"/>
   <bean class="com.consol.citrus.admin.service.report.TestNGTestReportService"/>
   <bean class="com.consol.citrus.admin.service.spring.SpringBeanService"/>
 
