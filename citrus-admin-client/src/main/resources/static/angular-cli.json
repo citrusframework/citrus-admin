@@ -24,6 +24,7 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "assets/file/jqueryFileTree.js",
         "../node_modules/bootstrap/js/modal.js",
+        "../node_modules/bootstrap/js/dropdown.js",
         "../node_modules/bootstrap/js/tab.js"
       ],
       "environments": {
