@@ -1,35 +1,38 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Test, TestResult} from "../model/tests";
+import {Component, Input, OnChanges} from '@angular/core';
+import {TestResult, TestDetail, Test} from "../model/tests";
 import {ReportService} from "../service/report.service";
 import {Alert} from "../model/alert";
 import {AlertService} from "../service/alert.service";
 
 @Component({
     selector: "test-result",
-    template: `<div class="test-result">
-  <h3 [textContent]="result?.success ? 'SUCCESS' : 'FAILED'"></h3>
-  <div *ngIf="result?.errorCause" class="error-details">
-    <h3 [textContent]="result?.errorCause"></h3>
-    <h4 [textContent]="result?.errorMessage"></h4>
-    <pre [textContent]="result?.stackTrace"></pre>
-  </div>   
+    template: `<div class="table-responsive">
+  <h2 *ngIf="!result"><i class="fa fa-file-text-o"></i> No results found for test</h2>
+  <div *ngIf="result" [class]="result.success ? 'color-success' : 'color-danger'">
+      <h2><i class="fa fa-file-text-o"></i> {{detail.name}}: &nbsp;&nbsp;&nbsp;<span [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span></h2>
+      <div *ngIf="result.errorCause" class="error-details">
+        <h3 [textContent]="result.errorCause"></h3>
+        <h4 [textContent]="result.errorMessage"></h4>
+        <pre [textContent]="result.stackTrace"></pre>
+      </div>
+  </div>
 </div>`
 })
-export class TestResultComponent implements OnInit {
+export class TestResultComponent implements OnChanges {
 
-    @Input() test: Test;
+    @Input() detail: TestDetail;
 
     result: TestResult;
 
     constructor(private _reportService: ReportService,
                 private _alertService: AlertService) {}
 
-    ngOnInit() {
+    ngOnChanges() {
         this.getTestResult();
     }
 
     getTestResult() {
-        this._reportService.getTestResult(this.test)
+        this._reportService.getTestResult(<Test> this.detail)
             .subscribe(
                 result => this.result = result,
                 error => {

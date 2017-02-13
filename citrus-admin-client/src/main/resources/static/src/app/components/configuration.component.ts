@@ -1,18 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 
 @Component({
     templateUrl: 'config.html'
 })
-export class ConfigurationComponent {
+export class ConfigurationComponent implements OnInit{
     constructor(private route: ActivatedRoute) {
-        let activeTabParam: string = route.snapshot.params['activeTab'];
-        if (activeTabParam != null) {
-            this.active = activeTabParam;
-        }
     }
 
     active = 'endpoints';
+
+    ngOnInit() {
+        this.route.params
+            .subscribe((params: Params) => this.active = params['activeTab']);
+    }
 
     isActive(name: string) {
         return this.active === name;

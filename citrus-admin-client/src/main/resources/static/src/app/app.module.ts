@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { HeaderComponent } from './components/header.component';
+import { SidebarComponent } from './components/sidebar.component';
 import { LogComponent } from './components/log.component';
 import { ComingComponent } from './components/coming.component';
 
@@ -63,6 +64,7 @@ import {SetupComponent} from "./components/setup.component";
         AppComponent,
         DashboardComponent,
         HeaderComponent,
+        SidebarComponent,
         LogComponent,
         ComingComponent,
         ConfigurationComponent,

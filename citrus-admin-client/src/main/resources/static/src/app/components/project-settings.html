@@ -1,248 +1,226 @@
-<div class="container content-header">
-  <div>
-    <h1>
-      <i class="fa fa-cube"></i> Project <small>Settings & Information</small>
-    </h1>
-  </div>
-</div>
-
-<div class="container">
-  <pills justified="true">
-    <pill pill-id="project" pill-title="Project" [active]="active == 'project'">
-      <form class="form-horizontal">
-        <h3>Project Settings</h3>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Name <em>*</em></label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.name" disabled="disabled" type="text" class="form-control" name="name"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Version <em>*</em></label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.version" disabled="disabled" type="text" class="form-control" name="version"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Description</label>
-          <div class="col-sm-10">
-            <textarea [(ngModel)]="project.description" type="text" class="form-control" rows="4" name="description"></textarea>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
-          </div>
-        </div>
-      </form>
-    </pill>
-    <pill pill-id="connector" pill-title="Connector" [active]="active == 'connector'">
-      <h3>Connector Library</h3>
-
-      <p>The Citrus admin connector is a little helper library that provides detailed information during the test run by pushing events to the admin UI.
-        The citrus-admin-connector is part of the Citrus project and is automatically loaded when tests are run. The connector library registers special
-        test listeners and pushes information to the citrus-admin web application. This way the admin UI is able to display runtime information of the
-        tests such as exchanged messages, test results and so on.</p>
-
-      <img src="app/images/project-connector.png" alt="Admin UI connector library" />
-
-      <form class="form-horizontal">
-        <div class="form-group" *ngIf="!project.settings.connectorActive">
-          <div class="col-sm-12">
-            <h4 *ngIf="!project.settings.connectorActive" class="alert alert-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
-            <a class="btn btn-primary" (click)="openDialog()" type="submit">Activate connector</a>
-          </div>
-        </div>
-
-        <div class="form-group" *ngIf="project.settings.connectorActive">
-          <div class="col-sm-12">
-            <h4 *ngIf="project.settings.connectorActive" class="alert alert-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
-            <a class="btn btn-primary" (click)="openDialog()" type="submit">Deactivate connector</a>
-          </div>
-        </div>
-      </form>
-    </pill>
-    <pill pill-id="sources" pill-title="Sources" [active]="active == 'sources'">
-      <form class="form-horizontal">
-        <h3>Sources</h3>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Citrus <em>*</em></label>
-          <div class="col-sm-10">
-            <select [(ngModel)]="project.settings.citrusVersion" class="form-control" name="citrusVersion">
-              <option value="2.7.1-SNAPSHOT">2.7.1-SNAPSHOT</option>
-              <option value="2.7">2.7</option>
-              <option value="2.6.2">2.6.2</option>
-              <option value="2.6.1">2.6.1</option>
-              <option value="2.6">2.6</option>
-              <option value="2.5.2">2.5.2</option>
-              <option value="2.5.1">2.5.1</option>
-              <option value="2.5">2.5</option>
-              <option value="2.4">2.4</option>
-              <option value="2.3">2.3</option>
-              <option value="2.2">2.2</option>
-              <option value="2.1">2.1</option>
-              <option value="2.0">2.0</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Java Sources <em>*</em></label>
-          <div class="col-sm-5">
-            <input [(ngModel)]="project.settings.javaSrcDirectory" type="text" class="form-control" name="javaSrcDirectory"/>
-          </div>
-          <div class="col-sm-5">
-            <input [(ngModel)]="project.settings.javaFilePattern" type="text" class="form-control" name="javaFilePattern"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">XML Sources <em>*</em></label>
-          <div class="col-sm-5">
-            <input [(ngModel)]="project.settings.xmlSrcDirectory" type="text" class="form-control" name="xmlSrcDirectory"/>
-          </div>
-          <div class="col-sm-5">
-            <input [(ngModel)]="project.settings.xmlFilePattern" type="text" class="form-control" name="xmlFilePattern"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Spring Application Context <em>*</em></label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.settings.springApplicationContext" type="text" class="form-control" name="springApplicationContext"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Package <em>*</em></label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.settings.basePackage" type="text" class="form-control" name="basePackage"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Tab size <em>*</em></label>
-          <div class="col-sm-2">
-            <input [(ngModel)]="project.settings.tabSize" type="text" class="form-control" name="tabSize"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
-          </div>
-        </div>
-      </form>
-    </pill>
-    <pill pill-id="build" pill-title="Build" [active]="active == 'build'">
-      <form class="form-horizontal">
-        <h3>Build Settings</h3>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">BuildType <em>*</em></label>
-          <div class="col-sm-10">
-            <select [(ngModel)]="project.settings.build.type" class="form-control" name="buildType">
-              <option value="maven">maven</option>
-            </select>
-          </div>
-        </div>
-
-        <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
-          <label class="col-sm-2 control-label">TestPlugin</label>
-          <div class="col-sm-10">
-            <select [(ngModel)]="project.settings.build.testPlugin" class="form-control" name="testPlugin">
-              <option value="maven-surefire">maven-surefire</option>
-              <option value="maven-failsafe">maven-failsafe</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Custom command</label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="useCustomCommand" type="checkbox" class="form-control" name="useCustomCommand"/>
-          </div>
-        </div>
-
-        <div *ngIf="useCustomCommand" class="form-group">
-          <label class="col-sm-2 control-label">Command</label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.settings.build.command" type="text" class="form-control" name="buildCommand"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Use clean</label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.settings.build.useClean" type="checkbox" class="form-control" name="buildUseClean"/>
-          </div>
-        </div>
-
-        <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
-          <label class="col-sm-2 control-label">Profiles</label>
-          <div class="col-sm-10">
-            <input [(ngModel)]="project.settings.build.profiles" type="text" class="form-control" name="buildProfiles"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Properties</label>
-          <div class="col-sm-4">
-            <input [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control" name="propertyName"/>
-          </div>
-          <div class="col-sm-4">
-            <input [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control" name="propertyValue"/>
-          </div>
-          <div class="col-sm-2">
-            <button class="btn btn-primary" (click)="addProperty()">Add</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <div class="list-group">
-              <div *ngIf="project.settings.build.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
-              <div *ngFor="let property of project.settings.build.properties" class="list-group-item clickable">
-                <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeProperty(property, $event)" name="remove" title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save</button>
-          </div>
-        </div>
-      </form>
-    </pill>
-  </pills>
-
-  <div class="alert-console" type="detailed"></div>
-
-  <div class="dialog"
-       dialog-id="dialog-connector"
-       dialog-title="Admin connector library"
-       (confirmed)="manageConnector($event)">
-    <p>Add/remove connector library from project '{{project.name}}'. When connected events get pushed in real time during the test runs.</p>
-
-    <h4 *ngIf="project.settings.connectorActive" class="text-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
-    <h4 *ngIf="!project.settings.connectorActive" class="text-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
-
-    <div class="box box-center">
-      <img src="app/images/brand-logo.png" />
-      <strong>citrus-admin-ui</strong>
-      <i *ngIf="project.settings.connectorActive" class="fa fa-arrows-h fa-lg text-success"></i>
-      <i *ngIf="!project.settings.connectorActive" class="fa fa-remove fa-lg text-danger"></i>
-      <img src="app/images/brand-logo.png" />
-      <strong>{{project.name}}</strong>
+<div *ngIf="active == 'project'">
+  <h1 class="page-header"><i class="fa fa-cube"></i> Project settings</h1>
+  
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name <em>*</em></label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.name" disabled="disabled" type="text" class="form-control" name="name"/>
+      </div>
     </div>
 
-    <br />
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Version <em>*</em></label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.version" disabled="disabled" type="text" class="form-control" name="version"/>
+      </div>
+    </div>
 
-    <p *ngIf="project.settings.connectorActive">This operation will remove the connectivity!</p>
-    <p *ngIf="!project.settings.connectorActive">This operation will add the connectivity!</p>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <textarea [(ngModel)]="project.description" type="text" class="form-control" rows="4" name="description"></textarea>
+      </div>
+    </div>
+
+    <h2 class="sub-header"><i class="fa fa-code"></i> Sources</h2>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Citrus <em>*</em></label>
+      <div class="col-sm-10">
+        <select [(ngModel)]="project.settings.citrusVersion" class="form-control" name="citrusVersion">
+          <option value="2.7.1-SNAPSHOT">2.7.1-SNAPSHOT</option>
+          <option value="2.7">2.7</option>
+          <option value="2.6.2">2.6.2</option>
+          <option value="2.6.1">2.6.1</option>
+          <option value="2.6">2.6</option>
+          <option value="2.5.2">2.5.2</option>
+          <option value="2.5.1">2.5.1</option>
+          <option value="2.5">2.5</option>
+          <option value="2.4">2.4</option>
+          <option value="2.3">2.3</option>
+          <option value="2.2">2.2</option>
+          <option value="2.1">2.1</option>
+          <option value="2.0">2.0</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Java Sources <em>*</em></label>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.javaSrcDirectory" type="text" class="form-control" name="javaSrcDirectory"/>
+      </div>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.javaFilePattern" type="text" class="form-control" name="javaFilePattern"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">XML Sources <em>*</em></label>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.xmlSrcDirectory" type="text" class="form-control" name="xmlSrcDirectory"/>
+      </div>
+      <div class="col-sm-5">
+        <input [(ngModel)]="project.settings.xmlFilePattern" type="text" class="form-control" name="xmlFilePattern"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Spring Application Context <em>*</em></label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.springApplicationContext" type="text" class="form-control" name="springApplicationContext"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Package <em>*</em></label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.basePackage" type="text" class="form-control" name="basePackage"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Tab size <em>*</em></label>
+      <div class="col-sm-2">
+        <input [(ngModel)]="project.settings.tabSize" type="text" class="form-control" name="tabSize"/>
+      </div>
+    </div>
+
+    <h2 class="sub-header"><i class="fa fa-cogs"></i> Build settings</h2>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">BuildType <em>*</em></label>
+      <div class="col-sm-10">
+        <select [(ngModel)]="project.settings.build.type" class="form-control" name="buildType">
+          <option value="maven">maven</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
+      <label class="col-sm-2 control-label">TestPlugin</label>
+      <div class="col-sm-10">
+        <select [(ngModel)]="project.settings.build.testPlugin" class="form-control" name="testPlugin">
+          <option value="maven-surefire">maven-surefire</option>
+          <option value="maven-failsafe">maven-failsafe</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Custom command</label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="useCustomCommand" type="checkbox" class="form-control" name="useCustomCommand"/>
+      </div>
+    </div>
+
+    <div *ngIf="useCustomCommand" class="form-group">
+      <label class="col-sm-2 control-label">Command</label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.build.command" type="text" class="form-control" name="buildCommand"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Use clean</label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.build.useClean" type="checkbox" class="form-control" name="buildUseClean"/>
+      </div>
+    </div>
+
+    <div *ngIf="project.settings.build.type === 'maven'" class="form-group">
+      <label class="col-sm-2 control-label">Profiles</label>
+      <div class="col-sm-10">
+        <input [(ngModel)]="project.settings.build.profiles" type="text" class="form-control" name="buildProfiles"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Properties</label>
+      <div class="col-sm-4">
+        <input [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control" name="propertyName"/>
+      </div>
+      <div class="col-sm-4">
+        <input [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control" name="propertyValue"/>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-primary" (click)="addProperty()">Add</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="list-group">
+          <div *ngIf="project.settings.build.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
+          <div *ngFor="let property of project.settings.build.properties" class="list-group-item clickable">
+            <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeProperty(property, $event)" name="remove" title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary" (click)="saveSettings()" type="submit">Save settings</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="active == 'connector'">
+  <h1 class="page-header"><i class="fa fa-external-link"></i> Connector Library</h1>
+
+  <p>The Citrus admin connector is a little helper library that provides detailed information during the test run by pushing events to the admin UI.
+    The citrus-admin-connector is part of the Citrus project and is automatically loaded when tests are run. The connector library registers special
+    test listeners and pushes information to the citrus-admin web application. This way the admin UI is able to display runtime information of the
+    tests such as exchanged messages, test results and so on.</p>
+
+  <form class="form-horizontal">
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <img src="assets/images/project-connector.png" alt="Admin UI connector library" />
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!project.settings.connectorActive">
+      <div class="col-sm-offset-2 col-sm-10">
+        <h4 *ngIf="!project.settings.connectorActive" class="alert alert-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
+        <a class="btn btn-primary" (click)="openDialog()" type="submit">Activate connector</a>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="project.settings.connectorActive">
+      <div class="col-sm-offset-2 col-sm-10">
+        <h4 *ngIf="project.settings.connectorActive" class="alert alert-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
+        <a class="btn btn-primary" (click)="openDialog()" type="submit">Deactivate connector</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="alert-console" type="detailed"></div>
+
+<div class="dialog"
+     dialog-id="dialog-connector"
+     dialog-title="Admin connector library"
+     (confirmed)="manageConnector($event)">
+  <p>Add/remove connector library from project '{{project.name}}'. When connected events get pushed in real time during the test runs.</p>
+
+  <h4 *ngIf="project.settings.connectorActive" class="text-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>
+  <h4 *ngIf="!project.settings.connectorActive" class="text-danger"><i class="fa fa-minus-square-o"></i> Currently connector is inactive!</h4>
+
+  <div class="box box-center">
+    <img src="assets/images/brand-logo.png" />
+    <strong>citrus-admin-ui</strong>
+    <i *ngIf="project.settings.connectorActive" class="fa fa-arrows-h fa-lg text-success"></i>
+    <i *ngIf="!project.settings.connectorActive" class="fa fa-remove fa-lg text-danger"></i>
+    <img src="assets/images/brand-logo.png" />
+    <strong>{{project.name}}</strong>
   </div>
+
+  <br />
+
+  <p *ngIf="project.settings.connectorActive">This operation will remove the connectivity!</p>
+  <p *ngIf="!project.settings.connectorActive">This operation will add the connectivity!</p>
 </div>

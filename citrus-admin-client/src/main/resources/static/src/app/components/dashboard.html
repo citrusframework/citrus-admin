@@ -1,76 +1,71 @@
-<div class="container">
-  <div class="jumbotron">
-    <h1><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
+<h1 class="page-header"><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
 
-    <p>
-      <span><b>Name:</b></span> <span>{{project?.name}}</span><br/>
-      <span><b>Package:</b></span> <span>{{project?.settings?.basePackage}}</span><br/>
-      <span><b>Version:</b></span> <span>{{project?.version}}</span><br/>
-      <span><b>Description:</b></span> <span [ngSwitch]="project?.description"><template *ngSwitchCase="''">No project description available</template><template *ngSwitchDefault>{{project?.description}}</template></span>
-    </p>
+<h4>Name: <span>{{project?.name}}</span></h4>
+<h4>Package: <span>{{project?.settings?.basePackage}}</span></h4>
+<h4>Version: <span>{{project?.version}}</span></h4>
+<h4>Tests: <span>{{testCount}}</span></h4>
+<h4 *ngIf="project?.description">Description: <span>{{project?.description}}</span></h4>
 
-    <a routerLink="/project/settings" class="btn btn-primary">Edit settings</a>
+<h2 class="sub-header"><i class="fa fa-tasks"></i> Test results <small>{{ testReport?.executionDate | date:"MM/dd/yyyy" }}</small></h2>
+
+<div class="row test-results">
+  <div class="col-xs-6 col-sm-3 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-success border-success" alt="PASSED">{{testReport?.passed}}</span>
+      <h4>PASSED</h4>
+      <span class="text-muted">{{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-xs-6 col-sm-3 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-danger border-danger" alt="FAILED">{{testReport?.failed}}</span>
+      <h4>FAILED</h4>
+      <span class="text-muted">{{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-xs-6 col-sm-3 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-warning border-warning" alt="SKIPPED">{{testReport?.skipped}}</span>
+      <h4>SKIPPED</h4>
+      <span class="text-muted">{{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-xs-6 col-sm-3 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-info border-info" alt="TOTAL">{{testReport?.total}}</span>
+      <h4>TOTAL</h4>
+      <span class="text-muted">{{testReport?.total}}</span>
+    </a>
   </div>
 </div>
 
-<div class="container content">
-  <div class="row">
-    <div class="col-lg-4">
-      <h2><i class="fa fa-wrench"></i> Configuration</h2>
-      <p>Citrus configuration items:</p>
-      <ul class="overview">
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/endpoints">Endpoints</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/schema-repository">Schema Definitions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/function-library">Functions</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/validation-matcher">Validation Matcher</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/data-dictionary">Data dictionaries</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/namespace-context">Namespaces</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/message-validators" disabled="disabled">Message Validators</a></li>
-        <li><i class="fa fa-angle-double-right"></i> <a routerLink="/configuration/global-variables">Global Variables</a></li>
-      </ul>
-      <br />
-      <a class="btn btn-default" routerLink="configuration" title="Show configuration page">Show configurations</a>
-    </div>
+<h2 class="sub-header"><i class="fa fa-cubes"></i> Latest Tests</h2>
 
-    <div class="col-lg-4">
-      <h2><i class="fa fa-cubes"></i> Tests</h2>
-      <p>Your project has <span class="badge badge-emphasis badge-citrus">{{testCount}}</span> test cases!</p>
-      <span>Latest tests:</span>
-      <ul class="overview">
-        <li *ngFor="let testGroup of latestTests">
-          <div *ngIf="testGroup.tests.length == 1 && testGroup.name == testGroup.tests[0].name">
-            <i class="fa fa-file-text-o"></i>
-            <a routerLink="/tests/{{testGroup.tests[0].name}}" title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</a>
-          </div>
-          <div *ngIf="testGroup.tests.length > 1 || testGroup.name != testGroup.tests[0].name">
-            <i class="fa fa-file-text-o"></i>
-            <span title="{{testGroup.tests[0].packageName}}.{{testGroup.tests[0].className}}">{{testGroup.tests[0].className | truncate:30}}</span>
-            <ul class="overview">
-              <li *ngFor="let test of testGroup.tests">
-                <i class="fa fa-caret-right"></i>
-                <a routerLink="/tests/{{test.name}}" title="{{test.className}}.{{test.methodName}}">{{test.methodName | truncate:30}}</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <a class="btn btn-default" routerLink="/tests" title="View all tests">Show all tests</a>
-    </div>
-
-    <div class="col-lg-4">
-      <h2><i class="fa fa-tasks"></i> Test results</h2>
-      <p>
-        <b>Date:</b> {{ testReport?.executionDate | date:"MM/dd/yyyy" }}<br/>
-        <b>Duration:</b> {{testReport?.duration / 1000 }} s<br/>
-        <b>Suite Name:</b> {{testReport?.suiteName}}
-      </p>
-      <p>
-        Passed:&nbsp; <span class="badge badge-success test-result"><i class="fa fa-check"></i>&nbsp;&nbsp;{{testReport?.passed}} | {{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span><br/>
-        Failed:&nbsp;&nbsp;&nbsp; <span class="badge badge-danger test-result"><i class="fa fa-times"></i>&nbsp;&nbsp;{{testReport?.failed}} | {{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span><br/>
-        Skipped: <span class="badge badge-warning test-result"><i class="fa fa-minus"></i>&nbsp;&nbsp;{{testReport?.skipped}} | {{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span><br/>
-      </p>
-      <p><span><b>Total:</b> {{testReport?.total}}</span></p>
-      <a class="btn btn-default" routerLink="/report" title="Show test reports">Show test results</a>
-    </div>
-  </div>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Class</th>
+        <th>Method</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let testGroup of latestTests">
+      <tr *ngFor="let test of testGroup.tests">
+        <td><span class="badge badge-{{test.type | lowercase}}">{{test.type | lowercase}}</span></td>
+        <td>
+          <i class="fa fa-file-text-o"></i>
+          <a routerLink="/tests/{{test.name}}" title="{{test.className}}.{{test.methodName}}">{{test.name}}</a>
+        </td>
+        <td>{{test.className}}</td>
+        <td>{{test.methodName}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4"><a routerLink="/tests" title="View all tests" style="font-size: 1.2em;">Show all {{testCount}} tests</a></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>

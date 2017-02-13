@@ -1,69 +1,89 @@
-<div class="container content-header">
-  <div>
-    <h1>
-      <i class="fa fa-tasks"></i> Test report <small>Latest test results</small>
-    </h1>
+<h1 class="page-header">
+  <i class="fa fa-tasks"></i> Test report <small>Latest test results</small>
+</h1>
+
+<div class="row test-results">
+  <div class="col-lg-4">
+    <h4>These are the latest test results for the active project.</h4>
+    <br/>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <b>Project:</b> {{report.projectName}}
+      </li>
+      <li class="list-group-item">
+        <b>Suite:</b> {{report.suiteName}}
+      </li>
+      <li class="list-group-item">
+        <b>Date:</b> {{ report.executionDate | date:"MM/dd/yyyy" }}<br/>
+      </li>
+      <li class="list-group-item">
+        <b>Duration:</b> {{report.duration / 1000 }} s<br/>
+      </li>
+    </ul>
+  </div>
+
+  <div class="col-lg-2 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-success border-success" alt="PASSED">{{report?.passed}}</span>
+      <h4>PASSED</h4>
+      <span class="text-muted">{{report?.total > 0 ? report?.passed / report?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-lg-2 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-danger border-danger" alt="FAILED">{{report?.failed}}</span>
+      <h4>FAILED</h4>
+      <span class="text-muted">{{report?.total > 0 ? report?.failed / report?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-lg-2 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-warning border-warning" alt="SKIPPED">{{report?.skipped}}</span>
+      <h4>SKIPPED</h4>
+      <span class="text-muted">{{report?.total > 0 ? report?.skipped / report?.total * 100 : 0}} %</span>
+    </a>
+  </div>
+  <div class="col-lg-2 test-result">
+    <a routerLink="/report" title="View all tests">
+      <span class="badge badge-info border-info" alt="TOTAL">{{report?.total}}</span>
+      <h4>TOTAL</h4>
+      <span class="text-muted">{{report?.total}}</span>
+    </a>
   </div>
 </div>
 
-<div class="container">
-  <div class="content-nav">
-    <span>These are the latest test results for the active project.</span>
-  </div>
+<h2 class="sub-header">Test results</h2>
 
-  <div class="row">
-    <div class="col-lg-6">
-      <ul class="list-group">
-        <li class="list-group-item">
-          <b>Project:</b> {{report.projectName}}
-        </li>
-        <li class="list-group-item">
-          <b>Suite Name:</b> {{report.suiteName}}
-        </li>
-        <li class="list-group-item">
-          <b>Date:</b> {{ report.executionDate | date:"MM/dd/yyyy" }}<br/>
-        </li>
-        <li class="list-group-item">
-          <b>Duration:</b> {{report.duration / 1000 }} s<br/>
-        </li>
-      </ul>
-    </div>
-
-    <div class="col-lg-6">
-      <ul class="list-group">
-        <li class="list-group-item">
-          Total
-          <span class="pull-right"><b>{{report.total}}</b></span>
-        </li>
-        <li class="list-group-item">
-          <span class="badge badge-success test-result"><i class="fa fa-check"></i> &nbsp;{{report.passed}} | {{report.total > 0 ? report.passed / report.total * 100 : 0}} %</span>
-          Passed
-        </li>
-        <li class="list-group-item">
-          <span class="badge badge-danger test-result"><i class="fa fa-times"></i> &nbsp;{{report.failed}} | {{report.total > 0 ? report.failed / report.total * 100 : 0}} %</span>
-          Failed
-        </li>
-        <li class="list-group-item">
-          <span class="badge badge-warning test-result"><i class="fa fa-minus"></i> &nbsp;{{report.skipped}} | {{report.total > 0 ? report.skipped / report.total * 100 : 0}} %</span>
-          Skipped
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <h3>Test results</h3>
-
-  <ul class="list-group">
-    <li *ngIf="report.results.length == 0" class="list-group-item"><i class="fa fa-file-text-o"></i> No tests found</li>
-    <li *ngFor="let result of report.results" [class]="result.success ? 'list-group-item list-group-item-success clickable' : 'list-group-item list-group-item-danger clickable'" (click)="open(result.test)">
-      <span><i class="fa fa-file-text-o"></i> <b>{{result.test.name}}</b></span>
-      <span class="pull-right" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
-      <div *ngIf="result.errorCause" class="error-details">
-        <h3 [textContent]="result.errorCause"></h3>
-        <h4 [textContent]="result.errorMessage"></h4>
-        <pre [textContent]="result.stackTrace"></pre>
-      </div>
-    </li>
-  </ul>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="report.results.length == 0">
+      <tr>
+        <td colspan="2"><i class="fa fa-file-text-o"></i> No results found for project</td>
+      </tr>
+    </tbody>
+    <tbody *ngFor="let result of report.results">
+      <tr (click)="open(result.test)" [class]="result.success ? 'color-success clickable' : 'color-danger clickable'">
+        <td>
+          <i class="fa fa-file-text-o"></i>
+          <span title="{{result.test.className}}.{{result.test.methodName}}">{{result.test.name}}</span>
+        </td>
+        <td [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></td>
+      </tr>
+      <tr *ngIf="result.errorCause" class="color-danger">
+        <td colspan="2">
+          <div *ngIf="result.errorCause" class="error-details">
+            <h3 [textContent]="result.errorCause"></h3>
+            <h4 [textContent]="result.errorMessage"></h4>
+            <pre [textContent]="result.stackTrace"></pre>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-

@@ -1,7 +1,6 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
-
 import { DashboardComponent }   from './components/dashboard.component';
 import { LogComponent }   from './components/log.component';
 import { ComingComponent }   from './components/coming.component';
@@ -9,7 +8,7 @@ import { ProjectSettingsComponent }   from './components/project.settings.compon
 import { ConfigurationComponent }   from './components/configuration.component';
 import { TestsComponent }   from './components/tests.component';
 import { TestReportComponent } from "./components/test.report.component";
-import {SetupComponent} from "./components/setup.component";
+import { SetupComponent } from "./components/setup.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/project', pathMatch: 'full' },

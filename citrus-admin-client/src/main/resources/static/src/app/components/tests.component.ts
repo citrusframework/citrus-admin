@@ -46,7 +46,7 @@ export class TestsComponent implements OnInit {
                     // TODO: I dont think this will work... further investigation needed here
                     this.tests = _.reduce(packages, function(collected:any, testPackage:any) { return collected.concat(testPackage.tests); }, []);
                     this.testNames = _.map(this.tests, function(test:any) { return test.name; });
-
+                    
                     if (this._route.snapshot.params['name'] != null) {
                         this.onTestSelected(this._route.snapshot.params['name']);
                     }
@@ -62,6 +62,7 @@ export class TestsComponent implements OnInit {
 
         if (this.openTests.length === 0) {
             this.activeTest = undefined;
+            this._router.navigate(["/tests"]);
         }
     }
 
