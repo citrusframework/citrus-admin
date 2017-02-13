@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Project} from "../model/project";
 import {Observable} from 'rxjs/Observable';
+import {Cached} from "../util/decorator";
 
 @Injectable()
 export class ProjectService {
@@ -14,6 +15,7 @@ export class ProjectService {
     cachedProject: Project;
     cachedObservable: Observable<Project>;
 
+    @Cached()
     getActiveProject(): Observable<Project> {
         if (this.cachedProject) {
             return Observable.of(this.cachedProject)

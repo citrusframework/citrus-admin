@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnInit, AfterViewInit} from '@angular/core';
-import {TestGroup, Test} from "../model/tests";
+import {TestGroup, Test} from "../../model/tests";
 
 @Component({
     selector: "test-listgroup",

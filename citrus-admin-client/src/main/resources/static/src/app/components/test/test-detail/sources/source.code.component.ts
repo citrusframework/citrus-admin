@@ -1,8 +1,8 @@
 import {Component,  Input, OnChanges, AfterViewInit} from '@angular/core';
-import {TestDetail} from "../model/tests";
-import {TestService} from "../service/test.service";
-import {Alert} from "../model/alert";
-import {AlertService} from "../service/alert.service";
+import {TestDetail} from "../../../../model/tests";
+import {TestService} from "../../../../service/test.service";
+import {Alert} from "../../../../model/alert";
+import {AlertService} from "../../../../service/alert.service";
 import * as ace from 'brace';
 import 'brace/theme/chrome';
 import 'brace/mode/java';

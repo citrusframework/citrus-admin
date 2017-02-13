@@ -1,31 +1,35 @@
-import {Component,  Input} from '@angular/core';
-import {TestDetail, TestResult} from "../model/tests";
-import {TestService} from "../service/test.service";
-import {LoggingOutput} from "../model/logging.output";
-import {Message} from "../model/message";
-import {Alert} from "../model/alert";
-import {AlertService} from "../service/alert.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {TestDetail, TestResult} from "../../../../model/tests";
+import {TestService} from "../../../../service/test.service";
+import {LoggingOutput} from "../../../../model/logging.output";
+import {Message} from "../../../../model/message";
+import {Alert} from "../../../../model/alert";
+import {AlertService} from "../../../../service/alert.service";
 import * as _ from 'lodash';
 import * as jQuery from 'jquery';
 import * as moment from 'moment';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import {Frame} from "stompjs";
+import {TestStateService} from "../../test.state";
+import {Observable} from "rxjs";
 
 
 @Component({
+    selector: 'test-run-outlet',
+    template: '<test-execute [detail]="detail|async"></test-execute>'
+})
+export class TestRunOutlet implements OnInit{
+    detail:Observable<TestDetail>
+    constructor(private testState:TestStateService) {}
+    ngOnInit() {
+        this.detail = this.testState.selectedTestDetail;
+    }
+}
+
+@Component({
     selector: "test-execute",
-    template: `<button (click)="execute()" type="button" class="btn btn-default" [disabled]="running"><i class="fa fa-play"></i> Run</button>
-<test-progress [completed]="completed" [failed]="failed" *ngIf="running || completed == 100"></test-progress>
-<pills navigation="true">
-    <pill pill-id="console" pill-title="Console" active="true" pill-icon="fa fa-file-text-o"><pre class="logger" [textContent]="processOutput"></pre></pill>
-    <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
-        <ul class="list-group">
-          <li class="list-group-item" *ngIf="!messages || messages?.length == 0">No messages yet!</li>
-          <li class="list-group-item test-message clickable" *ngFor="let message of messages" [message]="message"></li>
-        </ul>
-    </pill>
-</pills>`
+    templateUrl: 'test-execution.html'
 })
 export class TestExecuteComponent {
     @Input() detail: TestDetail;
@@ -59,7 +63,6 @@ export class TestExecuteComponent {
         this.completed = 0;
         this.finishedActions = 0;
         this.messages = [];
-        console.log(this.detail)
         this._testService.execute(this.detail)
             .subscribe(
                 result => {

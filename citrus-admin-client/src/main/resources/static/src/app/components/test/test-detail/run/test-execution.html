@@ -1,0 +1,15 @@
+<button (click)="execute()" type="button" class="btn btn-default" [disabled]="running"><i class="fa fa-play"></i> Run
+</button>
+<test-progress [completed]="completed" [failed]="failed" *ngIf="running || completed == 100"></test-progress>
+<pills navigation="true">
+    <pill pill-id="console" pill-title="Console" active="true" pill-icon="fa fa-file-text-o">
+        <pre class="logger" [textContent]="processOutput"></pre>
+    </pill>
+    <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
+        <ul class="list-group">
+            <li class="list-group-item" *ngIf="!messages || messages?.length == 0">No messages yet!</li>
+            <li class="list-group-item test-message clickable" *ngFor="let message of messages"
+                [message]="message"></li>
+        </ul>
+    </pill>
+</pills>

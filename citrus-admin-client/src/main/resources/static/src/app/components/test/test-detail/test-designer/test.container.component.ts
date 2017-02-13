@@ -1,5 +1,5 @@
 import {Component,  Input, Output, EventEmitter} from '@angular/core';
-import {TestAction} from "../../model/tests";
+import {TestAction} from "../../../../model/tests";
 
 @Component({
     selector: "test-container",

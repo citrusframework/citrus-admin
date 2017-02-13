@@ -60,6 +60,7 @@ public class TestController {
         return testCaseService.getTestCount(projectService.getActiveProject());
     }
 
+    // TODO: Why POST?
     @RequestMapping(value="/detail", method = { RequestMethod.POST })
     @ResponseBody
     public TestDetail getTestDetail(@RequestBody Test test) {

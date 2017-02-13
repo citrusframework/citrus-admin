@@ -4,16 +4,13 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { DashboardComponent }   from './components/dashboard.component';
 import { LogComponent }   from './components/log.component';
 import { ComingComponent }   from './components/coming.component';
-import { TestsComponent }   from './components/tests.component';
-import { TestReportComponent } from "./components/test.report.component";
+import { TestReportComponent } from "./components/test/test-report/test.report.component";
 import {SetupComponent} from "./components/setup.component";
 import {CanActivateRoutes} from "./service/can-activate-routes";
 import {ServiceModule} from "./service/service.module";
 
 const routes: Routes = [
     { path: '', redirectTo: '/project', pathMatch: 'full' },
-    { path: 'tests', component: TestsComponent, canActivate:[CanActivateRoutes]},
-    { path: 'tests/:name', component: TestsComponent, canActivate:[CanActivateRoutes]},
     { path: 'report', component: TestReportComponent, canActivate:[CanActivateRoutes]},
     { path: 'new', component: ComingComponent},
     { path: 'about', component: ComingComponent },
