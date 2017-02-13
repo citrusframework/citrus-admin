@@ -1,10 +1,53 @@
 <h1 class="page-header"><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
 
-<h4>Name: <span>{{project?.name}}</span></h4>
-<h4>Package: <span>{{project?.settings?.basePackage}}</span></h4>
-<h4>Version: <span>{{project?.version}}</span></h4>
-<h4>Tests: <span>{{testCount}}</span></h4>
-<h4 *ngIf="project?.description">Description: <span>{{project?.description}}</span></h4>
+<div class="row">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Name:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4>{{project?.name}}</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Home:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4>{{project?.projectHome}}</h4>
+  </div>
+</div>
+<div class="row" *ngIf="project?.description">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Description:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4 >{{project?.description}}</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Package:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4>{{project?.settings?.basePackage}}</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Version:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4>{{project?.version}}</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+    <h4 class="pull-right">Tests:</h4>
+  </div>
+  <div class="col-sm-11">
+    <h4>{{testCount}}</h4>
+  </div>
+</div>
 
 <h2 class="sub-header"><i class="fa fa-tasks"></i> Test results <small>{{ testReport?.executionDate | date:"MM/dd/yyyy" }}</small></h2>
 

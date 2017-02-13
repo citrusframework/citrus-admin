@@ -153,7 +153,6 @@ public class Project {
      *
      * @return the projectHome
      */
-    @JsonIgnore
     public String getProjectHome() {
         return projectHome;
     }

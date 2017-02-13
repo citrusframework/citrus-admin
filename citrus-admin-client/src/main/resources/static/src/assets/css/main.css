@@ -161,10 +161,18 @@ ul.properties li {
     text-overflow: ellipsis;
 }
 
-/** Forms **/
-
 form {
     max-width: 1200px;
+}
+
+.panel {
+    max-width: 400px;
+    min-width: 300px;
+}
+
+.floating {
+    float: left;
+    margin-left: 5px;
 }
 
 /** Box **/
@@ -524,6 +532,16 @@ pre.logger {
     background-color: #7c83c1;
 }
 
+.label-jmx-client, .badge-jmx-client,
+.label-jmx-server, .badge-jmx-server {
+    background-color: #e2da09;
+}
+
+.label-rmi-client, .badge-rmi-client,
+.label-rmi-server, .badge-rmi-server {
+    background-color: #b6c11b;
+}
+
 .label-ws-client, .badge-ws-client,
 .label-ws-server, .badge-ws-server{
     background-color: #026ebe;
@@ -531,6 +549,14 @@ pre.logger {
 
 .label-channel, .badge-channel {
     background-color: #96c1d2;
+}
+
+.label-camel, .badge-camel {
+    background-color: #d26d28;
+}
+
+.label-vertx, .badge-vertx {
+    background-color: #b13fd2;
 }
 
 .label-ftp-client, .badge-ftp-client,
