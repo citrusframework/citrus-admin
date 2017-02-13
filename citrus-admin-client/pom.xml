@@ -16,17 +16,10 @@
 
     <build>
         <plugins>
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>${pom.basedir}/src/main/resources/static/dist/</include>
-                    </includes>
-                </configuration>
             </plugin>
-            -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -64,13 +57,14 @@
                 </executions>
             </plugin>
         </plugins>
-        <!-- -->
         <resources>
             <resource>
-                <directory>src/main/resources/static/dist/</directory>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>static/dist/**</include>
+                </includes>
             </resource>
         </resources>
-        <!-- -->
     </build>
 
     <profiles>
