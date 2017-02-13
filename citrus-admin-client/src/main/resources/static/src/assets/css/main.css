@@ -294,6 +294,18 @@ pre.logger {
     background-color: rgba(255,255,255,0.2);
 }
 
+.navbar-default .navbar-toggle {
+    border-color: #33abde;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: rgba(255,255,255,0.2);
+}
+
 /** Tab navigation **/
 
 .nav-tabs > li > a {
