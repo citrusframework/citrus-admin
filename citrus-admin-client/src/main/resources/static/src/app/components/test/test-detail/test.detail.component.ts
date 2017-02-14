@@ -53,6 +53,7 @@ export class TestDetailComponent implements OnInit {
             this.testAction.selectTest(test);
             this.testAction.fetchDetails(test);
         })
+
     }
 
     isActive(link:string) {

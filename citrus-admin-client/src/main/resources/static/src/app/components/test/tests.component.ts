@@ -21,8 +21,8 @@ declare var jQuery:typeof jQueryVar;
 export class TestsComponent implements OnInit {
 
     constructor(
-                private _alertService: AlertService,
-                private _router: Router,
+                private alertService: AlertService,
+                private router: Router,
                 private route:ActivatedRoute,
                 private testActions:TestStateActions,
                 private testState:TestStateService,
@@ -47,7 +47,11 @@ export class TestsComponent implements OnInit {
         this.testState
             .openTabs
             .filter(ot => ot.length === 0)
-            .subscribe(() => this._router.navigate(['tests']))
+            .subscribe(() => this.router.navigate(['tests']))
+        this.testState.selectedTest.filter(t => t != null).subscribe(t => {
+            console.log('Hello');
+            this.router.navigate([t.name])
+        })
     }
 
     onTabClosed(test:Test) {
@@ -89,10 +93,10 @@ export class TestsComponent implements OnInit {
     }
 
     notifyError(error: any) {
-        this._alertService.add(new Alert("danger", error.message, false));
+        this.alertService.add(new Alert("danger", error.message, false));
     }
 
     private navigateToTestInfo(test:Test) {
-        this._router.navigate(['/tests', test.name, 'info']);
+        this.router.navigate(['/tests', test.name, 'info']);
     }
 }
