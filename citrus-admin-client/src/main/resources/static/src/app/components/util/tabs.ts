@@ -26,20 +26,24 @@ export class TabsComponent {
     }
 
     select(tab: TabComponent) {
-        this.tabs.forEach((tab: TabComponent) => {
-            tab.active = false;
-        });
-        tab.active = true;
+        if(this.dynamic) {
+            this.tabs.forEach((tab: TabComponent) => {
+                tab.active = false;
+            });
+            tab.active = true;
+        }
         this.selected.emit(tab);
     }
 
     close(tab: TabComponent, e:MouseEvent) {
         e.stopPropagation();
-        this.tabs.splice(this.tabs.indexOf(tab), 1);
-        this.closed.emit(tab);
+        if(this.dynamic) {
+            this.tabs.splice(this.tabs.indexOf(tab), 1);
+            this.closed.emit(tab);
 
-        if (tab.active && this.tabs.length) {
-            this.select(this.tabs[0]);
+            if (tab.active && this.tabs.length) {
+                this.select(this.tabs[0]);
+            }
         }
     }
 
@@ -73,7 +77,7 @@ export class TabComponent implements OnInit {
     @Output() select = new EventEmitter<TabComponent>();
     @Output() close = new EventEmitter<TabComponent>();
 
-    active: boolean;
+    @Input() active: boolean;
 
     constructor(private tabs: TabsComponent){
         tabs.addTab(this);

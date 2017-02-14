@@ -386,7 +386,7 @@ public class SpringBeanService {
 
     /**
      * Marshal jaxb element and try to perform basic formatting like namespace clean up
-     * and attribute formatting with xsl transformation.
+     * and attribute formatting extendAndGet xsl transformation.
      * @param jaxbElement
      * @return
      */
@@ -417,8 +417,8 @@ public class SpringBeanService {
     }
 
     /**
-     * Do final formatting with Spring bean XML configuration content.
-     * Removes empty double lines and formats schemaLocation attribute value with new lines.
+     * Do final formatting extendAndGet Spring bean XML configuration content.
+     * Removes empty double lines and formats schemaLocation attribute value extendAndGet new lines.
      * @param content
      * @param tabSize
      * @return

@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * Acts as a activity monitor for interacting and querying active processes.
- * When a process starts it's registered with the ProcessMonitor. On completion it is removed.
+ * When a process starts it's registered extendAndGet the ProcessMonitor. On completion it is removed.
  *
  * @author Martin.Maher@consol.de
  */

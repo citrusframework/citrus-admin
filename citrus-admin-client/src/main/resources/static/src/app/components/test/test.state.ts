@@ -6,6 +6,8 @@ import {AsyncActionType, AsyncActions, assign, Extender} from "../../util/redux.
 import {Effect, Actions} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
+import * as _ from "lodash";
+import {Trace} from "../../util/decorator";
 
 export interface TestState {
     tests:Test[]
@@ -30,7 +32,6 @@ export class TestStateEffects {
     constructor(
         private actions:AsyncActions,
         private testService:TestService,
-        private rxAction:Actions
     ) {}
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages())
@@ -101,29 +102,39 @@ const testSignature = (t:Test) => `${t.packageName}.${t.className}.${t.methodNam
 export function reduce(state:TestState = TestStateInit, action:Action) {
     const stateExtender = new Extender(state);
     switch (action.type) {
-        case TestStateActions.PACKAGES.SUCCESS:
+        case TestStateActions.PACKAGES.SUCCESS: {
             const packages = action.payload as TestGroup[];
-            const tests = packages.reduce((c:Test[], tg:TestGroup) => [...c, ...tg.tests], [] as Test[]);
+            const tests = packages.reduce((c: Test[], tg: TestGroup) => [...c, ...tg.tests], [] as Test[]);
             const testNames = tests.map(t => t.name);
-            return stateExtender.with({ packages, tests, testNames });
+            return stateExtender.extendAndGet({packages, tests, testNames});
+        }
         case TestStateActions.ADD_TAB: {
-            const openTabs = [...state.openTabs, action.payload]
-            return stateExtender.with({openTabs});
+            const exists = _.includes(state.openTabs, action.payload)
+            const openTabs = exists ? state.openTabs : [...state.openTabs, action.payload]
+            stateExtender.extend({selectedTest:action.payload})
+            return stateExtender.extendAndGet({openTabs});
         }
         case TestStateActions.REMOVE_TAB: {
-            const openTabs = state.openTabs.filter(t => t !== action.payload)
-            return stateExtender.with({openTabs});
+            const openTabs = state.openTabs.filter(t => t !== action.payload);
+            if(state.selectedTest === action.payload) {
+                const i = state.openTabs.findIndex(t => t === state.selectedTest);
+                stateExtender.extend({selectedTest: openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)]})
+            }
+            if(openTabs.length === 0) {
+                stateExtender.extend({selectedTest: null})
+            }
+            return stateExtender.extendAndGet({openTabs});
         }
         case TestStateActions.SELECT_TAB: {
             const selectedTest = action.payload
-            return stateExtender.with({selectedTest});
+            return stateExtender.extendAndGet({selectedTest});
         }
         case TestStateActions.DETAIL.SUCCESS: {
             const detail = action.payload.detail;
             const test = action.payload.test;
             const detailExtender = new Extender(state.details);
-            const details = detailExtender.with({[testSignature(test)]: detail})
-            return stateExtender.with({details});
+            const details = detailExtender.extendAndGet({[testSignature(test)]: detail})
+            return stateExtender.extendAndGet({details});
         }
     }
     return state;

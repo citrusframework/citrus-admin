@@ -100,12 +100,12 @@ public class WebSocketProcessListener implements ProcessListener {
 
     @Override
     public void onProcessFail(String processId, int exitCode) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed extendAndGet exit code " + exitCode + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, Throwable e) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage() + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed extendAndGet exception " + e.getLocalizedMessage() + System.lineSeparator()));
     }
 
     /**

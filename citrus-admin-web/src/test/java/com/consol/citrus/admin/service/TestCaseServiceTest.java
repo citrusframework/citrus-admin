@@ -85,7 +85,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
                                                     .filter(group -> group.getName().equals(name))
                                                     .findFirst();
 
-        Assert.assertTrue(testGroup.isPresent(), "Missing test package with name: " + name);
+        Assert.assertTrue(testGroup.isPresent(), "Missing test package extendAndGet name: " + name);
         Assert.assertEquals(testGroup.get().getTests().size(), size);
     }
 

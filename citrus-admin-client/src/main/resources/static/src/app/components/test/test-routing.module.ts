@@ -9,6 +9,7 @@ import {TestDetailComponent} from "./test-detail/test.detail.component";
 import {SourcesOutletComponent} from "./test-detail/sources/sources-outlet.component";
 import {TestRunOutlet} from "./test-detail/run/test.execute.component";
 import {TestResultOutletComponent} from "./test-detail/results/test-result.component";
+import {CanActivateTestTab, CannotActivate} from "./route-guards";
 
 const routes:Routes = [
     {
@@ -19,7 +20,11 @@ const routes:Routes = [
             {
                 path: ':name',
                 component: TestDetailComponent,
+                canActivateChild: [
+                    CanActivateTestTab
+                ],
                 children: [
+                    { path: '', redirectTo: 'info', pathMatch: 'full'},
                     { path: 'info', component: InfoOutletComponent},
                     { path: 'sources', component: SourcesOutletComponent},
                     { path: 'design', component: TestDesignerOutletComponent},
@@ -35,6 +40,10 @@ const routes:Routes = [
     imports: [
         ServiceModule,
         RouterModule.forChild(routes)
+    ],
+    providers: [
+        CanActivateTestTab,
+        CannotActivate
     ],
     exports: [
         RouterModule

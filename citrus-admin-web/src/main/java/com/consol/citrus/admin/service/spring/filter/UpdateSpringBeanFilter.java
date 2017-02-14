@@ -21,7 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeFilter;
 
 /**
- * Filter searches fo a Spring bean definition and overwrites it with a new bean definition in 
+ * Filter searches fo a Spring bean definition and overwrites it extendAndGet a new bean definition in
  * a Spring XML application context.
  * 
  * @author Christoph Deppisch

@@ -4,29 +4,14 @@ import { HttpModule } from '@angular/http';
 import { FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
-import { DashboardComponent } from './components/project/dashboard.component';
 import { HeaderComponent } from './components/header.component';
 import { SidebarComponent } from './components/sidebar.component';
 import { LogComponent } from './components/log.component';
 import { ComingComponent } from './components/coming.component';
-
-import { SourceCodeComponent } from './components/test/test-detail/sources/source.code.component';
-import { TestDetailComponent } from './components/test/test-detail/test.detail.component';
-import { TestExecuteComponent } from './components/test/test-detail/run/test.execute.component';
 import { TestResultComponent } from './components/test.result.component';
-import { TestMessageComponent } from './components/test/test-detail/run/test.message.component';
-import { TestProgressComponent } from './components/test/test-detail/run/test.progress.component';
-import { TestListGroupComponent } from './components/test/test.listgroup.component';
-import { TestsComponent } from './components/test/tests.component';
-import { TestReportComponent } from './components/test/test-report/test.report.component';
-import { TestActionComponent } from './components/test/test-detail/test-designer/test.action.component';
-import { TestContainerComponent } from './components/test/test-detail/test-designer/test.container.component';
-import { TestDesignerComponent } from './components/test/test-detail/test-designer/test.designer.component';
-import { TestTransitionComponent } from './components/test/test-detail/test-designer/test.transition.component';
 
 import { AlertConsole } from './components/alert.console';
 import { AlertDialog } from './components/alert.dialog';
-import { TruncatePipe } from "./util/truncate.pipe";
 import {FileSelectComponent} from "./components/file-select/file-select.component";
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
@@ -57,19 +42,7 @@ import {StateModule} from "./state.module";
         SidebarComponent,
         LogComponent,
         ComingComponent,
-        SourceCodeComponent,
-        TestDetailComponent,
-        TestExecuteComponent,
         TestResultComponent,
-        TestMessageComponent,
-        TestProgressComponent,
-        TestListGroupComponent,
-        TestReportComponent,
-        TestsComponent,
-        TestActionComponent,
-        TestContainerComponent,
-        TestDesignerComponent,
-        TestTransitionComponent,
         AlertConsole,
         AlertDialog,
         SetupComponent,

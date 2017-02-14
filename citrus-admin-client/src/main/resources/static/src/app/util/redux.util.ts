@@ -36,7 +36,12 @@ export const assign = <T>(base:T, extend:Partial<T>) => {
 export class Extender<T> {
     constructor(private base:T) {}
 
-    with(e:Partial<T>) {
+    extendAndGet(e:Partial<T>) {
         return assign(this.base, e);
+    }
+
+    extend(e:Partial<T>) {
+        this.base = this.extendAndGet(e);
+        return this;
     }
 }

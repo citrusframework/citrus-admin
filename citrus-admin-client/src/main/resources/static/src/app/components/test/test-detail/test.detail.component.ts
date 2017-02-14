@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TestStateService, TestStateActions} from "../test.state";
 import {Observable} from "rxjs";
 import * as _ from 'lodash'
+import {Trace} from "../../../util/decorator";
 
 declare var jQuery:any;
 
@@ -14,7 +15,7 @@ declare var jQuery:any;
     selector: "test-detail",
     templateUrl: 'test-detail.html'
 })
-export class TestDetailComponent implements OnInit, OnChanges {
+export class TestDetailComponent implements OnInit {
 
     test: Test;
 
@@ -26,7 +27,7 @@ export class TestDetailComponent implements OnInit, OnChanges {
         {name:"Results",    link:'results', icon:'fa-tasks'},
     ]
 
-    constructor(private _testService: TestService,
+    constructor(
                 private _alertService: AlertService,
                 private testState:TestStateService,
                 private testAction:TestStateActions,
@@ -39,20 +40,18 @@ export class TestDetailComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         Observable.combineLatest(
-            this.activatedRoute.params.filter(p => p != null),
-            this.testState.tests.filter(t => t != null),
+            this.activatedRoute.params.filter(p => p["name"] != null),
+            this.testState.tests.filter(t => t != null).first(),
+        )
+        .map(([{name}, tests]) => tests.find(t => t.name === name))
+        .filter(t => t != null)
+        .subscribe(test => {
             this.testState.openTabs
-        ).subscribe(([{name}, tests, openTests]) => {
-            const test = tests.find(t => t.name === name);
-            if(test) {
-                const inTab = _.includes(openTests, test);
-                if(!inTab) {
-                    this.testAction.addTab(test);
-                }
-                this.testAction.selectTest(test);
-                this.testAction.fetchDetails(test);
-                this.router.navigate(['tests', test.name, 'info'])
-            }
+                .take(1)
+                .filter(openTests => !_.includes(openTests, test) && openTests.length > 0)
+                .subscribe(() => this.testAction.addTab(test))
+            this.testAction.selectTest(test);
+            this.testAction.fetchDetails(test);
         })
     }
 
@@ -60,25 +59,6 @@ export class TestDetailComponent implements OnInit, OnChanges {
         return _.endsWith(this.router.url, link);
     }
 
-    ngOnChanges() {
-        if (!this.test) {
-            this.detail = undefined;
-        } else {
-            this.getTestDetail();
-        }
-    }
-
-    getTestDetail() {
-        this._testService.getTestDetail(this.test)
-            .subscribe(
-                detail => this.detail = detail,
-                error => {
-                    this.notifyError(<any>error);
-
-                    // close tab as error usually makes it unusable
-                    jQuery('li.active > button.close').click();
-                });
-    }
 
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error.message, false));

@@ -49,7 +49,7 @@ public class Mocks {
     }
 
     /**
-     * Inject Spring autowired fields in target instance with mocks.
+     * Inject Spring autowired fields in target instance extendAndGet mocks.
      * @param target
      */
     public static void injectMocks(Object target) {

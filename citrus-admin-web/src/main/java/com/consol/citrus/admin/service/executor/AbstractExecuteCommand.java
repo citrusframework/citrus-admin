@@ -42,7 +42,7 @@ public abstract class AbstractExecuteCommand {
     private File workingDirectory;
 
     /**
-     * Constructor initializes with working directory.
+     * Constructor initializes extendAndGet working directory.
      * @param workingDirectory the working directory where the command is to be executed from
      */
     public AbstractExecuteCommand(File workingDirectory) {

@@ -43,7 +43,7 @@ public class ProcessMonitorImpl implements ProcessMonitor {
     public void add(ProcessLauncher processLauncher) {
         String id = processLauncher.getProcessId();
         if(processMap.containsKey(id)) {
-            String msg = String.format("An active process already exists with the Id '%s'", id);
+            String msg = String.format("An active process already exists extendAndGet the Id '%s'", id);
             LOG.error(msg);
             throw new ProcessLauncherException(msg);
         }

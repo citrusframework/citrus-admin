@@ -139,7 +139,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
     }
 
     /**
-     * Resolves property value with project properties in case value is a property expression.
+     * Resolves property value extendAndGet project properties in case value is a property expression.
      * @param value
      * @return
      */

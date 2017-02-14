@@ -23,17 +23,18 @@ export class TestsComponent implements OnInit {
     constructor(
                 private _alertService: AlertService,
                 private _router: Router,
+                private route:ActivatedRoute,
                 private testActions:TestStateActions,
                 private testState:TestStateService,
-                private route:ActivatedRoute
     ) {
     }
 
     packageAvailable:Observable<boolean>;
     openTests: Observable<Test[]>;
-    packages:Observable<TestGroup[]>
+    packages:Observable<TestGroup[]>;
     testNames: Observable<string[]>;
     tests: Observable<Test[]>;
+    selectedTest: Observable<Test>;
 
     ngOnInit() {
         this.packages = this.testState.packages;
@@ -41,24 +42,31 @@ export class TestsComponent implements OnInit {
         this.openTests = this.testState.openTabs;
         this.testNames = this.testState.testNames
         this.tests = this.testState.tests;
+        this.selectedTest = this.testState.selectedTest;
         this.testActions.fetchPackages();
-        this.testState.openTabs.filter(ot => ot.length <= 0).subscribe(() =>this._router.navigate(['/tests']));
+        this.testState
+            .openTabs
+            .filter(ot => ot.length === 0)
+            .subscribe(() => this._router.navigate(['tests']))
     }
 
     onTabClosed(test:Test) {
         this.testActions.removeTab(test);
-
     }
 
     onTabSelected(test:Test) {
-        this.testActions.selectTest(test)
+        this.testActions.selectTest(test);
         this.navigateToTestInfo(test);
     }
 
     onTestSelected(name: string) {
         this.tests
+            .first()
             .map(ts => ts.find(t => t.name === name))
-            .subscribe(t => this.testActions.addTab(t))
+            .subscribe(t => {
+                this.testActions.addTab(t);
+                this.navigateToTestInfo(t);
+            })
     }
 
     openTestList() {

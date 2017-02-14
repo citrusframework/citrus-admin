@@ -49,7 +49,7 @@ public class MavenTestExecutor implements TestExecutor {
 
         BuildConfiguration buildConfiguration = project.getSettings().getBuild();
         if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
-            throw new ApplicationRuntimeException("Unable to execute Maven command with non-maven build configuration: " + buildConfiguration.getClass());
+            throw new ApplicationRuntimeException("Unable to execute Maven command extendAndGet non-maven build configuration: " + buildConfiguration.getClass());
         }
 
         ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, test, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();

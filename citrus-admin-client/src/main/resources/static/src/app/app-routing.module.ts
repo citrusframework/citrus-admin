@@ -1,7 +1,6 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
-import { DashboardComponent }   from './components/dashboard.component';
 import { LogComponent }   from './components/log.component';
 import { ComingComponent }   from './components/coming.component';
 import { TestReportComponent } from "./components/test/test-report/test.report.component";
