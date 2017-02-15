@@ -8,7 +8,7 @@ import {TestDesignerOutletComponent} from "./test-detail/test-designer/test-desi
 import {TestDetailComponent} from "./test-detail/test.detail.component";
 import {SourcesOutletComponent} from "./test-detail/sources/sources-outlet.component";
 import {TestRunOutlet} from "./test-detail/run/test.execute.component";
-import {TestResultOutletComponent} from "./test-detail/results/test-result.component";
+import {TestResultOutletComponent} from "./test-detail/results/test.result.component";
 import {CanActivateTestTab, CannotActivate} from "./route-guards";
 
 const routes:Routes = [

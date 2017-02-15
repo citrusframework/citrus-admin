@@ -2,14 +2,12 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ServiceModule} from "../../service/service.module";
 import {TestsComponent} from "./tests.component";
-import {SourcesComponent} from "../project/settings/sources/sources.component";
 import {SourceCodeComponent} from "./test-detail/sources/source.code.component";
 import {TestDetailComponent} from "./test-detail/test.detail.component";
 import {TestExecuteComponent, TestRunOutlet} from "./test-detail/run/test.execute.component";
 import {TestListGroupComponent} from "./test.listgroup.component";
 import {TestMessageComponent} from "./test-detail/run/test.message.component";
 import {TestProgressComponent} from "./test-detail/run/test.progress.component";
-import {TestReportComponent} from "./test-report/test.report.component";
 import {UtilComponentsModule} from "../util/util.module";
 import {TestTransitionComponent} from "./test-detail/test-designer/test.transition.component";
 import {TestDesignerComponent} from "./test-detail/test-designer/test.designer.component";
@@ -23,7 +21,7 @@ import {TestDesignerOutletComponent} from "./test-detail/test-designer/test-desi
 import {TestStateActions, TestStateEffects, TestStateService} from "./test.state";
 import {EffectsModule} from "@ngrx/effects";
 import {SourcesOutletComponent} from "./test-detail/sources/sources-outlet.component";
-import {TestResultOutletComponent} from "./test-detail/results/test-result.component";
+import {TestResultComponent, TestResultOutletComponent} from "./test-detail/results/test.result.component";
 
 const components = [
     TestsComponent,
@@ -33,16 +31,16 @@ const components = [
     TestListGroupComponent,
     TestMessageComponent,
     TestProgressComponent,
-    TestReportComponent,
     TestActionComponent,
     TestContainerComponent,
     TestDesignerComponent,
     TestTransitionComponent,
-    InfoComponent,
     TestDesignerOutletComponent,
     SourcesOutletComponent,
+    InfoComponent,
     InfoOutletComponent,
     TestRunOutlet,
+    TestResultComponent,
     TestResultOutletComponent
 ]
 

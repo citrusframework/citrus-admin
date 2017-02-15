@@ -18,11 +18,11 @@ const configurationRoutes:Routes = [
         canActivate: [CanActivateRoutes],
         children: [
             { path: 'endpoints', component: EndpointsComponent},
-            { path: 'schema-definition', component: SchemaRepositoryComponent},
-            { path: 'functions', component: FunctionLibraryComponent},
+            { path: 'schema-repository', component: SchemaRepositoryComponent},
+            { path: 'function-library', component: FunctionLibraryComponent},
             { path: 'validation-matcher', component: ValidationMatcherComponent},
-            { path: 'data-dictionaries', component: DataDictionaryComponent},
-            { path: 'namespaces', component: NamespaceContextComponent},
+            { path: 'data-dictionary', component: DataDictionaryComponent},
+            { path: 'namespace-context', component: NamespaceContextComponent},
             { path: 'global-variables', component: GlobalVariablesComponent}
         ]
     },

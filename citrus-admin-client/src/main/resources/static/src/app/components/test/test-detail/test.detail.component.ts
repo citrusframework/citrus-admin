@@ -1,13 +1,11 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Test, TestDetail} from "../../../model/tests";
-import {TestService} from "../../../service/test.service";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TestStateService, TestStateActions} from "../test.state";
 import {Observable} from "rxjs";
 import * as _ from 'lodash'
-import {Trace} from "../../../util/decorator";
 
 declare var jQuery:any;
 
@@ -59,7 +57,6 @@ export class TestDetailComponent implements OnInit {
     isActive(link:string) {
         return _.endsWith(this.router.url, link);
     }
-
 
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error.message, false));

@@ -1,0 +1,10 @@
+<ul class="nav nav-pills nav-justified">
+  <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link[0])">
+    <a [routerLink]="entry.link">{{entry.name}}</a>
+  </li>
+</ul>
+<div [class.clearfix]="navigation && pullRight"></div>
+
+<router-outlet></router-outlet>
+
+<div class="alert-console" type="detailed"></div>

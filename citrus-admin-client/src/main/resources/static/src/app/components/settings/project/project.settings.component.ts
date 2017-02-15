@@ -1,29 +1,26 @@
+import {Component, OnInit} from '@angular/core';
 import {Project} from "../../../model/project";
-import {OnInit} from "@angular/core";
-import {BuildProperty} from "../../../model/build.property";
 import {ProjectService} from "../../../service/project.service";
-import {AlertService} from "../../../service/alert.service";
-import * as jQueryVar from 'jquery';
 import {Alert} from "../../../model/alert";
+import {AlertService} from "../../../service/alert.service";
+import {BuildProperty} from "../../../model/build.property";
 
-declare var jQuery: typeof jQueryVar;
 
+@Component({
+    templateUrl: 'project-settings.html'
+})
+export class ProjectSettingsComponent implements OnInit {
 
+    constructor(private _projectService: ProjectService,
+                private _alertService: AlertService) {
+    }
 
-export abstract class ProjectSettingBase implements OnInit{
-    active = 'project';
-    project:Project = new Project();
+    project: Project = new Project();
 
     useCustomCommand: boolean = false;
-    dialogOpen: boolean = false;
 
     propertyName: string;
     propertyValue: string;
-
-    constructor(
-        private _projectService:ProjectService,
-        private _alertService:AlertService
-    ) {}
 
     ngOnInit() {
         this.getProject();
@@ -41,7 +38,6 @@ export abstract class ProjectSettingBase implements OnInit{
                 error => this.notifyError(<any>error));
     }
 
-
     removeProperty(property: BuildProperty, event:MouseEvent) {
         this.project.settings.build.properties.splice(this.project.settings.build.properties.indexOf(property), 1);
         event.stopPropagation();
@@ -58,31 +54,6 @@ export abstract class ProjectSettingBase implements OnInit{
                 error => this.notifyError(<any>error));
     }
 
-    openDialog() {
-        (jQuery('#dialog-connector') as any).modal();
-    }
-
-    manageConnector() {
-        if (this.project.settings.connectorActive) {
-            this._projectService.removeConnector()
-                .subscribe(
-                    () => {
-                        this.project.settings.useConnector = false;
-                        this.project.settings.connectorActive = false;
-                    },
-                    error => this.notifyError(<any>error));
-        } else {
-            this._projectService.addConnector()
-                .subscribe(() => {
-                        this.project.settings.useConnector = true;
-                        this.project.settings.connectorActive = true;
-                    },
-                    error => this.notifyError(<any>error));
-        }
-
-        this.getProject();
-    }
-
     notifySuccess(message: string) {
         this._alertService.add(new Alert("success", message, true));
     }
@@ -90,4 +61,5 @@ export abstract class ProjectSettingBase implements OnInit{
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error.message, false));
     }
+
 }

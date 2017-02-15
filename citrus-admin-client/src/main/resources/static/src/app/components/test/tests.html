@@ -16,7 +16,7 @@
     </div>
 </h1>
 
-<div *ngIf="openTests.length == 0" class="table-responsive">
+<div *ngIf="(openTests|async).length == 0" class="table-responsive">
     <table class="table table-hover">
         <thead>
         <tr>
@@ -26,7 +26,7 @@
             <th>Method</th>
         </tr>
         </thead>
-        <tbody *ngFor="let testGroup of packages">
+        <tbody *ngFor="let testGroup of packages|async">
         <tr *ngFor="let test of testGroup.tests" (click)="open(test)" class="clickable">
             <td><span class="badge badge-{{test.type | lowercase}}">{{test.type | lowercase}}</span></td>
             <td>
@@ -40,7 +40,7 @@
     </table>
 </div>
 
-<div *ngIf="openTests.length > 0" class="btn-group pull-right">
+<div *ngIf="(openTests|async).length > 0" class="btn-group pull-right">
     <button type="button" class="btn btn-default" (click)="openTestList()">Open</button>
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>
     </button>
@@ -58,6 +58,7 @@
         </li>
     </ul>
 </div>
+
 <tabs dynamic="false">
     <tab *ngFor="let test of openTests|async"
          tab-id="{{test.name}}"
@@ -68,11 +69,6 @@
     </tab>
     <router-outlet></router-outlet>
 </tabs>
-
-<div *ngIf="(openTests|async).length == 0" style="display: block; text-align: center; margin-top: 150px;">
-    <h3>Open test(s)</h3>
-    <p>Press 'O' to open test</p>
-</div>
 
 <div class="dialog"
      dialog-id="dialog-list-tests"

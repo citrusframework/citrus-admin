@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {TestReport} from "../../../model/test.report";
-import {ReportService} from "../../../service/report.service";
-import {AlertService} from "../../../service/alert.service";
 import {Router} from "@angular/router";
-import {Test} from "../../../model/tests";
-import {Alert} from "../../../model/alert";
+import {TestReport} from "../../model/test.report";
+import {ReportService} from "../../service/report.service";
+import {AlertService} from "../../service/alert.service";
+import {Test} from "../../model/tests";
+import {Alert} from "../../model/alert";
 
 @Component({
-    templateUrl: "test-report.html"
+    templateUrl: "report.html"
 })
-export class TestReportComponent implements OnInit {
+export class ReportComponent implements OnInit {
 
     constructor(private _reportService: ReportService,
                 private _alertService: AlertService,

@@ -1,16 +1,18 @@
-import { NgModule }             from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
-import { LogComponent }   from './components/log.component';
-import { ComingComponent }   from './components/coming.component';
-import { TestReportComponent } from "./components/test/test-report/test.report.component";
+import {LogComponent}   from './components/log.component';
+import {ComingComponent}   from './components/coming.component';
+import {ReportComponent} from "./components/report/report.component";
+import {DashboardComponent} from "./components/project/dashboard.component";
 import {SetupComponent} from "./components/setup.component";
 import {CanActivateRoutes} from "./service/can-activate-routes";
 import {ServiceModule} from "./service/service.module";
 
 const routes: Routes = [
-    { path: '', redirectTo: '/project', pathMatch: 'full' },
-    { path: 'report', component: TestReportComponent, canActivate:[CanActivateRoutes]},
+    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: DashboardComponent, canActivate:[CanActivateRoutes]},
+    { path: 'report', component: ReportComponent, canActivate:[CanActivateRoutes]},
     { path: 'new', component: ComingComponent},
     { path: 'about', component: ComingComponent },
     { path: 'log', component: LogComponent },

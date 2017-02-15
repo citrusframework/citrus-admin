@@ -1,27 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, NavigationEnd, NavigationStart} from '@angular/router';
+import {Component} from '@angular/core';
+import {Router, NavigationStart} from '@angular/router';
 
 const MenuEntry = (name:string, link:string[]) => ({name, link});
 
 @Component({
-    templateUrl: 'config.html'
+    templateUrl: 'configuration.html'
 })
 export class ConfigurationComponent {
 
 
     menuEntries = [
         MenuEntry('Endpoints', ['endpoints']),
-        MenuEntry('Schema Definitions', ['schema-definition']),
+        MenuEntry('Schema Definitions', ['schema-repository']),
         MenuEntry('Global Variables', ['global-variables']),
-        MenuEntry('Functions', ['functions']),
+        MenuEntry('Functions', ['function-library']),
         MenuEntry('Validation Matcher', ['validation-matcher']),
-        MenuEntry('Data dictionaries', ['data-dictionaries']),
-        MenuEntry('Namespaces', ['namespaces'])
-    ]
+        MenuEntry('Data dictionaries', ['data-dictionary']),
+        MenuEntry('Namespaces', ['namespace-context'])
+    ];
 
-    constructor(private route: ActivatedRoute,
-        private router:Router
-    ) {
+    constructor(private router:Router) {
         router.events
             .startWith(new NavigationStart(42, '/configuration'))
             .filter(e => e instanceof NavigationStart)
@@ -32,6 +30,6 @@ export class ConfigurationComponent {
     }
 
     isActive(name: string) {
-        return this.router.isActive('configuration/' +name, false);
+        return this.router.isActive('configuration/' + name, false);
     }
 }
