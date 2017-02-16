@@ -139,6 +139,10 @@ a.alert-link {
     background: #efefef;
 }
 
+ul.visible-xs-block {
+    margin-bottom: 25px;
+}
+
 ul.properties {
     margin: 0 0 0 0;
     padding-left: 40px;

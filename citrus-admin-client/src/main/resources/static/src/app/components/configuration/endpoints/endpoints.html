@@ -1,4 +1,4 @@
-<h2 class="sub-header">
+<h1 class="page-header">
   <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
   <div class="btn-group pull-right">
     <button [disabled]="selectedEndpoint" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></button>
@@ -6,7 +6,7 @@
       <li *ngFor="let type of endpointTypes" (click)="getEndpointType(type)" ><a name="{{type}}" class="clickable"><span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span> {{type}}</a></li>
     </ul>
   </div>
-</h2>
+</h1>
 
 <p>Endpoint components create producer and consumers for sending and receiving messages to/from various endpoint destinations. Endpoint components can be of synchronous and asynchronous nature and get referenced in test cases
   when sending and receiving messages.</p>
