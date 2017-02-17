@@ -50,7 +50,6 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
                 error => this.notifyError(<any>error));
     }
 
-
     saveSourceCode() {
         this._testService.updateSourceCode(this.getRelativePath(), this.editor.getValue())
             .subscribe(error => this.notifyError(<any>error));

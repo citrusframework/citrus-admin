@@ -94,6 +94,11 @@
         <th>Method</th>
       </tr>
     </thead>
+    <tbody *ngIf="latestTests?.length == 0">
+      <tr>
+        <td colspan="4"><i class="fa fa-file-text-o"></i> No tests found for project</td>
+      </tr>
+    </tbody>
     <tbody *ngFor="let testGroup of latestTests">
       <tr *ngFor="let test of testGroup.tests">
         <td><span class="badge badge-{{test.type | lowercase}}">{{test.type | lowercase}}</span></td>

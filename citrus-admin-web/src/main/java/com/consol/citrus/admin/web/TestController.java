@@ -19,7 +19,6 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -74,9 +73,9 @@ public class TestController {
     }
 
     @RequestMapping(value="/source", method = { RequestMethod.PUT })
-    @ResponseBody
-    public void updateSourceCode(@RequestParam("relativePath") String relativePath, @RequestBody String newSourceCode) {
+    public ResponseEntity updateSourceCode(@RequestParam("relativePath") String relativePath, @RequestBody String newSourceCode) {
         testCaseService.updateSourceCode(projectService.getActiveProject(), relativePath, newSourceCode);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value="/execute", method = { RequestMethod.POST })
@@ -87,8 +86,8 @@ public class TestController {
 
     @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })
     @ResponseBody
-    public ResponseEntity<String> stop(@PathVariable("processId") String processId) {
+    public ResponseEntity stop(@PathVariable("processId") String processId) {
         testExecutionService.stop(processId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

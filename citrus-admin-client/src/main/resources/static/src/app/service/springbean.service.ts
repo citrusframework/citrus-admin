@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {SpringBean} from "../model/springbean";
+import {SpringContext} from "../model/springcontext";
 
 @Injectable()
 export class SpringBeanService {
@@ -14,6 +15,23 @@ export class SpringBeanService {
         return this.http.post(this._serviceUrl + '/search', type, new RequestOptions({ headers: new Headers({ 'Content-Type': 'plain/text' }) }))
                         .map(res => <string[]> res.json())
                         .catch(this.handleError);
+    }
+
+    getContexts() {
+        return this.http.get(this._serviceUrl + '/context')
+            .map(res => <SpringContext[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getContextSource(context: SpringContext) {
+        return this.http.get(this._serviceUrl + '/context' + '/' + context.fileName + '/')
+            .map(res => <string> res.text())
+            .catch(this.handleError);
+    }
+
+    updateContextSource(context: SpringContext, source: string) {
+        return this.http.put(this._serviceUrl + '/context/' + context.fileName + '/', source)
+            .catch(this.handleError);
     }
 
     getAllBeans() {

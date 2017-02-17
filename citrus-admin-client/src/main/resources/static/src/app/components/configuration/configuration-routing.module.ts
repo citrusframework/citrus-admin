@@ -7,6 +7,7 @@ import {FunctionLibraryComponent} from "./function-library/function.library.comp
 import {ValidationMatcherComponent} from "./validation-matcher/validation.matcher.component";
 import {DataDictionaryComponent} from "./data-dictionary/data.dictionary.component";
 import {SpringBeansComponent} from "./spring-beans/spring.beans.component";
+import {SpringContextComponent} from "./spring-context/spring.context.component";
 import {NamespaceContextComponent} from "./namespace-context/namespace.context.component";
 import {GlobalVariablesComponent} from "./global-variables/global.variables.component";
 import {ServiceModule} from "../../service/service.module";
@@ -20,6 +21,7 @@ const configurationRoutes:Routes = [
         children: [
             { path: 'endpoints', component: EndpointsComponent},
             { path: 'spring-beans', component: SpringBeansComponent},
+            { path: 'spring-context', component: SpringContextComponent},
             { path: 'schema-repository', component: SchemaRepositoryComponent},
             { path: 'function-library', component: FunctionLibraryComponent},
             { path: 'validation-matcher', component: ValidationMatcherComponent},

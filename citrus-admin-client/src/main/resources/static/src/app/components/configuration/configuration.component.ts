@@ -11,6 +11,7 @@ export class ConfigurationComponent {
 
     menuEntries = [
         MenuEntry('Endpoints', ['endpoints']),
+        MenuEntry('Spring Application Context', ['spring-context']),
         MenuEntry('Spring Beans', ['spring-beans']),
         MenuEntry('Schema Definitions', ['schema-repository']),
         MenuEntry('Global Variables', ['global-variables']),
