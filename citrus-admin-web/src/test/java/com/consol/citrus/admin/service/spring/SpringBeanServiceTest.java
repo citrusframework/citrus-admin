@@ -90,6 +90,24 @@ public class SpringBeanServiceTest {
         Assert.assertTrue(result.contains("<bean name=\"deleteMeName\""), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<property name=\"deleteMe\" value=\"some\"/>"), "Failed to validate " + result);
     }
+    
+    @Test
+    public void testRemoveSpringBeanDefinitions() throws Exception {
+        File tempFile = createTempContextFile("citrus-context-remove-bean");
+
+        springBeanConfigService.removeBeanDefinitions(tempFile, project, SpringBean.class, "class", "com.consol.citrus.DeleteMe");
+
+        String result = FileUtils.readToString(new FileInputStream(tempFile));
+
+        Assert.assertTrue(result.contains("id=\"preserveMe\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("name=\"preserveMeName\""), "Failed to validate " + result);
+
+        Assert.assertFalse(result.contains("<bean id=\"deleteMe\""), "Failed to validate " + result);
+        Assert.assertFalse(result.contains("<bean name=\"deleteMeName\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<bean class=\"com.consol.citrus.SampleClass\""), "Failed to validate " + result);
+        Assert.assertFalse(result.contains("<bean class=\"com.consol.citrus.DeleteMe\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<property name=\"class\" value=\"com.consol.citrus.DeleteMe\"/>"), "Failed to validate " + result);
+    }
 
     @Test
     public void testUpdateBeanDefinition() throws Exception {

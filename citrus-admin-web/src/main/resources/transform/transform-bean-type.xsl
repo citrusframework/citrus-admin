@@ -21,11 +21,14 @@
   <xsl:param name="bean_element" />
   <xsl:param name="bean_namespace" />
 
+  <xsl:param name="attribute_name" />
+  <xsl:param name="attribute_value" />
+
   <xsl:template match="node()">
     <xsl:choose>
       <xsl:when test="local-name(.) = 'beans'">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;<xsl:value-of select="name(.)"/><xsl:call-template name="namespaces"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
-      <xsl:when test="local-name(.) = $bean_element and namespace-uri(.) = $bean_namespace"><xsl:call-template name="update-bean"/></xsl:when>
+      <xsl:when test="local-name(.) = $bean_element and namespace-uri(.) = $bean_namespace and (not($attribute_name) or (attribute::*[local-name(.) = $attribute_name] = $attribute_value))"><xsl:call-template name="update-bean"/></xsl:when>
       <xsl:when test="child::*">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:when test="text()">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:value-of select="text()"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
       <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>/&gt;</xsl:otherwise>

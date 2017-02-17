@@ -1,16 +1,19 @@
 import {NgModule} from "@angular/core";
 import {TruncatePipe} from "./truncate.pipe";
-import {AsyncAction} from "rxjs/scheduler/AsyncAction";
+import {ClazzPipe} from "./clazz.pipe";
 import {AsyncActions} from "./redux.util";
+
 @NgModule({
     providers: [
         AsyncActions
     ],
     declarations: [
-        TruncatePipe
+        TruncatePipe,
+        ClazzPipe
     ],
     exports: [
-        TruncatePipe
+        TruncatePipe,
+        ClazzPipe
     ]
 })
 export class UtilModule {}

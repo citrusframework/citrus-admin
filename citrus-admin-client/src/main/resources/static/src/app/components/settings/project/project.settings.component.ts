@@ -38,6 +38,16 @@ export class ProjectSettingsComponent implements OnInit {
                 error => this.notifyError(<any>error));
     }
 
+    addProperty() {
+        var property = new BuildProperty();
+        property.name = this.propertyName;
+        property.value = this.propertyValue;
+        this.project.settings.build.properties.push(property);
+
+        this.propertyName = "";
+        this.propertyValue = "";
+    }
+
     removeProperty(property: BuildProperty, event:MouseEvent) {
         this.project.settings.build.properties.splice(this.project.settings.build.properties.indexOf(property), 1);
         event.stopPropagation();

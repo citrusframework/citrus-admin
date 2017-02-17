@@ -3,6 +3,7 @@
   <li><a [routerLink]="['/configuration/endpoints']" [routerLinkActive]="['active']"><i class="fa fa-wrench"></i><span class="hidden-xs">&nbsp;&nbsp;Configuration</span></a></li>
   <ul class="nav hidden-xs" *ngIf="isActive('configuration')">
     <li><a [routerLink]="['/configuration/endpoints']" [routerLinkActive]="['active']">Endpoints</a></li>
+    <li><a [routerLink]="['/configuration/spring-beans']" [routerLinkActive]="['active']">Spring Beans</a></li>
     <li><a [routerLink]="['/configuration/schema-repository']" [routerLinkActive]="['active']">Schema Repository</a></li>
     <li><a [routerLink]="['/configuration/global-variables']" [routerLinkActive]="['active']">Global Variables</a></li>
     <li><a [routerLink]="['/configuration/function-library']" [routerLinkActive]="['active']">Function Library</a></li>

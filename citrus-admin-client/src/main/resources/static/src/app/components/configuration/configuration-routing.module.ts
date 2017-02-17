@@ -6,6 +6,7 @@ import {SchemaRepositoryComponent} from "./schema-repository/schema.repository.c
 import {FunctionLibraryComponent} from "./function-library/function.library.component";
 import {ValidationMatcherComponent} from "./validation-matcher/validation.matcher.component";
 import {DataDictionaryComponent} from "./data-dictionary/data.dictionary.component";
+import {SpringBeansComponent} from "./spring-beans/spring.beans.component";
 import {NamespaceContextComponent} from "./namespace-context/namespace.context.component";
 import {GlobalVariablesComponent} from "./global-variables/global.variables.component";
 import {ServiceModule} from "../../service/service.module";
@@ -18,6 +19,7 @@ const configurationRoutes:Routes = [
         canActivate: [CanActivateRoutes],
         children: [
             { path: 'endpoints', component: EndpointsComponent},
+            { path: 'spring-beans', component: SpringBeansComponent},
             { path: 'schema-repository', component: SchemaRepositoryComponent},
             { path: 'function-library', component: FunctionLibraryComponent},
             { path: 'validation-matcher', component: ValidationMatcherComponent},

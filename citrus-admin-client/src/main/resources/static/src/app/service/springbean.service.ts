@@ -16,6 +16,12 @@ export class SpringBeanService {
                         .catch(this.handleError);
     }
 
+    getAllBeans() {
+        return this.http.get(this._serviceUrl)
+            .map(res => <SpringBean[]> res.json())
+            .catch(this.handleError);
+    }
+
     getBeans(type: string) {
         return this.http.get(this._serviceUrl + '/' + type)
                         .map(res => <SpringBean[]> res.json())
@@ -28,19 +34,29 @@ export class SpringBeanService {
             .catch(this.handleError);
     }
 
-    createBean(bean: any) {
+    createBean(bean: SpringBean) {
         return this.http.post(this._serviceUrl, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
     }
 
-    updateBean(bean: any) {
-        return this.http.put(this._serviceUrl + '/' + bean.id, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+    updateBean(bean: SpringBean) {
+        if (bean.id) {
+            return this.http.put(this._serviceUrl + '/' + bean.clazz +  '/' + bean.id, JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+                    .catch(this.handleError);
+        } else {
+            return this.http.put(this._serviceUrl + '/' + bean.clazz + '/', JSON.stringify(bean), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
                 .catch(this.handleError);
+        }
     }
 
-    deleteBean(id: string) {
-        return this.http.delete(this._serviceUrl + '/' + id)
+    deleteBean(bean: SpringBean) {
+        if (bean.id) {
+            return this.http.delete(this._serviceUrl + '/' + bean.clazz + '/' + bean.id)
                 .catch(this.handleError);
+        } else {
+            return this.http.delete(this._serviceUrl + '/' + bean.clazz + '/')
+                .catch(this.handleError);
+        }
     }
 
     private handleError (error: Response) {

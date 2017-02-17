@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Element;
@@ -249,6 +250,17 @@ public class SpringBeanService {
      * @param type
      */
     public void removeBeanDefinitions(File configFile, Project project, Class<?> type) {
+        removeBeanDefinitions(configFile, project, type, null, null);
+    }
+
+    /**
+     * Method removes all Spring bean definitions of given type from the XML application context file.
+     * @param project
+     * @param type
+     * @param attributeName
+     * @param attributeValue
+     */
+    public void removeBeanDefinitions(File configFile, Project project, Class<?> type, String attributeName, String attributeValue) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -269,6 +281,11 @@ public class SpringBeanService {
                 Transformer transformer = transformerFactory.newTransformer(xsltSource);
                 transformer.setParameter("bean_element", beanElement);
                 transformer.setParameter("bean_namespace", beanNamespace);
+
+                if (StringUtils.hasText(attributeName)) {
+                    transformer.setParameter("attribute_name", attributeName);
+                    transformer.setParameter("attribute_value", attributeValue);
+                }
 
                 //transform
                 StringResult result = new StringResult();
@@ -340,6 +357,20 @@ public class SpringBeanService {
      * @param jaxbElement
      */
     public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object jaxbElement) {
+        updateBeanDefinitions(configFile, project, type, jaxbElement, null, null);
+    }
+
+    /**
+     * Method updates existing Spring bean definitions in a XML application context file. Bean definition is
+     * identified by its type defining class.
+     *
+     * @param project
+     * @param type
+     * @param jaxbElement
+     * @param attributeName
+     * @param attributeValue
+     */
+    public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object jaxbElement, String attributeName, String attributeValue) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -369,6 +400,11 @@ public class SpringBeanService {
                     transformer.setParameter("bean_content", getXmlContent(jaxbElement)
                             .replaceAll("(?m)^(\\s<)", getTabs(1, project.getSettings().getTabSize()) + "$1")
                             .replaceAll("(?m)^(</)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
+
+                    if (StringUtils.hasText(attributeName)) {
+                        transformer.setParameter("attribute_name", attributeName);
+                        transformer.setParameter("attribute_value", attributeValue);
+                    }
 
                     //transform
                     StringResult result = new StringResult();

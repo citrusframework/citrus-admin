@@ -8,6 +8,6 @@ export class SpringBean {
 
     public properties: SpringProperty[];
 
-    public name: string;
+    public id: string;
     public clazz: string;
 }

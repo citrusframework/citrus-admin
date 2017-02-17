@@ -45,16 +45,34 @@ public class SpringBeanController {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), bean);
     }
 
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{type}", method = {RequestMethod.PUT})
+    @ResponseBody
+    public void updateBeans(@PathVariable("type") String type, @RequestBody SpringBean bean) {
+        springBeanService.updateBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SpringBean.class, bean, "class", type);
+    }
+
+    @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateBean(@PathVariable("id") String id, @RequestBody SpringBean bean) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, bean);
     }
 
-    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{type}", method = {RequestMethod.DELETE})
+    @ResponseBody
+    public void deleteBeans(@PathVariable("type") String type) {
+        springBeanService.removeBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SpringBean.class, "class", type);
+    }
+
+    @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteBean(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
+    }
+
+    @RequestMapping(method = {RequestMethod.GET})
+    @ResponseBody
+    public List<SpringBean> listBeans() {
+        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SpringBean.class);
     }
 
     @RequestMapping(value = "/{type}", method = {RequestMethod.GET})
@@ -65,7 +83,7 @@ public class SpringBeanController {
 
     @RequestMapping(value = "/{type}/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public SpringBean getBean(@PathVariable("type") String type, @PathVariable("id") String id) {
+    public SpringBean getBean(@PathVariable("id") String id) {
         return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, SpringBean.class);
     }
 
