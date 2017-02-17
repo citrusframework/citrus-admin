@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
                                     this.project = project;
                                     if (this.project.settings.useConnector && !this.project.settings.connectorActive) {
                                         this._alertService.add(new Alert("warning", "Admin connector is inactive!", true)
-                                            .withLink(new Link("/project/settings/connector", "Fix in project settings")));
+                                            .withLink(new Link("/settings/connector", "Fix in project settings")));
                                     }
                                 },
                                 error => this.notifyError(<any>error));
