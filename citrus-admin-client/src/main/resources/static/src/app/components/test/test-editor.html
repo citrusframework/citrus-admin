@@ -3,7 +3,7 @@
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
-    <li *ngIf="packageAvailable|async" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
+    <li *ngIf="(packages|async).length == 0" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
     <li *ngFor="let package of packages|async" role="presentation" class="dropdown-submenu pull-left">
       <a role="menuitem" name="tests" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
       <ul class="dropdown-menu" role="menu">

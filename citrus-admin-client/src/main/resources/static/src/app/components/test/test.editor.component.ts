@@ -24,14 +24,12 @@ export class TestEditorComponent implements OnInit {
                 private testState:TestStateService) {
     }
 
-    packageAvailable:Observable<boolean>;
     openTests: Observable<Test[]>;
     packages:Observable<TestGroup[]>;
     selectedTest: Observable<Test>;
 
     ngOnInit() {
         this.packages = this.testState.packages;
-        this.packageAvailable = this.testState.packagesAvailable;
         this.openTests = this.testState.openTabs;
         this.selectedTest = this.testState.selectedTest;
 
@@ -68,7 +66,7 @@ export class TestEditorComponent implements OnInit {
     }
 
     handleKeyUp(event:KeyboardEvent) {
-        if (event && event.key == "o") {
+        if (event && event.key.toUpperCase() == "O") {
             this.openTestList();
         }
     }

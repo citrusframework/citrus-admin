@@ -50,8 +50,6 @@ export class TestStateService {
 
     get packages():Observable<TestGroup[]> { return this.store.select(s => s.tests.packages) }
 
-    get packagesAvailable():Observable<boolean> { return this.packages.map(p => p.length > 0)}
-
     get openTabs():Observable<Test[]> { return this.store.select(p => p.tests.openTabs) }
 
     get testNames():Observable<string[]> { return this.tests.map(p => p.map(t => t.name)) }

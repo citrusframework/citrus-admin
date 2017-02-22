@@ -18,14 +18,12 @@ export class TestListComponent implements OnInit {
             private testState:TestStateService) {
     }
 
-    packageAvailable:Observable<boolean>;
     packages:Observable<TestGroup[]>;
     testNames: Observable<string[]>;
     tests: Observable<Test[]>;
 
     ngOnInit() {
         this.packages = this.testState.packages;
-        this.packageAvailable = this.testState.packagesAvailable;
         this.testNames = this.testState.testNames;
         this.tests = this.testState.tests;
     }
