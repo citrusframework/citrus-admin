@@ -1,79 +1,10 @@
-<h1 class="page-header">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-8">
-                <i class="fa fa-cubes"></i> Tests
-                <small>Integration test cases</small>
-            </div>
-            <div class="col-lg-4">
-                <form>
-                    <autocomplete id="search-test" addon="search" icon="file-text-o" placeholder="TestName"
-                                  minLength="1" [items]="testNames|async"
-                                  (selected)="onTestSelected($event)"></autocomplete>
-                </form>
-            </div>
-        </div>
-    </div>
-</h1>
+<ul class="nav nav-pills nav-justified visible-xs-block">
+    <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link[0])">
+        <a [routerLink]="entry.link">{{entry.name}}</a>
+    </li>
+</ul>
+<div [class.clearfix]="navigation && pullRight"></div>
 
-<div *ngIf="(openTests|async).length == 0" class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Type</th>
-            <th>Name</th>
-            <th>Class</th>
-            <th>Method</th>
-        </tr>
-        </thead>
-        <tbody *ngFor="let testGroup of packages|async">
-        <tr *ngFor="let test of testGroup.tests" (click)="open(test)" class="clickable">
-            <td><span class="badge badge-{{test.type | lowercase}}">{{test.type | lowercase}}</span></td>
-            <td>
-                <i class="fa fa-file-text-o"></i>
-                <a name="{{test.name}}" title="{{test.className}}.{{test.methodName}}">{{test.name}}</a>
-            </td>
-            <td>{{test.className}}</td>
-            <td>{{test.methodName}}</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<router-outlet></router-outlet>
 
-<div *ngIf="(openTests|async).length > 0" class="btn-group pull-right">
-    <button type="button" class="btn btn-default" (click)="openTestList()">Open</button>
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li *ngIf="packageAvailable|async" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
-        <li *ngFor="let package of packages|async" role="presentation" class="dropdown-submenu pull-left">
-            <a role="menuitem" name="tests" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
-            <ul class="dropdown-menu" role="menu">
-                <li *ngFor="let test of package.tests" role="presentation">
-                    <a role="menuitem" (click)="open(test)" name="{{test.name}}" class="clickable">
-                        <i class="fa fa-file-text-o"></i> {{test.name | truncate:40}}
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
-
-<tabs dynamic="false">
-    <tab *ngFor="let test of openTests|async"
-         tab-id="{{test.name}}"
-         tab-title="{{test.name}}" closable="true"
-         [active]="test === (selectedTest|async)"
-         (select)="onTabSelected(test)"
-         (close)="onTabClosed(test)">
-    </tab>
-    <router-outlet></router-outlet>
-</tabs>
-
-<div class="dialog"
-     dialog-id="dialog-list-tests"
-     dialog-title="List of tests"
-     dialog-confirm="no">
-    <test-listgroup [test-groups]="packages|async" (selected)="open($event);closeTestList()"></test-listgroup>
-</div>
-<div class="alert-dialog"></div>
+<div class="alert-console" type="detailed"></div>

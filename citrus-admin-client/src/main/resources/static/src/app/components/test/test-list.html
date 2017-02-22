@@ -1,0 +1,50 @@
+<h1 class="page-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-8">
+        <i class="fa fa-cubes"></i> Tests
+        <small>Integration test cases</small>
+      </div>
+      <div class="col-lg-4">
+        <form>
+          <autocomplete id="search-test" addon="search" icon="file-text-o" placeholder="TestName"
+                        minLength="1" [items]="testNames|async"
+                        (selected)="openByName($event)"></autocomplete>
+        </form>
+      </div>
+    </div>
+  </div>
+</h1>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Class</th>
+        <th>Method</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let testGroup of packages|async">
+      <tr>
+        <td><i class="fa fa-cubes"></i></td>
+        <td colspan="3"><b>{{testGroup.name}}</b></td>
+      </tr>
+      <tr *ngFor="let test of testGroup.tests" (click)="open(test)" class="clickable">
+        <td><span class="badge badge-{{test.type | lowercase}}">{{test.type | lowercase}}</span></td>
+        <td>
+          <i class="fa fa-file-text-o"></i>
+          <span title="{{test.className}}.{{test.methodName}}">{{test.name}}</span>
+        </td>
+        <td>{{test.className}}</td>
+        <td>{{test.methodName}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">&nbsp;</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

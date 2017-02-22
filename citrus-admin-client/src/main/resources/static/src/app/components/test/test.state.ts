@@ -2,12 +2,11 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
-import {AsyncActionType, AsyncActions, assign, Extender} from "../../util/redux.util";
-import {Effect, Actions} from "@ngrx/effects";
+import {AsyncActionType, AsyncActions, Extender} from "../../util/redux.util";
+import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
 import * as _ from "lodash";
-import {Trace} from "../../util/decorator";
 
 export interface TestState {
     tests:Test[]
@@ -116,11 +115,11 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
         }
         case TestStateActions.REMOVE_TAB: {
             const openTabs = state.openTabs.filter(t => t !== action.payload);
-            if(state.selectedTest === action.payload) {
+            if (state.selectedTest === action.payload) {
                 const i = state.openTabs.findIndex(t => t === state.selectedTest);
                 stateExtender.extend({selectedTest: openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)]})
             }
-            if(openTabs.length === 0) {
+            if (openTabs.length === 0) {
                 stateExtender.extend({selectedTest: null})
             }
             return stateExtender.extendAndGet({openTabs});

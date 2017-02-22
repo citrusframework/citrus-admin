@@ -13,7 +13,7 @@ export class SettingsComponent  {
 
     constructor(private router:Router) {
         router.events
-            .startWith(new NavigationStart(999, '/settings'))
+            .startWith(new NavigationStart(46, '/settings'))
             .filter(e => e instanceof NavigationStart)
             .filter((e:NavigationStart) => e.url === '/settings')
             .subscribe(e => {

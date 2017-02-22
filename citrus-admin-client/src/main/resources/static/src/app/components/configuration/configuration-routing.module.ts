@@ -19,6 +19,7 @@ const configurationRoutes:Routes = [
         component: ConfigurationComponent,
         canActivate: [CanActivateRoutes],
         children: [
+            { path: '', redirectTo: 'endpoints', pathMatch: 'full'},
             { path: 'endpoints', component: EndpointsComponent},
             { path: 'spring-beans', component: SpringBeansComponent},
             { path: 'spring-context', component: SpringContextComponent},

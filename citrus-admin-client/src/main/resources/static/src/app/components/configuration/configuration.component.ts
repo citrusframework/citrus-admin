@@ -8,7 +8,6 @@ const MenuEntry = (name:string, link:string[]) => ({name, link});
 })
 export class ConfigurationComponent {
 
-
     menuEntries = [
         MenuEntry('Endpoints', ['endpoints']),
         MenuEntry('Spring Application Context', ['spring-context']),

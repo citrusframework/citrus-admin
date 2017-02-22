@@ -30,7 +30,7 @@ export class ReportComponent implements OnInit {
     }
 
     open(test: Test) {
-        this._router.navigate(['/tests', test.name]);
+        this._router.navigate(['/tests', 'editor', test.name, 'info']);
     }
 
     notifyError(error: any) {

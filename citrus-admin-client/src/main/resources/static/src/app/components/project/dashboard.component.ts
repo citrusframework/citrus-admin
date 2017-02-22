@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
                 private _alertService: AlertService) {}
 
     project: Project;
-    testReport: TestReport;
+    testReport: TestReport = new TestReport();
     latestTests: TestGroup[];
     testCount: number;
 
