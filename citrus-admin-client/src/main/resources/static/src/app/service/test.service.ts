@@ -63,6 +63,18 @@ export class TestService {
             .catch(this.handleError);
     }
 
+    executeGroup(group: TestGroup) {
+        return this.http.post(this._testExecuteUrl + '/group', JSON.stringify(group), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
+            .map(res => <TestResult> res.json())
+            .catch(this.handleError);
+    }
+
+    executeAll() {
+        return this.http.get(this._testExecuteUrl)
+            .map(res => <TestResult> res.json())
+            .catch(this.handleError);
+    }
+
     private handleError (error: Response) {
         return Observable.throw(error.json() || 'Server error');
     }

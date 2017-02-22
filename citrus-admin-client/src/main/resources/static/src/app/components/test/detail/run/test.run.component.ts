@@ -17,7 +17,7 @@ import {Observable} from "rxjs";
 
 @Component({
     selector: 'test-run-outlet',
-    template: '<test-execute [detail]="detail|async"></test-execute>'
+    template: '<test-run [detail]="detail|async"></test-run>'
 })
 export class TestRunOutlet implements OnInit{
     detail:Observable<TestDetail>
@@ -28,10 +28,10 @@ export class TestRunOutlet implements OnInit{
 }
 
 @Component({
-    selector: "test-execute",
-    templateUrl: 'test-execution.html'
+    selector: "test-run",
+    templateUrl: 'test-run.html'
 })
-export class TestExecuteComponent {
+export class TestRunComponent {
     @Input() detail: TestDetail;
 
     constructor(private _testService: TestService,

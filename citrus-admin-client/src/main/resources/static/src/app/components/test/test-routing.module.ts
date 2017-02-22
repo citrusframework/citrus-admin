@@ -9,9 +9,10 @@ import {InfoOutletComponent} from "./detail/info/info.component";
 import {TestDesignerOutletComponent} from "./detail/designer/test-designer-outlet.component";
 import {TestDetailComponent} from "./detail/test.detail.component";
 import {SourcesOutletComponent} from "./detail/sources/sources-outlet.component";
-import {TestRunOutlet} from "./detail/run/test.execute.component";
+import {TestRunOutlet} from "./detail/run/test.run.component";
 import {TestResultOutletComponent} from "./detail/results/test.result.component";
 import {CanActivateTestTab, CannotActivate} from "./route-guards";
+import {TestGroupRunComponent} from "./test.group.run.component";
 
 const routes:Routes = [
     {
@@ -21,6 +22,7 @@ const routes:Routes = [
         children: [
             { path: '', redirectTo: 'list', pathMatch: 'full'},
             { path: 'list', component: TestListComponent},
+            { path: 'run', component: TestGroupRunComponent},
             {
                 path: 'editor',
                 component: TestEditorComponent,

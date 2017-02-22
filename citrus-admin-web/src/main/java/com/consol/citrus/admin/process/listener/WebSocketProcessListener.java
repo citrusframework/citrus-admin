@@ -32,6 +32,7 @@ public class WebSocketProcessListener implements ProcessListener {
 
     private static final String TOPIC_LOG_OUTPUT = "/topic/log-output";
     private static final String TOPIC_MESSAGES = "/topic/messages";
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 

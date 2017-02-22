@@ -59,7 +59,6 @@ public class TestController {
         return testCaseService.getTestCount(projectService.getActiveProject());
     }
 
-    // TODO: Why POST?
     @RequestMapping(value="/detail", method = { RequestMethod.POST })
     @ResponseBody
     public TestDetail getTestDetail(@RequestBody Test test) {
@@ -78,10 +77,22 @@ public class TestController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(value="/execute", method = { RequestMethod.GET })
+    @ResponseBody
+    public TestResult executeGroup() {
+        return testExecutionService.execute(projectService.getActiveProject());
+    }
+
     @RequestMapping(value="/execute", method = { RequestMethod.POST })
     @ResponseBody
     public TestResult execute(@RequestBody Test test) {
         return testExecutionService.execute(projectService.getActiveProject(), test);
+    }
+
+    @RequestMapping(value="/execute/group", method = { RequestMethod.POST })
+    @ResponseBody
+    public TestResult executeGroup(@RequestBody TestGroup group) {
+        return testExecutionService.execute(projectService.getActiveProject(), group);
     }
 
     @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })

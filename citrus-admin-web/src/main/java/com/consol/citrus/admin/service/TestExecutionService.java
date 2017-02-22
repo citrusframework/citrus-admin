@@ -43,6 +43,27 @@ public class TestExecutionService {
     private TestExecutor testExecutor;
 
     /**
+     * Runs all test cases and returns result outcome (success or failure).
+     * @param project
+     * @return
+     */
+    public TestResult execute(Project project) {
+        TestResult result = new TestResult();
+
+        try {
+            String processId = testExecutor.execute(project);
+
+            result.setProcessId(processId);
+            result.setSuccess(true);
+        } catch (Exception e) {
+            log.warn("Failed to execute all test cases", e);
+            setFailureStack(result, e);
+        }
+
+        return result;
+    }
+
+    /**
      * Runs a test case and returns result outcome (success or failure).
      * @param project
      * @param test
@@ -53,12 +74,34 @@ public class TestExecutionService {
         result.setTest(test);
 
         try {
-            String processId = testExecutor.execute(test, project);
+            String processId = testExecutor.execute(project, test);
 
             result.setProcessId(processId);
             result.setSuccess(true);
         } catch (Exception e) {
             log.warn("Failed to execute Citrus test case '" + test.getName() + "'", e);
+            setFailureStack(result, e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Runs a test group and returns result outcome (success or failure).
+     * @param project
+     * @param group
+     * @return
+     */
+    public TestResult execute(Project project, TestGroup group) {
+        TestResult result = new TestResult();
+
+        try {
+            String processId = testExecutor.execute(project, group);
+
+            result.setProcessId(processId);
+            result.setSuccess(true);
+        } catch (Exception e) {
+            log.warn("Failed to execute test group '" + group.getName() + "'", e);
             setFailureStack(result, e);
         }
 

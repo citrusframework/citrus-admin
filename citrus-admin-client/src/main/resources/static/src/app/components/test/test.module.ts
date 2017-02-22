@@ -6,7 +6,8 @@ import {TestEditorComponent} from "./test.editor.component";
 import {TestListComponent} from "./test.list.component";
 import {SourceCodeComponent} from "./detail/sources/source.code.component";
 import {TestDetailComponent} from "./detail/test.detail.component";
-import {TestExecuteComponent, TestRunOutlet} from "./detail/run/test.execute.component";
+import {TestRunComponent, TestRunOutlet} from "./detail/run/test.run.component";
+import {TestGroupRunComponent} from "./test.group.run.component";
 import {TestListGroupComponent} from "./test.listgroup.component";
 import {TestMessageComponent} from "./detail/run/test.message.component";
 import {TestProgressComponent} from "./detail/run/test.progress.component";
@@ -31,7 +32,8 @@ const components = [
     TestListComponent,
     SourceCodeComponent,
     TestDetailComponent,
-    TestExecuteComponent,
+    TestRunComponent,
+    TestGroupRunComponent,
     TestListGroupComponent,
     TestMessageComponent,
     TestProgressComponent,

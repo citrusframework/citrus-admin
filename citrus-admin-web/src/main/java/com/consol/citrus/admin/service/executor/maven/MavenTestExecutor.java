@@ -17,8 +17,7 @@
 package com.consol.citrus.admin.service.executor.maven;
 
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.Test;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.build.BuildConfiguration;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.process.*;
@@ -44,7 +43,45 @@ public class MavenTestExecutor implements TestExecutor {
     private ProcessMonitor processMonitor;
 
     @Override
-    public String execute(Test test, Project project) throws ParseException {
+    public String execute(Project project) throws ParseException {
+        File projectHome = new File(project.getProjectHome());
+
+        BuildConfiguration buildConfiguration = project.getSettings().getBuild();
+        if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
+            throw new ApplicationRuntimeException("Unable to execute Maven command extendAndGet non-maven build configuration: " + buildConfiguration.getClass());
+        }
+
+        ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
+        ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, "all-tests");
+
+        processLauncher.addProcessListener(webSocketProcessListener);
+        processLauncher.addProcessListener(new LoggingProcessListener());
+        processLauncher.launchAndContinue(processBuilder, 0);
+
+        return processLauncher.getProcessId();
+    }
+
+    @Override
+    public String execute(Project project, TestGroup group) throws ParseException {
+        File projectHome = new File(project.getProjectHome());
+
+        BuildConfiguration buildConfiguration = project.getSettings().getBuild();
+        if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
+            throw new ApplicationRuntimeException("Unable to execute Maven command extendAndGet non-maven build configuration: " + buildConfiguration.getClass());
+        }
+
+        ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, group, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
+        ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, group.getName());
+
+        processLauncher.addProcessListener(webSocketProcessListener);
+        processLauncher.addProcessListener(new LoggingProcessListener());
+        processLauncher.launchAndContinue(processBuilder, 0);
+
+        return processLauncher.getProcessId();
+    }
+
+    @Override
+    public String execute(Project project, Test test) throws ParseException {
         File projectHome = new File(project.getProjectHome());
 
         BuildConfiguration buildConfiguration = project.getSettings().getBuild();
