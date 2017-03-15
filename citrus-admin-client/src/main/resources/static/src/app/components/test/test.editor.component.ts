@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute, NavigationStart} from '@angular/router';
 import {TestGroup, Test} from "../../model/tests";
 import {Alert} from "../../model/alert";
 import {AlertService} from "../../service/alert.service";
 import * as jQueryVar from 'jquery'
 import {TestStateActions, TestStateService} from "./test.state";
 import {Observable} from "rxjs";
+import {RouterState} from "../../service/router-state.service";
 
 declare var jQuery:typeof jQueryVar;
 
@@ -21,7 +22,10 @@ export class TestEditorComponent implements OnInit {
                 private alertService: AlertService,
                 private router: Router,
                 private testActions:TestStateActions,
-                private testState:TestStateService) {
+                private testState:TestStateService,
+                private route:ActivatedRoute,
+                private routerState:RouterState
+    ) {
     }
 
     openTests: Observable<Test[]>;
@@ -33,14 +37,23 @@ export class TestEditorComponent implements OnInit {
         this.openTests = this.testState.openTabs;
         this.selectedTest = this.testState.selectedTest;
 
+        /** Navigate to the main page if we dont have opentabs in state **/
         this.testState
             .openTabs
             .filter(ot => ot.length === 0)
             .subscribe(() => this.router.navigate(['tests', 'editor']));
 
+        /** Navigate to a test route if selected tab is changed **/
         this.testState.selectedTest.filter(t => t != null).subscribe(t => {
             this.router.navigate([t.name])
         })
+
+        Observable.combineLatest(
+            this.routerState.path.filter(p => p === '/tests/editor').take(1),
+            this.testState.selectedTest.filter(t => t != null).take(1)
+        )
+        .subscribe(([u, t]) => this.router.navigate(['tests','editor', t.name]))
+
     }
 
     onTabClosed(test:Test) {

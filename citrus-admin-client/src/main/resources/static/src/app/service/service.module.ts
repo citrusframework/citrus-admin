@@ -8,6 +8,7 @@ import {ProjectSetupService} from "./project.setup.service";
 import {ReportService} from "./report.service";
 import {SpringBeanService} from "./springbean.service";
 import {TestService} from "./test.service";
+import {RouterState} from "./router-state.service";
 @NgModule({
     providers: [
         AlertService,
@@ -18,7 +19,8 @@ import {TestService} from "./test.service";
         ProjectSetupService,
         ReportService,
         SpringBeanService,
-        TestService
+        TestService,
+        RouterState
     ]
 })
 export class ServiceModule {}

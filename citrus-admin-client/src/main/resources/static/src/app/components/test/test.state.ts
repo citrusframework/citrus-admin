@@ -7,6 +7,8 @@ import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
 import * as _ from "lodash";
+import {log} from "util";
+import {Log} from "../../util/decorator";
 
 export interface TestState {
     tests:Test[]
@@ -106,7 +108,7 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
             return stateExtender.extendAndGet({packages, tests, testNames});
         }
         case TestStateActions.ADD_TAB: {
-            const exists = _.includes(state.openTabs, action.payload)
+            const exists = state.openTabs.find(t => t.name === action.payload.name);
             const openTabs = exists ? state.openTabs : [...state.openTabs, action.payload]
             stateExtender.extend({selectedTest:action.payload})
             return stateExtender.extendAndGet({openTabs});

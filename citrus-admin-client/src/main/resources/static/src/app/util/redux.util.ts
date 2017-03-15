@@ -25,7 +25,9 @@ export class AsyncActions {
     }
 }
 
-export type Partial<T> = {
+type object = {};
+
+export type Partial<T extends {}> = {
     [P in keyof T]?: T[P]
 }
 
@@ -36,12 +38,16 @@ export const assign = <T>(base:T, extend:Partial<T>) => {
 export class Extender<T> {
     constructor(private base:T) {}
 
-    extendAndGet(e:Partial<T>) {
+    extendAndGet(e:Partial<T> = {} as Partial<T>) {
         return assign(this.base, e);
     }
 
     extend(e:Partial<T>) {
         this.base = this.extendAndGet(e);
         return this;
+    }
+
+    asExtender(getter:<O>(c:T)=>O) {
+        return new Extender(getter(this.extendAndGet()));
     }
 }
