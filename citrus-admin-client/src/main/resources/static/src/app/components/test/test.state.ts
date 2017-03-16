@@ -52,7 +52,12 @@ export class TestStateService {
 
     get packages():Observable<TestGroup[]> { return this.store.select(s => s.tests.packages).map(toArray) }
 
-    get openTabs():Observable<Test[]> { return this.store.select(p => p.tests.openTabs).map(toArray) }
+    get openTabs():Observable<Test[]> { return Observable.combineLatest(
+        this.store.select(p => p.tests.openTabs),
+        this.store.select(p => p.tests.tests)
+        )
+        .map(([openTabs, tests]) => openTabs.map(t => tests[t]))
+    }
 
     get testNames():Observable<string[]> { return this.tests.map(p => p.map(t => t.name)) }
 
