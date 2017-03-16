@@ -27,6 +27,10 @@ export class AsyncActions {
 
 type object = {};
 
+export type IdMap<T> = {[id:string]:T};
+export const toIdMap = <T>(list:T[], getId:(e:T)=>string) => list.reduce((idm, e) => ({...idm, [getId(e)]:e}), {} as IdMap<T>);
+export const toArray = <T>(idMap:IdMap<T>) => Object.keys(idMap).map(k => idMap[k])
+
 export type Partial<T extends {}> = {
     [P in keyof T]?: T[P]
 }

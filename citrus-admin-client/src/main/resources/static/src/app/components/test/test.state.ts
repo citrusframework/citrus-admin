@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
-import {AsyncActionType, AsyncActions, Extender} from "../../util/redux.util";
+import {AsyncActionType, AsyncActions, Extender, IdMap, toArray, toIdMap} from "../../util/redux.util";
 import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
@@ -10,21 +10,25 @@ import * as _ from "lodash";
 import {log} from "util";
 import {Log} from "../../util/decorator";
 
+export type TestMap = IdMap<Test>;
+export type TestGroupMap = IdMap<TestGroup>;
+export type TestDetailMap = IdMap<TestDetail>;
+
 export interface TestState {
-    tests:Test[]
-    packages:TestGroup[],
+    tests:IdMap<Test>,
+    packages:IdMap<TestGroup>,
     testNames:string[],
-    openTabs:Test[],
-    selectedTest:Test,
-    details: {[testSignature:string]:TestDetail}
+    openTabs:string[],
+    selectedTest:string,
+    details: IdMap<TestDetail>
 }
 
-const TestStateInit:TestState = {
-    tests:[],
-    packages: [],
+export const TestStateInit:TestState = {
+    tests:{},
+    packages: {},
     testNames: [],
     openTabs:[],
-    selectedTest:null,
+    selectedTest:'',
     details: {}
 }
 
@@ -38,7 +42,7 @@ export class TestStateEffects {
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages())
 
     @Effect() detail = this.actions
-        .handleEffect(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload).map(detail => ({detail, test:payload})))
+        .handleEffect(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
 
     /*
     @Effect() selectTest = this.rxAction.ofType(TestStateActions.SELECT_TAB)
@@ -50,20 +54,25 @@ export class TestStateEffects {
 export class TestStateService {
     constructor(private store:Store<AppState>) {}
 
-    get packages():Observable<TestGroup[]> { return this.store.select(s => s.tests.packages) }
+    get packages():Observable<TestGroup[]> { return this.store.select(s => s.tests.packages).map(toArray) }
 
-    get openTabs():Observable<Test[]> { return this.store.select(p => p.tests.openTabs) }
+    get openTabs():Observable<Test[]> { return this.store.select(p => p.tests.openTabs).map(toArray) }
 
     get testNames():Observable<string[]> { return this.tests.map(p => p.map(t => t.name)) }
 
     get tests():Observable<Test[]> { return this.packages.map(tg => tg.reduce((c:Test[], tg:TestGroup) => [...c, ...tg.tests], [] as Test[]))}
 
-    get selectedTest():Observable<Test> { return this.store.select(p => p.tests.selectedTest)}
+    get selectedTest():Observable<Test> {
+        return (Observable.combineLatest(
+            this.store.select(p => p.tests.selectedTest),
+            this.store.select(p => p.tests.tests)
+        ).map(([s,t]) => t[s]))
+    }
 
     get selectedTestDetail():Observable<TestDetail> { return this.selectedTest.filter(t => t != null).switchMap(t => this.getDetail(t))}
 
     getDetail(test:Test):Observable<TestDetail> {
-        return this.store.select(s => s.tests.details[testSignature(test)]).filter(d => d != null)
+        return this.store.select(s => s.tests.details[test.name]).filter(d => d != null)
     }
 }
 
@@ -96,44 +105,44 @@ export class TestStateActions {
     }
 }
 
-const testSignature = (t:Test) => `${t.packageName}.${t.className}.${t.methodName}:${t.name}.${t.type}`;
-
 export function reduce(state:TestState = TestStateInit, action:Action) {
     const stateExtender = new Extender(state);
     switch (action.type) {
         case TestStateActions.PACKAGES.SUCCESS: {
-            const packages = action.payload as TestGroup[];
-            const tests = packages.reduce((c: Test[], tg: TestGroup) => [...c, ...tg.tests], [] as Test[]);
-            const testNames = tests.map(t => t.name);
-            return stateExtender.extendAndGet({packages, tests, testNames});
+            const packages = toIdMap(action.payload as TestGroup[], tg => tg.name) ;
+            const tests = toIdMap((action.payload as TestGroup[]).reduce((c: Test[], tg: TestGroup) => [...c, ...tg.tests], [] as Test[]), t => t.name);
+            const testNames = Object.keys(tests);
+            return { ...state, packages, tests, testNames }
         }
         case TestStateActions.ADD_TAB: {
-            const exists = state.openTabs.find(t => t.name === action.payload.name);
-            const openTabs = exists ? state.openTabs : [...state.openTabs, action.payload]
-            stateExtender.extend({selectedTest:action.payload})
-            return stateExtender.extendAndGet({openTabs});
+            const {name} = action.payload as Test;
+            const exists = state.openTabs.indexOf(name);
+            const openTabs = exists >= 0 ? state.openTabs : [...state.openTabs, name];
+            return {...state, openTabs, selectedTest:name};
         }
         case TestStateActions.REMOVE_TAB: {
-            const openTabs = state.openTabs.filter(t => t !== action.payload);
-            if (state.selectedTest === action.payload) {
+            const openTabs = state.openTabs.filter(t => t !== action.payload.name);
+            let {selectedTest} = state;
+            if (state.selectedTest === action.payload.name) {
                 const i = state.openTabs.findIndex(t => t === state.selectedTest);
-                stateExtender.extend({selectedTest: openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)]})
+                selectedTest = openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)];
             }
             if (openTabs.length === 0) {
-                stateExtender.extend({selectedTest: null})
+                selectedTest = '';
             }
-            return stateExtender.extendAndGet({openTabs});
+            return {...state, selectedTest, openTabs};
         }
         case TestStateActions.SELECT_TAB: {
-            const selectedTest = action.payload
-            return stateExtender.extendAndGet({selectedTest});
+            if( state.selectedTest === action.payload.name ||
+                state.openTabs.indexOf(action.payload.name) === -1) {
+                return state;
+            } else {
+                return {...state, selectedTest: action.payload.name};
+            }
         }
         case TestStateActions.DETAIL.SUCCESS: {
-            const detail = action.payload.detail;
-            const test = action.payload.test;
-            const detailExtender = new Extender(state.details);
-            const details = detailExtender.extendAndGet({[testSignature(test)]: detail})
-            return stateExtender.extendAndGet({details});
+            const detail = action.payload as TestDetail;
+            return {...state, details : {[detail.name]:detail}};
         }
     }
     return state;

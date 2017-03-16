@@ -19,10 +19,11 @@ export class Test {
     public name: string;
     public className: string;
     public methodName: string;
-    public methodNames: string[];
+    public methodNames?: string[];
     public type: string;
     public packageName: string;
     public relativePath: string;
+
 }
 
 export class TestDetail extends Test {
