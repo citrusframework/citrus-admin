@@ -710,11 +710,6 @@ i.channel {
 
 /** Drop Down Menu **/
 
-.dropdown-menu.autocomplete {
-    max-height: 650px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
 
 .dropdown-submenu{
     position: relative;
