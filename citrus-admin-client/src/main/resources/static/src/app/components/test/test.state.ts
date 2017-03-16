@@ -44,10 +44,6 @@ export class TestStateEffects {
     @Effect() detail = this.actions
         .handleEffect(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
 
-    /*
-    @Effect() selectTest = this.rxAction.ofType(TestStateActions.SELECT_TAB)
-        .map(({payload}) => ({type:TestStateActions.DETAIL.FETCH, payload}))
-    */
 }
 
 @Injectable()

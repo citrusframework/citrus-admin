@@ -1,6 +1,4 @@
 import {reduce, TestStateInit, TestStateActions, TestState, TestMap} from "./test.state";
-import {IdMap} from "../../util/redux.util";
-import {Test} from "../../model/tests";
 
 describe('TesState.reducer', () => {
 
