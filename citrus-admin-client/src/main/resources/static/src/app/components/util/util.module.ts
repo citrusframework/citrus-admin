@@ -6,6 +6,7 @@ import {SidebarMenuComponent, MenuItemComponent} from "./sidebar";
 import {TabsComponent, TabComponent} from "./tabs";
 import {FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import {DetailPanelComponent, DetailPanelHeadingComponent, DetailPanelBodyComponent} from "./panel.component";
 
 const components = [
     AutoCompleteComponent,
@@ -15,7 +16,10 @@ const components = [
     SidebarMenuComponent,
     TabsComponent,
     TabComponent,
-    MenuItemComponent
+    MenuItemComponent,
+    DetailPanelComponent,
+    DetailPanelHeadingComponent,
+    DetailPanelBodyComponent
 ]
 
 @NgModule({

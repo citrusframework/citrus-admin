@@ -114,12 +114,12 @@
     </div>
   </div>
 
-  <div *ngFor="let endpoint of endpoints" class="panel panel-default floating">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        <a class="clickable" (click)="selectEndpoint(endpoint)" name="edit" title="Edit endpoint">{{endpoint.id}}</a>
-        <a class="clickable pull-right" (click)="removeEndpoint(endpoint, $event)" name="remove" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
-      </h3>
+  <detail-panel *ngFor="let endpoint of endpoints">
+    <div detail-panel-heading
+         [title]="endpoint.id"
+         (click)="selectEndpoint(endpoint)"
+         (remove)="removeEndpoint(endpoint, $event)"
+    >
     </div>
     <div class="panel-body" style="min-height: 10em;">
       <ul class="properties endpoint-properties">
@@ -130,5 +130,5 @@
       <span class="label label-endpoint label-{{endpoint.type}}"><i class="fa fa-share-alt-square"></i> {{endpoint.type}}</span>
       <a class="clickable pull-right" (click)="selectEndpoint(endpoint)" name="edit" title="Edit endpoint"><i class="fa fa-edit"></i></a>
     </div>
-  </div>
+  </detail-panel>
 </div>

@@ -5,7 +5,8 @@
   </div>
 </h1>
 
-<p>Bean components add very specific behavior to the Citrus components and the project in general. On this page you see all bean configurations in your project.</p>
+<p>Bean components add very specific behavior to the Citrus components and the project in general. On this page you see
+  all bean configurations in your project.</p>
 
 <br/>
 
@@ -42,9 +43,13 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngIf="newBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
+        <div *ngIf="newBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties
+          defined
+        </div>
         <div *ngFor="let property of newBean.properties" class="list-group-item clickable">
-          <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeProperty(newBean, property, $event)" name="remove" title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a
+            class="btn-remove pull-right" (click)="removeProperty(newBean, property, $event)" name="remove"
+            title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
         </div>
       </div>
     </div>
@@ -91,9 +96,13 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngIf="selectedBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
+        <div *ngIf="selectedBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No
+          properties defined
+        </div>
         <div *ngFor="let property of selectedBean.properties" class="list-group-item clickable">
-          <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeProperty(selectedBean, property, $event)" name="remove" title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a
+            class="btn-remove pull-right" (click)="removeProperty(selectedBean, property, $event)" name="remove"
+            title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
         </div>
       </div>
     </div>
@@ -107,19 +116,24 @@
   </div>
 </form>
 
-<div *ngIf="!newBean && !selectedBean">
+<div *ngIf="!newBean && !selectedBean" style="display: flex; flex-wrap: wrap">
   <div *ngIf="beans.length == 0" class="panel panel-default">
     <div class="panel-body">
       <i class="fa fa-times"></i> No beans defined
     </div>
   </div>
 
-  <div *ngFor="let bean of beans" class="panel panel-default floating">
-    <div class="panel-heading">
+  <detail-panel *ngFor="let bean of beans">
+    <div detail-panel-heading
+         (click)="selectBean(bean)"
+         (remove)="removeBean(bean, $event)"
+         [title]="bean.id ? bean.id : 'bean'"
+    ><!--
       <h3 class="panel-title">
         <a class="clickable" (click)="selectBean(bean)" name="edit" title="Edit bean">{{bean.id ? bean.id : 'bean'}}</a>
         <a class="clickable pull-right" (click)="removeBean(bean, $event)" name="remove" title="Remove bean"><i class="fa fa-times" style="color: #A50000;"></i></a>
       </h3>
+      -->
     </div>
     <div class="panel-body" style="min-height: 10em;">
       <ul class="properties endpoint-properties">
@@ -127,12 +141,15 @@
         <li><b>package</b>: {{bean.clazz | clazz:'package'}}</li>
       </ul>
       <ul class="properties endpoint-properties">
-        <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>: {{property.value}}</li>
+        <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>:
+          {{property.value}}
+        </li>
       </ul>
     </div>
     <div class="panel-footer">
       <span>&nbsp;</span>
-      <a class="clickable pull-right" (click)="selectBean(bean)" name="edit" title="Edit bean"><i class="fa fa-edit"></i></a>
+      <a class="clickable pull-right" (click)="selectBean(bean)" name="edit" title="Edit bean"><i
+          class="fa fa-edit"></i></a>
     </div>
-  </div>
+  </detail-panel>
 </div>
