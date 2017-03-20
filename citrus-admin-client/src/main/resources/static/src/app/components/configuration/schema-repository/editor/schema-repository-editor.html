@@ -1,0 +1,91 @@
+<form class="form-horizontal">
+    <h3 *ngIf="isNew">Create Repository</h3>
+    <h3 *ngIf="!isNew">Edit Repository</h3>
+    <div class="form-group" [class.has-error]="">
+        <label class="col-sm-2 control-label">Name <em>*</em></label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control"
+                   name="selectedRepositoryId"
+                   autofocus="true"
+                   [disabled]="!isNew"
+                   [(ngModel)]="repository.id"
+            />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Mapping strategy</label>
+        <div class="col-sm-10">
+            <select class="form-control" [(ngModel)]="repository.schemaMappingStrategy" name="mappingStrategy">
+                <option *ngFor="let strategy of mappingStrategies" [ngValue]="strategy">{{ strategy }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Schemas</label>
+        <div class="col-sm-3">
+            <input placeholder="Name" type="text" class="form-control"
+                   [(ngModel)]="newSchemaId"
+                   name="newSchemaId"/>
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="Location" type="text" class="form-control"
+                   [(ngModel)]="newSchemaIocation"
+                   name="newSchemaLocation"/>
+        </div>
+        <div class="col-sm-1 text-right">
+            <button (click)="addSchema(newSchemaId, newSchemaLocation)"
+                    class="btn btn-primary"
+                    [disabled]="newSchemaId.length === 0 || newSchemaLocation.length === 0"
+            >
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="list-group">
+                <div *ngFor="let schema of repository.schemas?.schemas" class="list-group-item clickable">
+                    <i class="fa fa-file-text-o"></i>&nbsp;<b>{{schema.id}}</b>
+                    location={{schema.location}}&nbsp;
+                    <a class="pull-right" name="remove-schema" title="Remove schema" (click)="removeSchema(schema)">
+                        <i class="fa fa-times" style="color: #A50000;"></i></a></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Referenced Schemas</label>
+        <div class="col-sm-9">
+            <select class="form-control" [(ngModel)]="selectedRef" name="referencedSchema">
+                <option *ngFor="let refCandidate of repositoryReferenceCandidates" [ngValue]="refCandidate">{{ refCandidate.id }}</option>
+            </select>
+        </div>
+        <div class="col-sm-1 text-right">
+            <button (click)="addSchemaReference(selectedRef)"
+                    class="btn btn-primary"
+                    [disabled]="!selectedRef"
+            ><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <ul class="list-group">
+                <li *ngFor="let reference of repository.schemas?.references"
+                     class="list-group-item clickable"><i
+                        class="fa fa-file-text-o"></i>&nbsp;<b>{{reference.schema}}</b>&nbsp;<a
+                        class="pull-right" name="remove-schema-reference" title="Remove schema reference"
+                        (click)="removeSchemaReference(reference)"><i class="fa fa-times"
+                                                                      style="color: #A50000;"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" (click)="invokeSave()">
+                <span *ngIf="isNew">Create</span>
+                <span *ngIf="!isNew">Save</span>
+            </button>
+            <button class="btn btn-default" (click)="invokeCancel()">Cancel</button>
+        </div>
+    </div>
+</form>

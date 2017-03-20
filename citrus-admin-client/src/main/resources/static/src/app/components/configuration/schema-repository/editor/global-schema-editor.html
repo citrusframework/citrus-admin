@@ -1,0 +1,34 @@
+<form class="form-horizontal">
+    <h3 *ngIf="isNew">New Schema</h3>
+    <h3 *ngIf="!isNew">Edit Schema</h3>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Name <em>*</em></label>
+        <div class="col-sm-10">
+            <input [(ngModel)]="schema.id"
+                   placeholder="Name"
+                   type="text"
+                   [disabled]="!isNew"
+                   class="form-control"
+                   name="newGlobalSchemaId"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Location <em>*</em></label>
+        <div class="col-sm-10">
+            <input [(ngModel)]="schema.location" placeholder="Location" type="text" class="form-control"
+                   name="newGlobalSchemaLocation"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" (click)="invokeSave()">
+                <span *ngIf="isNew">Create</span>
+                <span *ngIf="!isNew">Save</span>
+            </button>
+            <button class="btn btn-default" (click)="invokeCancel()">Cancel</button>
+        </div>
+    </div>
+</form>

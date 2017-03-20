@@ -1,7 +1,16 @@
 import {Observable} from "rxjs";
+import * as _ from 'lodash';
 
 export type ObservableProducer = {(...args:any[]):Observable<any>};
 
+
+export function memoize() {
+    return function (target:Object, key:string, desc:PropertyDescriptor) {
+        const v = desc.value;
+        desc.value = _.memoize(v);
+        return desc;
+    }
+}
 
 /**
  * WIP consider to use _.memoize

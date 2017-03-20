@@ -1,10 +1,10 @@
-import {NgModule} from "@angular/core";
+import {NgModule, forwardRef} from "@angular/core";
 import {AutoCompleteComponent} from "./autocomplete";
 import {DialogComponent} from "./dialog";
 import {PillComponent, PillsComponent} from "./pills";
 import {SidebarMenuComponent, MenuItemComponent} from "./sidebar";
 import {TabsComponent, TabComponent} from "./tabs";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 
 const components = [

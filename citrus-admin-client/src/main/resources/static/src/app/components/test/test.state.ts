@@ -2,13 +2,10 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
-import {AsyncActionType, AsyncActions, Extender, IdMap, toArray, toIdMap} from "../../util/redux.util";
+import {AsyncActionType, AsyncActions, IdMap, toArray, toIdMap} from "../../util/redux.util";
 import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
-import * as _ from "lodash";
-import {log} from "util";
-import {Log} from "../../util/decorator";
 
 export type TestMap = IdMap<Test>;
 export type TestGroupMap = IdMap<TestGroup>;
@@ -42,7 +39,7 @@ export class TestStateEffects {
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages())
 
     @Effect() detail = this.actions
-        .handleEffect(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
+        .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
 
 }
 
@@ -107,7 +104,6 @@ export class TestStateActions {
 }
 
 export function reduce(state:TestState = TestStateInit, action:Action) {
-    const stateExtender = new Extender(state);
     switch (action.type) {
         case TestStateActions.PACKAGES.SUCCESS: {
             const packages = toIdMap(action.payload as TestGroup[], tg => tg.name) ;

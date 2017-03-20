@@ -20,6 +20,8 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -270,6 +273,7 @@ public class ConfigurationController {
 
     /**
      * Get data dictionary implementation for given type.
+     *
      * @param type
      * @param model
      * @return
@@ -294,5 +298,15 @@ public class ConfigurationController {
     @ResponseBody
     public void deleteComponent(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
+    }
+
+    @RequestMapping(value = "/mapping-strategy")
+    @ResponseBody
+    public Object getMappingStrategies() {
+        return springBeanService.getBeanNames(
+                projectService.getProjectContextConfigFile(),
+                projectService.getActiveProject(),
+                XsdSchemaMappingStrategy.class.getName()
+        ).stream().filter(n -> n != null).collect(Collectors.toList());
     }
 }

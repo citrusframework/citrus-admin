@@ -1,4 +1,18 @@
-import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, OnInit, forwardRef} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from "@angular/forms";
+import {isNullOrUndefined} from "util";
+import * as _ from 'lodash';
+
+export function RestrictValues(values:string[]) {
+    return (c:FormControl) => {
+        console.log(values, c.value, _.includes(values, c.value))
+        return _.includes(values, c.value) ? null : ({
+                restrictedValues: {
+                    valid: false
+                }
+            })
+    }
+}
 
 @Component({
     selector: 'autocomplete',
@@ -12,21 +26,31 @@ import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, OnInit} f
         .dropdown-menu .active > a {
             color: #262626;
         }
+        .dropdown-menu li > a:hover {
+            background: white;
+        }
+        .dropdown-menu .active > a:hover {
+            background-color: #fcc300;
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(#fac300));
+            background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+            background-image: linear-gradient(to bottom, #fad011, #fcc300);
+        }
     `],
     host: {
         '(document:click)': 'handleDocumentClick($event)',
         '(keydown)': 'handleKeyDown($event)'
     },
     template: `
-    <div [class]="addon ? 'input-group' : 'form-group'" #inputRef>
+    <div [class]="addon ? 'input-group' : 'form-group'">
       <input    id="{{id}}" 
                 type="text" 
                 autocomplete="off" 
                 placeholder="{{placeholder}}" 
                 class="form-control" 
                 [(ngModel)]="query" 
-                (change)="filter()"
+                (ngModelChange)="filter()"
                 (focus)="onInputFocus()"
+                #inputRef
         >
       <span *ngIf="addon" class="input-group-addon clickable" (click)="showAll()"><i class="fa fa-{{addon}} fa-white"></i></span>
     </div>
@@ -39,10 +63,15 @@ import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, OnInit} f
             <a *ngIf="suggestion == 'No elements found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a> 
             <a *ngIf="suggestion != 'No elements found'" name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
         </li>
-        <li>{{activeSelected}}</li>
-    </ul>`
+    </ul>`,
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => AutoCompleteComponent),
+        multi: true
+    }],
 })
-export class AutoCompleteComponent implements OnInit {
+export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
+
     @Output() selected = new EventEmitter(true);
 
     @Input() id: string;
@@ -51,7 +80,8 @@ export class AutoCompleteComponent implements OnInit {
     @Input() items: string[] = [];
     @Input() addon: string;
     @Input() minLength: number = 3;
-    @Input() showImmediately:boolean = true;
+    @Input() showImmediately: boolean = true;
+    @Input() clearAfterSelect = true;
 
     query: string = "";
     suggestions: string[] = [];
@@ -63,6 +93,8 @@ export class AutoCompleteComponent implements OnInit {
     inputRef: ElementRef;
 
     listStyle: any = {};
+
+    onChange = (v:any) => {}
 
     private activeSelected = ""
 
@@ -81,12 +113,12 @@ export class AutoCompleteComponent implements OnInit {
     }
 
     onInputFocus() {
-        if(this.showImmediately) {
+        if (this.showImmediately) {
             this.showAll();
         }
     }
 
-    setActiveSelected(suggestion:string) {
+    setActiveSelected(suggestion: string) {
         this.activeSelected = suggestion;
     }
 
@@ -100,13 +132,20 @@ export class AutoCompleteComponent implements OnInit {
         } else {
             this.suggestions = [];
         }
+        this.onChange(this.query);
+    }
+
+    focus() {
+        console.log(this.inputRef.nativeElement)
+        this.inputRef.nativeElement.focus();
     }
 
     select(item: string) {
-        this.query = "";
+        this.query = this.clearAfterSelect ? "" : item;
         this.suggestions = [];
-
+        this.onChange(this.query);
         this.selected.emit(item);
+        this.focus();
     }
 
     showAll() {
@@ -138,15 +177,32 @@ export class AutoCompleteComponent implements OnInit {
             }
             case 38: {// UP
                 const nextIndex = this.suggestions.indexOf(this.activeSelected) - 1;
-                this.activeSelected = this.suggestions[nextIndex < 0 ? this.suggestions.length -1 : nextIndex]; // if index is out-of-range it will assign undefined
+                this.activeSelected = this.suggestions[nextIndex < 0 ? this.suggestions.length - 1 : nextIndex]; // if index is out-of-range it will assign undefined
                 break;
             }
             case 13: {
-                if(this.activeSelected) {
+                if (this.activeSelected) {
                     this.select(this.activeSelected);
                 }
                 break;
             }
+            case 27: {
+                this.activeSelected = "";
+                this.suggestions = [];
+                break;
+            }
         }
+    }
+
+    writeValue(obj: any): void {
+        if (isNullOrUndefined !== obj)
+            this.query = obj;
+    }
+
+    registerOnChange(fn: any): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: any): void {
     }
 }

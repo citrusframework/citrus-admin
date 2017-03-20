@@ -15,7 +15,7 @@ export class ProjectService {
     cachedProject: Project;
     cachedObservable: Observable<Project>;
 
-    @Cached()
+    //@Cached()
     getActiveProject(): Observable<Project> {
         if (this.cachedProject) {
             return Observable.of(this.cachedProject)
