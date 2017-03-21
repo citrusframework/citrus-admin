@@ -7,5 +7,5 @@ if (environment_1.environment.production) {
     core_1.enableProdMode();
 }
 var platform = platform_browser_dynamic_1.platformBrowserDynamic();
-platform.bootstrapModule(app_module_1.AppModule).then(console.log.bind(console));
+platform.bootstrapModule(app_module_1.AppModule);
 //# sourceMappingURL=main.js.map

@@ -33,13 +33,13 @@ const routes:Routes = [
                         component: TestDetailComponent,
                         canActivateChild: [CanActivateTestTabChild],
                         children: [
-                            { path: '', redirectTo: 'info', pathMatch: 'full'},
+                            //{ path: '', redirectTo: 'info', pathMatch:'full'},
                             { path: 'info', component: InfoOutletComponent},
                             { path: 'sources', component: SourcesOutletComponent},
                             { path: 'design', component: TestDesignerOutletComponent},
                             { path: 'run', component: TestRunOutlet},
                             { path: 'results', component: TestResultOutletComponent}
-                        ]
+                        ],
                     }
                 ]
             }

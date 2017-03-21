@@ -8,4 +8,4 @@ if(environment.production) {
 }
 
 const platform = platformBrowserDynamic();
-platform.bootstrapModule(AppModule).then(console.log.bind(console));
+platform.bootstrapModule(AppModule)

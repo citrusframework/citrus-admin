@@ -3,7 +3,7 @@ import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
 import {AsyncActionType, AsyncActions, IdMap, toArray, toIdMap} from "../../util/redux.util";
-import {Effect} from "@ngrx/effects";
+import {Effect, Actions} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
 
@@ -17,7 +17,8 @@ export interface TestState {
     testNames:string[],
     openTabs:string[],
     selectedTest:string,
-    details: IdMap<TestDetail>
+    details: IdMap<TestDetail>,
+    latestDetailView:string
 }
 
 export const TestStateInit:TestState = {
@@ -26,7 +27,8 @@ export const TestStateInit:TestState = {
     testNames: [],
     openTabs:[],
     selectedTest:'',
-    details: {}
+    details: {},
+    latestDetailView: 'info'
 }
 
 @Injectable()
@@ -34,12 +36,14 @@ export class TestStateEffects {
     constructor(
         private actions:AsyncActions,
         private testService:TestService,
+        private actions$:Actions
     ) {}
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages())
 
     @Effect() detail = this.actions
         .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
+
 
 }
 
@@ -72,6 +76,10 @@ export class TestStateService {
     getDetail(test:Test):Observable<TestDetail> {
         return this.store.select(s => s.tests.details[test.name]).filter(d => d != null)
     }
+
+    get latestDetailView() {
+        return this.store.select(s => s.tests.latestDetailView)
+    }
 }
 
 @Injectable()
@@ -101,6 +109,8 @@ export class TestStateActions {
     fetchDetails(payload: Test) {
         this.store.dispatch(({type:TestStateActions.DETAIL.FETCH, payload}))
     }
+
+
 }
 
 export function reduce(state:TestState = TestStateInit, action:Action) {
@@ -140,6 +150,13 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
         case TestStateActions.DETAIL.SUCCESS: {
             const detail = action.payload as TestDetail;
             return {...state, details : {[detail.name]:detail}};
+        }
+        case '[Router] Update Location': {
+            const [,, latestDetailView] = /^\/tests\/editor\/([^\\\/]+?)\/([^\\\/]+?)(?:\/(?=$))?$/i.exec(action.payload.path) || ['','', ''];
+            if(latestDetailView !== '') {
+                return { ...state, latestDetailView }
+            }
+            return state;
         }
     }
     return state;

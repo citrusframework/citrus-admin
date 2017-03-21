@@ -9,6 +9,7 @@ import {DashboardComponent} from "./components/project/dashboard.component";
 import {SetupComponent} from "./components/setup.component";
 import {CanActivateRoutes} from "./service/can-activate-routes";
 import {ServiceModule} from "./service/service.module";
+import {environment} from "../environments/environment";
 
 const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -23,7 +24,7 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes,  { enableTracing: environment.traceRouting }),
         ServiceModule
     ],
     exports: [ RouterModule ],
