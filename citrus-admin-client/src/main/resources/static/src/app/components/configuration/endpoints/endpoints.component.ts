@@ -4,9 +4,6 @@ import {SpringBeanService} from "../../../service/springbean.service";
 import {Endpoint} from "../../../model/endpoint";
 import {EndPointStateService, EndPointActions} from "./endpoint.state";
 import {Observable} from "rxjs";
-import {log} from "../../../util/redux.util";
-
-declare var jQuery:any;
 
 @Component({
     selector:'endpoints',

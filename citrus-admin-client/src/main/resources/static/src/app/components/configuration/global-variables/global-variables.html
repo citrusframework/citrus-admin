@@ -17,7 +17,7 @@
       <input [(ngModel)]="newVariable.value" placeholder="Value" type="text" class="form-control" name="newVariableValue"/>
     </div>
 
-    <button class="btn btn-primary" (click)="addVariable()" type="submit"><i class="fa fa-plus"></i> Add</button>
+    <button class="btn btn-primary" [disabled]="!newVariable.name || !newVariable.value" (click)="addVariable()" type="submit"><i class="fa fa-plus"></i> Add</button>
     <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
   </div>
 </form>

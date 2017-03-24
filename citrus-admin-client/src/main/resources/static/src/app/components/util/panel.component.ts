@@ -1,4 +1,7 @@
-import {Component, HostBinding, Output, EventEmitter, Input, Directive} from "@angular/core";
+import {
+    Component, HostBinding, Output, EventEmitter, Input, Directive, trigger, transition,
+    style, animate, OnInit, OnDestroy
+} from "@angular/core";
 @Component({
     selector: 'detail-panel',
     template: `
@@ -21,9 +24,29 @@ import {Component, HostBinding, Output, EventEmitter, Input, Directive} from "@a
             display: flex;
             flex-direction: column;
         }                   
-    `]
+    `],
+    animations: [
+        trigger('panel', [
+            transition(':enter', [
+                style({opacity:0}),
+                animate(250, style({opacity:1}))
+            ]),
+            transition(':leave', [
+                style({opacity:1}),
+                animate(250, style({opacity:0, transform:'scale(0,0)'}))
+            ])
+        ])
+    ]
 })
-export class DetailPanelComponent {
+export class DetailPanelComponent implements OnInit, OnDestroy {
+    _appear:boolean;
+    ngOnInit(): void {
+        this._appear = true;
+    }
+
+    ngOnDestroy(): void {
+        this._appear = false;
+    }
     @HostBinding('class')
     get hostClasses() {
         return 'col-xs-12 col-sm-6 col-md-4 col-lg-3'
@@ -32,6 +55,7 @@ export class DetailPanelComponent {
     @HostBinding('style.display') get flexStyle() {return 'flex'}
     @HostBinding('style.direction') get flexDirectionStyle() {return 'column'}
 
+    @HostBinding('@panel') get appear() { return this._appear }
 }
 
 @Directive({
