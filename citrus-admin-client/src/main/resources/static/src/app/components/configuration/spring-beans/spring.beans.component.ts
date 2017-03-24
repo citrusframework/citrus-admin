@@ -4,6 +4,8 @@ import {SpringBean} from "../../../model/springbean";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
 import {SpringProperty} from "../../../model/springproperty";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {EditorMode} from "../editor-mode.enum";
 
 declare var jQuery:any;
 
@@ -14,20 +16,39 @@ declare var jQuery:any;
 })
 export class SpringBeansComponent implements OnInit {
 
-    constructor(private _springBeanService: SpringBeanService,
-                private _alertService: AlertService) {
+    constructor(
+        private _springBeanService: SpringBeanService,
+        private _alertService: AlertService,
+        private fb:FormBuilder
+    ) {
         this.beans = [];
     }
 
-    newBean: SpringBean;
-    selectedBean: SpringBean;
+    bean: SpringBean;
     beans: SpringBean[];
 
     propertyName: string;
     propertyValue: string;
+    form:FormGroup;
+    mode:EditorMode;
+    EditorMode = EditorMode;
 
     ngOnInit() {
         this.getSpringBeans();
+
+    }
+
+    private createForm() {
+        this.form = this.fb.group({
+            type: [this.bean.clazz, Validators.required],
+            name: [this.bean.id, Validators.required],
+        })
+    }
+
+    private reset() {
+        this.form = null;
+        this.bean = null;
+        this.mode = null;
     }
 
     getSpringBeans() {
@@ -38,11 +59,15 @@ export class SpringBeansComponent implements OnInit {
     }
 
     initNew() {
-        this.newBean = new SpringBean();
+        this.bean = new SpringBean();
+        this.mode = EditorMode.NEW;
+        this.createForm();
     }
 
     selectBean(bean: SpringBean) {
-        this.selectedBean = bean;
+        this.bean = bean;
+        this.mode = EditorMode.EDIT;
+        this.createForm();
     }
 
     removeBean(bean: SpringBean, event:MouseEvent) {
@@ -58,22 +83,32 @@ export class SpringBeansComponent implements OnInit {
         return false;
     }
 
+    submit() {
+        if(EditorMode.NEW === this.mode) {
+            this.createBean();
+        }
+        if(EditorMode.EDIT === this.mode) {
+            this.saveBean();
+        }
+    }
+
     createBean() {
-        this._springBeanService.createBean(this.newBean)
+        this._springBeanService.createBean(this.bean)
             .subscribe(
                 response => {
-                    this.notifySuccess("Created new bean '" + this.newBean.id + "'");
-                    this.beans.push(this.newBean); this.newBean = undefined;
+                    this.notifySuccess("Created new bean '" + this.bean.id + "'");
+                    this.beans.push(this.bean); this.bean = undefined;
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
 
     saveBean() {
-        this._springBeanService.updateBean(this.selectedBean)
+        this._springBeanService.updateBean(this.bean)
             .subscribe(
                 response => {
-                    this.notifySuccess("Successfully saved bean '" + this.selectedBean.id + "'");
-                    this.selectedBean = undefined;
+                    this.notifySuccess("Successfully saved bean '" + this.bean.id + "'");
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
@@ -86,21 +121,21 @@ export class SpringBeansComponent implements OnInit {
 
         this.propertyName = "";
         this.propertyValue = "";
+
     }
 
     removeProperty(bean: SpringBean, property: SpringProperty, event:MouseEvent) {
         bean.properties.splice(bean.properties.indexOf(property), 1);
         event.stopPropagation();
         return false;
+
     }
 
     cancel() {
-        if (this.selectedBean) {
-            this.selectedBean = undefined;
+        if (EditorMode.EDIT === this.mode) {
             this.getSpringBeans();
-        } else {
-            this.newBean = undefined;
         }
+        this.reset();
     }
 
     notifySuccess(message: string) {

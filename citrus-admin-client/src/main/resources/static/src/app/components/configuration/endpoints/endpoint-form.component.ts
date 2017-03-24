@@ -35,11 +35,9 @@ export class EndpointFormComponent implements OnInit{
         private endpointState:EndPointStateService,
         private endpointActions:EndPointActions
     ) {
-        console.log('Construct Stateful')
     }
 
     ngOnInit(): void {
-        console.log('Initi Stateful')
         this.endpoint = this.route.params
             .switchMap(({name}:{name:string}) => this.endpointState.getEndpoint(name))
             .switchMap(e => e ? Observable.of(e) : this.route
@@ -73,23 +71,7 @@ export class EndpointFormComponent implements OnInit{
 @Component({
     selector: 'endpoint-form-presentation',
     templateUrl: 'endpoint-form.html',
-    styles: [`
-        .input-group {
-            display: flex;
-        }
-        .input-group .input-group-addon {
-            width: auto;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .input-group .input-group-addon *{
-            align-self: center;
-        }
-        
-        .form-group.has-error .input-group-addon {
-            
-        }
-    `]
+    styles: [``]
 })
 export class EndpointFormPresentationComponent implements OnInit{
     @Input() endpoint:Endpoint;
@@ -106,13 +88,11 @@ export class EndpointFormPresentationComponent implements OnInit{
         private fb:FormBuilder,
         private springBeanService:SpringBeanService
     ) {
-        console.log('Construct Stateless')
     }
 
     get isNew() { return this.mode === EditorMode.NEW }
 
     ngOnInit() {
-        console.log('Initi Stateless')
         this.beans = this.endpoint.properties
             .filter(p => p.optionKey)
             .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {})

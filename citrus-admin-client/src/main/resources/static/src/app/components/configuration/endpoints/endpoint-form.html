@@ -8,18 +8,37 @@
       <input formControlName="type" type="hidden" class="form-control" [(ngModel)]="endpoint.type"/>
     </div>
   </div>
-
-  <div class="form-group" [class.has-error]="form.get('id').errors">
-    <label class="col-sm-2 control-label">Name <em>*</em></label>
-    <div class="col-sm-10">
-      <div [class.input-group]="form.get('id').errors">
-        <input type="text" class="form-control" name="id" formControlName="id" [(ngModel)]="endpoint.id" />
-        <div class="input-group-addon"  *ngIf="form.get('id').errors">
-          <span *ngIf="form.get('id').errors?.required">This field is required</span>
-        </div>
-      </div>
+  <form-group [control]="form.get('id')" label="Name *">
+    <input-with-addon
+        formControlName="id"
+        [autofocus]="true"
+        [message]="form.get('id').errors ? 'Name is Required' : ''"
+        [(ngModel)]="endpoint.id"
+    ></input-with-addon>
+  </form-group>
+  <form-group *ngFor="let property of endpoint.properties"
+              [control]="form.get(property.id)"
+              [label]="property.displayName + (property.required ? ' *' : '')">
+    <input-with-addon
+        *ngIf="!property.optionKey && !property.options"
+        [formControlName]="property.id"
+        [message]="form.get(property.id).errors ? 'Name is Required' : ''"
+        [(ngModel)]="property.value"
+    ></input-with-addon>
+    <div *ngIf="property.optionKey" style="display: flex">
+      <autocomplete
+          [items]="beans[property.optionKey]|async"
+          icon="coffee"
+          addon="search"
+          [(ngModel)]="property.value"
+          [formControlName]="property.id"
+      ></autocomplete>
     </div>
-  </div>
+    <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" [formControlName]="property.id">
+      <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
+    </select>
+  </form-group>
+  <!--
   <div *ngFor="let property of endpoint.properties" class="form-group" [class.has-error]="form.get(property.id).errors">
     <label class="col-sm-2 control-label">{{property.displayName}} <span *ngIf="property.required">*</span></label>
     <div class="col-sm-10">
@@ -45,6 +64,7 @@
       </div>
     </div>
   </div>
+  -->
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-primary"

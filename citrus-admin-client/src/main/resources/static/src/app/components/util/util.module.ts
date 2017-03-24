@@ -9,6 +9,7 @@ import {CommonModule} from "@angular/common";
 import {DetailPanelComponent, DetailPanelHeadingComponent, DetailPanelBodyComponent} from "./panel.component";
 import {OutletComponent} from "./outlet.component";
 import {RouterModule} from "@angular/router";
+import {FormGroupComponent, InputWithAddonComponent} from "./forms.component";
 
 const components = [
     AutoCompleteComponent,
@@ -22,7 +23,9 @@ const components = [
     DetailPanelComponent,
     DetailPanelHeadingComponent,
     DetailPanelBodyComponent,
-    OutletComponent
+    OutletComponent,
+    FormGroupComponent,
+    InputWithAddonComponent
 ]
 
 @NgModule({

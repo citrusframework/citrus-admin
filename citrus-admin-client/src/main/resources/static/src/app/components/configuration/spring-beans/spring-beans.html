@@ -1,7 +1,8 @@
+<script src="../endpoints/endpoint-form.component.ts"></script>
 <h1 class="page-header">
   <span><i class="fa fa-sitemap"></i> Spring beans</span>
   <div class="btn-group pull-right">
-    <button [disabled]="selectedBean" (click)="initNew()" type="button" class="btn btn-default">New</button>
+    <button [disabled]="bean" (click)="initNew()" type="button" class="btn btn-default">New</button>
   </div>
 </h1>
 
@@ -10,45 +11,56 @@
 
 <br/>
 
-<form *ngIf="newBean" class="form-horizontal">
-  <h3>New Bean</h3>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Type <em>*</em></label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="newBean.clazz" name="clazz" type="text" class="form-control"/>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Name <em>*</em></label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="newBean.id" type="text" class="form-control" name="newBeanId"/>
-    </div>
-  </div>
-
+<form *ngIf="bean && form" class="form-horizontal" [formGroup]="form" (ngSubmit)="submit()">
+  <h3 *ngIf="EditorMode.NEW === mode">Create Bean</h3>
+  <h3 *ngIf="EditorMode.EDIT === mode">Edit Bean</h3>
+  <form-group
+    [control]="form.get('type')"
+    label="Type *"
+  >
+    <input-with-addon
+      formControlName="type"
+      [autofocus]="true"
+      [message]="form.get('type').errors ? 'Field is required':''"
+      [(ngModel)]="bean.clazz"
+    >
+    </input-with-addon>
+  </form-group>
+  <form-group
+      [control]="form.get('name')"
+      label="Name *"
+  >
+    <input-with-addon
+        formControlName="name"
+        [message]="form.get('name').errors ? 'Field is required':''"
+        [(ngModel)]="bean.id"
+    >
+    </input-with-addon>
+  </form-group>
   <div class="form-group">
     <label class="col-sm-2 control-label">Properties</label>
     <div class="col-sm-4">
-      <input [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control" name="propertyName"/>
+      <input [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control" name="propertyName"/>
     </div>
     <div class="col-sm-4">
-      <input [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control" name="propertyValue"/>
+      <input [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control" name="propertyValue"/>
     </div>
     <div class="col-sm-2">
-      <button class="btn btn-primary" (click)="addProperty(newBean)">Add</button>
+      <button class="btn btn-primary" [disabled]="!propertyValue || !propertyName" (click)="addProperty(bean)">Add</button>
     </div>
   </div>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngIf="newBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties
+        <div *ngIf="bean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties
           defined
         </div>
-        <div *ngFor="let property of newBean.properties" class="list-group-item clickable">
+        <div *ngFor="let property of bean.properties" class="list-group-item clickable">
           <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a
-            class="btn-remove pull-right" (click)="removeProperty(newBean, property, $event)" name="remove"
+            class="btn-remove pull-right" (click)="removeProperty(bean, property, $event)" name="remove"
             title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
         </div>
       </div>
@@ -57,67 +69,16 @@
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-primary" (click)="createBean()" type="submit">Create</button>
+      <button class="btn btn-primary" [disabled]="form.invalid" type="submit">
+        Save
+      </button>
       <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
     </div>
   </div>
 </form>
 
-<form *ngIf="selectedBean" class="form-horizontal">
-  <h3>Edit Bean</h3>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Type <em>*</em></label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="selectedBean.clazz" name="clazz" type="text" class="form-control"/>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Name <em>*</em></label>
-    <div class="col-sm-10">
-      <input [(ngModel)]="selectedBean.id" type="text" class="form-control" name="selectedBeanId"/>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Properties</label>
-    <div class="col-sm-4">
-      <input [(ngModel)]="propertyName" placeholder="Name" type="text" class="form-control" name="propertyName"/>
-    </div>
-    <div class="col-sm-4">
-      <input [(ngModel)]="propertyValue" placeholder="Value" type="text" class="form-control" name="propertyValue"/>
-    </div>
-    <div class="col-sm-2">
-      <button class="btn btn-primary" (click)="addProperty(selectedBean)">Add</button>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="list-group">
-        <div *ngIf="selectedBean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No
-          properties defined
-        </div>
-        <div *ngFor="let property of selectedBean.properties" class="list-group-item clickable">
-          <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a
-            class="btn-remove pull-right" (click)="removeProperty(selectedBean, property, $event)" name="remove"
-            title="Remove property"><i class="fa fa-times" style="color: #A50000;"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-primary" (click)="saveBean()" type="submit">Save</button>
-      <button class="btn btn-default" (click)="cancel()" type="reset">Close</button>
-    </div>
-  </div>
-</form>
-
-<div *ngIf="!newBean && !selectedBean" style="display: flex; flex-wrap: wrap">
-  <div *ngIf="beans.length == 0" class="panel panel-default">
+<div *ngIf="!bean && !form" style="display: flex; flex-wrap: wrap">
+  <div *ngIf="beans.length == 0" class="panel panel-default cols-xs-12">
     <div class="panel-body">
       <i class="fa fa-times"></i> No beans defined
     </div>
@@ -127,13 +88,8 @@
     <div detail-panel-heading
          (click)="selectBean(bean)"
          (remove)="removeBean(bean, $event)"
-         [title]="bean.id ? bean.id : 'bean'"
-    ><!--
-      <h3 class="panel-title">
-        <a class="clickable" (click)="selectBean(bean)" name="edit" title="Edit bean">{{bean.id ? bean.id : 'bean'}}</a>
-        <a class="clickable pull-right" (click)="removeBean(bean, $event)" name="remove" title="Remove bean"><i class="fa fa-times" style="color: #A50000;"></i></a>
-      </h3>
-      -->
+         [title]="bean.id ? bean.id : '<bean>'"
+    >
     </div>
     <div class="panel-body" style="min-height: 10em;">
       <ul class="properties endpoint-properties">

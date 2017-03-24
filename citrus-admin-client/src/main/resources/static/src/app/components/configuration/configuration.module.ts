@@ -10,7 +10,7 @@ import {SpringContextComponent} from "./spring-context/spring.context.component"
 import {ValidationMatcherComponent} from "./validation-matcher/validation.matcher.component";
 import {UtilComponentsModule} from "../util/util.module";
 import {ConfigurationRoutingModule} from "./configuration-routing.module";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {UtilModule} from "../../util/util.module";
 import {SchemaRepositoryModule} from "./schema-repository/schema-repository.module";
@@ -24,7 +24,8 @@ import {EndPointModule} from "./endpoints/endpoint.module";
         CommonModule,
         ConfigurationRoutingModule,
         SchemaRepositoryModule,
-        EndPointModule
+        EndPointModule,
+        ReactiveFormsModule
     ],
     declarations: [
         ConfigurationComponent,
