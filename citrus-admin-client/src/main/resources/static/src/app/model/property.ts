@@ -9,4 +9,5 @@ export class Property {
     public displayName: string;
     public optionKey: string;
     public options: string[];
+    public required:boolean
 }

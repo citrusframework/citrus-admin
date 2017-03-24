@@ -6,8 +6,14 @@ export type ObservableProducer = {(...args:any[]):Observable<any>};
 
 export function memoize() {
     return function (target:Object, key:string, desc:PropertyDescriptor) {
-        const v = desc.value;
-        desc.value = _.memoize(v);
+        if(_.isFunction(desc.value)) {
+            const v = desc.value;
+            desc.value = _.memoize(v);
+        }
+        if(_.isFunction(desc.get)) {
+            const g = desc.get;
+            desc.get = _.memoize(g);
+        }
         return desc;
     }
 }

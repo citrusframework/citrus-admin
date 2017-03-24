@@ -2,6 +2,7 @@ import {NgModule} from "@angular/core";
 import {TruncatePipe} from "./truncate.pipe";
 import {ClazzPipe} from "./clazz.pipe";
 import {AsyncActions} from "./redux.util";
+import {LogPipe} from "./log.pipe";
 
 @NgModule({
     providers: [
@@ -9,11 +10,13 @@ import {AsyncActions} from "./redux.util";
     ],
     declarations: [
         TruncatePipe,
-        ClazzPipe
+        ClazzPipe,
+        LogPipe
     ],
     exports: [
         TruncatePipe,
-        ClazzPipe
+        ClazzPipe,
+        LogPipe
     ]
 })
 export class UtilModule {}

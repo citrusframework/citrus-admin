@@ -1,6 +1,8 @@
+export type AlertType = "success"|"info"|"warning"|"danger"
+
 export class Alert {
 
-    constructor(type: string,
+    constructor(type: AlertType,
                 message: string,
                 autoClear: boolean) {
         this.type = type;
@@ -17,6 +19,22 @@ export class Alert {
         this.link = link;
 
         return this;
+    }
+
+    static danger(message:string, autoclear =false) {
+        return new Alert("danger", message, autoclear)
+    }
+
+    static info(message:string, autoclear =false) {
+        return new Alert("info", message, autoclear)
+    }
+
+    static warning(message:string, autoclear =false) {
+        return new Alert("warning", message, autoclear)
+    }
+
+    static success(message:string, autoclear =false) {
+        return new Alert("success", message, autoclear)
     }
 }
 

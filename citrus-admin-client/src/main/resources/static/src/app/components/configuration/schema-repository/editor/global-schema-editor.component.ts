@@ -3,7 +3,7 @@ import {SchemaRepositoryStateService, SchemaRepositoryActions} from "../schema-r
 import {Observable} from "rxjs";
 import {Schema} from "../../../../model/schema.repository";
 import {ActivatedRoute, Router} from "@angular/router";
-import {EditorDataTupel, EditorMode} from "./editor-mode.enum";
+import {EditorMode, EditorDataTupel} from "../../editor-mode.enum";
 @Component({
     selector: 'global-schema-editor',
     template: `        

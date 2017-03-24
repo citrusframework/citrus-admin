@@ -5,7 +5,7 @@ import {Observable} from "rxjs";
 import {SchemaRepository, Schema, SchemaReference} from "../../../../model/schema.repository";
 import {SchemaRepositoryStateService, SchemaRepositoryActions} from "../schema-repository.state";
 import * as _ from 'lodash'
-import {EditorMode} from "./editor-mode.enum";
+import {EditorMode} from "../../editor-mode.enum";
 
 
 @Component({

@@ -31,7 +31,7 @@ export class DialogComponent {
 
     @Input("dialog-id") name: string;
     @Input("dialog-title") title: string;
-    @Input("dialog-close") showClose: string = "yes";
+    @Input("dialog-cancel") showClose: string = "yes";
     @Input("dialog-confirm") showConfirm: string = "yes";
 
     open() {

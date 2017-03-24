@@ -1,7 +1,6 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {ConfigurationComponent} from "./configuration.component";
-import {EndpointsComponent} from "./endpoints/endpoints.component";
 import {FunctionLibraryComponent} from "./function-library/function.library.component";
 import {ValidationMatcherComponent} from "./validation-matcher/validation.matcher.component";
 import {DataDictionaryComponent} from "./data-dictionary/data.dictionary.component";
@@ -12,6 +11,7 @@ import {GlobalVariablesComponent} from "./global-variables/global.variables.comp
 import {ServiceModule} from "../../service/service.module";
 import {CanActivateRoutes} from "../../service/can-activate-routes";
 import {routes as schemaRepositoryRoutes} from './schema-repository/schema-repository.module';
+import {endpointRoutes} from "./endpoints/endpoint.module";
 
 const configurationRoutes:Routes = [
     {
@@ -19,8 +19,6 @@ const configurationRoutes:Routes = [
         component: ConfigurationComponent,
         canActivate: [CanActivateRoutes],
         children: [
-            { path: '', redirectTo: 'endpoints', pathMatch: 'full'},
-            { path: 'endpoints', component: EndpointsComponent},
             { path: 'spring-beans', component: SpringBeansComponent},
             { path: 'spring-context', component: SpringContextComponent},
             { path: 'function-library', component: FunctionLibraryComponent},
@@ -28,7 +26,8 @@ const configurationRoutes:Routes = [
             { path: 'data-dictionary', component: DataDictionaryComponent},
             { path: 'namespace-context', component: NamespaceContextComponent},
             { path: 'global-variables', component: GlobalVariablesComponent},
-            ...schemaRepositoryRoutes
+            ...schemaRepositoryRoutes,
+            ...endpointRoutes
         ]
     },
 ]

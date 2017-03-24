@@ -9,7 +9,7 @@ import {ConfigService} from "../../../service/config.service";
 import {Effect, Actions} from "@ngrx/effects";
 import {SchemaRepository, Schema} from "../../../model/schema.repository";
 import {AlertService} from "../../../service/alert.service";
-import {Alert} from "../../../model/alert";
+import {Alert, AlertType} from "../../../model/alert";
 import {memoize} from "../../../util/decorator";
 
 export interface SchemaRepositoryState {
@@ -115,7 +115,7 @@ export class SchemaRepositoryActions {
     }
 }
 
-type IMessages = IdMap<[string, (id:string)=>string]>;
+type IMessages = IdMap<[AlertType, (id:string)=>string]>;
 const Messages:IMessages = {
     [SchemaRepositoryActions.REPOSITORY.CREATE.SUCCESS]:['success', (id:string) => `Successfully created repository ${id}`],
     [SchemaRepositoryActions.REPOSITORY.DELETE.SUCCESS]:['success', (id:string) => `Successfully deleted repository ${id}`],
