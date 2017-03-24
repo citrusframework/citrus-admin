@@ -14,6 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {UtilModule} from "../../util/util.module";
 import {SchemaRepositoryModule} from "./schema-repository/schema-repository.module";
+import {EndPointModule} from "./endpoints/endpoint.module";
 
 @NgModule({
     imports: [
@@ -22,12 +23,12 @@ import {SchemaRepositoryModule} from "./schema-repository/schema-repository.modu
         FormsModule,
         CommonModule,
         ConfigurationRoutingModule,
-        SchemaRepositoryModule
+        SchemaRepositoryModule,
+        EndPointModule
     ],
     declarations: [
         ConfigurationComponent,
         DataDictionaryComponent,
-        EndpointsComponent,
         FunctionLibraryComponent,
         GlobalVariablesComponent,
         NamespaceContextComponent,

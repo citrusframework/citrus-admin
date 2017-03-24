@@ -1,16 +1,24 @@
 import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, OnInit, forwardRef} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from "@angular/forms";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, Validator, AbstractControl} from "@angular/forms";
 import {isNullOrUndefined} from "util";
 import * as _ from 'lodash';
+import {Observable} from "rxjs";
 
 export function RestrictValues(values:string[]) {
     return (c:FormControl) => {
-        console.log(values, c.value, _.includes(values, c.value))
-        return _.includes(values, c.value) ? null : ({
+        return _.includes([...values, ''], c.value || '') ? null : ({
                 restrictedValues: {
                     valid: false
                 }
             })
+    }
+}
+
+export function RestrictAsyncValues(values:Observable<string[]>) {
+    return (c:FormControl) => {
+        return values
+            .map(RestrictValues)
+            .map(v => v(c));
     }
 }
 
@@ -22,9 +30,16 @@ export function RestrictValues(values:string[]) {
             overflow-x: hidden;
             overflow-y: auto;
             left: auto;
+            display: flex;
+            width: 100%;
+            transition: height 0.35s ease-in;
         }
         .dropdown-menu .active > a {
             color: #262626;
+            width: 100%;            
+        }
+        .dropdown-menu li {
+            width: 100%;
         }
         .dropdown-menu li > a:hover {
             background: white;
@@ -56,8 +71,7 @@ export function RestrictValues(values:string[]) {
     </div>
     <ul class="dropdown-menu autocomplete" 
         #suggestionListRef
-        [style.width]="listStyle.width + 'px'"                
-        [style.display]="suggestions?.length > 0 ? 'block': 'none'" 
+        [style.display]="suggestions?.length > 0 ? 'flex': 'none'" 
     >
         <li *ngFor="let suggestion of suggestions" [class.active]="activeSelected === suggestion" (mouseover)="setActiveSelected(suggestion)">
             <a *ngIf="suggestion == 'No elements found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a> 
@@ -81,7 +95,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
     @Input() addon: string;
     @Input() minLength: number = 3;
     @Input() showImmediately: boolean = true;
-    @Input() clearAfterSelect = true;
+    @Input() clearAfterSelect = false;
 
     query: string = "";
     suggestions: string[] = [];
@@ -136,7 +150,6 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
     }
 
     focus() {
-        console.log(this.inputRef.nativeElement)
         this.inputRef.nativeElement.focus();
     }
 
@@ -170,23 +183,23 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
     handleKeyDown($event: KeyboardEvent) {
         const {keyCode} = $event;
         switch (keyCode) {
-            case 40: {// DOWN
+            case 40: { // DOWN
                 const nextIndex = (this.suggestions.indexOf(this.activeSelected) + 1) % (this.suggestions.length);
                 this.activeSelected = this.suggestions[nextIndex]; // if index is out-of-range it will assign undefined
                 break;
             }
-            case 38: {// UP
+            case 38: { // UP
                 const nextIndex = this.suggestions.indexOf(this.activeSelected) - 1;
                 this.activeSelected = this.suggestions[nextIndex < 0 ? this.suggestions.length - 1 : nextIndex]; // if index is out-of-range it will assign undefined
                 break;
             }
-            case 13: {
+            case 13: { // ENTER
                 if (this.activeSelected) {
                     this.select(this.activeSelected);
                 }
                 break;
             }
-            case 27: {
+            case 27: { // ESCAPE
                 this.activeSelected = "";
                 this.suggestions = [];
                 break;

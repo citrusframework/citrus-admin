@@ -7,6 +7,8 @@ import {TabsComponent, TabComponent} from "./tabs";
 import {FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {DetailPanelComponent, DetailPanelHeadingComponent, DetailPanelBodyComponent} from "./panel.component";
+import {OutletComponent} from "./outlet.component";
+import {RouterModule} from "@angular/router";
 
 const components = [
     AutoCompleteComponent,
@@ -19,13 +21,15 @@ const components = [
     MenuItemComponent,
     DetailPanelComponent,
     DetailPanelHeadingComponent,
-    DetailPanelBodyComponent
+    DetailPanelBodyComponent,
+    OutletComponent
 ]
 
 @NgModule({
     imports: [
         FormsModule,
-        CommonModule
+        CommonModule,
+        RouterModule
     ],
     declarations: components,
     exports: components,

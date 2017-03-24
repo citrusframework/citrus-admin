@@ -7,18 +7,21 @@ import {reduce as tests, TestState} from './components/test/test.state'
 import {reduce as configuration} from './components/configuration/configuration.state'
 import {ConfigurationState} from "./components/configuration/configuration.state";
 import {environment} from "../environments/environment";
+import {endpointReducerBuilder, EndPointState} from "./components/configuration/endpoints/endpoint.state";
 
 export interface AppState {
     router:RouterState,
     tests:TestState,
-    configuration:ConfigurationState
+    configuration:ConfigurationState,
+    endpoint:EndPointState
 }
 
 const imports = [
     StoreModule.provideStore({
         router,
         tests,
-        configuration
+        configuration,
+        endpoint: endpointReducerBuilder.createReducer()
     }),
     RouterStoreModule.connectRouter()
 ];

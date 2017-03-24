@@ -1,133 +1,65 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {EndpointService} from '../../../service/endpoint.service';
 import {SpringBeanService} from "../../../service/springbean.service";
 import {Endpoint} from "../../../model/endpoint";
-import {Property} from "../../../model/property";
-import {Alert} from "../../../model/alert";
-import {AlertService} from "../../../service/alert.service";
+import {EndPointStateService, EndPointActions} from "./endpoint.state";
+import {Observable} from "rxjs";
+import {log} from "../../../util/redux.util";
 
 declare var jQuery:any;
 
 @Component({
-    selector: 'endpoints',
+    selector:'endpoints',
+    template: `
+      <endpoints-presentation
+        [endpoints]="endpoints|async"
+        [endpointTypes]="endpointTypeNames|async"
+        (removeEndpoint)="removeEndpoint($event)"
+      ></endpoints-presentation>
+    `
+})
+export class EndpointsComponent implements OnInit {
+    endpoints: Observable<Endpoint[]>;
+    endpointTypeNames: Observable<string[]>;
+
+    constructor(
+        private endpointState:EndPointStateService,
+        private endpointActions:EndPointActions,
+    ) {}
+
+    ngOnInit(): void {
+        this.endpointActions.fetchEndpointTypes();
+        this.endpointActions.fetchEndpoints();
+        this.endpoints = this.endpointState.endpoints;
+        this.endpointTypeNames = this.endpointState.endpointTypeNames;
+    }
+
+    removeEndpoint(endpoint:Endpoint) {
+        this.endpointActions.deleteEndpoint(endpoint.id);
+    }
+}
+
+@Component({
+    selector: 'endpoints-presentation',
     templateUrl: 'endpoints.html',
     providers: [EndpointService, SpringBeanService]
 })
-export class EndpointsComponent implements OnInit {
+export class EndpointsPresentationComponent implements OnInit {
 
-    constructor(private _endpointService: EndpointService,
-                private _springBeanService: SpringBeanService,
-                private _alertService: AlertService) {
-        this.endpoints = [];
-        this.endpointTypes = [];
-    }
+    constructor() {}
 
-    newEndpoint: Endpoint;
-    selectedEndpoint: Endpoint;
-    endpoints: Endpoint[];
+    @Input() endpoints: Endpoint[];
+    @Input() endpointTypes: string[];
 
-    endpointTypes: string[];
+    @Output() removeEndpoint = new EventEmitter<Endpoint>();
 
     ngOnInit() {
-        this.getEndpointTypes();
-        this.getEndpoints();
     }
 
-    getEndpointTypes() {
-        this._endpointService.getEndpointTypes()
-            .subscribe(
-                types => this.endpointTypes = types,
-                error => this.notifyError(<any>error));
-    }
 
-    getEndpoints() {
-        this._endpointService.getEndpoints()
-            .subscribe(
-                endpoints => this.endpoints = endpoints,
-                error => this.notifyError(<any>error));
-    }
-
-    selectEndpoint(endpoint: Endpoint) {
-        this.selectedEndpoint = endpoint;
-    }
-
-    getEndpointType(type: string) {
-        this._endpointService.getEndpointType(type)
-            .subscribe(
-                endpoint => this.newEndpoint = endpoint,
-                error => this.notifyError(<any>error));
-    }
-
-    removeEndpoint(endpoint: Endpoint, event:MouseEvent) {
-        this._endpointService.deleteEndpoint(endpoint.id)
-            .subscribe(
-                response => {
-                    this.endpoints.splice(this.endpoints.indexOf(endpoint), 1);
-                    this.notifySuccess("Removed endpoint '" + endpoint.id + "'");
-                },
-                error => this.notifyError(<any>error));
-
-        event.stopPropagation();
+    invokeRemove(endpoint: Endpoint, event:MouseEvent) {
+        this.removeEndpoint.next(endpoint)
         return false;
     }
 
-    createEndpoint() {
-        this._endpointService.createEndpoint(this.newEndpoint)
-            .subscribe(
-                response => {
-                    this.notifySuccess("Created new endpoint '" + this.newEndpoint.id + "'");
-                    this.endpoints.push(this.newEndpoint); this.newEndpoint = undefined;
-                },
-                error => this.notifyError(<any>error));
-    }
-
-    saveEndpoint() {
-        this._endpointService.updateEndpoint(this.selectedEndpoint)
-            .subscribe(
-                response => {
-                    this.notifySuccess("Successfully saved endpoint '" + this.selectedEndpoint.id + "'");
-                    this.selectedEndpoint = undefined;
-                },
-                error => this.notifyError(<any>error));
-    }
-
-    searchBeans(property: Property) {
-        jQuery('ul.option-search').find('a.option-select').unbind('click');
-        jQuery('ul.option-search').html('');
-
-        this._springBeanService.searchBeans(property.optionKey)
-            .subscribe(
-                beans => {
-                    for(var item of beans) {
-                        jQuery('ul.option-search').append('<li><a name="' + item + '" class="clickable option-select"><i class="fa fa-cube"></i>&nbsp;' + item + '</a></li>');
-                    }
-
-                    // TODO: Chacke Typing. Is Name a valid Property?
-                    jQuery('ul.option-search').find('a.option-select').click(function(e:any) {
-                        property.value = e.currentTarget.name;
-                    });
-
-                    if (!beans.length) {
-                        jQuery('ul.option-search').append('<li><a name="none" class="disabled">No beans found!</a></li>');
-                    }
-                },
-                error => this.notifyError(<any>error));
-    }
-
-    cancel() {
-        if (this.selectedEndpoint) {
-            this.selectedEndpoint = undefined;
-            this.getEndpoints();
-        } else {
-            this.newEndpoint = undefined;
-        }
-    }
-
-    notifySuccess(message: string) {
-        this._alertService.add(new Alert("success", message, true));
-    }
-
-    notifyError(error: any) {
-        this._alertService.add(new Alert("danger", error.message, false));
-    }
 }

@@ -1,0 +1,150 @@
+import {
+    Component, Input, OnInit, trigger, transition, state, style, animate, Output,
+    EventEmitter
+} from "@angular/core";
+import {Endpoint} from "../../../model/endpoint";
+import {ActivatedRoute, Router} from "@angular/router";
+import {EndPointStateService, EndPointActions} from "./endpoint.state";
+import {Observable} from "rxjs";
+import {EditorMode, EditorDataTupel} from "../editor-mode.enum";
+import {Property} from "../../../model/property";
+import {SpringBeanService} from "../../../service/springbean.service";
+import {FormBuilder, FormGroup, Validators, Validator, ValidatorFn, AsyncValidatorFn} from "@angular/forms";
+import {IdMap, notNull, log} from "../../../util/redux.util";
+import {RestrictAsyncValues} from "../../util/autocomplete";
+
+@Component({
+    selector: 'endpoint-form',
+    template: `
+        <endpoint-form-presentation
+          *ngIf="endpoint|async"
+          [endpoint]="endpoint|async"
+          [mode]="mode|async"
+          (save)="save($event)"
+          (cancel)="cancel($event)"
+        >
+        </endpoint-form-presentation>
+    `
+})
+export class EndpointFormComponent implements OnInit{
+    endpoint:Observable<Endpoint>;
+    mode:Observable<EditorMode>;
+    constructor(
+        private route:ActivatedRoute,
+        private router:Router,
+        private endpointState:EndPointStateService,
+        private endpointActions:EndPointActions
+    ) {
+        console.log('Construct Stateful')
+    }
+
+    ngOnInit(): void {
+        console.log('Initi Stateful')
+        this.endpoint = this.route.params
+            .switchMap(({name}:{name:string}) => this.endpointState.getEndpoint(name))
+            .switchMap(e => e ? Observable.of(e) : this.route
+                    .params
+                    .filter(({type}) => type != null).first()
+                    .do(({type}) => this.endpointActions.fetchEndpointType(type))
+                    .switchMap(({type}) => this.endpointState.getEndpointType(type)
+                    .filter(notNull()))
+            ).filter(notNull()).first()
+        this.mode = this.endpoint.map(e => e.id == null ? EditorMode.NEW : EditorMode.EDIT)
+    }
+
+    save([mode, endpoint]:EditorDataTupel<Endpoint>) {
+        if(EditorMode.NEW === mode) {
+            this.endpointActions.createEndpoint(endpoint);
+            this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
+                this.router.navigate(['configuration/endpoints/endpoint-editor', endpoint.id])
+            })
+        }
+        if(EditorMode.EDIT === mode) {
+            this.endpointActions.updateEndpoint(endpoint);
+        }
+    }
+
+    cancel() {
+        this.router.navigate(['configuration/endpoints']);
+    }
+
+}
+
+@Component({
+    selector: 'endpoint-form-presentation',
+    templateUrl: 'endpoint-form.html',
+    styles: [`
+        .input-group {
+            display: flex;
+        }
+        .input-group .input-group-addon {
+            width: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .input-group .input-group-addon *{
+            align-self: center;
+        }
+        
+        .form-group.has-error .input-group-addon {
+            
+        }
+    `]
+})
+export class EndpointFormPresentationComponent implements OnInit{
+    @Input() endpoint:Endpoint;
+    @Input() mode:EditorMode;
+
+    @Output() save = new EventEmitter<EditorDataTupel<Endpoint>>();
+    @Output() cancel = new EventEmitter<any>();
+
+    form:FormGroup;
+
+    beans:{[propKey:string]:Observable<string[]>} = {};
+
+    constructor(
+        private fb:FormBuilder,
+        private springBeanService:SpringBeanService
+    ) {
+        console.log('Construct Stateless')
+    }
+
+    get isNew() { return this.mode === EditorMode.NEW }
+
+    ngOnInit() {
+        console.log('Initi Stateless')
+        this.beans = this.endpoint.properties
+            .filter(p => p.optionKey)
+            .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {})
+        this.form = this.fb.group({
+            type: [this.endpoint.type],
+            id: [this.endpoint.id, Validators.required],
+            ...this.endpoint.properties
+                .reduce((fg,p) => ({...fg, [p.id]: [p.value, ...this.getValidators(p)]}), {} as IdMap<any>)
+        })
+    }
+
+    private getValidators(p: Property):[ValidatorFn, AsyncValidatorFn] {
+        const validators:ValidatorFn[] = [(c) => null];
+        const asyncValidators:AsyncValidatorFn[] = [];
+        if(p.required) {
+            validators.push(Validators.required)
+        }
+        if(p.optionKey) {
+            asyncValidators.push(RestrictAsyncValues(this.beans[p.optionKey]))
+        }
+        return [
+            Validators.compose(validators),
+            Validators.composeAsync(asyncValidators)
+        ];
+    }
+
+    invokeSave(endpoint:Endpoint) {
+        this.save.next([this.mode, endpoint]);
+    }
+
+    invokeCancel() {
+        this.cancel.next();
+    }
+
+}

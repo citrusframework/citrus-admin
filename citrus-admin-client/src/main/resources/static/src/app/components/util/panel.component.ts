@@ -77,10 +77,12 @@ export class DetailPanelHeadingComponent {
     @Output() remove = new EventEmitter<MouseEvent>();
 
     invokeClick($e: MouseEvent) {
+        $e.stopPropagation();
         this.click.next($e)
     }
 
     invokeRemove($e: MouseEvent) {
+        $e.stopPropagation();
         this.remove.next($e)
     }
 
