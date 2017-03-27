@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -28,7 +29,6 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -61,17 +61,31 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         assertTestPackage(testPackages, "com.consol.citrus.bar", 2L);
         assertTestPackage(testPackages, "com.consol.citrus.bar.scan", 1L);
 
-        assertTestPresent(testPackages.get(0).getTests(), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
-        assertTestPresent(testPackages.get(0).getTests(), "BarJavaTest", "CitrusJavaTest", "barTest");
-        assertTestPresent(testPackages.get(0).getTests(), "DataProviderJavaTest.fooProviderTest", "DataProviderJavaTest", "fooProviderTest");
-        assertTestPresent(testPackages.get(0).getTests(), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
-        assertTestPresent(testPackages.get(1).getTests(), "FooTest", "FooTest", "FooTest");
-        assertTestPresent(testPackages.get(1).getTests(), "WithoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest");
-        assertTestPresent(testPackages.get(2).getTests(), "BarTest", "BarTest", "barTest");
-        assertTestPresent(testPackages.get(2).getTests(), "Bar2Test", "BarTest", "bar2Test");
-        assertTestPresent(testPackages.get(3).getTests(), "BarPackageTest", "BarTest", "barPackageTest");
-        assertTestPresent(testPackages.get(3).getTests(), "barPackageNameTest", "BarTest", "barPackageNameTest");
-        assertTestPresent(testPackages.get(4).getTests(), "barPackageScanTest", "BarTest", "barPackageScanTest");
+        assertTestPresent(getTests(testPackages, "javadsl"), "CitrusJavaTest.fooTest", "CitrusJavaTest", "fooTest");
+        assertTestPresent(getTests(testPackages, "javadsl"), "BarJavaTest", "CitrusJavaTest", "barTest");
+        assertTestPresent(getTests(testPackages, "javadsl"), "DataProviderJavaTest.fooProviderTest", "DataProviderJavaTest", "fooProviderTest");
+        assertTestPresent(getTests(testPackages, "javadsl"), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
+        assertTestPresent(getTests(testPackages, "foo"), "FooTest", "FooTest", "FooTest");
+        assertTestPresent(getTests(testPackages, "foo"), "WithoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest");
+        assertTestPresent(getTests(testPackages, "bar"), "BarTest", "BarTest", "barTest");
+        assertTestPresent(getTests(testPackages, "bar"), "Bar2Test", "BarTest", "bar2Test");
+        assertTestPresent(getTests(testPackages, "com.consol.citrus.bar"), "BarPackageTest", "BarTest", "barPackageTest");
+        assertTestPresent(getTests(testPackages, "com.consol.citrus.bar"), "barPackageNameTest", "BarTest", "barPackageNameTest");
+        assertTestPresent(getTests(testPackages, "com.consol.citrus.bar.scan"), "barPackageScanTest", "BarTest", "barPackageScanTest");
+    }
+
+    /**
+     * Finds package by name and provides test cases in that package as list.
+     * @param testPackages
+     * @param packageName
+     * @return
+     */
+    private List<com.consol.citrus.admin.model.Test> getTests(List<TestGroup> testPackages, String packageName) {
+        return testPackages.stream()
+                .filter(group -> group.getName().equals(packageName))
+                .findFirst()
+                .orElseThrow(() -> new CitrusRuntimeException("Missing test package for name: " + packageName))
+                .getTests();
     }
 
     /**
@@ -81,12 +95,12 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
      * @param size
      */
     private void assertTestPackage(List<TestGroup> testPackages, String name, long size) {
-        Optional<TestGroup> testGroup = testPackages.stream()
-                                                    .filter(group -> group.getName().equals(name))
-                                                    .findFirst();
+        TestGroup testGroup = testPackages.stream()
+                                    .filter(group -> group.getName().equals(name))
+                                    .findFirst()
+                                    .orElseThrow(() -> new CitrusRuntimeException("Missing test package for name: " + name));
 
-        Assert.assertTrue(testGroup.isPresent(), "Missing test package extendAndGet name: " + name);
-        Assert.assertEquals(testGroup.get().getTests().size(), size);
+        Assert.assertEquals(testGroup.getTests().size(), size);
     }
 
     /**

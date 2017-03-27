@@ -38,7 +38,7 @@ body {
 }
 
 .nav-sidebar > .nav > li > a {
-    padding-left: 50px;
+    padding-left: 45px;
 }
 
 .nav-sidebar > .nav > li > a:hover {
@@ -50,9 +50,16 @@ body {
 .nav-sidebar > .nav > li.active > a,
 .nav-sidebar > .nav > li.active > a:hover,
 .nav-sidebar > .nav > li.active > a:focus {
+    font-weight: bold;
     color: #3b73af;
     background-color: #f3faff;
     border-right: 4px solid #3b73af;
+}
+
+.nav-sidebar > .nav > li.active > a > i:before,
+.nav-sidebar > .nav > li.active > a:hover > i:before,
+.nav-sidebar > .nav > li.active > a:focus > i:before {
+    content: "\f046";
 }
 
 /*
