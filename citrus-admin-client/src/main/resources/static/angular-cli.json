@@ -17,7 +17,7 @@
       "tsconfig": "tsconfig.json",
       "styles": [
         "styles.less",
-        "assets/css/jQueryFileTree.css",
+        "assets/css/jqueryFileTree.css",
         "assets/css/main.css"
       ],
       "scripts": [
