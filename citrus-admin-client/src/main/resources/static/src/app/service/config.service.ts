@@ -63,7 +63,7 @@ export class ConfigService {
                 .catch(this.handleError);
     }
 
-    getValidationMatcherLibraries() {
+    getValidationMatcherLibraries():Observable<ValidationMatcherLibrary[]> {
         return this.http.get(this.validationMatcherUrl)
             .map(res => <ValidationMatcherLibrary[]> res.json())
             .catch(this.handleError);
