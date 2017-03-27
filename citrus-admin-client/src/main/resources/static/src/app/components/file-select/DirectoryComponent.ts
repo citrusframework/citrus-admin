@@ -4,7 +4,7 @@ import {Directory} from "./Directory";
     selector: 'directory',
     template: `
         <li [class]="cssClass">
-            <a [rel]="directory.path" (click)="">
+            <a [rel]="directory.path">
                 <ng-content></ng-content>
             </a>
             <ul *ngIf="directory.children.length">
@@ -24,7 +24,7 @@ export class DirectoryComponent {
     @Output()
     toggle = new EventEmitter<Directory>();
 
-    get cssClass() {
+    getCssClass() {
         return ['directory', this.directory.isOpen ? 'expanded' : 'collapsed']
     }
 

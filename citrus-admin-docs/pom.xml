@@ -34,8 +34,8 @@
                   <goal>install-node-and-npm</goal>
                 </goals>
                 <configuration>
-                  <nodeVersion>v5.9.1</nodeVersion>
-                  <npmVersion>3.8.5</npmVersion>
+                  <nodeVersion>${node.version}</nodeVersion>
+                  <npmVersion>${npm.version}</npmVersion>
                 </configuration>
               </execution>
               <execution>

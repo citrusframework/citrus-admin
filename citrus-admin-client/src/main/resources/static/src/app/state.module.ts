@@ -21,13 +21,13 @@ const imports = [
         configuration
     }),
     RouterStoreModule.connectRouter()
-]
+];
 
 if(environment.reduxTools) {
     imports.push(StoreDevtoolsModule.instrumentOnlyWithExtension({}))
 }
 
 @NgModule({
-    imports
+    imports: imports
 })
 export class StateModule {}

@@ -14,6 +14,7 @@ import {ReportComponent} from './components/report/report.component';
 import {AlertConsole} from './components/alert.console';
 import {AlertDialog} from './components/alert.dialog';
 import {FileSelectComponent} from "./components/file-select/file-select.component";
+import {DirectoryComponent} from "./components/file-select/DirectoryComponent";
 import {OpenProjectComponent} from "./components/project/project.open.component";
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
@@ -50,7 +51,8 @@ import {StateModule} from "./state.module";
         AlertDialog,
         OpenProjectComponent,
         SetupComponent,
-        FileSelectComponent
+        FileSelectComponent,
+        DirectoryComponent
     ],
     providers: [
     ],
