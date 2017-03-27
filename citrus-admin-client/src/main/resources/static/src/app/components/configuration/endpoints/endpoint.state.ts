@@ -117,7 +117,7 @@ export const EndPointStateProviders = [
     EndPointStateService
 ]
 
-export const endpointReducerBuilder = new ReducerBuilder<EndPointState>(EndpointStateInit)
+export const endpointReducer = new ReducerBuilder<EndPointState>(EndpointStateInit)
     .on(EndPointActions.ENDPOINTS.SUCCESS)
         ((state:EndPointState, endPoints:Endpoint[]) => {
             return ({...state, endpoints: toIdMap(endPoints, e => e.id)})
@@ -130,3 +130,4 @@ export const endpointReducerBuilder = new ReducerBuilder<EndPointState>(Endpoint
         ((state:EndPointState, endPointType:Endpoint) => ({...state, endpointTypes: {...state.endpointTypes, [endPointType.type]:endPointType}}))
     .on(EndPointActions.ENDPOINT_TYPES.SUCCESS)
         ((state:EndPointState, endpointTypeNames:string[]) => ({...state, endpointTypeNames}))
+    .createReducer()

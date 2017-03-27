@@ -6,8 +6,8 @@ import {routerReducer as router} from '@ngrx/router-store'
 import {reduce as tests, TestState} from './components/test/test.state'
 import {reduce as configuration} from './components/configuration/configuration.state'
 import {ConfigurationState} from "./components/configuration/configuration.state";
-import {environment} from "../environments/environment";
-import {endpointReducerBuilder, EndPointState} from "./components/configuration/endpoints/endpoint.state";
+import {environment as env} from "../environments/environment";
+import {endpointReducer as endpoint, EndPointState} from "./components/configuration/endpoints/endpoint.state";
 
 export interface AppState {
     router:RouterState,
@@ -16,21 +16,16 @@ export interface AppState {
     endpoint:EndPointState
 }
 
-const imports = [
-    StoreModule.provideStore({
-        router,
-        tests,
-        configuration,
-        endpoint: endpointReducerBuilder.createReducer()
-    }),
-    RouterStoreModule.connectRouter()
-];
-
-if(environment.reduxTools) {
-    imports.push(StoreDevtoolsModule.instrumentOnlyWithExtension({}))
-}
-
 @NgModule({
-    imports: imports
+    imports: [
+        StoreModule.provideStore({
+            router,
+            tests,
+            configuration,
+            endpoint
+        }),
+        RouterStoreModule.connectRouter(),
+        ...(env.reduxTools ? [StoreDevtoolsModule.instrumentOnlyWithExtension({})] : [])
+    ]
 })
 export class StateModule {}
