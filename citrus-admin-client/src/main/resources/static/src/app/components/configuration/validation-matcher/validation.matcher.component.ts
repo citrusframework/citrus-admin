@@ -3,6 +3,8 @@ import {ConfigService} from '../../../service/config.service';
 import {ValidationMatcherLibrary, ValidationMatcher} from "../../../model/validation.matcher.library";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
+import {EditorMode} from "../editor-mode.enum";
+import {Validators, FormGroup, FormBuilder} from "@angular/forms";
 
 @Component({
     selector: 'validation-matcher',
@@ -12,18 +14,40 @@ import {AlertService} from "../../../service/alert.service";
 export class ValidationMatcherComponent implements OnInit {
 
     constructor(private _configService: ConfigService,
+                private fb:FormBuilder,
                 private _alertService: AlertService) {
         this.libraries = [];
         this.newValidationMatcher = new ValidationMatcher();
     }
 
+    form:FormGroup;
+    mode:EditorMode;
+    EditorMode = EditorMode;
     newValidationMatcher: ValidationMatcher;
     newLibrary: ValidationMatcherLibrary;
     selectedLibrary: ValidationMatcherLibrary;
     libraries: ValidationMatcherLibrary[];
 
+    removeValidationMatcher(selected: ValidationMatcher) {
+        this.selectedLibrary.matchers.splice(this.selectedLibrary.matchers.indexOf(selected), 1);
+    }
+
+    addValidationMatcher() {
+        this.selectedLibrary.matchers.push(this.newValidationMatcher);
+
+        this.newValidationMatcher = new ValidationMatcher();
+    }
+
     ngOnInit() {
         this.getLibraries();
+    }
+
+    initForm(mode: EditorMode) {
+        this.mode = mode;
+        this.form = this.fb.group({
+            id: [this.selectedLibrary.id, Validators.required],
+            prefix: [this.selectedLibrary.prefix, Validators.required]
+        })
     }
 
     getLibraries() {
@@ -35,14 +59,15 @@ export class ValidationMatcherComponent implements OnInit {
 
     selectLibrary(endpoint: ValidationMatcherLibrary) {
         this.selectedLibrary = endpoint;
+        this.initForm(EditorMode.EDIT)
     }
 
-    removeLibrary(library: ValidationMatcherLibrary, event:MouseEvent) {
+    removeLibrary(library: ValidationMatcherLibrary, event: MouseEvent) {
         this._configService.deleteComponent(library.id)
             .subscribe(
                 response => {
                     this.libraries.splice(this.libraries.indexOf(library), 1);
-                    this.notifySuccess("Removed validation matcher library '" + library.id + "'");
+                    this.notifySuccess("Removed function library '" + library.id + "'");
                 },
                 error => this.notifyError(<any>error));
 
@@ -50,34 +75,19 @@ export class ValidationMatcherComponent implements OnInit {
         return false;
     }
 
-    removeValidationMatcher(selected: ValidationMatcher) {
-        if (this.selectedLibrary) {
-            this.selectedLibrary.matchers.splice(this.selectedLibrary.matchers.indexOf(selected), 1);
-        } else {
-            this.newLibrary.matchers.splice(this.newLibrary.matchers.indexOf(selected), 1);
-        }
-    }
-
-    addValidationMatcher() {
-        if (this.selectedLibrary) {
-            this.selectedLibrary.matchers.push(this.newValidationMatcher);
-        } else {
-            this.newLibrary.matchers.push(this.newValidationMatcher);
-        }
-
-        this.newValidationMatcher = new ValidationMatcher();
-    }
 
     initLibrary() {
-        this.newLibrary = new ValidationMatcherLibrary();
+        this.selectedLibrary = new ValidationMatcherLibrary();
+        this.initForm(EditorMode.NEW);
     }
 
     createLibrary() {
-        this._configService.createValidationMatcherLibrary(this.newLibrary)
+        this._configService.createValidationMatcherLibrary(this.selectedLibrary)
             .subscribe(
                 response => {
-                    this.notifySuccess("Created new validation matcher library '" + this.newLibrary.id + "'");
-                    this.libraries.push(this.newLibrary); this.newLibrary = undefined;
+                    this.notifySuccess("Created new function library '" + this.selectedLibrary.id + "'");
+                    this.libraries.push(this.selectedLibrary);
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
@@ -86,19 +96,31 @@ export class ValidationMatcherComponent implements OnInit {
         this._configService.updateValidationMatcherLibrary(this.selectedLibrary)
             .subscribe(
                 response => {
-                    this.notifySuccess("Successfully saved validation matcher library '" + this.selectedLibrary.id + "'");
-                    this.selectedLibrary = undefined;
+                    this.notifySuccess("Successfully saved function library '" + this.selectedLibrary.id + "'");
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
 
-    cancel() {
-        if (this.selectedLibrary) {
-            this.selectedLibrary = undefined;
-            this.getLibraries();
-        } else {
-            this.newLibrary = undefined;
+    submitForm() {
+        if (EditorMode.NEW === this.mode) {
+            this.createLibrary()
         }
+        if (EditorMode.EDIT === this.mode) {
+            this.saveLibrary()
+        }
+    }
+
+    cancel() {
+        this.reset();
+        this.getLibraries();
+
+    }
+
+    private reset() {
+        this.mode = null;
+        this.selectedLibrary = undefined;
+        this.form = null;
     }
 
     notifySuccess(message: string) {
