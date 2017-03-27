@@ -38,33 +38,6 @@
       <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
     </select>
   </form-group>
-  <!--
-  <div *ngFor="let property of endpoint.properties" class="form-group" [class.has-error]="form.get(property.id).errors">
-    <label class="col-sm-2 control-label">{{property.displayName}} <span *ngIf="property.required">*</span></label>
-    <div class="col-sm-10">
-      <div *ngIf="property.optionKey" class="input-group">
-        <autocomplete
-            [items]="beans[property.optionKey]|async"
-            icon="coffee"
-            addon="search"
-            [(ngModel)]="property.value"
-            [formControlName]="property.id"
-        ></autocomplete>
-      </div>
-
-      <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" [formControlName]="property.id">
-        <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
-      </select>
-
-      <div *ngIf="!property.optionKey && !property.options" [class.input-group]="form.get(property.id).errors">
-        <input type="text" class="form-control" name="id" [(ngModel)]="property.value" [formControlName]="property.id"/>
-        <div class="input-group-addon" *ngIf="form.get(property.id).errors">
-          <span *ngIf="form.get(property.id).errors?.required">This field is required</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-primary"
