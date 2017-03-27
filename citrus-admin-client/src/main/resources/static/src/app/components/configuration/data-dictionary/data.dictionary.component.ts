@@ -3,6 +3,8 @@ import {ConfigService} from '../../../service/config.service';
 import {DataDictionary, Mapping} from "../../../model/data.dictionary";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
+import {EditorMode} from "../editor-mode.enum";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 
 @Component({
     selector: 'data-dictionary',
@@ -12,20 +14,33 @@ import {AlertService} from "../../../service/alert.service";
 export class DataDictionaryComponent implements OnInit {
 
     constructor(private _configService: ConfigService,
+                private fb:FormBuilder,
                 private _alertService: AlertService) {
         this.dictionaries = [];
         this.newMapping = new Mapping();
-        this.newDictionaryType = "xpath";
+        this.dictionaryType = "xpath";
     }
 
+    EditorMode = EditorMode;
+    mode: EditorMode;
+    form:FormGroup;
     newMapping: Mapping;
-    newDictionaryType: string;
-    newDictionary: DataDictionary;
+    dictionaryType = 'xpath';
     selectedDictionary: DataDictionary;
     dictionaries: DataDictionary[];
 
     ngOnInit() {
         this.getDictionaries();
+    }
+
+    initForm(mode:EditorMode) {
+        this.mode = mode;
+        this.form = this.fb.group({
+            id: [this.selectedDictionary.id, Validators.required],
+            globalScope: [this.selectedDictionary.globalScope, Validators.required],
+            type: [{value:this.dictionaryType, disabled: EditorMode.EDIT === mode}, Validators.required],
+            mappingStrategy: [this.selectedDictionary.mappingStrategy, Validators.required],
+        })
     }
 
     getDictionaries() {
@@ -37,6 +52,7 @@ export class DataDictionaryComponent implements OnInit {
 
     selectDictionary(endpoint: DataDictionary) {
         this.selectedDictionary = endpoint;
+        this.initForm(EditorMode.EDIT)
     }
 
     removeDictionary(library: DataDictionary, event:MouseEvent) {
@@ -53,33 +69,27 @@ export class DataDictionaryComponent implements OnInit {
     }
 
     removeMapping(selected: Mapping) {
-        if (this.selectedDictionary) {
-            this.selectedDictionary.mappings.mappings.splice(this.selectedDictionary.mappings.mappings.indexOf(selected), 1);
-        } else {
-            this.newDictionary.mappings.mappings.splice(this.newDictionary.mappings.mappings.indexOf(selected), 1);
-        }
+        this.selectedDictionary.mappings.mappings.splice(this.selectedDictionary.mappings.mappings.indexOf(selected), 1);
     }
 
     addMapping() {
-        if (this.selectedDictionary) {
-            this.selectedDictionary.mappings.mappings.push(this.newMapping);
-        } else {
-            this.newDictionary.mappings.mappings.push(this.newMapping);
-        }
-
+        this.selectedDictionary.mappings.mappings.push(this.newMapping);
         this.newMapping = new Mapping();
     }
 
     initDictionary() {
-        this.newDictionary = new DataDictionary();
+        this.selectedDictionary = new DataDictionary();
+        this.selectedDictionary.globalScope = true;
+        this.selectedDictionary.mappingStrategy = 'EXACT_MATCH';
+        this.initForm(EditorMode.NEW)
     }
 
     createDictionary() {
-        this._configService.createDataDictionary(this.newDictionaryType, this.newDictionary)
+        this._configService.createDataDictionary(this.dictionaryType, this.selectedDictionary)
             .subscribe(
                 response => {
-                    this.notifySuccess("Created new data dictionary '" + this.newDictionary.id + "'");
-                    this.dictionaries.push(this.newDictionary); this.newDictionary = undefined;
+                    this.notifySuccess("Created new data dictionary '" + this.selectedDictionary.id + "'");
+                    this.dictionaries.push(this.selectedDictionary); this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
@@ -89,18 +99,25 @@ export class DataDictionaryComponent implements OnInit {
             .subscribe(
                 response => {
                     this.notifySuccess("Successfully saved data dictionary '" + this.selectedDictionary.id + "'");
-                    this.selectedDictionary = undefined;
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
 
-    cancel() {
-        if (this.selectedDictionary) {
-            this.selectedDictionary = undefined;
-            this.getDictionaries();
-        } else {
-            this.newDictionary = undefined;
+    submitForm() {
+        if(EditorMode.EDIT === this.mode) {
+            console.log('Save Edit')
+            this.saveDictionary();
         }
+        if(EditorMode.NEW === this.mode) {
+            console.log('Save New')
+            this.createDictionary();
+        }
+    }
+
+    cancel() {
+        this.reset();
+        this.getDictionaries();
     }
 
     notifySuccess(message: string) {
@@ -109,5 +126,12 @@ export class DataDictionaryComponent implements OnInit {
 
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error.message, false));
+    }
+
+    private reset() {
+        this.mode = null;
+        this.form = null;
+        this.selectedDictionary = null;
+        this.dictionaryType = 'xpath';
     }
 }
