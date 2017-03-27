@@ -3,6 +3,8 @@ import {ConfigService} from '../../../service/config.service';
 import {FunctionLibrary, Function} from "../../../model/function.library";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
+import {EditorMode} from "../editor-mode.enum";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 
 @Component({
     selector: 'function-library',
@@ -12,18 +14,29 @@ import {AlertService} from "../../../service/alert.service";
 export class FunctionLibraryComponent implements OnInit {
 
     constructor(private _configService: ConfigService,
+                private fb: FormBuilder,
                 private _alertService: AlertService) {
         this.libraries = [];
         this.newFunction = new Function();
     }
 
+    mode: EditorMode;
+    form: FormGroup
     newFunction: Function;
-    newLibrary: FunctionLibrary;
     selectedLibrary: FunctionLibrary;
     libraries: FunctionLibrary[];
+    EditorMode = EditorMode;
 
     ngOnInit() {
         this.getLibraries();
+    }
+
+    initForm(mode: EditorMode) {
+        this.mode = mode;
+        this.form = this.fb.group({
+            id: [this.selectedLibrary.id, Validators.required],
+            prefix: [this.selectedLibrary.prefix, Validators.required]
+        })
     }
 
     getLibraries() {
@@ -35,9 +48,10 @@ export class FunctionLibraryComponent implements OnInit {
 
     selectLibrary(endpoint: FunctionLibrary) {
         this.selectedLibrary = endpoint;
+        this.initForm(EditorMode.EDIT)
     }
 
-    removeLibrary(library: FunctionLibrary, event:MouseEvent) {
+    removeLibrary(library: FunctionLibrary, event: MouseEvent) {
         this._configService.deleteComponent(library.id)
             .subscribe(
                 response => {
@@ -51,33 +65,26 @@ export class FunctionLibraryComponent implements OnInit {
     }
 
     removeFunction(selected: Function) {
-        if (this.selectedLibrary) {
-            this.selectedLibrary.functions.splice(this.selectedLibrary.functions.indexOf(selected), 1);
-        } else {
-            this.newLibrary.functions.splice(this.newLibrary.functions.indexOf(selected), 1);
-        }
+        this.selectedLibrary.functions.splice(this.selectedLibrary.functions.indexOf(selected), 1);
     }
 
     addFunction() {
-        if (this.selectedLibrary) {
-            this.selectedLibrary.functions.push(this.newFunction);
-        } else {
-            this.newLibrary.functions.push(this.newFunction);
-        }
-
+        this.selectedLibrary.functions.push(this.newFunction);
         this.newFunction = new Function();
     }
 
     initLibrary() {
-        this.newLibrary = new FunctionLibrary();
+        this.selectedLibrary = new FunctionLibrary();
+        this.initForm(EditorMode.NEW);
     }
 
     createLibrary() {
-        this._configService.createFunctionLibrary(this.newLibrary)
+        this._configService.createFunctionLibrary(this.selectedLibrary)
             .subscribe(
                 response => {
-                    this.notifySuccess("Created new function library '" + this.newLibrary.id + "'");
-                    this.libraries.push(this.newLibrary); this.newLibrary = undefined;
+                    this.notifySuccess("Created new function library '" + this.selectedLibrary.id + "'");
+                    this.libraries.push(this.selectedLibrary);
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
@@ -87,18 +94,30 @@ export class FunctionLibraryComponent implements OnInit {
             .subscribe(
                 response => {
                     this.notifySuccess("Successfully saved function library '" + this.selectedLibrary.id + "'");
-                    this.selectedLibrary = undefined;
+                    this.reset();
                 },
                 error => this.notifyError(<any>error));
     }
 
-    cancel() {
-        if (this.selectedLibrary) {
-            this.selectedLibrary = undefined;
-            this.getLibraries();
-        } else {
-            this.newLibrary = undefined;
+    submitForm() {
+        if (EditorMode.NEW === this.mode) {
+            this.createLibrary()
         }
+        if (EditorMode.EDIT === this.mode) {
+            this.saveLibrary()
+        }
+    }
+
+    cancel() {
+        this.reset();
+        this.getLibraries();
+
+    }
+
+    private reset() {
+        this.mode = null;
+        this.selectedLibrary = undefined;
+        this.form = null;
     }
 
     notifySuccess(message: string) {
