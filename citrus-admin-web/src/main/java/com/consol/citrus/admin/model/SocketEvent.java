@@ -19,7 +19,7 @@ package com.consol.citrus.admin.model;
 import net.minidev.json.JSONObject;
 
 /**
- * All socket event types extendAndGet proper JSON data generation.
+ * All socket event types with proper JSON data generation.
  *
  * @author Christoph Deppisch
  */

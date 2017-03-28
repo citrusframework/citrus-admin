@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.process.listener;
 
-import com.consol.citrus.admin.model.MessageEvent;
-import com.consol.citrus.admin.model.SocketEvent;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ public class WebSocketProcessListener implements ProcessListener {
 
     private static final String TOPIC_LOG_OUTPUT = "/topic/log-output";
     private static final String TOPIC_MESSAGES = "/topic/messages";
+    private static final String TOPIC_TEST_RESULTS = "/topic/results";
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -60,8 +60,14 @@ public class WebSocketProcessListener implements ProcessListener {
             messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
         } else if (output.contains("TEST SUCCESS")) {
             messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
+            if (!projectService.getActiveProject().getSettings().isUseConnector()) {
+                messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, true));
+            }
         } else if (output.contains("TEST FAILED")) {
             messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
+            if (!projectService.getActiveProject().getSettings().isUseConnector()) {
+                messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, false));
+            }
         } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
             String actionIndex = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1));
             JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,
@@ -70,6 +76,32 @@ public class WebSocketProcessListener implements ProcessListener {
         } else {
             handleMessageEvent(processId, output);
         }
+    }
+
+    private TestResult getTestResult(String processId, String output, boolean success) {
+        String lineMarker;
+        String packageMarker;
+        if (success) {
+            lineMarker =  "TEST SUCCESS";
+            packageMarker =  "()";
+        } else {
+            lineMarker =  "TEST FAILED";
+            packageMarker =  "<>";
+        }
+
+        String testName = output.substring(output. indexOf(lineMarker) + lineMarker.length(), output.indexOf(packageMarker.charAt(0))).trim();
+        String testPackage = output.substring(output.indexOf(packageMarker.charAt(0)) + 1, output.indexOf(packageMarker.charAt(1))).trim();
+
+        TestResult result = new TestResult();
+        Test test = new Test();
+        test.setType(TestType.JAVA);
+        test.setName(testName);
+        test.setPackageName(testPackage);
+        result.setTest(test);
+
+        result.setSuccess(success);
+        result.setProcessId(processId);
+        return result;
     }
 
     private void handleMessageEvent(String processId, String output) {
@@ -101,12 +133,12 @@ public class WebSocketProcessListener implements ProcessListener {
 
     @Override
     public void onProcessFail(String processId, int exitCode) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed extendAndGet exit code " + exitCode + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, Throwable e) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed extendAndGet exception " + e.getLocalizedMessage() + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage() + System.lineSeparator()));
     }
 
     /**

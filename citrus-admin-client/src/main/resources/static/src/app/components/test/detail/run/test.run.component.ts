@@ -81,7 +81,6 @@ export class TestRunComponent {
             });
             this.stompClient.subscribe('/topic/messages', (output:Stomp.Message) => {
                 var message = JSON.parse(output.body);
-                console.log(message);
                 this.handleMessage(message);
             });
         }

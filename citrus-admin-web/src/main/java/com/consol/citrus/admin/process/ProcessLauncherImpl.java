@@ -30,7 +30,7 @@ public class ProcessLauncherImpl implements ProcessLauncher {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncherImpl.class);
-    private static final int LOG_CACHE_SIZE = 10;
+    private static final int LOG_CACHE_SIZE = 30;
 
     private boolean processCompleted;
     private String processId;
@@ -153,7 +153,7 @@ public class ProcessLauncherImpl implements ProcessLauncher {
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 StringBuilder lineCache = new StringBuilder();
                 int lineCacheSize = LOG_CACHE_SIZE;
-                String line = null;
+                String line;
                 while ((line = br.readLine()) != null) {
                     notifyActivity(processId, line);
 

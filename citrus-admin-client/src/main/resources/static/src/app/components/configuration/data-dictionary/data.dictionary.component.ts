@@ -106,11 +106,8 @@ export class DataDictionaryComponent implements OnInit {
 
     submitForm() {
         if(EditorMode.EDIT === this.mode) {
-            console.log('Save Edit')
             this.saveDictionary();
-        }
-        if(EditorMode.NEW === this.mode) {
-            console.log('Save New')
+        } else if(EditorMode.NEW === this.mode) {
             this.createDictionary();
         }
     }

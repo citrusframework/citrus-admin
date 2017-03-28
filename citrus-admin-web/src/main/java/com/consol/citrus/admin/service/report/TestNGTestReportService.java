@@ -122,7 +122,7 @@ public class TestNGTestReportService implements TestReportService {
     }
 
     /**
-     * Fills result object extendAndGet test method information.
+     * Fills result object with test method information.
      * @param result
      * @param testMethod
      */

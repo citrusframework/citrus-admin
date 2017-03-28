@@ -8,7 +8,7 @@ declare var jQuery:any;
         '(document:keyup)': 'handleKeyUp($event)',
     },
     template: `<div id="{{name}}" class="modal fade">
-  <div class="modal-dialog modal-lg">
+  <div [class]="getDialogSize()">
     <div class="modal-content">
       <div *ngIf="title" class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -33,6 +33,7 @@ export class DialogComponent {
     @Input("dialog-title") title: string;
     @Input("dialog-cancel") showClose: string = "yes";
     @Input("dialog-confirm") showConfirm: string = "yes";
+    @Input("dialog-size") size: string = "normal";
 
     open() {
         jQuery('#' + this.name).modal();
@@ -46,6 +47,10 @@ export class DialogComponent {
     confirm() {
         this.confirmed.emit(this.name);
         this.close();
+    }
+
+    getDialogSize() {
+        return (this.size == 'normal') ? 'modal-dialog' : 'modal-dialog modal-' + this.size;
     }
 
     handleKeyUp(event:KeyboardEvent) {

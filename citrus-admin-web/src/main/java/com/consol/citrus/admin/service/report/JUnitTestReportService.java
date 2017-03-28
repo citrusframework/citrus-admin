@@ -103,7 +103,7 @@ public class JUnitTestReportService implements TestReportService {
     }
 
     /**
-     * Fills result object extendAndGet test case information.
+     * Fills result object with test case information.
      * @param result
      * @param testCase
      */

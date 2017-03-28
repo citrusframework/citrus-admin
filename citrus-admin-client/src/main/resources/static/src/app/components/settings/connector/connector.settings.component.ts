@@ -15,8 +15,6 @@ export class ConnectorSettingsComponent {
 
     project: Project = new Project();
 
-    dialogOpen: boolean = false;
-
     ngOnInit() {
         this.getProject();
     }

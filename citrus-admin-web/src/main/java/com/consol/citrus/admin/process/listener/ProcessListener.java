@@ -39,7 +39,7 @@ public interface ProcessListener {
     void onProcessSuccess(String processId);
 
     /**
-     * Invoked on failed completion event, extendAndGet the process exit code
+     * Invoked on failed completion event, with the process exit code
      *
      * @param processId the id of the process
      * @param exitCode the exitcode returned from the process
@@ -47,7 +47,7 @@ public interface ProcessListener {
     void onProcessFail(String processId, int exitCode);
 
     /**
-     * Invoked on failed completion event, extendAndGet the exception that was caught
+     * Invoked on failed completion event, with the exception that was caught
      *
      * @param processId the id of the process
      * @param e the exception caught within the ProcessLauncher
@@ -55,7 +55,7 @@ public interface ProcessListener {
     void onProcessFail(String processId, Throwable e);
 
     /**
-     * Invoked on process output extendAndGet output data from process. This method is called
+     * Invoked on process output with output data from process. This method is called
      * in cache mode. In contrast to process activity which is called immediately after
      * process output was detected (@see onProcessActivity).
      *
@@ -65,9 +65,9 @@ public interface ProcessListener {
     void onProcessOutput(String processId, String output);
 
     /**
-     * Invoked on process activity extendAndGet output data from process. Called immediately
+     * Invoked on process activity with output data from process. Called immediately
      * after process activity was detected. In contrast to process output which is cached
-     * first and notified separately extendAndGet less frequency (@see onProcessOutput).
+     * first and notified separately with less frequency (@see onProcessOutput).
      *
      * @param processId the id of the process
      * @param output

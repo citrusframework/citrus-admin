@@ -109,7 +109,7 @@ public class TestExecutionService {
     }
 
     /**
-     * Stops process extendAndGet given id.
+     * Stops process with given id.
      * @param processId
      */
     public void stop(String processId) {

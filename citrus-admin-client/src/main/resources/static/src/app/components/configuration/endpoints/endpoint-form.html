@@ -13,8 +13,7 @@
         formControlName="id"
         [autofocus]="true"
         [message]="form.get('id').errors ? 'Name is Required' : ''"
-        [(ngModel)]="endpoint.id"
-    ></input-with-addon>
+        [(ngModel)]="endpoint.id"></input-with-addon>
   </form-group>
   <form-group *ngFor="let property of endpoint.properties"
               [control]="form.get(property.id)"
@@ -23,16 +22,14 @@
         *ngIf="!property.optionKey && !property.options"
         [formControlName]="property.id"
         [message]="form.get(property.id).errors ? 'Name is Required' : ''"
-        [(ngModel)]="property.value"
-    ></input-with-addon>
+        [(ngModel)]="property.value"></input-with-addon>
     <div *ngIf="property.optionKey" style="display: flex">
       <autocomplete
           [items]="beans[property.optionKey]|async"
           icon="coffee"
           addon="search"
           [(ngModel)]="property.value"
-          [formControlName]="property.id"
-      ></autocomplete>
+          [formControlName]="property.id"></autocomplete>
     </div>
     <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" [formControlName]="property.id">
       <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>

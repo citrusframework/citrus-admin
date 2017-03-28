@@ -6,7 +6,6 @@ import {Pipe, PipeTransform} from '@angular/core'
 export class LogPipe implements PipeTransform {
     transform(value: string, ...args: any[]) : string {
         console.log(value, args);
-
         return value;
     }
 }

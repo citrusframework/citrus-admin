@@ -116,7 +116,6 @@ export class SchemaRepositoryEditorPresentationComponent {
         const ref = new SchemaReference();
         ref.schema = schema.id;
         this.repository.schemas.references.push(ref);
-        console.log(this.repository.schemas.references);
     }
 
     get repositoryReferenceCandidates() {
@@ -128,7 +127,6 @@ export class SchemaRepositoryEditorPresentationComponent {
         const ref = new SchemaReference();
         ref.schema = schema.id;
         this.repository.schemas.references.push(ref);
-        console.log(this.repository.schemas.references);
     }
 
     removeSchemaReference(reference:SchemaReference) {

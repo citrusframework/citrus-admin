@@ -65,7 +65,7 @@ public class ProcessLauncherTest {
     @Test
     public void testSyncSuccess_withMaxExecutionTime() throws Exception {
         ProcessBuilder pb = getSleepProcessBuilder(1);
-        ProcessLauncher pl = launchAndWait(pb, "sync-success-extendAndGet-timeout", 5);
+        ProcessLauncher pl = launchAndWait(pb, "sync-success-with-timeout", 5);
         assertSuccess(pl);
     }
 
@@ -98,7 +98,7 @@ public class ProcessLauncherTest {
     @Test
     public void testAsyncSuccess_withMaxExecutionTime() throws Exception {
         ProcessBuilder pb = getSleepProcessBuilder(2);
-        ProcessLauncher pl = launchAndContinue(pb, "async-success-extendAndGet-timeout", 3);
+        ProcessLauncher pl = launchAndContinue(pb, "async-success-with-timeout", 3);
 
         // check started
         Thread.sleep(1000);

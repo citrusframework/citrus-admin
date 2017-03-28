@@ -22,7 +22,7 @@
 //
 // History:
 //
-// 1.01 - updated to work extendAndGet foreign characters in directory/file names (12 April 2008)
+// 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
 // 1.00 - released (24 March 2008)
 //
 // TERMS OF USE

@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class NamespacePrefixMapper extends com.sun.xml.bind.marshaller.NamespacePrefixMapper {
 
-    /** List of known namespaces extendAndGet mapping to prefix */
+    /** List of known namespaces with mapping to prefix */
     private Map<String, String> namespaceMappings = new HashMap<String, String>();
 
     public NamespacePrefixMapper() {

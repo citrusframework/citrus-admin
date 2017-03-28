@@ -2,22 +2,68 @@
   <i class="fa fa-cubes"></i> Tests <small>Run tests</small>
 </h1>
 
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li role="presentation">
+            <a role="menuitem" name="all" (click)="select(undefined)" class="clickable"><i class="fa fa-cubes"></i> All tests</a>
+          </li>
+          <li *ngFor="let package of packages|async" role="presentation">
+            <a role="menuitem" name="{{package.name}}" (click)="select(package)" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
+          </li>
+        </ul>
+      </span>
+      <input type="text" class="form-control" value="{{selected ? selected.name : 'All tests'}}">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()">Run</button>
+      </span>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
+  </div>
+</div>
+
+<p></p>
+
 <div class="table-responsive">
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Package</th>
-        <th style="width: 4em;"></th>
+        <th width="30">Type</th>
+        <th width="40%">Name</th>
+        <th>Class</th>
+        <th width="60">Status</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><i class="fa fa-cubes"></i> <b>All tests</b></td>
-        <td><button type="button" class="btn btn-success" title="Run tests" (click)="executeAll()" [disabled]="running">Run</button></td>
+      <tr *ngIf="!selected">
+        <td><span class="badge badge-java">java</span></td>
+        <td>
+          <i class="fa fa-file-text-o"></i>
+          <span title="All tests">All tests</span>
+        </td>
+        <td></td>
+        <td>
+          <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+          <span *ngIf="!running">PENDING</span>
+        </td>
       </tr>
-      <tr *ngFor="let testGroup of packages|async">
-        <td><i class="fa fa-cubes"></i> <b>{{testGroup.name}}</b></td>
-        <td><button type="button" class="btn btn-success" title="Run tests" (click)="execute(testGroup)" [disabled]="running">Run</button></td>
+      <tr *ngFor="let result of results" (click)="open(result.test)" class="clickable">
+        <td><span class="badge badge-{{result.test.type | lowercase}}">{{result.test.type | lowercase}}</span></td>
+        <td>
+          <i class="fa fa-file-text-o"></i>
+          <span title="{{result.test.className}}.{{result.test.methodName}}">{{result.test.name}}</span>
+        </td>
+        <td>{{result.test.className}}</td>
+        <td>
+          <span *ngIf="!running && result.success == undefined">PENDING</span>
+          <img *ngIf="running && result.success == undefined" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+          <span *ngIf="result.success != undefined" [class]="(result.success == undefined) ? 'badge' : (result.success ? 'badge badge-success' : 'badge badge-danger')" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
+        </td>
       </tr>
     </tbody>
     <tfoot>
@@ -28,8 +74,13 @@
   </table>
 </div>
 
-<ul class="list-group">
-  <li class="list-group-item" *ngFor="let result of finished">{{result.name}} - <span [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span></li>
-</ul>
+<div class="dialog"
+     dialog-id="dialog-console"
+     dialog-title="Console log output"
+     dialog-confirm="no"
+     dialog-size="lg">
+  <p>Log output:</p>
 
-<pre class="logger" [textContent]="processOutput"></pre>
+  <pre class="logger" [textContent]="currentOutput"></pre>
+
+</div>
