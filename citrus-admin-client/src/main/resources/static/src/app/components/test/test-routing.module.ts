@@ -24,7 +24,7 @@ const routes:Routes = [
             { path: 'list', component: TestListComponent},
             { path: 'run', component: TestGroupRunComponent},
             {
-                path: 'editor',
+                path: 'detail',
                 component: TestEditorComponent,
                 canActivate: [CanActivateRoutes],
                 children: [

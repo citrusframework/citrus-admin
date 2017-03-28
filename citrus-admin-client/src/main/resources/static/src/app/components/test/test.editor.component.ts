@@ -41,7 +41,7 @@ export class TestEditorComponent implements OnInit {
         this.testState
             .openTabs
             .filter(ot => ot.length === 0)
-            .subscribe(() => this.router.navigate(['tests', 'editor']));
+            .subscribe(() => this.router.navigate(['tests', 'detail']));
 
         /** Navigate to a test route if selected tab is changed **/
         this.testState.selectedTest.filter(t => t != null).subscribe(t => {
@@ -49,10 +49,10 @@ export class TestEditorComponent implements OnInit {
         })
 
         Observable.combineLatest(
-            this.routerState.path.filter(p => p === '/tests/editor').take(1),
+            this.routerState.path.filter(p => p === '/tests/detail').take(1),
             this.testState.selectedTest.filter(t => t != null).take(1)
         )
-        .subscribe(([u, t]) => this.router.navigate(['tests','editor', t.name]))
+        .subscribe(([u, t]) => this.router.navigate(['tests','detail', t.name]))
 
     }
 
@@ -89,6 +89,6 @@ export class TestEditorComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
-        this.router.navigate(['/tests', 'editor', test.name, 'info']);
+        this.router.navigate(['/tests', 'detail', test.name, 'info']);
     }
 }

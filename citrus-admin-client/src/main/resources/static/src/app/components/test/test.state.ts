@@ -152,7 +152,7 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
             return {...state, details : {[detail.name]:detail}};
         }
         case '[Router] Update Location': {
-            const [,, latestDetailView] = /^\/tests\/editor\/([^\\\/]+?)\/([^\\\/]+?)(?:\/(?=$))?$/i.exec(action.payload.path) || ['','', ''];
+            const [,, latestDetailView] = /^\/tests\/detail\/([^\\\/]+?)\/([^\\\/]+?)(?:\/(?=$))?$/i.exec(action.payload.path) || ['','', ''];
             if(latestDetailView !== '') {
                 return { ...state, latestDetailView }
             }

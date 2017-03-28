@@ -10,7 +10,7 @@ export class TestsComponent {
     menuEntries = [
         {name: 'List', link:['list']},
         {name: 'Run', link:['run']},
-        {name: 'Editor', link:['editor']}
+        {name: 'Details', link:['detail']}
     ];
 
     constructor(private router:Router,

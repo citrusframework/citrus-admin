@@ -48,6 +48,6 @@ export class TestListComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
-        this.router.navigate(['/tests', 'editor', test.name, 'info']);
+        this.router.navigate(['/tests', 'detail', test.name, 'info']);
     }
 }

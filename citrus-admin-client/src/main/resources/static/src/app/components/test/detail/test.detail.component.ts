@@ -52,7 +52,7 @@ export class TestDetailComponent implements OnInit {
             this.testAction.fetchDetails(test);
             this.testState.latestDetailView.first()
                 .delay(100) // for some reasons we need to wait a bit before routing in ngOnInit
-                .subscribe(lv => this.router.navigate(['tests','editor', test.name, lv]))
+                .subscribe(lv => this.router.navigate(['tests','detail', test.name, lv]))
         })
 
     }

@@ -30,7 +30,7 @@ export class CanActivateTestEditor implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>|Promise<boolean>|boolean {
         const testSelected = this.testState.selectedTest;
-        testSelected.filter(t => t != null).first().subscribe(t => this.router.navigate(['tests', 'editor', t.name]))
+        testSelected.filter(t => t != null).first().subscribe(t => this.router.navigate(['tests', 'detail', t.name]))
         return testSelected.map(_ => true);
     }
 

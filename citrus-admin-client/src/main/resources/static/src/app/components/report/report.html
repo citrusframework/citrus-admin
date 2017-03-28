@@ -59,7 +59,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Result</th>
+        <th width="80">Result</th>
       </tr>
     </thead>
     <tbody *ngIf="report.results.length == 0">
@@ -68,12 +68,12 @@
       </tr>
     </tbody>
     <tbody *ngFor="let result of report.results">
-      <tr (click)="open(result.test)" [class]="result.success ? 'color-success clickable' : 'color-danger clickable'">
+      <tr (click)="open(result.test)" class="clickable">
         <td>
           <i class="fa fa-file-text-o"></i>
           <span title="{{result.test.className}}.{{result.test.methodName}}">{{result.test.name}}</span>
         </td>
-        <td [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></td>
+        <td><span [class]="result.success ? 'badge badge-success' : 'badge badge-danger'" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span></td>
       </tr>
       <tr *ngIf="result.errorCause" class="color-danger">
         <td colspan="2">
