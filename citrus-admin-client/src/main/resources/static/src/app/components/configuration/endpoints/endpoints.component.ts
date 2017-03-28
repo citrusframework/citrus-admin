@@ -4,6 +4,7 @@ import {SpringBeanService} from "../../../service/springbean.service";
 import {Endpoint} from "../../../model/endpoint";
 import {EndPointStateService, EndPointActions} from "./endpoint.state";
 import {Observable} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
     selector:'endpoints',
@@ -11,8 +12,7 @@ import {Observable} from "rxjs";
       <endpoints-presentation
         [endpoints]="endpoints|async"
         [endpointTypes]="endpointTypeNames|async"
-        (removeEndpoint)="removeEndpoint($event)"
-      ></endpoints-presentation>
+        (removeEndpoint)="removeEndpoint($event)"></endpoints-presentation>
     `
 })
 export class EndpointsComponent implements OnInit {
@@ -43,19 +43,30 @@ export class EndpointsComponent implements OnInit {
 })
 export class EndpointsPresentationComponent implements OnInit {
 
-    constructor() {}
+    constructor(private _router: Router) {}
 
     @Input() endpoints: Endpoint[];
     @Input() endpointTypes: string[];
 
     @Output() removeEndpoint = new EventEmitter<Endpoint>();
 
+    display = "table";
+    
     ngOnInit() {
     }
 
+    setDisplay(type: string) {
+        this.display = type;
+    }
+
+    invokeEdit(endpoint: Endpoint, event:MouseEvent) {
+        event.stopPropagation();
+        this._router.navigate(['/configuration/endpoints/endpoint-editor', endpoint.id]);
+        return false;
+    }
 
     invokeRemove(endpoint: Endpoint, event:MouseEvent) {
-        this.removeEndpoint.next(endpoint)
+        this.removeEndpoint.next(endpoint);
         return false;
     }
 

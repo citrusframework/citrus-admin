@@ -1,12 +1,11 @@
 <div>
-    <div
-            class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>Repository</th>
+                <th width="30%">Repository</th>
                 <th>Schemas</th>
-                <th>Action</th>
+                <th width="50">Actions</th>
             </tr>
             </thead>
             <tbody *ngIf="noRepositories|async">
@@ -17,9 +16,8 @@
             <tbody *ngFor="let repository of repositories|async">
             <tr>
                 <td>
-                    <a name="{{repository.id}}" class="clickable" title="Edit repository"
-                       [routerLink]="['edit-schema-repository', repository.id]">
-                        <i class="fa fa-file-text-o"></i> {{repository.id}}
+                    <a name="{{repository.id}}" class="clickable" title="Edit repository" [routerLink]="['edit-schema-repository', repository.id]">
+                      <i class="fa fa-file-text-o"></i> {{repository.id}}
                     </a>
                 </td>
                 <td>
@@ -32,8 +30,13 @@
                         </li>
                     </ul>
                 </td>
-                <td><a name="remove" (click)="removeRepository(repository, $event)" class="clickable"
-                       title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a></td>
+                <td>
+                    <a name="{{repository.id}}" class="clickable" title="Edit repository"
+                       [routerLink]="['edit-schema-repository', repository.id]"><i class="fa fa-edit"></i></a>
+                    &nbsp;|&nbsp;
+                    <a name="remove" (click)="removeRepository(repository, $event)" class="clickable"
+                       title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
+                </td>
             </tr>
             </tbody>
             <tfoot>
@@ -44,8 +47,8 @@
         </table>
     </div>
 </div>
-<div>
 
+<div>
     <h2 class="sub-header">
         <span><i class="fa fa-file-code-o"></i> Schemas</span>
         <div class="btn-group pull-right">
@@ -66,8 +69,8 @@
             <thead>
             <tr>
                 <th width="30%">Schema</th>
-                <th width="60">Location</th>
-                <th>Action</th>
+                <th>Location</th>
+                <th width="50">Actions</th>
             </tr>
             </thead>
             <tbody *ngIf="noSchemas|async">
@@ -78,13 +81,15 @@
             <tbody *ngFor="let schema of schemas|async">
             <tr>
                 <td>
-                    <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable"
-                       title="Edit schema">
-                        <i class="fa fa-file-text-o"></i> {{schema.id}}
+                    <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable" title="Edit schema">
+                      <i class="fa fa-file-text-o"></i> {{schema.id}}
                     </a>
                 </td>
                 <td>{{schema.location}}</td>
                 <td>
+                    <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable"
+                       title="Edit schema"><i class="fa fa-file-text-o"></i></a>
+                    &nbsp;|&nbsp;
                     <a name="remove" (click)="removeSchema(schema, $event)" class="clickable"
                        title="Remove schema"><i class="fa fa-times" style="color: #A50000;"></i></a>
                 </td>

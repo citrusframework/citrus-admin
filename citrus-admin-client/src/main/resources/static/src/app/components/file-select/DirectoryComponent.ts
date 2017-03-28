@@ -24,7 +24,7 @@ export class DirectoryComponent {
     @Output()
     toggle = new EventEmitter<Directory>();
 
-    getCssClass() {
+    get cssClass() {
         return ['directory', this.directory.isOpen ? 'expanded' : 'collapsed']
     }
 

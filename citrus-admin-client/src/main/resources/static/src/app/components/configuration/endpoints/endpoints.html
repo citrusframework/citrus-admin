@@ -16,14 +16,56 @@
   when sending and receiving messages.</p>
 
 <br/>
-<div style="display: flex; flex-wrap: wrap">
+
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default" (click)="setDisplay('table')"><i class="fa fa-bars"></i></button>
+  <button type="button" class="btn btn-default" (click)="setDisplay('grid')"><i class="fa fa-th"></i></button>
+</div>
+
+<p></p>
+
+<div *ngIf="display == 'table'" class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Properties</th>
+      <th width="50">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let endpoint of endpoints" (click)="invokeEdit(endpoint, $event)" class="clickable">
+      <td><endpoint-label [type]="endpoint.type" [enclosing]="true"></endpoint-label></td>
+      <td>{{endpoint.id}}</td>
+      <td>
+        <ul class="properties endpoint-properties">
+          <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
+        </ul>
+      </td>
+      <td>
+        <a [routerLink]="['endpoint-editor', endpoint.id]" name="edit" title="Edit endpoint"><i class="fa fa-edit"></i></a>
+        &nbsp;|&nbsp;
+        <a (click)="invokeRemove(endpoint, $event)" name="remove" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<div *ngIf="display == 'grid'" style="display: flex; flex-wrap: wrap">
   <div *ngIf="endpoints.length == 0" class="panel panel-default">
     <div class="panel-body">
       <i class="fa fa-times"></i> No endpoints defined
     </div>
   </div>
 
-  <detail-panel *ngFor="let endpoint of endpoints" >
+  <detail-panel *ngFor="let endpoint of endpoints">
     <div detail-panel-heading
          [title]="endpoint.id"
          [routerLink]="['endpoint-editor', endpoint.id]"

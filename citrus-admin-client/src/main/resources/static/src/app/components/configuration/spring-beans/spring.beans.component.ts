@@ -24,6 +24,8 @@ export class SpringBeansComponent implements OnInit {
         this.beans = [];
     }
 
+    display = "table";
+
     bean: SpringBean;
     beans: SpringBean[];
 
@@ -136,6 +138,10 @@ export class SpringBeansComponent implements OnInit {
             this.getSpringBeans();
         }
         this.reset();
+    }
+
+    setDisplay(type: string) {
+        this.display = type;
     }
 
     notifySuccess(message: string) {
