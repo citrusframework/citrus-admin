@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service.spring;
 
-import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
+import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
@@ -55,7 +55,7 @@ public class SpringBeanServiceTest {
 
         SpringBean springBean = new SpringBean();
         springBean.setId("listener");
-        springBean.setClazz(WebSocketPushMessageListener.class.getName());
+        springBean.setClazz(WebSocketPushEventsListener.class.getName());
 
         File tempFile = createTempContextFile("citrus-context-add");
 
@@ -69,7 +69,7 @@ public class SpringBeanServiceTest {
         Assert.assertTrue(result.contains("<citrus:schema id=\"1\" location=\"l1\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<citrus:schema id=\"2\" location=\"l2\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<citrus:schema-repository id=\"x\">"), "Failed to validate " + result);
-        Assert.assertTrue(result.contains("<bean class=\"" + WebSocketPushMessageListener.class.getName() + "\" id=\"listener\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<bean class=\"" + WebSocketPushEventsListener.class.getName() + "\" id=\"listener\"/>"), "Failed to validate " + result);
     }
 
     @Test

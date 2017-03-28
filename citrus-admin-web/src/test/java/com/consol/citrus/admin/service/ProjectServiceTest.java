@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
+import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
@@ -119,19 +119,19 @@ public class ProjectServiceTest {
 
         Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
-        when(springBeanService.getBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getSimpleName()), eq(SpringBean.class))).thenReturn(null);
+        when(springBeanService.getBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushEventsListener.class.getSimpleName()), eq(SpringBean.class))).thenReturn(null);
         when(environment.getProperty("local.server.port", "8080")).thenReturn("8080");
         projectService.addConnector();
 
         Assert.assertTrue(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
-        when(springBeanService.getBeanNames(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getName()))).thenReturn(Collections.singletonList(WebSocketPushMessageListener.class.getSimpleName()));
+        when(springBeanService.getBeanNames(any(File.class), eq(testProject), eq(WebSocketPushEventsListener.class.getName()))).thenReturn(Collections.singletonList(WebSocketPushEventsListener.class.getSimpleName()));
         projectService.removeConnector();
 
         Assert.assertFalse(FileUtils.readToString(new FileSystemResource(testProject.getMavenPomFile())).contains("citrus-admin-connector"));
 
         verify(springBeanService).addBeanDefinition(any(File.class), eq(testProject), any(SpringBean.class));
-        verify(springBeanService).removeBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushMessageListener.class.getSimpleName()));
+        verify(springBeanService).removeBeanDefinition(any(File.class), eq(testProject), eq(WebSocketPushEventsListener.class.getSimpleName()));
     }
 
     @Test(expectedExceptions = { ApplicationRuntimeException.class },

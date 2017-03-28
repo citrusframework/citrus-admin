@@ -20,7 +20,7 @@ const routes:Routes = [
         component: TestsComponent,
         canActivate: [CanActivateRoutes],
         children: [
-            { path: '', redirectTo: 'list', pathMatch: 'full'},
+            { path: '', redirectTo: 'run', pathMatch: 'full'},
             { path: 'list', component: TestListComponent},
             { path: 'run', component: TestGroupRunComponent},
             {

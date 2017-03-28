@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.MessageEvent;
+import com.consol.citrus.admin.model.TestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -35,6 +36,12 @@ public class ConnectorController {
 
     @RequestMapping(value = "/status")
     public ResponseEntity status() {
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/result", method = RequestMethod.POST)
+    public ResponseEntity testResult(@RequestBody TestResult result) {
+        messagingTemplate.convertAndSend("/topic/results", result);
         return ResponseEntity.ok().build();
     }
 

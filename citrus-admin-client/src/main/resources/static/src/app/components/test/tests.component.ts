@@ -22,7 +22,7 @@ export class TestsComponent {
             .filter(e => e instanceof NavigationStart)
             .filter((e:NavigationStart) => e.url === '/tests')
             .subscribe(e => {
-                router.navigate(['tests/list'])
+                router.navigate(['tests/run'])
             });
     }
 

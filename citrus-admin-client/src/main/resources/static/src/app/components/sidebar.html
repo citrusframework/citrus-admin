@@ -14,8 +14,8 @@
   </ul>
   <li [routerLinkActive]="['active']"><a [routerLink]="['/tests']"><i class="fa fa-cubes"></i><span class="hidden-xs">&nbsp;&nbsp;Tests</span></a></li>
   <ul class="nav hidden-xs" *ngIf="isActive('tests')">
-    <li [routerLinkActive]="['active']"><a [routerLink]="['/tests/list']"><i class="fa fa-square-o"></i> List</a></li>
     <li [routerLinkActive]="['active']"><a [routerLink]="['/tests/run']"><i class="fa fa-square-o"></i> Run</a></li>
+    <li [routerLinkActive]="['active']"><a [routerLink]="['/tests/list']"><i class="fa fa-square-o"></i> List</a></li>
     <li [routerLinkActive]="['active']"><a [routerLink]="['/tests/editor']"><i class="fa fa-square-o"></i> Editor</a></li>
   </ul>
   <li [routerLinkActive]="['active']"><a [routerLink]="['/report']"><i class="fa fa-tasks"></i><span class="hidden-xs">&nbsp;&nbsp;Test Report</span></a></li>

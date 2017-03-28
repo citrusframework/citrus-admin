@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
-import com.consol.citrus.admin.connector.WebSocketPushMessageListener;
+import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.ProjectSettings;
@@ -294,10 +294,10 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(true);
                 saveProject(project);
 
-                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), getActiveProject(), WebSocketPushMessageListener.class.getSimpleName(), SpringBean.class) == null) {
+                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), SpringBean.class) == null) {
                     SpringBean pushMessageListener = new SpringBean();
-                    pushMessageListener.setId(WebSocketPushMessageListener.class.getSimpleName());
-                    pushMessageListener.setClazz(WebSocketPushMessageListener.class.getName());
+                    pushMessageListener.setId(WebSocketPushEventsListener.class.getSimpleName());
+                    pushMessageListener.setClazz(WebSocketPushEventsListener.class.getName());
 
                     if (!environment.getProperty("local.server.port", "8080").equals("8080")) {
                         Property portProperty = new Property();
@@ -330,7 +330,7 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(false);
                 saveProject(project);
 
-                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), getActiveProject(), WebSocketPushMessageListener.class.getName());
+                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), getActiveProject(), WebSocketPushEventsListener.class.getName());
                 for (String listenerBean : listenerBeans) {
                     springBeanService.removeBeanDefinition(getProjectContextConfigFile(), getActiveProject(), listenerBean);
                 }

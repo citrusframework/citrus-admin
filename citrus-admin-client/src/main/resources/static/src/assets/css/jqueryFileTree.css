@@ -95,4 +95,6 @@ ul.jqueryFileTree a:hover {
 li.selected > a { font-weight: bold; }
 li.expanded ~ li.collapsed { display: none; }
 li.expanded ~ li.ext_citrus { display: none; }
+li.collapsed ~ li.backdrop { display: none; }
+li.expanded ~ li.backdrop { display: block !important; }
 ul.jqueryFileTree li.expanded > a { font-weight: bold; }

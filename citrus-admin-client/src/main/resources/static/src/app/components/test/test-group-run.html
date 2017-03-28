@@ -49,7 +49,7 @@
         <td></td>
         <td>
           <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
-          <span *ngIf="!running">PENDING</span>
+          <span *ngIf="!running">&nbsp;</span>
         </td>
       </tr>
       <tr *ngFor="let result of results" (click)="open(result.test)" class="clickable">
@@ -60,7 +60,7 @@
         </td>
         <td>{{result.test.className}}</td>
         <td>
-          <span *ngIf="!running && result.success == undefined">PENDING</span>
+          <span *ngIf="!running && result.success == undefined">&nbsp;</span>
           <img *ngIf="running && result.success == undefined" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
           <span *ngIf="result.success != undefined" [class]="(result.success == undefined) ? 'badge' : (result.success ? 'badge badge-success' : 'badge badge-danger')" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
         </td>

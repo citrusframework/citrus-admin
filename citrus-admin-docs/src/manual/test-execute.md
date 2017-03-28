@@ -14,7 +14,7 @@ The message panel displays all inbound and outbound messages. Click on the envel
 listener that you have to add to your Citrus project:
 
 ```
-<bean class="com.consol.citrus.admin.connector.WebSocketPushMessageListener">
+<bean class="com.consol.citrus.admin.connector.WebSocketPushEventListener">
   <property name="host" value="localhost"/>
   <property name="port" value="8080"/>
 </bean>
