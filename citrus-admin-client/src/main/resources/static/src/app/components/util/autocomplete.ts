@@ -71,8 +71,7 @@ export function RestrictAsyncValues(values:Observable<string[]>) {
     </div>
     <ul class="dropdown-menu autocomplete" 
         #suggestionListRef
-        [style.display]="suggestions?.length > 0 ? 'flex': 'none'" 
-    >
+        [style.display]="suggestions?.length > 0 ? 'block': 'none'" >
         <li *ngFor="let suggestion of suggestions" [class.active]="activeSelected === suggestion" (mouseover)="setActiveSelected(suggestion)">
             <a *ngIf="suggestion == 'No elements found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a> 
             <a *ngIf="suggestion != 'No elements found'" name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
