@@ -69,6 +69,7 @@ public class ReportController {
 
         TestResult result = new TestResult();
         result.setTest(test);
+        result.setSuccess(true);
         return result;
     }
 }

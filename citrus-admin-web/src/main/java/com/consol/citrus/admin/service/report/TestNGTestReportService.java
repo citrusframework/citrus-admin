@@ -54,6 +54,7 @@ public class TestNGTestReportService implements TestReportService {
     @Override
     public TestResult getLatest(Project activeProject, Test test) {
         TestResult result = new TestResult();
+        result.setSuccess(true);
         result.setTest(test);
         if (hasTestResults(activeProject)) {
             try {
