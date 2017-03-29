@@ -1,45 +1,49 @@
-<h1 class="page-header">Open project</h1>
+<div class="jumbotron">
 
-<form (ngSubmit)="onSubmit()">
-  <fieldset>
-    <div class="form-group">
-      <h4>Open a project by selecting the Citrus project home directory <span name="edit-settings" class="clickable" (click)="showSettings()" title="Edit project settings"><i class="fa fa-wrench"></i></span></h4>
-    </div>
+  <h1 class="page-header">Open project</h1>
 
-    <div class="form-group">
-      <div class="input-group">
-        <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Project Home" name="projectHome" />
-        <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
+  <form (ngSubmit)="onSubmit()">
+    <fieldset>
+      <div class="form-group">
+        <h4>Open a project by selecting the Citrus project home directory <span name="edit-settings" class="clickable" (click)="showSettings()" title="Edit project settings"><i class="fa fa-wrench"></i></span></h4>
       </div>
-    </div>
 
-    <div class="form-group">
-      <div>
-        <button class="btn btn-primary" type="submit" [disabled]="projectHome?.length > 0 ? false : true">Open</button>
-        <button (click)="cancel()" class="btn btn-default" type="reset">Back</button>
+      <div class="form-group">
+        <div class="input-group">
+          <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Project Home" name="projectHome" />
+          <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
+        </div>
       </div>
-    </div>
-  </fieldset>
-</form>
 
-<div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>&nbsp;Failed to open the project. Please review the default <a name="edit-settings" class="clickable" (click)="showSettings()">project settings</a> that are required to open the project.
-  <p>&nbsp;</p>
-  <p><strong>What happened!?</strong></p>
-  <p [textContent]="error.message"></p>
+      <div class="form-group">
+        <div>
+          <button class="btn btn-primary" type="submit" [disabled]="projectHome?.length > 0 ? false : true">Open</button>
+          <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Error!</strong>&nbsp;Failed to open the project. Please review the default <a name="edit-settings" class="clickable" (click)="showSettings()">project settings</a> that are required to open the project.
+    <p>&nbsp;</p>
+    <p><strong>What happened!?</strong></p>
+    <p [textContent]="error.message"></p>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" (click)="clearSuccess()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
+  </div>
+
+  <h2 class="sub-header">Recent projects</h2>
+  <ul class="list-group">
+    <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
+    <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
+  </ul>
+
 </div>
-
-<div *ngIf="success" class="alert alert-success alert-dismissible" role="alert">
-  <button type="button" class="close" (click)="clearSuccess()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
-</div>
-
-<h2 class="sub-header">Recent projects</h2>
-<ul class="list-group">
-  <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
-  <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
-</ul>
 
 <div id="dialog-settings" class="modal fade">
   <div class="modal-dialog">
