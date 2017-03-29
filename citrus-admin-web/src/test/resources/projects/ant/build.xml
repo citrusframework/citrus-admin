@@ -1,7 +1,7 @@
 <project name="citrus-integration-tests" basedir="." default="citrus.run.tests" description="This is a sample Citrus ANT build">
 
   <property file="src/test/resources/citrus.properties"/>
-  <property name="citrus.version" value="2.7.1-SNAPSHOT"/>
+  <property name="citrus.version" value="2.7.2-SNAPSHOT"/>
 
   <path id="citrus-classpath">
     <pathelement path="src/test/java"/>
