@@ -460,6 +460,23 @@ public class SpringBeanService {
      * @return
      */
     private String format(String content, int tabSize) {
+        for (Map.Entry<String, String> namespaceEntry : springBeanMarshaller.getNamespacePrefixMapper().getNamespaceMappings().entrySet()) {
+            if (content.contains(String.format("<%s:", namespaceEntry.getValue())) && !content.contains("xmlns:" + namespaceEntry.getValue())) {
+                String namespaceMarker = "xmlns:citrus=";
+                int position = content.indexOf(namespaceMarker);
+
+                if (position < 0) {
+                    position = content.indexOf("xmlns=");
+                }
+
+                if (position < 0) {
+                    throw new ApplicationRuntimeException("Invalid Spring context file - missing default namespace declaration");
+                }
+                
+                content = content.substring(0, position) + String.format("xmlns:%s=\"%s\" %n%s", namespaceEntry.getValue(), namespaceEntry.getKey(), getTabs(5, tabSize)) + content.substring(position);
+            }
+        }
+
         return content.replaceAll("(?m)(^\\s*$)+", "").replaceAll("\\.xsd\\s", ".xsd\n" + getTabs(3, tabSize));
     }
 

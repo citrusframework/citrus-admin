@@ -21,6 +21,7 @@ import com.consol.citrus.admin.marshal.SpringBeanMarshaller;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -70,6 +71,22 @@ public class SpringBeanServiceTest {
         Assert.assertTrue(result.contains("<citrus:schema id=\"2\" location=\"l2\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<citrus:schema-repository id=\"x\">"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<bean class=\"" + WebSocketPushEventsListener.class.getName() + "\" id=\"listener\"/>"), "Failed to validate " + result);
+    }
+
+    @Test
+    public void testAddBeanDefinitionNamespace() throws Exception {
+        JmsEndpointModel jmsEndpoint = new JmsEndpointModel();
+        jmsEndpoint.setId("jmsEndpoint");
+        jmsEndpoint.setDestinationName("jms.inbound.queue");
+
+        File tempFile = createTempContextFile("citrus-context-add");
+
+        springBeanConfigService.addBeanDefinition(tempFile, project, jmsEndpoint);
+
+        String result = FileUtils.readToString(new FileInputStream(tempFile));
+
+        Assert.assertTrue(result.contains("<citrus-jms:endpoint id=\"jmsEndpoint\" destination-name=\"jms.inbound.queue\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("xmlns:citrus-jms=\"http://www.citrusframework.org/schema/jms/config\""), "Failed to validate " + result);
     }
 
     @Test

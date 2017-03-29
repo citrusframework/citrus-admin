@@ -34,6 +34,8 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SpringBeanMarshaller.class);
 
+    private NamespacePrefixMapper namespacePrefixMapper = new NamespacePrefixMapper();
+
     public SpringBeanMarshaller() {
         setContextPaths("com.consol.citrus.admin.model.spring",
                 "com.consol.citrus.model.config.core",
@@ -46,6 +48,8 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
                 "com.consol.citrus.model.config.ftp",
                 "com.consol.citrus.model.config.mail",
                 "com.consol.citrus.model.config.docker",
+                "com.consol.citrus.model.config.kubernetes",
+                "com.consol.citrus.model.config.selenium",
                 "com.consol.citrus.model.config.rmi",
                 "com.consol.citrus.model.config.jmx",
                 "com.consol.citrus.model.config.http");
@@ -55,7 +59,7 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
         marshallerProperties.put(Marshaller.JAXB_ENCODING, "UTF-8");
         marshallerProperties.put(Marshaller.JAXB_FRAGMENT, true);
 
-        marshallerProperties.put("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixMapper());
+        marshallerProperties.put("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
         setMarshallerProperties(marshallerProperties);
 
         try {
@@ -63,5 +67,23 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
         } catch (Exception e) {
             log.warn("Failed to setup configuration component marshaller", e);
         }
+    }
+
+    /**
+     * Gets the namespacePrefixMapper.
+     *
+     * @return
+     */
+    public NamespacePrefixMapper getNamespacePrefixMapper() {
+        return namespacePrefixMapper;
+    }
+
+    /**
+     * Sets the namespacePrefixMapper.
+     *
+     * @param namespacePrefixMapper
+     */
+    public void setNamespacePrefixMapper(NamespacePrefixMapper namespacePrefixMapper) {
+        this.namespacePrefixMapper = namespacePrefixMapper;
     }
 }
