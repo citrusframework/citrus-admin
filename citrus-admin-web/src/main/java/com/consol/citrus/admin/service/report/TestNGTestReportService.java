@@ -32,6 +32,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -157,7 +158,10 @@ public class TestNGTestReportService implements TestReportService {
      * @throws IOException
      */
     private String getTestResultsAsString(Project activeProject) throws IOException {
-        return FileUtils.readToString(getTestResultsFile(activeProject));
+        Resource fileResource = getTestResultsFile(activeProject);
+        try (InputStream fileIn = fileResource.getInputStream()) {
+            return FileUtils.readToString(fileIn);
+        }
     }
 
     /**
