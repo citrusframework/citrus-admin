@@ -64,14 +64,11 @@ public class SpringBeanService {
 
     @PostConstruct
     protected void init() {
-        transformerFactory.setURIResolver(new URIResolver() {
-            @Override
-            public Source resolve(String href, String base) throws TransformerException {
-                try {
-                    return new StreamSource(new ClassPathResource("transform/" + href).getInputStream());
-                } catch (IOException e) {
-                    throw new TransformerException("Failed to resolve uri: " + href, e);
-                }
+        transformerFactory.setURIResolver((href, base) -> {
+            try {
+                return new StreamSource(new ClassPathResource("transform/" + href).getInputStream());
+            } catch (IOException e) {
+                throw new TransformerException("Failed to resolve uri: " + href, e);
             }
         });
     }

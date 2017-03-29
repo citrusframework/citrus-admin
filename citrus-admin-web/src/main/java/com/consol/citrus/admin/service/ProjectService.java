@@ -46,6 +46,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Christoph Deppisch
@@ -278,14 +280,27 @@ public class ProjectService {
         if (project.isMavenProject()) {
             try {
                 String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
-
+                                                                                      
                 if (!pomXml.contains("<artifactId>citrus-admin-connector</artifactId>")) {
-                    pomXml = pomXml.replaceAll("</dependencies>", "  <dependency>" + System.lineSeparator() +
-                            "      <groupId>com.consol.citrus</groupId>" + System.lineSeparator() +
-                            "      <artifactId>citrus-admin-connector</artifactId>" + System.lineSeparator() +
-                            "      <version>1.0.0-beta-5</version>" + System.lineSeparator() +
-                            "    </dependency>" + System.lineSeparator() +
-                            "  </dependencies>");
+                    String[] patterns = new String[] {
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
+                    };
+
+                    for (String pattern : patterns) {
+                        Matcher matcher = Pattern.compile(pattern).matcher(pomXml);
+
+                        if (matcher.find()) {
+                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-admin-connector</artifactId>%n      <version>1.0.0-beta-5</version>%n    </dependency>") + pomXml.substring(matcher.end());
+                            break;
+                        }
+                    }
+
+                    if (!pomXml.contains("<artifactId>citrus-admin-connector</artifactId>")) {
+                        throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file - please add manually");
+                    }
 
                     FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
                 }
