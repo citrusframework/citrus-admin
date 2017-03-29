@@ -18,7 +18,7 @@
       </span>
       <input type="text" class="form-control" value="{{selected ? selected.name : 'All tests'}}">
       <span class="input-group-btn">
-        <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()">Run</button>
+        <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()"><i class="fa fa-play-circle"></i> Run</button>
       </span>
     </div>
   </div>
@@ -41,7 +41,7 @@
     </thead>
     <tbody>
       <tr *ngIf="!selected">
-        <td><span class="badge badge-java">java</span></td>
+        <td></td>
         <td>
           <i class="fa fa-file-text-o"></i>
           <span title="All tests">All tests</span>
@@ -68,7 +68,8 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="4">&nbsp;</td>
+        <td></td>
+        <td colspan="3"><a *ngIf="!running" routerLink="/report" title="View latest report"><i class="fa fa-tasks"></i> View test report</a></td>
       </tr>
     </tfoot>
   </table>

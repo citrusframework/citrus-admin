@@ -10,7 +10,6 @@ import {TestDesignerOutletComponent} from "./detail/designer/test-designer-outle
 import {TestDetailComponent} from "./detail/test.detail.component";
 import {SourcesOutletComponent} from "./detail/sources/sources-outlet.component";
 import {TestRunOutlet} from "./detail/run/test.run.component";
-import {TestResultOutletComponent} from "./detail/results/test.result.component";
 import {CanActivateTestTabChild, CannotActivate, CanActivateTestEditor} from "./route-guards";
 import {TestGroupRunComponent} from "./test.group.run.component";
 
@@ -37,8 +36,7 @@ const routes:Routes = [
                             { path: 'info', component: InfoOutletComponent},
                             { path: 'sources', component: SourcesOutletComponent},
                             { path: 'design', component: TestDesignerOutletComponent},
-                            { path: 'run', component: TestRunOutlet},
-                            { path: 'results', component: TestResultOutletComponent}
+                            { path: 'run', component: TestRunOutlet}
                         ],
                     }
                 ]

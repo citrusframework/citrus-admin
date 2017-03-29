@@ -649,6 +649,11 @@ pre.logger {
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
+pre.message {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    overflow-x: scroll;
+}
+
 /** Progress bar */
 
 .progress {

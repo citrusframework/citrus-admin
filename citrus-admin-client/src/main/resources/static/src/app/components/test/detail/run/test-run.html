@@ -1,14 +1,46 @@
-<button (click)="execute()" type="button" class="btn btn-default" [disabled]="running"><i class="fa fa-play"></i> Run</button>
-<test-progress [completed]="completed" [failed]="failed" *ngIf="running || completed == 100"></test-progress>
-<pills navigation="true">
-    <pill pill-id="console" pill-title="Console" active="true" pill-icon="fa fa-file-text-o">
-        <pre class="logger" [textContent]="processOutput"></pre>
-    </pill>
-    <pill pill-id="messages" pill-title="Messages" pill-icon="fa fa-envelope-o">
-        <ul class="list-group">
-            <li class="list-group-item" *ngIf="!messages || messages?.length == 0">No messages yet!</li>
-            <li class="list-group-item test-message clickable" *ngFor="let message of messages"
-                [message]="message"></li>
-        </ul>
-    </pill>
-</pills>
+<div class="space-top-30"></div>
+
+<button (click)="execute()" type="button" class="btn btn-success" [disabled]="running"><i class="fa fa-play-circle"></i> Run Test</button>
+<button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
+
+<h2 class="sub-header">Exchanged messages</h2>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th width="30">Type</th>
+      <th>Message</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="!messages || messages?.length == 0">
+      <td>
+        <i *ngIf="!running" class="fa fa-envelope-o">&nbsp;</i>
+        <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+      </td>
+      <td><span>No messages found!</span></td>
+    </tr>
+    <tr *ngFor="let message of messages" class="clickable">
+      <td><span [class]="message.type == 'OUTBOUND' ? 'badge badge-primary' : 'badge badge-success'" [textContent]="message.type == 'OUTBOUND' ? 'OUT' : 'IN'" style="min-width: 3em;"></span></td>
+      <td class="test-message" [message]="message"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 class="sub-header">Latest results</h2>
+
+<test-progress *ngIf="running || completed == 100" [completed]="completed" [failed]="failed"></test-progress>
+<test-result-outlet *ngIf="!running"></test-result-outlet>
+
+<div class="dialog"
+     dialog-id="dialog-console"
+     dialog-title="Console log output"
+     dialog-confirm="no"
+     dialog-size="lg">
+  <p>Log output:</p>
+
+  <pre class="logger" [textContent]="currentOutput"></pre>
+
+</div>

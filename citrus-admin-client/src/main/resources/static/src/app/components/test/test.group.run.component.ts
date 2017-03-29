@@ -119,17 +119,16 @@ export class TestGroupRunComponent implements OnInit {
     handle(output: LoggingOutput) {
         if ("PROCESS_FAILED" == output.event || "PROCESS_SUCCESS" == output.event) {
             this.running = false;
-            jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
             this.currentOutput = this.processOutput;
             jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
         }
 
         if ("PROCESS_FAILED" == output.event) {
-            this.alertService.add(new Alert("danger", "Process failed " + output.processId + ":" + output.msg, false));
+            this.alertService.add(new Alert("warning", "Test run failed '" + output.processId + "': " + output.msg, false));
         }
         
         if ("PROCESS_SUCCESS" == output.event) {
-            this.alertService.add(new Alert("success", "Process success " + output.processId, true));
+            this.alertService.add(new Alert("success", "Test run success '" + output.processId + "'", true));
         }
     }
 

@@ -18,17 +18,23 @@ package com.consol.citrus.admin.process.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
+@Component
 public class LoggingProcessListener implements ProcessListener {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingProcessListener.class);
 
+    /** Local logging cache */
+    private StringBuilder outputCache;
+
     @Override
     public void onProcessStart(String processId) {
+        outputCache = new StringBuilder();
         log.info(String.format("Starting new process: %s", processId));
     }
 
@@ -49,6 +55,8 @@ public class LoggingProcessListener implements ProcessListener {
 
     @Override
     public void onProcessOutput(String processId, String output) {
+        outputCache.append(output).append(System.lineSeparator());
+
         if (log.isTraceEnabled()) {
             System.out.println(output);
         }
@@ -56,5 +64,13 @@ public class LoggingProcessListener implements ProcessListener {
 
     @Override
     public void onProcessActivity(String processId, String output) {
+    }
+
+    /**
+     * Provides cached log output.
+     * @return
+     */
+    public String getCachedOutput() {
+        return outputCache.toString();
     }
 }

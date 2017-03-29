@@ -52,7 +52,7 @@ export class TestResultComponent implements OnChanges {
     template: `<test-result [detail]="detail|async"></test-result>`
 })
 export class TestResultOutletComponent implements OnInit {
-    detail:Observable<TestDetail>
+    detail:Observable<TestDetail>;
     constructor(private testState:TestStateService) {
     }
 

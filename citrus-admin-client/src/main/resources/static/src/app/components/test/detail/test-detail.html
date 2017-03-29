@@ -1,11 +1,8 @@
-<div class="pull-right">
-  <ul class="nav nav-pills pills-bar justified">
-    <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link)">
-      <a [routerLink]="[entry.link]"><i  class="{{'fa ' + entry.icon}}"></i>&nbsp;{{entry.name}}</a>
-    </li>
-  </ul>
-</div>
-<div class="clearfix"></div>
+<ul class="nav nav-pills pills-bar justified">
+  <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link)">
+    <a [routerLink]="[entry.link]"><i  class="{{'fa ' + entry.icon}}"></i>&nbsp;{{entry.name}}</a>
+  </li>
+</ul>
 
 <router-outlet></router-outlet>
 

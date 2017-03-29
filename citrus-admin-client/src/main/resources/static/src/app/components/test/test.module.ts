@@ -48,7 +48,7 @@ const components = [
     TestRunOutlet,
     TestResultComponent,
     TestResultOutletComponent
-]
+];
 
 @NgModule({
     imports: [

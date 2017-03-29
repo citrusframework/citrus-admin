@@ -21,14 +21,14 @@ import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.build.BuildConfiguration;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.process.*;
-import com.consol.citrus.admin.process.listener.LoggingProcessListener;
-import com.consol.citrus.admin.process.listener.WebSocketProcessListener;
+import com.consol.citrus.admin.process.listener.ProcessListener;
 import com.consol.citrus.admin.service.executor.TestExecutor;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +37,7 @@ import java.io.File;
 public class MavenTestExecutor implements TestExecutor {
 
     @Autowired
-    private WebSocketProcessListener webSocketProcessListener;
+    private List<ProcessListener> processListeners;
 
     @Autowired
     private ProcessMonitor processMonitor;
@@ -54,8 +54,7 @@ public class MavenTestExecutor implements TestExecutor {
         ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, "all-tests");
 
-        processLauncher.addProcessListener(webSocketProcessListener);
-        processLauncher.addProcessListener(new LoggingProcessListener());
+        addProcessListeners(processLauncher);
         processLauncher.launchAndContinue(processBuilder, 0);
 
         return processLauncher.getProcessId();
@@ -73,8 +72,7 @@ public class MavenTestExecutor implements TestExecutor {
         ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, group, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, group.getName());
 
-        processLauncher.addProcessListener(webSocketProcessListener);
-        processLauncher.addProcessListener(new LoggingProcessListener());
+        addProcessListeners(processLauncher);
         processLauncher.launchAndContinue(processBuilder, 0);
 
         return processLauncher.getProcessId();
@@ -92,10 +90,19 @@ public class MavenTestExecutor implements TestExecutor {
         ProcessBuilder processBuilder = new MavenRunTestsCommand(projectHome, test, (MavenBuildConfiguration) buildConfiguration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, test.getName());
 
-        processLauncher.addProcessListener(webSocketProcessListener);
-        processLauncher.addProcessListener(new LoggingProcessListener());
+        addProcessListeners(processLauncher);
         processLauncher.launchAndContinue(processBuilder, 0);
 
         return processLauncher.getProcessId();
+    }
+
+    /**
+     * Adds all process listeners that were automatically autowired.
+     * @param processLauncher
+     */
+    private void addProcessListeners(ProcessLauncher processLauncher) {
+        for (ProcessListener processListener : processListeners) {
+            processLauncher.addProcessListener(processListener);
+        }
     }
 }

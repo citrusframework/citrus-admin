@@ -6,7 +6,6 @@ import {Message} from "../../../../model/message";
 import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
 import * as _ from 'lodash';
-import * as jQuery from 'jquery';
 import * as moment from 'moment';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
@@ -14,13 +13,12 @@ import {Frame} from "stompjs";
 import {TestStateService} from "../../test.state";
 import {Observable} from "rxjs";
 
-
 @Component({
     selector: 'test-run-outlet',
     template: '<test-run [detail]="detail|async"></test-run>'
 })
 export class TestRunOutlet implements OnInit{
-    detail:Observable<TestDetail>
+    detail:Observable<TestDetail>;
     constructor(private testState:TestStateService) {}
     ngOnInit() {
         this.detail = this.testState.selectedTestDetail;
@@ -53,11 +51,13 @@ export class TestRunComponent {
     finishedActions = 0;
 
     processOutput = "";
+    currentOutput = "";
 
     messages: Message[];
 
     execute() {
         this.processOutput = "";
+        this.currentOutput = "";
         this.running = true;
         this.failed = false;
         this.completed = 0;
@@ -77,6 +77,7 @@ export class TestRunComponent {
                 var loggingOutput: LoggingOutput = JSON.parse(output.body);
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
                 this.processOutput += loggingOutput.msg;
+                this.currentOutput = loggingOutput.msg;
                 this.handle(loggingOutput);
             });
             this.stompClient.subscribe('/topic/messages', (output:Stomp.Message) => {
@@ -86,6 +87,10 @@ export class TestRunComponent {
         }
     }
 
+    openConsole() {
+        (jQuery('#dialog-console') as any).modal();
+    }
+
     handleMessage(message:any) {
         this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
     }
@@ -93,8 +98,6 @@ export class TestRunComponent {
     handle(output: LoggingOutput) {
         if ("PROCESS_START" == output.event) {
             this.completed = 1;
-        } else if ("PROCESS_FAILED" == output.event) {
-            this.running = false;
         } else if ("TEST_START" == output.event) {
             this.completed = 1;
         } else if ("TEST_ACTION_FINISH" == output.event) {
@@ -103,19 +106,21 @@ export class TestRunComponent {
             if (this.detail.actions.length) {
                 this.completed = Math.round((this.finishedActions / this.detail.actions.length) * 100);
             } else if (this.completed < 90) {
-                this.completed += 10;
+                this.completed += 2;
             }
-        } else if ("TEST_SUCCESS" == output.event) {
-            this.running = false;
-            this.completed = 100;
-        } else if ("TEST_FAILED" == output.event) {
-            this.running = false;
+        } else if ("TEST_FAILED" == output.event || "PROCESS_FAILED" == output.event) {
             this.failed = true;
-            this.completed = 100;
         } else {
             if (this.completed < 11) {
                 this.completed++;
             }
+        }
+
+        if ("PROCESS_FAILED" == output.event || "PROCESS_SUCCESS" == output.event) {
+            this.completed = 100;
+            this.running = false;
+            this.currentOutput = this.processOutput;
+            jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
         }
     }
 

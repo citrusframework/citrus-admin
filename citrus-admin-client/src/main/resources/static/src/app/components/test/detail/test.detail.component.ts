@@ -21,8 +21,7 @@ export class TestDetailComponent implements OnInit {
         {name:"Info",       link:'info',    icon:'fa-cube'},
         {name:"Sources",    link:'sources', icon:'fa-code'},
         {name:"Design",     link:'design',  icon:'fa-sitemap'},
-        {name:"Run",        link:'run',     icon:'fa-play-circle'},
-        {name:"Results",    link:'results', icon:'fa-tasks'},
+        {name:"Run",        link:'run',     icon:'fa-play-circle'}
     ]
 
     constructor(
