@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.connector;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.*;
@@ -35,7 +34,7 @@ import java.io.PrintWriter;
 /**
  * @author Christoph Deppisch
  */
-public class WebSocketPushEventsListener extends AbstractTestListener implements MessageListener, TestListener, InitializingBean {
+public class WebSocketPushEventsListener extends AbstractTestListener implements MessageListener, TestListener, TestActionListener, InitializingBean {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebSocketPushEventsListener.class);
@@ -51,12 +50,19 @@ public class WebSocketPushEventsListener extends AbstractTestListener implements
     private boolean disabled = false;
 
     @Override
+    public void onTestStart(TestCase test) {
+        pushTestEvent(getTestEvent(test, "TEST_START", test.getName()));
+    }
+
+    @Override
     public void onTestFailure(TestCase test, Throwable cause) {
+        pushTestEvent(getTestEvent(test, "TEST_FAILED", test.getName()));
         pushResult(getTestResult(test, cause, false));
     }
 
     @Override
     public void onTestSuccess(TestCase test) {
+        pushTestEvent(getTestEvent(test, "TEST_SUCCESS", test.getName()));
         pushResult(getTestResult(test, null, true));
     }
 
@@ -68,6 +74,20 @@ public class WebSocketPushEventsListener extends AbstractTestListener implements
     @Override
     public void onOutboundMessage(Message message, TestContext testContext) {
         pushMessage(getProcessId(testContext), message, "outbound");
+    }
+
+    @Override
+    public void onTestActionStart(TestCase test, TestAction testAction) {
+        pushTestEvent(getTestEvent(test, "TEST_ACTION_START", testAction.getName()));
+    }
+
+    @Override
+    public void onTestActionFinish(TestCase test, TestAction testAction) {
+        pushTestEvent(getTestEvent(test, "TEST_ACTION_FINISH", testAction.getName()));
+    }
+
+    @Override
+    public void onTestActionSkipped(TestCase test, TestAction testAction) {
     }
 
     /**
@@ -82,6 +102,28 @@ public class WebSocketPushEventsListener extends AbstractTestListener implements
                 HttpEntity<String> httpRequest = new HttpEntity<>(testResult, headers);
 
                 ResponseEntity<String> response = getRestTemplate().exchange(getConnectorBaseUrl() + "/result", HttpMethod.POST, httpRequest, String.class);
+
+                if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                    disabled = true;
+                }
+            }
+        } catch (RestClientException e) {
+            log.error("Failed to push test result to citrus-admin connector", e);
+        }
+    }
+
+    /**
+     * Push test event to citrus-admin connector via REST API.
+     * @param event
+     */
+    protected void pushTestEvent(String event) {
+        try {
+            if (!disabled) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                HttpEntity<String> httpRequest = new HttpEntity<>(event, headers);
+
+                ResponseEntity<String> response = getRestTemplate().exchange(getConnectorBaseUrl() + "/test-event", HttpMethod.POST, httpRequest, String.class);
 
                 if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                     disabled = true;
@@ -161,6 +203,22 @@ public class WebSocketPushEventsListener extends AbstractTestListener implements
         }
 
         return resultObject.toJSONString();
+    }
+
+    /**
+     * Construct JSON test event from given test data and event name.
+     * @param test
+     * @param eventName
+     * @param msg
+     * @return
+     */
+    protected String getTestEvent(TestCase test, String eventName, String msg) {
+        JSONObject eventObject = new JSONObject();
+        eventObject.put("processId", test.getName());
+        eventObject.put("type", eventName);
+        eventObject.put("msg", msg);
+
+        return eventObject.toJSONString();
     }
 
     /**

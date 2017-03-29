@@ -275,6 +275,8 @@ pre.logger {
     overflow-y: auto;
     overflow-x: auto;
     font-size: 12px;
+    background-color: #333;
+    color: #ddd;
 }
 
 /** Space placeholders */

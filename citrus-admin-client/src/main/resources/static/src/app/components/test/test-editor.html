@@ -17,6 +17,8 @@
   </ul>
 </div>
 
+<h2 *ngIf="(openTests|async).length == 0">Open Test(s)</h2>
+
 <tabs dynamic="false">
   <tab *ngFor="let test of openTests|async"
        tab-id="{{test.name}}"

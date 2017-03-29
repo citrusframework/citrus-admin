@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TestDetail, TestResult} from "../../../../model/tests";
 import {TestService} from "../../../../service/test.service";
-import {LoggingOutput} from "../../../../model/logging.output";
+import {SocketEvent} from "../../../../model/socket.event";
 import {Message} from "../../../../model/message";
 import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
@@ -74,11 +74,15 @@ export class TestRunComponent {
     subscribe() {
         if (this.stompClient) {
             this.stompClient.subscribe('/topic/log-output', (output:Stomp.Message)=> {
-                var loggingOutput: LoggingOutput = JSON.parse(output.body);
+                var event: SocketEvent = JSON.parse(output.body);
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
-                this.processOutput += loggingOutput.msg;
-                this.currentOutput = loggingOutput.msg;
-                this.handle(loggingOutput);
+                this.processOutput += event.msg;
+                this.currentOutput = event.msg;
+                this.handle(event);
+            });
+            this.stompClient.subscribe('/topic/test-events', (output:Stomp.Message) => {
+                var event: SocketEvent = JSON.parse(output.body);
+                this.handle(event);
             });
             this.stompClient.subscribe('/topic/messages', (output:Stomp.Message) => {
                 var message = JSON.parse(output.body);
@@ -95,12 +99,12 @@ export class TestRunComponent {
         this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
     }
 
-    handle(output: LoggingOutput) {
-        if ("PROCESS_START" == output.event) {
+    handle(event: SocketEvent) {
+        if ("PROCESS_START" == event.type) {
             this.completed = 1;
-        } else if ("TEST_START" == output.event) {
+        } else if ("TEST_START" == event.type) {
             this.completed = 1;
-        } else if ("TEST_ACTION_FINISH" == output.event) {
+        } else if ("TEST_ACTION_FINISH" == event.type) {
             this.finishedActions++;
 
             if (this.detail.actions.length) {
@@ -108,7 +112,7 @@ export class TestRunComponent {
             } else if (this.completed < 90) {
                 this.completed += 2;
             }
-        } else if ("TEST_FAILED" == output.event || "PROCESS_FAILED" == output.event) {
+        } else if ("TEST_FAILED" == event.type || "PROCESS_FAILED" == event.type) {
             this.failed = true;
         } else {
             if (this.completed < 11) {
@@ -116,7 +120,7 @@ export class TestRunComponent {
             }
         }
 
-        if ("PROCESS_FAILED" == output.event || "PROCESS_SUCCESS" == output.event) {
+        if ("PROCESS_FAILED" == event.type || "PROCESS_SUCCESS" == event.type) {
             this.completed = 100;
             this.running = false;
             this.currentOutput = this.processOutput;

@@ -8,7 +8,7 @@ import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import {Frame} from "stompjs";
 import {TestStateService} from "./test.state";
-import {LoggingOutput} from "../../model/logging.output";
+import {SocketEvent} from "../../model/socket.event";
 import {Router} from "@angular/router";
 
 @Component({
@@ -93,10 +93,10 @@ export class TestGroupRunComponent implements OnInit {
     subscribe() {
         if (this.stompClient) {
             this.stompClient.subscribe('/topic/log-output', (output:Stomp.Message)=> {
-                var loggingOutput: LoggingOutput = JSON.parse(output.body);
-                this.processOutput += loggingOutput.msg;
-                this.currentOutput = loggingOutput.msg;
-                this.handle(loggingOutput);
+                var event: SocketEvent = JSON.parse(output.body);
+                this.processOutput += event.msg;
+                this.currentOutput = event.msg;
+                this.handle(event);
             });
             this.stompClient.subscribe('/topic/results', (output:Stomp.Message) => {
                 var result = JSON.parse(output.body);
@@ -116,19 +116,19 @@ export class TestGroupRunComponent implements OnInit {
         }
     }
 
-    handle(output: LoggingOutput) {
-        if ("PROCESS_FAILED" == output.event || "PROCESS_SUCCESS" == output.event) {
+    handle(event: SocketEvent) {
+        if ("PROCESS_FAILED" == event.type || "PROCESS_SUCCESS" == event.type) {
             this.running = false;
             this.currentOutput = this.processOutput;
             jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
         }
 
-        if ("PROCESS_FAILED" == output.event) {
-            this.alertService.add(new Alert("warning", "Test run failed '" + output.processId + "': " + output.msg, false));
+        if ("PROCESS_FAILED" == event.type) {
+            this.alertService.add(new Alert("warning", "Test run failed '" + event.processId + "': " + event.msg, false));
         }
         
-        if ("PROCESS_SUCCESS" == output.event) {
-            this.alertService.add(new Alert("success", "Test run success '" + output.processId + "'", true));
+        if ("PROCESS_SUCCESS" == event.type) {
+            this.alertService.add(new Alert("success", "Test run success '" + event.processId + "'", true));
         }
     }
 

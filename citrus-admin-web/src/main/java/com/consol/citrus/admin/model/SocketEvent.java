@@ -16,41 +16,101 @@
 
 package com.consol.citrus.admin.model;
 
-import net.minidev.json.JSONObject;
-
 /**
  * All socket event types with proper JSON data generation.
  *
  * @author Christoph Deppisch
  */
-public enum SocketEvent {
-    PING,
-    LOG_MESSAGE,
-    TEST_START,
-    TEST_SUCCESS,
-    TEST_FAILED,
-    TEST_FINISHED,
-    TEST_SKIP,
-    TEST_ACTION_START,
-    TEST_ACTION_FINISH,
-    TEST_ACTION_SKIP,
-    PROCESS_START,
-    PROCESS_SUCCESS,
-    PROCESS_FAILED;
+public class SocketEvent {
+
+    private String processId;
+    private EventType type;
+    private String msg;
 
     /**
      * Creates proper JSON message for socket event.
      * @param processId the process id
-     * @param pushEvent the type of event
+     * @param eventType the type of event
      * @param message the event message
      * @return a json representation of the message
      */
     @SuppressWarnings("unchecked")
-    public static JSONObject createEvent(String processId, SocketEvent pushEvent, String message) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("processId", processId);
-        jsonObject.put("event", pushEvent.name());
-        jsonObject.put("msg", message);
-        return jsonObject;
+    public static SocketEvent createEvent(String processId, EventType eventType, String message) {
+        SocketEvent event = new SocketEvent();
+        event.setProcessId(processId);
+        event.setType(eventType);
+        event.setMsg(message);
+
+        return event;
+    }
+
+    public enum EventType {
+        PING,
+        LOG_MESSAGE,
+        TEST_START,
+        TEST_SUCCESS,
+        TEST_FAILED,
+        TEST_FINISHED,
+        TEST_SKIP,
+        TEST_ACTION_START,
+        TEST_ACTION_FINISH,
+        TEST_ACTION_SKIP,
+        PROCESS_START,
+        PROCESS_SUCCESS,
+        PROCESS_FAILED;
+    }
+
+    /**
+     * Gets the processId.
+     *
+     * @return
+     */
+    public String getProcessId() {
+        return processId;
+    }
+
+    /**
+     * Sets the processId.
+     *
+     * @param processId
+     */
+    public void setProcessId(String processId) {
+        this.processId = processId;
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @return
+     */
+    public EventType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the type.
+     *
+     * @param type
+     */
+    public void setType(EventType type) {
+        this.type = type;
+    }
+
+    /**
+     * Gets the msg.
+     *
+     * @return
+     */
+    public String getMsg() {
+        return msg;
+    }
+
+    /**
+     * Sets the msg.
+     *
+     * @param msg
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

@@ -1,8 +1,8 @@
-export class LoggingOutput {
+export class SocketEvent {
 
     constructor() { }
 
     public msg: string;
-    public event: string;
+    public type: string;
     public processId: string;
 }

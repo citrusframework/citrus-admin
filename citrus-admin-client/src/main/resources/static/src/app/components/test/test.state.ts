@@ -29,7 +29,7 @@ export const TestStateInit:TestState = {
     selectedTest:'',
     details: {},
     latestDetailView: 'info'
-}
+};
 
 @Injectable()
 export class TestStateEffects {
@@ -39,12 +39,10 @@ export class TestStateEffects {
         private actions$:Actions
     ) {}
     @Effect() package = this.actions
-        .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages())
+        .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 
     @Effect() detail = this.actions
         .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
-
-
 }
 
 @Injectable()
@@ -109,8 +107,6 @@ export class TestStateActions {
     fetchDetails(payload: Test) {
         this.store.dispatch(({type:TestStateActions.DETAIL.FETCH, payload}))
     }
-
-
 }
 
 export function reduce(state:TestState = TestStateInit, action:Action) {

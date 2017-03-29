@@ -63,8 +63,17 @@ public class WebSocketPushEventsListenerTest {
             return ResponseEntity.ok().build();
         });
 
+        when(restTemplate.exchange(eq("http://localhost:8080/api/connector/test-event"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class))).thenAnswer(invocation -> {
+            HttpEntity request = (HttpEntity) invocation.getArguments()[2];
+
+            Assert.assertEquals(request.getBody().toString(), "{\"msg\":\"MyTestIT\",\"processId\":\"MyTestIT\",\"type\":\"TEST_SUCCESS\"}");
+
+            return ResponseEntity.ok().build();
+        });
+
         pushMessageListener.onTestSuccess(test);
         verify(restTemplate).exchange(eq("http://localhost:8080/api/connector/result"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
+        verify(restTemplate).exchange(eq("http://localhost:8080/api/connector/test-event"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
     }
 
     @Test
@@ -87,8 +96,17 @@ public class WebSocketPushEventsListenerTest {
             return ResponseEntity.ok().build();
         });
 
+        when(restTemplate.exchange(eq("http://localhost:8080/api/connector/test-event"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class))).thenAnswer(invocation -> {
+            HttpEntity request = (HttpEntity) invocation.getArguments()[2];
+
+            Assert.assertEquals(request.getBody().toString(), "{\"msg\":\"MyTestIT\",\"processId\":\"MyTestIT\",\"type\":\"TEST_FAILED\"}");
+
+            return ResponseEntity.ok().build();
+        });
+
         pushMessageListener.onTestFailure(test, cause);
         verify(restTemplate).exchange(eq("http://localhost:8080/api/connector/result"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
+        verify(restTemplate).exchange(eq("http://localhost:8080/api/connector/test-event"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
     }
 
     @Test

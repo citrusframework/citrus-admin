@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 public class WebSocketProcessListener implements ProcessListener {
 
     private static final String TOPIC_LOG_OUTPUT = "/topic/log-output";
+    private static final String TOPIC_TEST_EVENTS = "/topic/test-events";
     private static final String TOPIC_MESSAGES = "/topic/messages";
     private static final String TOPIC_TEST_RESULTS = "/topic/results";
 
@@ -56,25 +57,28 @@ public class WebSocketProcessListener implements ProcessListener {
             }
         }
 
+        if (!projectService.getActiveProject().getSettings().isUseConnector() ||
+                (projectService.getActiveProject().getSettings().isUseConnector() &&
+                !projectService.getActiveProject().getSettings().isConnectorActive())) {
+            handleTestEvent(processId, output);
+            handleMessageEvent(processId, output);
+        }
+    }
+
+    private void handleTestEvent(String processId, String output) {
         if (output.contains("STARTING TEST")) {
-            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
+            messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_START, output));
         } else if (output.contains("TEST SUCCESS")) {
-            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
-            if (!projectService.getActiveProject().getSettings().isUseConnector()) {
-                messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, true));
-            }
+            messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_SUCCESS, output));
+            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, true));
         } else if (output.contains("TEST FAILED")) {
-            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
-            if (!projectService.getActiveProject().getSettings().isUseConnector()) {
-                messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, false));
-            }
+            messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_FAILED, output));
+            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, false));
         } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
             String actionIndex = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1));
-            JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,
+            SocketEvent event = SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_ACTION_FINISH,
                     "TEST ACTION " + actionIndex.trim());
-            messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, event);
-        } else {
-            handleMessageEvent(processId, output);
+            messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, event);
         }
     }
 
@@ -105,10 +109,6 @@ public class WebSocketProcessListener implements ProcessListener {
     }
 
     private void handleMessageEvent(String processId, String output) {
-        if (projectService.getActiveProject().getSettings().isUseConnector()) {
-            return;
-        }
-
         if (output.contains("Logger.Message_OUT")) {
             messageEvent = MessageEvent.createEvent(processId, MessageEvent.OUTBOUND, output.substring(output.indexOf("Logger.Message_OUT") + 20));
         } else if (output.contains("Logger.Message_IN")) {
@@ -118,27 +118,27 @@ public class WebSocketProcessListener implements ProcessListener {
 
     @Override
     public void onProcessOutput(String processId, String output) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.LOG_MESSAGE, output));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.EventType.LOG_MESSAGE, output));
     }
 
     @Override
     public void onProcessStart(String processId) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_START, "process started" + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.EventType.PROCESS_START, "process started" + System.lineSeparator()));
     }
 
     @Override
     public void onProcessSuccess(String processId) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_SUCCESS, "process completed successfully" + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.EventType.PROCESS_SUCCESS, "process completed successfully" + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, int exitCode) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.EventType.PROCESS_FAILED, "process failed with exit code " + exitCode + System.lineSeparator()));
     }
 
     @Override
     public void onProcessFail(String processId, Throwable e) {
-        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage() + System.lineSeparator()));
+        messagingTemplate.convertAndSend(TOPIC_LOG_OUTPUT, SocketEvent.createEvent(processId, SocketEvent.EventType.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage() + System.lineSeparator()));
     }
 
     /**
