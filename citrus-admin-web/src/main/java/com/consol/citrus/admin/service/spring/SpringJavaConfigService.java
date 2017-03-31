@@ -1,0 +1,269 @@
+/*
+ * Copyright 2006-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.admin.service.spring;
+
+import com.consol.citrus.admin.converter.model.ModelConverter;
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.admin.model.Project;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+
+/**
+ * @author Christoph Deppisch
+ */
+@Service
+public class SpringJavaConfigService {
+
+    @Autowired
+    private List<ModelConverter> modelConverter;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SpringJavaConfigService.class);
+
+    /**
+     * Reads file import locations from Spring bean application context.
+     * @param project
+     * @return
+     */
+    public List<Class<?>> getConfigImports(Class<?> configFile, Project project) {
+        Import importAnnotation = configFile.getAnnotation(Import.class);
+        if (importAnnotation != null) {
+            return Arrays.asList(importAnnotation.value());
+        }
+
+        return new ArrayList<>();
+    }
+
+    /**
+     * Finds bean definition element by id and type in Spring application context and
+     * performs unmarshalling in order to return JaxB object.
+     * @param project
+     * @param id
+     * @param type
+     * @return
+     */
+    public <T> T getBeanDefinition(Class<?> configFile, Project project, String id, Class<T> type) {
+        List<Class<?>> configFiles = new ArrayList<>();
+        configFiles.add(configFile);
+        configFiles.addAll(getConfigImports(configFile, project));
+
+        final Method[] beanDefinitionMethod = new Method[1];
+        for (Class<?> config : configFiles) {
+            ReflectionUtils.doWithMethods(config, method -> {
+                if (method.getName().equals(id)) {
+                    beanDefinitionMethod[0] = method;
+                } else {
+                    Bean beanAnnotation = method.getAnnotation(Bean.class);
+                    if (beanAnnotation.value().length > 0 && beanAnnotation.value()[0].equals(id)) {
+                        beanDefinitionMethod[0] = method;
+                    }
+
+                    if (beanAnnotation.name().length > 0 && beanAnnotation.name()[0].equals(id)) {
+                        beanDefinitionMethod[0] = method;
+                    }
+                }
+            }, method -> method.getAnnotation(Bean.class) != null);
+
+            if (beanDefinitionMethod[0] != null) {
+                try {
+                    Object bean = beanDefinitionMethod[0].invoke(config.newInstance());
+                    if (bean.getClass().equals(type)) {
+                        return (T) bean;
+                    }
+
+                    for (ModelConverter converter : modelConverter) {
+                        if (converter.getSourceModelClass().equals(bean.getClass()) &&
+                                converter.getTargetModelClass().equals(type)) {
+                            return (T) converter.convert(id, bean);
+                        }
+                    }
+                } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                    throw new ApplicationRuntimeException("Failed to access bean definition method in Java config", e);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds all bean definition elements by type in Spring application context and
+     * performs unmarshalling in order to return a list of JaxB object.
+     * @param project
+     * @param type
+     * @return
+     */
+    public <T> List<T> getBeanDefinitions(Class<?> configFile, Project project, Class<T> type) {
+        List<T> beanDefinitions = new ArrayList<T>();
+
+        List<Class<?>> importedFiles = getConfigImports(configFile, project);
+        for (Class<?> importLocation : importedFiles) {
+            beanDefinitions.addAll(getBeanDefinitions(importLocation, project, type));
+        }
+
+        final List<Method> beanDefinitionMethods = new ArrayList<>();
+        ReflectionUtils.doWithMethods(configFile, method -> {
+            if (method.getReturnType().equals(type) ||
+                    modelConverter.stream().anyMatch(converter -> converter.getTargetModelClass().equals(type) && converter.getSourceModelClass().equals(method.getReturnType()))) {
+                beanDefinitionMethods.add(method);
+            }
+        }, method -> method.getAnnotation(Bean.class) != null);
+
+        for (Method beanDefinitionMethod : beanDefinitionMethods) {
+            try {
+                Object bean = beanDefinitionMethod.invoke(configFile.newInstance());
+                if (bean.getClass().equals(type)) {
+                    beanDefinitions.add((T) bean);
+                } else {
+                    for (ModelConverter converter : modelConverter) {
+                        if (converter.getSourceModelClass().equals(bean.getClass()) &&
+                                converter.getTargetModelClass().equals(type)) {
+                            String beanId = beanDefinitionMethod.getName();
+
+                            Bean beanAnnotation = beanDefinitionMethod.getAnnotation(Bean.class);
+                            if (beanAnnotation != null) {
+                                if (beanAnnotation.value().length > 0) {
+                                    beanId = beanAnnotation.value()[0];
+                                } else if (beanAnnotation.name().length > 0) {
+                                    beanId = beanAnnotation.name()[0];
+                                }
+                            }
+
+                            beanDefinitions.add((T) converter.convert(beanId, bean));
+                            break;
+                        }
+                    }
+                }
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new ApplicationRuntimeException("Failed to access bean definition method in Java config", e);
+            }
+        }
+
+        log.debug(String.format("Found %s beans in Java config of type: %s", beanDefinitions.size(), type.getName()));
+
+        return beanDefinitions;
+    }
+
+    /**
+     * Find all Spring bean definitions in application context for given bean type.
+     * @param project
+     * @param type
+     * @return
+     */
+    public List<String> getBeanNames(Class<?> configFile, Project project, Class<?> type) {
+        List<String> beanNames = new ArrayList<String>();
+
+        List<Class<?>> importedFiles = getConfigImports(configFile, project);
+        for (Class<?> importLocation : importedFiles) {
+            beanNames.addAll(getBeanNames(importLocation, project, type));
+        }
+
+        ReflectionUtils.doWithMethods(configFile, method -> {
+            if (method.getReturnType().equals(type)) {
+                Bean beanAnnotation = method.getAnnotation(Bean.class);
+                if (beanAnnotation.value().length > 0) {
+                    Collections.addAll(beanNames, beanAnnotation.value());
+                } else if (beanAnnotation.name().length > 0) {
+                    Collections.addAll(beanNames, beanAnnotation.name());
+                } else {
+                    beanNames.add(method.getName());
+                }
+            }
+        }, method -> method.getAnnotation(Bean.class) != null);
+
+        return beanNames;
+    }
+
+    /**
+     * Method adds a new Spring bean definition to the XML application context file.
+     * @param project
+     * @param jaxbElement
+     */
+    public void addBeanDefinition(File configFile, Project project, Object jaxbElement) {
+        
+    }
+
+    /**
+     * Method removes a Spring bean definition from the XML application context file. Bean definition is
+     * identified by its id or bean name.
+     * @param project
+     * @param id
+     */
+    public void removeBeanDefinition(File configFile, Project project, String id) {
+
+    }
+
+    /**
+     * Method removes all Spring bean definitions of given type from the XML application context file.
+     * @param project
+     * @param type
+     */
+    public void removeBeanDefinitions(File configFile, Project project, Class<?> type) {
+
+    }
+
+    /**
+     * Method updates an existing Spring bean definition in a XML application context file. Bean definition is
+     * identified by its id or bean name.
+     * @param project
+     * @param id
+     * @param jaxbElement
+     */
+    public void updateBeanDefinition(File configFile, Project project, String id, Object jaxbElement) {
+
+    }
+
+    /**
+     * Method updates existing Spring bean definitions in a XML application context file. Bean definition is
+     * identified by its type defining class.
+     *
+     * @param project
+     * @param type
+     * @param jaxbElement
+     */
+    public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object jaxbElement) {
+
+    }
+
+    /**
+     * Construct tabs according to project settings.
+     * @param amount
+     * @param tabSize
+     * @return
+     */
+    private String getTabs(int amount, int tabSize) {
+        StringBuilder tabs = new StringBuilder();
+
+        for (int i = 1; i <= amount; i++) {
+            for (int k = 1; k <= tabSize; k++) {
+                tabs.append(" ");
+            }
+        }
+
+        return tabs.toString();
+    }
+}

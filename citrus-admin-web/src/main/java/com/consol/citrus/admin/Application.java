@@ -31,6 +31,7 @@ public class Application {
 
     /** Spring application context file */
     public static final String SPRING_APPLICATION_CONTEXT = "spring.application.context";
+    public static final String SPRING_JAVA_CONFIG = "spring.java.config";
 
     /** Source directory */
     public static final String JAVA_SRC_DIRECTORY = "java.source.directory";

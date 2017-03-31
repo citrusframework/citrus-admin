@@ -16,7 +16,6 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
@@ -25,6 +24,7 @@ import com.consol.citrus.admin.model.ProjectSettings;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
+import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -64,9 +64,11 @@ public class ProjectService {
     /** Holds in memory list of recently opened projects */
     private List<String> recentlyOpened = new ArrayList<>();
 
-    /** Spring bean service*/
     @Autowired
     private SpringBeanService springBeanService;
+
+    @Autowired
+    private SpringJavaConfigService springJavaConfigService;
 
     @Autowired
     private Environment environment;
@@ -161,8 +163,61 @@ public class ProjectService {
      * Returns the project's Spring application context config file.
      * @return the config file or null if no config file exists within the selected project.
      */
-    public File getProjectContextConfigFile() {
-        return fileBrowserService.findFileInPath(new File(project.getProjectHome()), getDefaultConfigurationFile(), true);
+    public File getSpringXmlApplicationContextFile() {
+        String contextFile = project.getSettings().getSpringApplicationContext();
+
+        if (contextFile.startsWith("classpath*:")) {
+            contextFile = contextFile.substring("classpath*:".length());
+        }
+
+        if (contextFile.startsWith("classpath:")) {
+            contextFile = contextFile.substring("classpath:".length());
+        }
+
+        return fileBrowserService.findFileInPath(new File(project.getProjectHome()), contextFile, true);
+    }
+
+    /**
+     * Returns the project's Spring Java config file.
+     * @return the config file or null if no config file exists within the selected project.
+     */
+    public File getSpringJavaConfigFile() {
+        String contextFile = project.getSettings().getSpringJavaConfig();
+
+        if (contextFile.contains(".")) {
+            contextFile = contextFile.substring(contextFile.lastIndexOf(".") + 1);
+        }
+
+        return fileBrowserService.findFileInPath(new File(project.getJavaDirectory()), contextFile + ".java", true);
+    }
+
+    /**
+     * Returns the project's Spring Java config file.
+     * @return the config file or null if no config file exists within the selected project.
+     */
+    public Class<?> getSpringJavaConfig() {
+        try {
+            ClassLoader classLoader = project.getClassLoader();
+            return classLoader.loadClass(project.getSettings().getSpringJavaConfig());
+        }  catch (IOException | ClassNotFoundException | NoClassDefFoundError e) {
+            throw new ApplicationRuntimeException("Failed to access Spring Java config class", e);
+        }
+    }
+
+    /**
+     * Checks if Spring application context file is present.
+     * @return
+     */
+    public boolean hasSpringXmlApplicationContext() {
+        return getSpringXmlApplicationContextFile() != null;
+    }
+
+    /**
+     * Checks if Spring Java config class is present.
+     * @return
+     */
+    public boolean hasSpringJavaConfig() {
+        return getSpringJavaConfigFile() != null;
     }
 
     /**
@@ -229,31 +284,12 @@ public class ProjectService {
             Assert.isTrue(homeDir.exists(), "Invalid project home directory");
             Assert.isTrue(new File(homeDir, project.getSettings().getJavaSrcDirectory()).exists(), "Missing Java source directory");
             Assert.isTrue(new File(homeDir, project.getSettings().getXmlSrcDirectory()).exists(), "Missing resources directory");
-            Assert.isTrue(new File(homeDir, project.getSettings().getSpringApplicationContext()).exists(), "Missing Spring application context file");
         } catch (IllegalArgumentException e) {
             log.warn("Project home validation failed: " + e.getLocalizedMessage());
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Gets file name from path pattern property.
-     * @return
-     */
-    private String getDefaultConfigurationFile() {
-        String configurationFile = Citrus.DEFAULT_APPLICATION_CONTEXT;
-
-        if (configurationFile.startsWith("classpath*:")) {
-            configurationFile = configurationFile.substring("classpath*:".length());
-        }
-
-        if (configurationFile.startsWith("classpath:")) {
-            configurationFile = configurationFile.substring("classpath:".length());
-        }
-
-        return configurationFile;
     }
 
     /**
@@ -309,18 +345,21 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(true);
                 saveProject(project);
 
-                if (springBeanService.getBeanDefinition(getProjectContextConfigFile(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), SpringBean.class) == null) {
-                    SpringBean pushMessageListener = new SpringBean();
-                    pushMessageListener.setId(WebSocketPushEventsListener.class.getSimpleName());
-                    pushMessageListener.setClazz(WebSocketPushEventsListener.class.getName());
+                SpringBean bean = new SpringBean();
+                bean.setId(WebSocketPushEventsListener.class.getSimpleName());
+                bean.setClazz(WebSocketPushEventsListener.class.getName());
 
-                    if (!environment.getProperty("local.server.port", "8080").equals("8080")) {
-                        Property portProperty = new Property();
-                        portProperty.setName("port");
-                        portProperty.setValue(environment.getProperty("local.server.port"));
-                        pushMessageListener.getProperties().add(portProperty);
-                    }
-                    springBeanService.addBeanDefinition(getProjectContextConfigFile(), getActiveProject(), pushMessageListener);
+                if (!environment.getProperty("local.server.port", "8080").equals("8080")) {
+                    Property portProperty = new Property();
+                    portProperty.setName("port");
+                    portProperty.setValue(environment.getProperty("local.server.port"));
+                    bean.getProperties().add(portProperty);
+                }
+
+                if (hasSpringXmlApplicationContext() && springBeanService.getBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), SpringBean.class) == null) {
+                    springBeanService.addBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), bean);
+                } else if (hasSpringJavaConfig() && springJavaConfigService.getBeanDefinition(getSpringJavaConfig(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), WebSocketPushEventsListener.class) == null) {
+                    springJavaConfigService.addBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
@@ -345,9 +384,17 @@ public class ProjectService {
                 project.getSettings().setConnectorActive(false);
                 saveProject(project);
 
-                List<String> listenerBeans = springBeanService.getBeanNames(getProjectContextConfigFile(), getActiveProject(), WebSocketPushEventsListener.class.getName());
-                for (String listenerBean : listenerBeans) {
-                    springBeanService.removeBeanDefinition(getProjectContextConfigFile(), getActiveProject(), listenerBean);
+                List<String> beans;
+                if (hasSpringXmlApplicationContext()) {
+                    beans = springBeanService.getBeanNames(getSpringXmlApplicationContextFile(), getActiveProject(), WebSocketPushEventsListener.class.getName());
+                    for (String bean : beans) {
+                        springBeanService.removeBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), bean);
+                    }
+                } else if (hasSpringJavaConfig()) {
+                    beans = springJavaConfigService.getBeanNames(getSpringJavaConfig(), getActiveProject(), WebSocketPushEventsListener.class);
+                    for (String bean : beans) {
+                        springBeanService.removeBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
+                    }
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
@@ -363,6 +410,7 @@ public class ProjectService {
         System.setProperty(Application.JAVA_SRC_DIRECTORY, settings.getJavaSrcDirectory());
         System.setProperty(Application.XML_SRC_DIRECTORY, settings.getXmlSrcDirectory());
         System.setProperty(Application.SPRING_APPLICATION_CONTEXT, settings.getSpringApplicationContext());
+        System.setProperty(Application.SPRING_JAVA_CONFIG, settings.getSpringJavaConfig());
     }
 
     /**
@@ -384,6 +432,15 @@ public class ProjectService {
     }
 
     /**
+     * Sets the springJavaConfigService.
+     *
+     * @param springJavaConfigService
+     */
+    public void setSpringJavaConfigService(SpringJavaConfigService springJavaConfigService) {
+        this.springJavaConfigService = springJavaConfigService;
+    }
+
+    /**
      * Sets the environment property.
      *
      * @param environment
@@ -398,5 +455,14 @@ public class ProjectService {
      */
     public String[] getRecentProjects() {
         return recentlyOpened.toArray(new String[recentlyOpened.size()]);
+    }
+
+    /**
+     * Sets the project.
+     *
+     * @param project
+     */
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

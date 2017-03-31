@@ -74,6 +74,13 @@
   </div>
 
   <div class="form-group">
+    <label class="col-sm-2 control-label">Spring Java Config <em>*</em></label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="project.settings.springJavaConfig" type="text" class="form-control" name="springJavaConfig"/>
+    </div>
+  </div>
+
+  <div class="form-group">
     <label class="col-sm-2 control-label">Package <em>*</em></label>
     <div class="col-sm-10">
       <input [(ngModel)]="project.settings.basePackage" type="text" class="form-control" name="basePackage"/>

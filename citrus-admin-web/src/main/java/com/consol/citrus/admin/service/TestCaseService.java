@@ -28,7 +28,6 @@ import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -396,7 +395,7 @@ public class TestCaseService {
         if (project.isMavenProject()) {
             try {
                 FileUtils.setSimulationMode(true);
-                ClassLoader classLoader = getTestClassLoader(project);
+                ClassLoader classLoader = project.getClassLoader();
                 Class testClass = classLoader.loadClass(detail.getPackageName() + "." + detail.getClassName());
 
                 if (TestSimulator.class.isAssignableFrom(testClass)) {
@@ -430,27 +429,6 @@ public class TestCaseService {
         TestcaseModel testModel = new TestcaseModel();
         testModel.setName(detail.getClassName() + "." + detail.getMethodName());
         return testModel;
-    }
-
-    private ClassLoader getTestClassLoader(Project project) throws IOException {
-        List<URL> classpathUrls = new ArrayList<>();
-
-        classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "classes").getURL());
-        classpathUrls.add(new FileSystemResource(project.getProjectHome() + File.separator + "target" + File.separator + "test-classes").getURL());
-
-        File[] mavenDependencies = Maven.configureResolver()
-                .workOffline()
-                .loadPomFromFile(project.getMavenPomFile())
-                .importRuntimeAndTestDependencies()
-                .resolve()
-                .withTransitivity()
-                .asFile();
-
-        for (File mavenDependency : mavenDependencies) {
-            classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
-        }
-
-        return URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]));
     }
 
     private TestcaseModel getTestcaseModel(TestCase testCase) {

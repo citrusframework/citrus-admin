@@ -49,7 +49,7 @@
     <label class="col-sm-2 control-label">Mapping Strategy <em>*</em></label>
     <div class="col-sm-10">
       <select [(ngModel)]="newDictionary.mappingStrategy" class="form-control" placeholder="MappingStrategy" name="mappingStrategy">
-        <option value="EXACT_MATCH" selected="selected">EXACT</option>
+        <option value="EXACT" selected="selected">EXACT</option>
         <option value="STARTS_WITH">STARTS_WITH</option>
         <option value="ENDS_WITH">ENDS_WITH</option>
       </select>
@@ -127,7 +127,7 @@
       [control]="form.get('mappingStrategy')"
   >
       <select formControlName="mappingStrategy" [(ngModel)]="selectedDictionary.mappingStrategy" class="form-control" placeholder="MappingStrategy" name="selectedMappingStrategy">
-        <option value="EXACT_MATCH">EXACT_MATCH</option>
+        <option value="EXACT">EXACT</option>
         <option value="STARTS_WITH">STARTS_WITH</option>
         <option value="ENDS_WITH">ENDS_WITH</option>
       </select>

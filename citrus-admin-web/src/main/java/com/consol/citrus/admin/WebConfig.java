@@ -18,8 +18,7 @@ package com.consol.citrus.admin;
 
 import com.consol.citrus.admin.web.ProjectSetupInterceptor;
 import org.springframework.boot.autoconfigure.web.ErrorViewResolver;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.*;

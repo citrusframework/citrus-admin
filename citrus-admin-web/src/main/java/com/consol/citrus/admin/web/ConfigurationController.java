@@ -19,8 +19,8 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
+import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import com.consol.citrus.model.config.core.*;
-import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
@@ -31,8 +31,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,28 +47,49 @@ public class ConfigurationController {
     @Autowired
     private SpringBeanService springBeanService;
 
+    @Autowired
+    private SpringJavaConfigService springJavaConfigService;
+
     @RequestMapping(value = "/global-variables", method = {RequestMethod.POST})
     @ResponseBody
     public void createGlobalVariables(@RequestBody GlobalVariablesModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/global-variables", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateGlobalVariables(@RequestBody GlobalVariablesModel component) {
         if (component.getVariables().isEmpty()) {
-            springBeanService.removeBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.removeBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.removeBeanDefinitions(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
+            }
         } else if (getGlobalVariables().getVariables().isEmpty()) {
             createGlobalVariables(component);
         } else {
-            springBeanService.updateBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), GlobalVariablesModel.class, component);
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.updateBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), GlobalVariablesModel.class, component);
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.updateBeanDefinitions(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), GlobalVariablesModel.class, component);
+            }
         }
     }
 
     @RequestMapping(value = "/global-variables", method = {RequestMethod.GET})
     @ResponseBody
     public GlobalVariablesModel getGlobalVariables() {
-        List<GlobalVariablesModel> components = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
+        List<GlobalVariablesModel> components = null;
+        if (projectService.hasSpringXmlApplicationContext()) {
+            components = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            components = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), GlobalVariablesModel.class);
+        }
+
         if (CollectionUtils.isEmpty(components)) {
             return new GlobalVariablesModel();
         } else {
@@ -80,25 +100,43 @@ public class ConfigurationController {
     @RequestMapping(value = "/namespace-context", method = {RequestMethod.POST})
     @ResponseBody
     public void createNamespaceContext(@RequestBody NamespaceContextModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/namespace-context", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateNamespaceContext(@RequestBody NamespaceContextModel component) {
         if (component.getNamespaces().isEmpty()) {
-            springBeanService.removeBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), NamespaceContextModel.class);
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.removeBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), NamespaceContextModel.class);
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.removeBeanDefinitions(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), NamespaceContextModel.class);
+            }
         } else if (getNamespaceContext().getNamespaces().isEmpty()) {
             createNamespaceContext(component);
         } else {
-            springBeanService.updateBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), NamespaceContextModel.class, component);
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.updateBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), NamespaceContextModel.class, component);
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.updateBeanDefinitions(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), NamespaceContextModel.class, component);
+            }
         }
     }
 
     @RequestMapping(value = "/namespace-context", method = {RequestMethod.GET})
     @ResponseBody
     public NamespaceContextModel getNamespaceContext() {
-        List<NamespaceContextModel> components = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), NamespaceContextModel.class);
+        List<NamespaceContextModel> components = null;
+        if (projectService.hasSpringXmlApplicationContext()) {
+            components = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), NamespaceContextModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            components = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), NamespaceContextModel.class);
+        }
+
         if (CollectionUtils.isEmpty(components)) {
             return new NamespaceContextModel();
         } else {
@@ -109,31 +147,57 @@ public class ConfigurationController {
     @RequestMapping(value = "/schema-repository", method = {RequestMethod.GET})
     @ResponseBody
     public List<SchemaRepositoryModel> listSchemaRepositories() {
-        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SchemaRepositoryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SchemaRepositoryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), SchemaRepositoryModel.class);
+        }
+
+        return new ArrayList<>();
     }
 
     @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public SchemaRepositoryModel getSchemaRepository(@PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
+        }
+
+        throw new ApplicationRuntimeException("No proper Spring application context defined in project");
     }
 
     @RequestMapping(value = "/schema-repository", method = {RequestMethod.POST})
     @ResponseBody
     public void createSchemaRepository(@RequestBody SchemaRepositoryModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/schema-repository", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchemaRepository(@RequestBody SchemaRepositoryModel component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component.getId(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        }
     }
 
     @RequestMapping(value = "/schema", method = {RequestMethod.GET})
     @ResponseBody
     public List<SchemaModel> listSchemas() {
-        List<SchemaModel> schemas = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), SchemaModel.class);
+        List<SchemaModel> schemas = new ArrayList<>();
+        if (projectService.hasSpringXmlApplicationContext()) {
+            schemas = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SchemaModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            schemas = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), SchemaModel.class);
+        }
+
         for (int i = 0; i < schemas.size(); i++) {
             if (!StringUtils.hasText(schemas.get(i).getId())) {
                 schemas.get(i).setId("schema" + (i + 1));
@@ -146,77 +210,136 @@ public class ConfigurationController {
     @RequestMapping(value = "/schema/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public SchemaModel getSchema(@PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, SchemaModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, SchemaModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaModel.class);
+        }
+
+        throw new ApplicationRuntimeException("No proper Spring application context defined in project");
     }
 
     @RequestMapping(value = "/schema", method = {RequestMethod.POST})
     @ResponseBody
     public void createSchema(@RequestBody SchemaModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/schema", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchema(@RequestBody SchemaModel component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component.getId(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        }
     }
 
     @RequestMapping(value = "/function-library", method = {RequestMethod.GET})
     @ResponseBody
     public List<FunctionLibraryModel> listFunctionLibraries() {
-        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), FunctionLibraryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), FunctionLibraryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), FunctionLibraryModel.class);
+        }
+
+        return new ArrayList<>();
     }
 
     @RequestMapping(value = "/function-library/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public FunctionLibraryModel getFunctionLibrary(@PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
+        } else {
+            throw new ApplicationRuntimeException("No proper Spring application context defined in project");
+        }
     }
 
     @RequestMapping(value = "/function-library", method = {RequestMethod.POST})
     @ResponseBody
     public void createFunctionLibrary(@RequestBody FunctionLibraryModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/function-library", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateFunctionLibrary(@RequestBody FunctionLibraryModel component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component.getId(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        }
     }
 
     @RequestMapping(value = "/validation-matcher", method = {RequestMethod.GET})
     @ResponseBody
     public List<ValidationMatcherLibraryModel> listValidationMatcherLibraries() {
-        return springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
+        }
+
+        return new ArrayList<>();
     }
 
     @RequestMapping(value = "/validation-matcher/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public ValidationMatcherLibraryModel getValidationMatcherLibrary(@PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
+        }
+
+        throw new ApplicationRuntimeException("No proper Spring application context defined in project");
     }
 
     @RequestMapping(value = "/validation-matcher", method = {RequestMethod.POST})
     @ResponseBody
     public void createValidationMatcherLibrary(@RequestBody ValidationMatcherLibraryModel component) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component);
+        }
     }
 
     @RequestMapping(value = "/validation-matcher", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateValidationMatcherLibrary(@RequestBody ValidationMatcherLibraryModel component) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component.getId(), component);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component.getId(), component);
+        }
     }
 
     @RequestMapping(value = "/data-dictionary", method = {RequestMethod.GET})
     @ResponseBody
     public List<DataDictionaryType> listDataDictionaries() {
         List<DataDictionaryType> libraries = new ArrayList<DataDictionaryType>();
-
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), XpathDataDictionaryModel.class));
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
+        if (projectService.hasSpringXmlApplicationContext()) {
+            libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), XpathDataDictionaryModel.class));
+            libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
+            libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
+        } else if (projectService.hasSpringJavaConfig()) {
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), XpathDataDictionaryModel.class));
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
+        }
 
         return libraries;
     }
@@ -224,14 +347,28 @@ public class ConfigurationController {
     @RequestMapping(value = "/data-dictionary/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public DataDictionaryType getDataDictionary(@PathVariable("id") String id) {
-        DataDictionaryType library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
+        DataDictionaryType library = null;
 
-        if (library == null) {
-            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, XmlDataDictionaryModel.class);
-        }
+        if (projectService.hasSpringXmlApplicationContext()) {
+            library = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
 
-        if (library == null) {
-            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
+            if (library == null) {
+                library = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, XmlDataDictionaryModel.class);
+            }
+
+            if (library == null) {
+                library = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
+            }
+        } else if (projectService.hasSpringJavaConfig()) {
+            library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
+
+            if (library == null) {
+                library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, XmlDataDictionaryModel.class);
+            }
+
+            if (library == null) {
+                library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
+            }
         }
 
         return library;
@@ -241,7 +378,11 @@ public class ConfigurationController {
     @ResponseBody
     public void createDataDictionary(@PathVariable("type") String type, @RequestBody JSONObject model) {
         try {
-            springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), getDataDictionaryType(type, model));
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), getDataDictionaryType(type, model));
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), getDataDictionaryType(type, model));
+            }
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to read data dictionary model", e);
         }
@@ -264,11 +405,14 @@ public class ConfigurationController {
             }
 
             DataDictionaryType component = getDataDictionaryType(type, model);
-            springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), component.getId(), component);
+            if (projectService.hasSpringXmlApplicationContext()) {
+                springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), component.getId(), component);
+            } else if (projectService.hasSpringJavaConfig()) {
+                springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), component.getId(), component);
+            }
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to read data dictionary model", e);
         }
-
     }
 
     /**
@@ -297,16 +441,30 @@ public class ConfigurationController {
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteComponent(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.removeBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.removeBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), id);
+        }
     }
 
     @RequestMapping(value = "/mapping-strategy")
     @ResponseBody
-    public Object getMappingStrategies() {
-        return springBeanService.getBeanNames(
-                projectService.getProjectContextConfigFile(),
-                projectService.getActiveProject(),
-                XsdSchemaMappingStrategy.class.getName()
-        ).stream().filter(n -> n != null).collect(Collectors.toList());
+    public List<String> getMappingStrategies() {
+        if (projectService.hasSpringXmlApplicationContext()) {
+            return springBeanService.getBeanNames(
+                    projectService.getSpringXmlApplicationContextFile(),
+                    projectService.getActiveProject(),
+                    XsdSchemaMappingStrategy.class.getName()
+            ).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        } else if (projectService.hasSpringJavaConfig()) {
+            return springJavaConfigService.getBeanNames(
+                    projectService.getSpringJavaConfig(),
+                    projectService.getActiveProject(),
+                    XsdSchemaMappingStrategy.class
+            ).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
     }
 }

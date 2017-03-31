@@ -21,6 +21,7 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
+import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -43,24 +44,39 @@ public class EndpointController {
     private SpringBeanService springBeanService;
 
     @Autowired
+    private SpringJavaConfigService springJavaConfigService;
+
+    @Autowired
     private List<EndpointConverter> endpointConverter;
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
     public void createEndpoint(@RequestBody EndpointModel endpointDefinition) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), convertToModel(endpointDefinition));
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.addBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), convertToModel(endpointDefinition));
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.addBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), convertToModel(endpointDefinition));
+        }
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointModel endpointDefinition) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, convertToModel(endpointDefinition));
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.updateBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, convertToModel(endpointDefinition));
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.updateBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), id, convertToModel(endpointDefinition));
+        }
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteEndpoint(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id);
+        if (projectService.hasSpringXmlApplicationContext()) {
+            springBeanService.removeBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id);
+        } else if (projectService.hasSpringJavaConfig()) {
+            springJavaConfigService.removeBeanDefinition(projectService.getSpringJavaConfigFile(), projectService.getActiveProject(), id);
+        }
     }
 
     @RequestMapping(method = {RequestMethod.GET})
@@ -68,7 +84,13 @@ public class EndpointController {
     public List<?> listEndpoints() {
         List<EndpointModel> endpoints = new ArrayList<>();
         for (EndpointConverter converter : endpointConverter) {
-            List<?> models = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), converter.getSourceModelClass());
+            List<?> models = null;
+            if (projectService.hasSpringXmlApplicationContext()) {
+                models = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), converter.getSourceModelClass());
+            } else if (projectService.hasSpringJavaConfig()) {
+                models = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), converter.getSourceModelClass());
+            }
+
             for (Object endpoint : models) {
                 endpoints.add(converter.convert(endpoint));
             }
@@ -81,13 +103,19 @@ public class EndpointController {
     @ResponseBody
     public Object getEndpoint(@PathVariable("id") String id) {
         for (EndpointConverter converter : endpointConverter) {
-            Object model = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), projectService.getActiveProject(), id, converter.getSourceModelClass());
+            Object model = null;
+            if (projectService.hasSpringXmlApplicationContext()) {
+                model = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, converter.getSourceModelClass());
+            } else if (projectService.hasSpringJavaConfig()) {
+                model = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, converter.getSourceModelClass());
+            }
+
             if (model != null) {
                 return converter.convert(model);
             }
         }
 
-        throw new ApplicationRuntimeException(String.format("Unable to find endpoint for id '%id'", id));
+        throw new ApplicationRuntimeException(String.format("Unable to find endpoint for id '%s'", id));
     }
 
     @RequestMapping(value = "/types", method = {RequestMethod.GET})

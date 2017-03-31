@@ -18,6 +18,7 @@ export class ProjectSettings {
     constructor() {}
 
     public springApplicationContext: string;
+    public springJavaConfig: string;
     public javaSrcDirectory: string;
     public xmlSrcDirectory: string;
     public javaFilePattern: string;

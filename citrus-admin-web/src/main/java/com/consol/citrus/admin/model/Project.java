@@ -19,10 +19,16 @@ package com.consol.citrus.admin.model;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -254,5 +260,34 @@ public class Project {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read project settings file", e);
         }
+    }
+
+    /**
+     * Provide project class loader
+     * @return
+     * @throws IOException
+     */
+    @JsonIgnore
+    public ClassLoader getClassLoader() throws IOException {
+        List<URL> classpathUrls = new ArrayList<>();
+
+        classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "classes").getURL());
+        classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "test-classes").getURL());
+
+        if (isMavenProject()) {
+            File[] mavenDependencies = Maven.configureResolver()
+                    .workOffline()
+                    .loadPomFromFile(getMavenPomFile())
+                    .importRuntimeAndTestDependencies()
+                    .resolve()
+                    .withTransitivity()
+                    .asFile();
+
+            for (File mavenDependency : mavenDependencies) {
+                classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
+            }
+        }
+
+        return URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]));
     }
 }

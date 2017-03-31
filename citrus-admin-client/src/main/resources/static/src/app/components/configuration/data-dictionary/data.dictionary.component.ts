@@ -80,7 +80,7 @@ export class DataDictionaryComponent implements OnInit {
     initDictionary() {
         this.selectedDictionary = new DataDictionary();
         this.selectedDictionary.globalScope = true;
-        this.selectedDictionary.mappingStrategy = 'EXACT_MATCH';
+        this.selectedDictionary.mappingStrategy = 'EXACT';
         this.initForm(EditorMode.NEW)
     }
 

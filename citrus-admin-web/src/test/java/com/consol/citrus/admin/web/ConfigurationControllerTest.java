@@ -18,7 +18,6 @@ package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.service.ProjectService;
-import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import net.minidev.json.JSONArray;
@@ -42,9 +41,6 @@ public class ConfigurationControllerTest extends AbstractTestNGSpringContextTest
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private SpringBeanService springBeanService;
 
     @Autowired
     private ConfigurationController controller;

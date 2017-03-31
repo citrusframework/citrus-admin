@@ -21,6 +21,7 @@
   <bean class="com.consol.citrus.admin.service.report.JUnitTestReportService"/>
   <bean class="com.consol.citrus.admin.service.report.TestNGTestReportService"/>
   <bean class="com.consol.citrus.admin.service.spring.SpringBeanService"/>
+  <bean class="com.consol.citrus.admin.service.spring.SpringJavaConfigService"/>
 
   <bean class="org.springframework.messaging.simp.SimpMessagingTemplate">
     <constructor-arg ref="nullChannel"/>

@@ -21,6 +21,7 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
+import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import com.consol.citrus.util.FileUtils;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
@@ -42,6 +43,7 @@ public class ProjectServiceTest {
     private ProjectService projectService;
     private FileBrowserService fileBrowserService = new FileBrowserService();
     private SpringBeanService springBeanService = Mockito.mock(SpringBeanService.class);
+    private SpringJavaConfigService springJavaConfigService = Mockito.mock(SpringJavaConfigService.class);
     private Environment environment = Mockito.mock(Environment.class);
 
     @BeforeMethod
@@ -49,6 +51,7 @@ public class ProjectServiceTest {
         projectService = new ProjectService();
         projectService.setFileBrowserService(fileBrowserService);
         projectService.setSpringBeanService(springBeanService);
+        projectService.setSpringJavaConfigService(springJavaConfigService);
         projectService.setEnvironment(environment);
     }
 
@@ -103,13 +106,30 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testGetProjectContextConfigFile() throws Exception {
+    public void testGetSpringXmlApplicationContextFile() throws Exception {
         Project testProject = new Project(new ClassPathResource("projects/maven").getFile().getCanonicalPath());
         projectService.setActiveProject(testProject);
 
-        File configFile = projectService.getProjectContextConfigFile();
+        Assert.assertTrue(projectService.hasSpringXmlApplicationContext());
+
+        File configFile = projectService.getSpringXmlApplicationContextFile();
+        Assert.assertNotNull(configFile);
         Assert.assertTrue(configFile.exists());
         Assert.assertEquals(configFile.getName(), "citrus-context.xml");
+    }
+
+    @Test
+    public void testGetSpringJavaConfigFile() throws Exception {
+        Project testProject = new Project(new ClassPathResource("projects/java-config").getFile().getCanonicalPath());
+        testProject.getSettings().setSpringJavaConfig("config.JavaConfig");
+        projectService.setActiveProject(testProject);
+
+        Assert.assertTrue(projectService.hasSpringJavaConfig());
+
+        File configFile = projectService.getSpringJavaConfigFile();
+        Assert.assertNotNull(configFile);
+        Assert.assertTrue(configFile.exists());
+        Assert.assertEquals(configFile.getName(), "JavaConfig.java");
     }
 
     @Test

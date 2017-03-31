@@ -32,7 +32,8 @@ public class ProjectSettings {
     private String basePackage = System.getProperty(Application.BASE_PACKAGE, "com.consol.citrus");
     private String citrusVersion = Citrus.getVersion();
 
-    private String springApplicationContext = System.getProperty(Application.SPRING_APPLICATION_CONTEXT, "src" + File.separator + "test" + File.separator + "resources" + File.separator + "citrus-context.xml");
+    private String springApplicationContext = System.getProperty(Application.SPRING_APPLICATION_CONTEXT, Citrus.DEFAULT_APPLICATION_CONTEXT);
+    private String springJavaConfig = System.getProperty(Application.SPRING_JAVA_CONFIG, System.getProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, "com.consol.citrus.CitrusEndpointConfig"));
     private String javaSrcDirectory = System.getProperty(Application.JAVA_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "java" + File.separator);
     private String xmlSrcDirectory = System.getProperty(Application.XML_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "resources" + File.separator);
     private String javaFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getJavaTestFileNamePattern().toArray());
@@ -183,6 +184,24 @@ public class ProjectSettings {
      */
     public void setSpringApplicationContext(String springApplicationContext) {
         this.springApplicationContext = springApplicationContext;
+    }
+
+    /**
+     * Gets the springJavaConfig.
+     *
+     * @return
+     */
+    public String getSpringJavaConfig() {
+        return springJavaConfig;
+    }
+
+    /**
+     * Sets the springJavaConfig.
+     *
+     * @param springJavaConfig
+     */
+    public void setSpringJavaConfig(String springJavaConfig) {
+        this.springJavaConfig = springJavaConfig;
     }
 
     /**
