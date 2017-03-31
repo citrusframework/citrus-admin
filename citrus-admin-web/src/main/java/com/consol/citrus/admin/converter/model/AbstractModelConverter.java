@@ -46,10 +46,17 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
                         .findFirst()
                         .orElse(null);
                 try {
-                    if (setter != null && setter.getParameterCount() == 1 && checkTypes(setter.getParameterTypes()[0], method.getReturnType())) {
-                        Object object = method.invoke(model);
-                        if (object != null) {
-                            setter.invoke(targetModel, object);
+                    if (setter != null && setter.getParameterCount() == 1) {
+                        if (checkTypes(setter.getParameterTypes()[0], method.getReturnType())) {
+                            Object object = method.invoke(model);
+                            if (object != null) {
+                                setter.invoke(targetModel, object);
+                            }
+                        } else if (setter.getParameterTypes()[0].equals(String.class) && method.getReturnType().isPrimitive()) {
+                            Object object = method.invoke(model);
+                            if (object != null) {
+                                setter.invoke(targetModel, object.toString());
+                            }
                         }
                     }
                 } catch (InvocationTargetException e) {
