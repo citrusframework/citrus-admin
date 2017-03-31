@@ -1,5 +1,6 @@
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.model.config.jms.JmsEndpointModel;
@@ -16,6 +17,7 @@ public class JmsEndpointModelConverter extends AbstractEndpointModelConverter<Jm
      */
     public JmsEndpointModelConverter() {
         super(JmsEndpointModel.class, JmsEndpoint.class, JmsEndpointConfiguration.class);
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("destinationName", "destination"));
     }
 
     @Override

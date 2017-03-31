@@ -17,7 +17,7 @@
 package config;
 
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.jms.endpoint.JmsEndpoint;
+import com.consol.citrus.http.client.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,14 +25,14 @@ import org.springframework.context.annotation.Configuration;
  * @author Christoph Deppisch
  */
 @Configuration
-public class JavaConfig {
+public class AddBeanJavaConfig {
 
     @Bean
-    public JmsEndpoint sampleEndpoint() {
+    public HttpClient httpClient() {
         return CitrusEndpoints
-                .jms()
-                .asynchronous()
-                .destination("jms.inbound.queue")
+                .http()
+                .client()
+                .requestUrl("http://localhost:8080/foo")
                 .build();
     }
 }

@@ -19,6 +19,7 @@ package com.consol.citrus.admin.service.spring;
 import com.consol.citrus.admin.converter.model.ModelConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Christoph Deppisch
@@ -201,10 +204,39 @@ public class SpringJavaConfigService {
     /**
      * Method adds a new Spring bean definition to the XML application context file.
      * @param project
-     * @param jaxbElement
+     * @param model
      */
-    public void addBeanDefinition(File configFile, Project project, Object jaxbElement) {
-        
+    public void addBeanDefinition(File configFile, Project project, Object model) {
+        ModelConverter converter = modelConverter.stream().filter(c -> c.getTargetModelClass().equals(model.getClass()))
+                .findFirst()
+                .orElseThrow(() -> new ApplicationRuntimeException("Invalid modle type '%s' - no proper model converter found"));
+
+        String javaCode;
+        try (InputStream fis = new FileInputStream(configFile)) {
+            javaCode = FileUtils.readToString(fis);
+        } catch (IOException e) {
+            throw new ApplicationRuntimeException("Failed to read/write Java config file");
+        }
+
+        StringBuilder codeBuilder = new StringBuilder(javaCode);
+        String codeSnippet = converter.getJavaConfig(model);
+        Matcher classStartMatcher = Pattern.compile("^(public)? class " + configFile.getName().replaceAll("\\.java", "") + "(.*)\\{(\\s)*$", Pattern.MULTILINE).matcher(javaCode);
+        if (classStartMatcher.find()) {
+            codeBuilder.insert(classStartMatcher.end(), codeSnippet);
+        }
+
+        Matcher importMatcher = Pattern.compile("^import(.*);(\\s)*$", Pattern.MULTILINE).matcher(javaCode);
+        if (importMatcher.find()) {
+            List<Class<?>> imports = converter.getAdditionalImports();
+            imports.stream().map(importType -> String.format("%nimport %s;", importType.getName())).forEach(importStmt -> {
+                if (!javaCode.contains(importStmt)) {
+                    codeBuilder.insert(importMatcher.end(), importStmt);
+                }
+            });
+        }
+
+        FileUtils.writeToFile(codeBuilder.toString(), configFile);
+
     }
 
     /**
@@ -231,9 +263,9 @@ public class SpringJavaConfigService {
      * identified by its id or bean name.
      * @param project
      * @param id
-     * @param jaxbElement
+     * @param model
      */
-    public void updateBeanDefinition(File configFile, Project project, String id, Object jaxbElement) {
+    public void updateBeanDefinition(File configFile, Project project, String id, Object model) {
 
     }
 
@@ -243,9 +275,9 @@ public class SpringJavaConfigService {
      *
      * @param project
      * @param type
-     * @param jaxbElement
+     * @param model
      */
-    public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object jaxbElement) {
+    public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object model) {
 
     }
 

@@ -8,16 +8,19 @@ import com.consol.citrus.model.config.http.HttpClientModel;
 import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import com.consol.citrus.model.config.jms.JmsSyncEndpointModel;
 import com.consol.citrus.model.config.ws.WebServiceClientModel;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
 import com.consol.citrus.validation.matcher.core.StartsWithValidationMatcher;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.ws.client.WebServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.*;
 import java.util.List;
 
 /**
@@ -206,5 +209,73 @@ public class SpringJavaConfigServiceTest extends AbstractTestNGSpringContextTest
 
         names = springJavaConfigService.getBeanNames(GetBeanDefinitionConfig.class, project, WebServiceClient.class);
         Assert.assertEquals(names.size(), 0L);
+    }
+
+    @Test
+    public void testAddJavaConfig() throws Exception {
+        SchemaModel xsdSchema1 = new SchemaModelBuilder().withId("xsdSchema1").withLocation("path/to/schema1.xsd").build();
+        SchemaModel xsdSchema2 = new SchemaModelBuilder().withId("xsdSchema2").withLocation("path/to/schema2.xsd").build();
+
+        SchemaRepositoryModel schemaRepository = new SchemaRepositoryModelBuilder()
+                .withId("schemaRepository")
+                .addSchema(xsdSchema1)
+                .addSchema(xsdSchema2).build();
+
+        JmsEndpointModel endpoint = new JmsEndpointModel();
+        endpoint.setId("jmsEndpoint");
+        endpoint.setDestinationName("jms.inbound.queue");
+
+        File configFile = new ClassPathResource("config/AddBeanJavaConfig.java").getFile();
+
+        springJavaConfigService.addBeanDefinition(configFile, project, xsdSchema1);
+        springJavaConfigService.addBeanDefinition(configFile, project, xsdSchema2);
+        springJavaConfigService.addBeanDefinition(configFile, project, schemaRepository);
+        springJavaConfigService.addBeanDefinition(configFile, project, endpoint);
+
+        String result = FileUtils.readToString(new FileInputStream(configFile));
+
+        System.out.println(result);
+
+        Assert.assertTrue(result.contains("import com.consol.citrus.dsl.endpoint.CitrusEndpoints;"));
+        Assert.assertTrue(result.contains("import com.consol.citrus.xml.XsdSchemaRepository;"));
+        Assert.assertTrue(result.contains("import org.springframework.core.io.ClassPathResource;"));
+        Assert.assertTrue(result.contains("import org.springframework.xml.xsd.SimpleXsdSchema;"));
+        Assert.assertTrue(result.contains("import com.consol.citrus.jms.endpoint.JmsEndpoint;"));
+        Assert.assertTrue(result.contains("import com.consol.citrus.http.client.HttpClient;"));
+
+        Assert.assertTrue(result.contains("public HttpClient httpClient() {"));
+        Assert.assertTrue(result.contains("public JmsEndpoint jmsEndpoint() {"));
+        Assert.assertTrue(result.contains("return CitrusEndpoints.jms().asynchronous()"));
+        Assert.assertTrue(result.contains(".destination(\"jms.inbound.queue\")"));
+        Assert.assertTrue(result.contains("public XsdSchemaRepository schemaRepository() {"));
+        Assert.assertTrue(result.contains("public SimpleXsdSchema xsdSchema1() {"));
+        Assert.assertTrue(result.contains("xsdSchema1.setXsd(new ClassPathResource(\"path/to/schema1.xsd\"));"));
+        Assert.assertTrue(result.contains("public SimpleXsdSchema xsdSchema2() {"));
+        Assert.assertTrue(result.contains("xsdSchema2.setXsd(new ClassPathResource(\"path/to/schema2.xsd\"));"));
+    }
+
+    /**
+     * Creates a temporary file in operating system and writes template content to file.
+     * @param templateName
+     * @param content
+     * @return
+     */
+    private File createTempContextFile(String templateName, String content) throws IOException {
+        FileWriter writer = null;
+        File tempFile;
+
+        try {
+            tempFile = File.createTempFile(templateName, ".java");
+
+            writer = new FileWriter(tempFile);
+            writer.write(content);
+        } finally {
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
+        }
+
+        return tempFile;
     }
 }

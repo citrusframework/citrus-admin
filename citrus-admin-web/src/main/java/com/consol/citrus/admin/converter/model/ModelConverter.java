@@ -2,6 +2,8 @@ package com.consol.citrus.admin.converter.model;
 
 import com.consol.citrus.admin.converter.ObjectConverter;
 
+import java.util.List;
+
 /**
  * @author Christoph Deppisch
  */
@@ -21,5 +23,11 @@ public interface ModelConverter<T, S> extends ObjectConverter<T, S> {
      * @return
      */
     String getJavaConfig(T model);
+
+    /**
+     * Gets the additional imports that this converter should add to the target code.
+     * @return
+     */
+    List<Class<?>> getAdditionalImports();
 
 }

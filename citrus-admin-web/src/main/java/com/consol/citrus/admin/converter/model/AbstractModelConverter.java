@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +19,8 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
 
     private final Class<S> sourceModelType;
     private final Class<T> targetModelType;
+
+    private List<MethodCallDecorator> decorators = new ArrayList<>();
 
     /**
      * Default constructor using source and target model types.
@@ -83,32 +85,40 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
         Matcher matcher = invalidMethodNamePattern.matcher(id);
         if (matcher.find()) {
             methodName = StringUtils.trimAllWhitespace(id.replaceAll("\\.", "").replaceAll("-", ""));
-            builder.append(String.format("\t@Bean(\"%s\")%n", id));
+            builder.append(String.format("%n\t@Bean(\"%s\")%n", id));
         } else {
             methodName = id;
-            builder.append(String.format("\t@Bean%n"));
+            builder.append(String.format("%n\t@Bean%n"));
         }
 
-        builder.append(String.format("\tpublic %s %s() {%n", getTargetModelClass().getSimpleName(), methodName));
+        builder.append(String.format("\tpublic %s %s() {%n", getSourceModelClass().getSimpleName(), methodName));
 
-        builder.append(String.format("\t\t%s %s = new %s();%n", getTargetModelClass().getSimpleName(), methodName, getTargetModelClass().getSimpleName()));
+        builder.append(String.format("\t\t%s %s = new %s();%n", getSourceModelClass().getSimpleName(), methodName, getSourceModelClass().getSimpleName()));
 
         ReflectionUtils.doWithMethods(model.getClass(), method -> {
             try {
                 Object object = method.invoke(model);
                 if (object != null) {
-                    if (object instanceof String) {
-                        builder.append(String.format("\t\t\t%s.%s(\"%s\");%n", methodName, getSetterMethod(method.getName()), object));
+                    Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(getSetterMethod(method.getName()))).findAny();
+                    if (decorator.isPresent()) {
+                        if (decorator.get().allowMethodCall()) {
+                            builder.append(decorator.get().decorate(String.format("\t\t%s.%s(%s);%n", methodName, decorator.get().decorateMethodName(), decorator.get().decorateArgument(object))));
+                        }
+                    } else if (object instanceof String) {
+                        builder.append(String.format("\t\t%s.%s(\"%s\");%n", methodName, getSetterMethod(method.getName()), object));
                     } else {
-                        builder.append(String.format("\t\t\t%s.%s(%s);%n", methodName, getSetterMethod(method.getName()), object));
+                        builder.append(String.format("\t\t%s.%s(%s);%n", methodName, getSetterMethod(method.getName()), object));
                     }
                 }
             } catch (InvocationTargetException e) {
                 throw new ApplicationRuntimeException("Failed to access target model property", e);
             }
-        }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is")) && method.getParameterCount() == 0);
+        }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is"))
+                && !method.getName().equals("getClass")
+                && !method.getName().equals("getId")
+                && method.getParameterCount() == 0);
 
-        builder.append(String.format("\t\t\treturn %s;%n", methodName));
+        builder.append(String.format("\t\treturn %s;%n", methodName));
         builder.append(String.format("\t}%n"));
 
         return builder.toString();
@@ -176,6 +186,115 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
         }
 
         return false;
+    }
+
+    /**
+     * Method call decorator able to overwrite method call logic on multiple levels.
+     */
+    public static class MethodCallDecorator {
+
+        private final String methodName;
+
+        /** Optional decorated name that should be used instead of method name */
+        private String decoratedName;
+
+        /** Additional types that should be added to the imports section of the code */
+        private List<Class<?>> additionalImports = new ArrayList<>();
+
+        /**
+         * Default constructor using target method name to decorate.
+         * @param methodName
+         */
+        public MethodCallDecorator(String methodName) {
+            this.methodName = methodName;
+        }
+
+        /**
+         * Constructor using optional decorated method name that should be used instead.
+         * @param methodName
+         * @param decoratedName
+         */
+        public MethodCallDecorator(String methodName, String decoratedName) {
+            this.methodName = methodName;
+            this.decoratedName = decoratedName;
+        }
+
+        /**
+         * Decorate code snippet that should call the method.
+         * @param code
+         * @return
+         */
+        public String decorate(String code) {
+            return code;
+        }
+
+        /**
+         * Optional skip of complete method call when returning false. Subclasses may overwrite this method
+         * to indicate that complete method call should be skipped.
+         * @return
+         */
+        public boolean allowMethodCall() {
+            return true;
+        }
+
+        /**
+         * Decorate the methodName.
+         * @return
+         */
+        public String decorateMethodName() {
+            if (StringUtils.hasText(decoratedName)) {
+                return decoratedName;
+            }
+
+            return methodName;
+        }
+
+        /**
+         * Checks wheather this decorator is capable of decorating the methodCall.
+         * @param methodCall
+         * @return
+         */
+        public boolean supports(String methodCall) {
+            return methodName.equals(methodCall);
+        }
+
+        /**
+         * Decorate method argument.
+         * @param arg
+         * @return
+         */
+        public Object decorateArgument(Object arg) {
+            if (arg instanceof String) {
+                return "\"" + arg + "\"";
+            } else {
+                return arg;
+            }
+        }
+
+        /**
+         * Gets the additionalImports.
+         * @return
+         */
+        public List<Class<?>> getAdditionalImports() {
+            return additionalImports;
+        }
+    }
+
+    /**
+     * Add method call decorator.
+     * @param decorator
+     */
+    protected void addDecorator(AbstractModelConverter.MethodCallDecorator decorator) {
+        decorators.add(decorator);
+    }
+
+    @Override
+    public List<Class<?>> getAdditionalImports() {
+        List<Class<?>> types = new ArrayList<>();
+        types.add(getSourceModelClass());
+
+        decorators.forEach(decorator -> types.addAll(decorator.getAdditionalImports()));
+        return types;
     }
 
     @Override
