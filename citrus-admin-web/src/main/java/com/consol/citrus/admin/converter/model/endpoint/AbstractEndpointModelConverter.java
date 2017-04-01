@@ -44,6 +44,13 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
                 return AbstractEndpointModelConverter.this.getJavaConfig(model);
             }
         };
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("timeout") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Long.valueOf(arg.toString());
+            }
+        });
     }
 
     /**
@@ -55,6 +62,13 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
     protected AbstractEndpointModelConverter(Class<T> targetModelType, Class<S> sourceModelType, ModelConverter<T, C> delegate) {
         this.sourceModelType = sourceModelType;
         this.delegate = delegate;
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("timeout") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Long.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override
