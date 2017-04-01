@@ -27,6 +27,13 @@ public abstract class AbstractServerModelConverter<T, S extends Server> extends 
                 return getJavaConfig(model, getId(model), getEndpointType());
             }
         };
+
+        delegate.addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Long.valueOf(arg.toString());
+            }
+        });
     }
 
     protected abstract String getEndpointType();

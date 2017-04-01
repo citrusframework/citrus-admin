@@ -51,9 +51,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="list-group">
-        <div *ngIf="bean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties
-          defined
-        </div>
+        <div *ngIf="bean.properties?.length == 0" class="list-group-item"><i class="fa fa-times"></i> No properties defined</div>
         <div *ngFor="let property of bean.properties" class="list-group-item clickable">
           <i class="fa fa-file-text-o"></i>&nbsp;<b>{{property.name}}</b> = {{property.value}}&nbsp;<a
             class="btn-remove pull-right" (click)="removeProperty(bean, property, $event)" name="remove"
@@ -83,40 +81,43 @@
 <div *ngIf="display == 'table'" class="table-responsive">
   <table class="table table-hover">
     <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Properties</th>
-      <th width="50">Actions</th>
-    </tr>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Properties</th>
+        <th width="50">Actions</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let bean of beans" (click)="selectBean(bean)" class="clickable">
-      <td>{{bean.id ? bean.id : 'bean'}}</td>
-      <td>
-        <ul class="properties endpoint-properties">
-          <li><b>type</b>: {{bean.clazz | clazz:'name'}}</li>
-          <li><b>package</b>: {{bean.clazz | clazz:'package'}}</li>
-        </ul>
-      </td>
-      <td>
-        <ul class="properties endpoint-properties">
-          <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>:
-            {{property.value}}
-          </li>
-        </ul>
-      </td>
-      <td>
-        <a (click)="selectBean(bean)" name="edit" title="Edit bean"><i class="fa fa-edit"></i></a>
-        &nbsp;|&nbsp;
-        <a (click)="removeBean(bean, $event)" name="remove" title="Remove bean"><i class="fa fa-times" style="color: #A50000;"></i></a>
-      </td>
-    </tr>
+      <tr *ngIf="beans?.length == 0">
+        <td colspan="4"><i class="fa fa-sitemap"></i> No beans found for project</td>
+      </tr>
+      <tr *ngFor="let bean of beans" (click)="selectBean(bean)" class="clickable">
+        <td>{{bean.id ? bean.id : 'bean'}}</td>
+        <td>
+          <ul class="properties endpoint-properties">
+            <li><b>type</b>: {{bean.clazz | clazz:'name'}}</li>
+            <li><b>package</b>: {{bean.clazz | clazz:'package'}}</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="properties endpoint-properties">
+            <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>:
+              {{property.value}}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <a (click)="selectBean(bean)" name="edit" title="Edit bean"><i class="fa fa-edit"></i></a>
+          &nbsp;|&nbsp;
+          <a (click)="removeBean(bean, $event)" name="remove" title="Remove bean"><i class="fa fa-times" style="color: #A50000;"></i></a>
+        </td>
+      </tr>
     </tbody>
     <tfoot>
-    <tr>
-      <td colspan="4">&nbsp;</td>
-    </tr>
+      <tr>
+        <td colspan="4">&nbsp;</td>
+      </tr>
     </tfoot>
   </table>
 </div>

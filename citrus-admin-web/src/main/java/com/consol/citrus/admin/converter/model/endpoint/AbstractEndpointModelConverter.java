@@ -114,7 +114,7 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
             try {
                 Object object = method.invoke(model);
                 if (object != null) {
-                    String methodCall = StringUtils.uncapitalize(method.getName().replaceAll("get", ""));
+                    String methodCall = getMethodCall(method.getName());
                     Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(methodCall)).findAny();
 
                     if (decorator.isPresent()) {
@@ -139,6 +139,21 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
         builder.append(String.format("\t}%n"));
 
         return builder.toString();
+    }
+
+    /**
+     * Map setter method call based on getter method names.
+     * @param methodName
+     * @return
+     */
+    private String getMethodCall(String methodName) {
+        if (methodName.startsWith("get")) {
+            return StringUtils.uncapitalize(methodName.substring(3));
+        } else if (methodName.startsWith("is")) {
+            return StringUtils.uncapitalize(methodName.substring(2));
+        }
+
+        return methodName;
     }
 
     /**

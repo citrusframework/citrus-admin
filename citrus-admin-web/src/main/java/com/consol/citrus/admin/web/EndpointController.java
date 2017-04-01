@@ -84,7 +84,7 @@ public class EndpointController {
     public List<?> listEndpoints() {
         List<EndpointModel> endpoints = new ArrayList<>();
         for (EndpointConverter converter : endpointConverter) {
-            List<?> models = null;
+            List<?> models = new ArrayList<>();
             if (projectService.hasSpringXmlApplicationContext()) {
                 models = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), converter.getSourceModelClass());
             } else if (projectService.hasSpringJavaConfig()) {
