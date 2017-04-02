@@ -467,17 +467,21 @@ public class ProjectService {
 
                 if (!pomXml.contains("<artifactId>citrus-" + module.getName() + "</artifactId>")) {
                     String[] patterns = new String[] {
-                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*</dependency>",
-                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*</dependency>",
-                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
-                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
+                            "^\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>(.+)</version>[\\s\\n\\r]*</dependency>\\s*$",
+                            "^\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*</dependency>\\s*$",
+                            "^\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>(.+)</version>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>\\s*$",
+                            "^\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>\\s*$",
                     };
 
                     for (String pattern : patterns) {
-                        Matcher matcher = Pattern.compile(pattern).matcher(pomXml);
+                        Matcher matcher = Pattern.compile(pattern, Pattern.MULTILINE).matcher(pomXml);
 
                         if (matcher.find()) {
-                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-" + module.getName() + "</artifactId>%n      <version>" + getActiveProject().getVersion() + "</version>%n    </dependency>") + pomXml.substring(matcher.end());
+                            String version = getActiveProject().getVersion();
+                            if (matcher.groupCount() > 0) {
+                                version = matcher.group(1);
+                            }
+                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-" + module.getName() + "</artifactId>%n      <version>" + version + "</version>%n    </dependency>") + pomXml.substring(matcher.end());
                             break;
                         }
                     }
