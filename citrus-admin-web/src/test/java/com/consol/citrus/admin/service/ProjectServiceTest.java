@@ -18,6 +18,8 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
+import com.consol.citrus.admin.model.Module;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
@@ -103,6 +105,21 @@ public class ProjectServiceTest {
         for (Map.Entry<String, String> propEntry : properties.entrySet()) {
             Assert.assertEquals(projectProperties.get(propEntry.getKey()), propEntry.getValue());
         }
+    }
+
+    @Test
+    public void testGetModules() throws Exception {
+        Project testProject = new Project(new ClassPathResource("projects/maven").getFile().getCanonicalPath());
+        projectService.setActiveProject(testProject);
+
+        List<Module> modules = projectService.getModules();
+        Assert.assertEquals(modules.size(), new NamespacePrefixMapper().getNamespaceMappings().size());
+
+        Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("core")));
+        Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("java-dsl")));
+        Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("http")));
+        Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("jms")));
+        Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("ws")));
     }
 
     @Test

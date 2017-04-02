@@ -44,7 +44,7 @@ export class TestListComponent implements OnInit {
     }
 
     notifyError(error: any) {
-        this.alertService.add(new Alert("danger", error.message, false));
+        this.alertService.add(new Alert("danger", error, false));
     }
 
     private navigateToTestInfo(test:Test) {

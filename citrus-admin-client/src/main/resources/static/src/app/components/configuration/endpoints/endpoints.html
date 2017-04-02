@@ -3,10 +3,13 @@
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></button>
     <ul class="dropdown-menu">
-      <li *ngFor="let type of endpointTypes" [routerLink]="['endpoint-editor', {type:type}]" >
+      <li *ngFor="let type of endpointTypes" [routerLink]="['endpoint-editor', {type:type}]">
         <a [name]="type" class="clickable">
           <endpoint-label [type]="type"></endpoint-label>
         </a>
+      </li>
+      <li [routerLink]="['/settings/modules']">
+        <a name="more" class="clickable">... more modules</a>
       </li>
     </ul>
   </div>
@@ -72,8 +75,7 @@
     <div detail-panel-heading
          [title]="endpoint.id"
          [routerLink]="['endpoint-editor', endpoint.id]"
-         (remove)="invokeRemove(endpoint, $event)"
-    >
+         (remove)="invokeRemove(endpoint, $event)">
     </div>
     <div class="panel-body" style="min-height: 10em;">
       <ul class="properties endpoint-properties">

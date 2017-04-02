@@ -8,6 +8,7 @@ export class SettingsComponent  {
 
     menuEntries = [
         {name: 'Project', link:['project']},
+        {name: 'Modules', link:['modules']},
         {name: 'Connector', link:['connector']}
     ];
 

@@ -16,13 +16,14 @@
 
 package com.consol.citrus.admin.web;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.ProjectSettings;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -72,6 +73,22 @@ public class ProjectController {
     @ResponseBody
     public ResponseEntity saveProjectSettings(@RequestBody ProjectSettings settings) {
         projectService.applySettings(settings);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/modules", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Module> getProjectModules() {
+        return projectService.getModules();
+    }
+
+    @RequestMapping(value = "/module", method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody Module module) {
+        if (module.isActive()) {
+            projectService.add(module);
+        } else {
+            projectService.remove(module);
+        }
         return ResponseEntity.ok().build();
     }
 

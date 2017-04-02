@@ -19,8 +19,8 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.ProjectSettings;
+import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
@@ -39,8 +39,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
 import org.springframework.util.xml.SimpleNamespaceContext;
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 
 import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
@@ -393,11 +394,11 @@ public class ProjectService {
                 } else if (hasSpringJavaConfig()) {
                     beans = springJavaConfigService.getBeanNames(getSpringJavaConfig(), getActiveProject(), WebSocketPushEventsListener.class);
                     for (String bean : beans) {
-                        springBeanService.removeBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
+                        springJavaConfigService.removeBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
                     }
                 }
             } catch (IOException e) {
-                throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
+                throw new ApplicationRuntimeException("Failed to remove admin connector dependency from Maven pom.xml file", e);
             }
         }
     }
@@ -411,6 +412,105 @@ public class ProjectService {
         System.setProperty(Application.XML_SRC_DIRECTORY, settings.getXmlSrcDirectory());
         System.setProperty(Application.SPRING_APPLICATION_CONTEXT, settings.getSpringApplicationContext());
         System.setProperty(Application.SPRING_JAVA_CONFIG, settings.getSpringJavaConfig());
+    }
+
+    /**
+     * Get the Citrus modules for this project based on the build dependencies.
+     * @return
+     */
+    public List<Module> getModules() {
+        List<Module> modules = new ArrayList<>();
+        Collection<String> allModules = new NamespacePrefixMapper().getNamespaceMappings().values();
+
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
+
+                Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
+
+                NodeList dependencies = XPathUtils.evaluateAsNodeList(pomDoc, "/mvn:project/mvn:dependencies/mvn:dependency/mvn:artifactId[starts-with(., 'citrus-')]", nsContext);
+
+                for (int i = 0; i < dependencies.getLength(); i++) {
+                    String moduleName = DomUtils.getTextValue((Element) dependencies.item(i));
+
+                    if (moduleName.equals("citrus-core")) {
+                        allModules.remove("citrus");
+                    } else {
+                        allModules.remove(moduleName);
+                    }
+
+                    modules.add(new Module(moduleName.substring("citrus-".length()), getActiveProject().getVersion(), true));
+                }
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
+            }
+        }
+
+        allModules.stream()
+                .filter(name -> !name.equals("citrus-test"))
+                .map(name -> new Module(name.substring("citrus-".length()), getActiveProject().getVersion(), false))
+                .forEach(modules::add);
+
+        return modules;
+    }
+
+    /**
+     * Adds module to project build configuration as dependency.
+     * @param module
+     */
+    public void add(Module module) {
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+
+                if (!pomXml.contains("<artifactId>citrus-" + module.getName() + "</artifactId>")) {
+                    String[] patterns = new String[] {
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
+                            "\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-core</artifactId>[\\s\\n\\r]*<scope>.*</scope>[\\s\\n\\r]*</dependency>",
+                    };
+
+                    for (String pattern : patterns) {
+                        Matcher matcher = Pattern.compile(pattern).matcher(pomXml);
+
+                        if (matcher.find()) {
+                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-" + module.getName() + "</artifactId>%n      <version>" + getActiveProject().getVersion() + "</version>%n    </dependency>") + pomXml.substring(matcher.end());
+                            break;
+                        }
+                    }
+
+                    if (!pomXml.contains("<artifactId>citrus-" + module.getName() + "</artifactId>")) {
+                        throw new ApplicationRuntimeException("Failed to add Citrus module dependency to Maven pom.xml file - please add manually");
+                    }
+
+                    FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+                }
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
+            }
+        }
+    }
+
+    /**
+     * Removes module from project build configuration.
+     * @param module
+     */
+    public void remove(Module module) {
+        if (project.isMavenProject()) {
+            try {
+                String pomXml = FileUtils.readToString(new FileSystemResource(project.getMavenPomFile()));
+
+                pomXml = pomXml.replaceAll("\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-" + module.getName() + "</artifactId>[\\s\\n\\r]*<version>.*</version>[\\s\\n\\r]*</dependency>", "");
+                pomXml = pomXml.replaceAll("\\s*<dependency>[\\s\\n\\r]*<groupId>com\\.consol\\.citrus</groupId>[\\s\\n\\r]*<artifactId>citrus-" + module.getName() + "</artifactId>[\\s\\n\\r]*</dependency>", "");
+
+                FileUtils.writeToFile(pomXml, new FileSystemResource(project.getMavenPomFile()).getFile());
+            } catch (IOException e) {
+                throw new ApplicationRuntimeException("Failed to remove Citrus module dependency from Maven pom.xml file", e);
+            }
+        }
     }
 
     /**

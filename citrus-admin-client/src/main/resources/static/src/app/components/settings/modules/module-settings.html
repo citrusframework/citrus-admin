@@ -1,0 +1,39 @@
+<h1 class="page-header"><i class="fa fa-cubes"></i> Module settings</h1>
+
+<p>Citrus is modular so you can add functionality according to your project's needs. Citrus provides separate modules for message
+transports and exchanged data. By selecting the modules below Citrus will automatically add the needed dependencies to your project.</p>
+
+
+<div *ngIf="modules.length == 0" class="panel panel-default">
+  <div class="panel-body">
+    <i class="fa fa-times"></i> No Citrus modules defined in project
+  </div>
+</div>
+
+<h2 *ngIf="modules.length > 0" class="sub-header">Active modules</h2>
+
+<div style="display: flex; flex-wrap: wrap">
+  <div *ngFor="let module of modules">
+    <div *ngIf="module.active" class="panel panel-default">
+      <div class="panel-body">
+        <h4><i (click)="removeModule(module)" class="fa fa-check-square-o clickable"></i> <span class="badge badge-{{module.name}}" [textContent]="'citrus-' + module.name" style="font-size: 12pt; width: 85%; text-align: left;"></span></h4>
+        <p><b>name:</b> {{module.name}}</p>
+        <p><b>version:</b> {{module.version}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 *ngIf="modules.length > 0" class="sub-header">Add modules</h2>
+
+<div style="display: flex; flex-wrap: wrap">
+  <div *ngFor="let module of modules">
+    <div *ngIf="!module.active" class="panel panel-default">
+      <div class="panel-body">
+        <h4><i (click)="addModule(module)" class="fa fa-square-o clickable"></i> <span class="badge badge-{{module.name}}" [textContent]="'citrus-' + module.name" style="font-size: 12pt; width: 85%; text-align: left;"></span></h4>
+        <p><b>name:</b> {{module.name}} </p>
+        <p><b>version:</b> {{module.version}}</p>
+      </div>
+    </div>
+  </div>
+</div>

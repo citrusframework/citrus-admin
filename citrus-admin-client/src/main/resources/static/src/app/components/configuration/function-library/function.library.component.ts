@@ -125,6 +125,6 @@ export class FunctionLibraryComponent implements OnInit {
     }
 
     notifyError(error: any) {
-        this._alertService.add(new Alert("danger", error.message, false));
+        this._alertService.add(new Alert("danger", error, false));
     }
 }

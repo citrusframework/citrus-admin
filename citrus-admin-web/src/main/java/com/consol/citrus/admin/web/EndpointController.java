@@ -19,6 +19,7 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.converter.endpoint.EndpointConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.EndpointModel;
+import com.consol.citrus.admin.model.Module;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -126,7 +128,11 @@ public class EndpointController {
             endpointTypes.add(converter.getEndpointType());
         }
 
-        return endpointTypes;
+        List<String> activeModuleNames = projectService.getModules().stream()
+                .filter(Module::isActive)
+                .map(Module::getName).collect(Collectors.toList());
+
+        return endpointTypes.stream().filter(type -> activeModuleNames.contains(type.replaceAll("-client", "").replaceAll("-server", ""))).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/type/{type}", method = {RequestMethod.GET})

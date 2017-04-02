@@ -193,6 +193,7 @@ form {
 .panel {
     max-width: 400px;
     min-width: 300px;
+    margin-left: 3px;
 }
 
 .floating {
@@ -553,7 +554,10 @@ pre.logger {
     background-color: #0096D6;
 }
 
-.label-citrus, .badge-citrus {
+.label-citrus, .badge-citrus,
+.label-core, .badge-core,
+.label-java-dsl, .badge-java-dsl,
+.label-admin-connector, .badge-admin-connector {
     background-color: #fcc300;
 }
 
@@ -573,32 +577,32 @@ pre.logger {
     background-color: #fa6c00;
 }
 
-.label-http-client, .badge-http-client,
+.label-http, .label-http-client, .badge-http, .badge-http-client,
 .label-http-server, .badge-http-server {
     background-color: #34abca;
 }
 
-.label-ssh-client, .badge-ssh-client,
+.label-ssh, .label-ssh-client, .badge-ssh, .badge-ssh-client,
 .label-ssh-server, .badge-ssh-server {
     background-color: #f42222;
 }
 
-.label-mail-client, .badge-mail-client,
+.label-mail, .label-mail-client, .badge-mail, .badge-mail-client,
 .label-mail-server, .badge-mail-server {
     background-color: #7c83c1;
 }
 
-.label-jmx-client, .badge-jmx-client,
+.label-jmx, .label-jmx-client, .badge-jmx, .badge-jmx-client,
 .label-jmx-server, .badge-jmx-server {
     background-color: #e2da09;
 }
 
-.label-rmi-client, .badge-rmi-client,
+.label-rmi, .label-rmi-client, .badge-rmi, .badge-rmi-client,
 .label-rmi-server, .badge-rmi-server {
     background-color: #b6c11b;
 }
 
-.label-ws-client, .badge-ws-client,
+.label-ws, .label-ws-client, .badge-ws, .badge-ws-client,
 .label-ws-server, .badge-ws-server{
     background-color: #026ebe;
 }
@@ -615,14 +619,44 @@ pre.logger {
     background-color: #b13fd2;
 }
 
-.label-ftp-client, .badge-ftp-client,
+.label-ftp, .label-ftp-client, .badge-ftp, .badge-ftp-client,
 .label-ftp-server, .badge-ftp-server {
+    background-color: #ff8dc3;
+}
+
+.label-websocket, .label-websocket-client, .badge-websocket, .badge-websocket-client,
+.label-websocket-server, .badge-websocket-server {
+    background-color: #b06db8;
+}
+
+.label-docker, .label-docker-client, .badge-docker, .badge-docker-client,
+.label-docker-server, .badge-docker-server {
+    background-color: #0096D6;
+}
+
+.label-cucumber, .label-cucumber-client, .badge-cucumber, .badge-cucumber-client,
+.label-cucumber-server, .badge-cucumber-server {
     background-color: #5cb85c;
 }
 
-.label-websocket-client, .badge-websocker-client,
-.label-websocket-server, .badge-websocker-server {
-    background-color: #b06db8;
+.label-zookeeper, .label-zookeeper-client, .badge-zookeeper, .badge-zookeeper-client,
+.label-zookeeper-server, .badge-zookeeper-server {
+    background-color: #d63d2a;
+}
+
+.label-arquillian, .label-arquillian-client, .badge-arquillian, .badge-arquillian-client,
+.label-arquillian-server, .badge-arquillian-server {
+    background-color: #9cd638;
+}
+
+.label-k8s, .label-k8s-client, .badge-k8s, .badge-k8s-client,
+.label-k8s-server, .badge-k8s-server {
+    background-color: #0096D6;
+}
+
+.label-selenium, .label-selenium-client, .badge-selenium, .badge-selenium-client,
+.label-selenium-server, .badge-selenium-server {
+    background-color: #5cb85c;
 }
 
 .badge-primary {

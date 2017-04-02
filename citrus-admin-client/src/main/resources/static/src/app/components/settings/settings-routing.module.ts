@@ -4,6 +4,7 @@ import {CanActivateRoutes} from "../../service/can-activate-routes";
 import {ServiceModule} from "../../service/service.module";
 import {ConnectorSettingsComponent} from "./connector/connector.settings.component";
 import {ProjectSettingsComponent} from "./project/project.settings.component";
+import {ModuleSettingsComponent} from "./modules/module.settings.component";
 import {SettingsComponent} from "./settings.component";
 
 const routes:Routes = [
@@ -14,6 +15,7 @@ const routes:Routes = [
         children: [
             { path: '', redirectTo: 'project', pathMatch: 'full'},
             { path: 'project', component: ProjectSettingsComponent},
+            { path: 'modules', component: ModuleSettingsComponent},
             { path: 'connector', component: ConnectorSettingsComponent}
         ]
     },

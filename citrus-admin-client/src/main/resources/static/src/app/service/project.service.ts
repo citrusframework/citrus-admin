@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Project} from "../model/project";
 import {Observable} from 'rxjs/Observable';
-import {Cached} from "../util/decorator";
+import {Module} from "../model/module";
 
 @Injectable()
 export class ProjectService {
@@ -15,7 +15,6 @@ export class ProjectService {
     cachedProject: Project;
     cachedObservable: Observable<Project>;
 
-    //@Cached()
     getActiveProject(): Observable<Project> {
         if (this.cachedProject) {
             return Observable.of(this.cachedProject)
@@ -37,6 +36,17 @@ export class ProjectService {
             this.cachedObservable = null;
         }
         return this.http.put(this._serviceUrl, JSON.stringify(project), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
+            .catch(this.handleError);
+    }
+
+    getModules(): Observable<Module[]> {
+        return this.http.get(this._serviceUrl + "/modules")
+                .map(res => <Module[]> res.json())
+                .catch(this.handleError);
+    }
+
+    updateModule(module: Module) {
+        return this.http.put(this._serviceUrl + "/module", JSON.stringify(module), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
             .catch(this.handleError);
     }
 
