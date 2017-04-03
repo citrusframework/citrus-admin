@@ -101,8 +101,8 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
                 if (object != null) {
                     Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(getSetterMethod(method.getName()))).findAny();
                     if (decorator.isPresent()) {
-                        if (decorator.get().allowMethodCall()) {
-                            builder.append(decorator.get().decorate(String.format("\t\t%s.%s(%s);%n", methodName, decorator.get().decorateMethodName(), decorator.get().decorateArgument(object))));
+                        if (decorator.get().allowMethodCall(object)) {
+                            builder.append(decorator.get().decorate(String.format("\t\t%s.%s(%s);%n", methodName, decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
                         }
                     } else if (object instanceof String) {
                         builder.append(String.format("\t\t%s.%s(\"%s\");%n", methodName, getSetterMethod(method.getName()), object));
@@ -222,18 +222,20 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
         /**
          * Decorate code snippet that should call the method.
          * @param code
+         * @param arg
          * @return
          */
-        public String decorate(String code) {
+        public String decorate(String code, Object arg) {
             return code;
         }
 
         /**
          * Optional skip of complete method call when returning false. Subclasses may overwrite this method
          * to indicate that complete method call should be skipped.
+         * @param arg
          * @return
          */
-        public boolean allowMethodCall() {
+        public boolean allowMethodCall(Object arg) {
             return true;
         }
 

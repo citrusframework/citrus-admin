@@ -12,7 +12,7 @@
     <input-with-addon
         formControlName="id"
         [autofocus]="true"
-        [message]="form.get('id').errors ? 'Name is Required' : ''"
+        [message]="form.get('id').errors ? 'Name is required' : ''"
         [(ngModel)]="endpoint.id"></input-with-addon>
   </form-group>
   <form-group *ngFor="let property of endpoint.properties"
@@ -21,7 +21,7 @@
     <input-with-addon
         *ngIf="!property.optionKey && !property.options"
         [formControlName]="property.id"
-        [message]="form.get(property.id).errors ? 'Name is Required' : ''"
+        [message]="form.get(property.id).errors ? property.displayName + ' is required' : ''"
         [(ngModel)]="property.value"></input-with-addon>
     <div *ngIf="property.optionKey" style="display: flex">
       <autocomplete
@@ -39,9 +39,7 @@
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-primary"
               [disabled]="form.invalid"
-              type="submit">
-        Save
-      </button>
+              type="submit">Save</button>
       <button class="btn btn-default" (click)="invokeCancel()" type="reset">Close</button>
     </div>
   </div>

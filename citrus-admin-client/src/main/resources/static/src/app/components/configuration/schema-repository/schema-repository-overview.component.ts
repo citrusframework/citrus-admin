@@ -25,7 +25,7 @@ export class SchemaRepositoryOverviewComponent implements OnInit {
         this.schemas = this.schemaRepositoryState.schemas;
         this.repositories = this.schemaRepositoryState.repositories;
         this.noSchemas = this.schemas.map(s => s.length === 0)
-        this.noRepositories = this.schemas.map(s => s.length === 0)
+        this.noRepositories = this.repositories.map(s => s.length === 0)
         this.schemaRepositoryActions.fetchRepository();
         this.schemaRepositoryActions.fetchSchema()
     }

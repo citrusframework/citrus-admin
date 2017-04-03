@@ -209,7 +209,7 @@ public class SpringJavaConfigService {
     public void addBeanDefinition(File configFile, Project project, Object model) {
         ModelConverter converter = modelConverter.stream().filter(c -> c.getTargetModelClass().equals(model.getClass()))
                 .findFirst()
-                .orElseThrow(() -> new ApplicationRuntimeException("Invalid modle type '%s' - no proper model converter found"));
+                .orElseThrow(() -> new ApplicationRuntimeException(String.format("Invalid model type '%s' - no proper model converter found", model.getClass())));
 
         String javaCode;
         try (InputStream fis = new FileInputStream(configFile)) {

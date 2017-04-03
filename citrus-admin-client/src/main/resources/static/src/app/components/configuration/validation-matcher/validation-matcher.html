@@ -18,24 +18,20 @@
   <h3 *ngIf="EditorMode.EDIT === mode">Edit Library</h3>
   <form-group
       [control]="form.get('id')"
-      label="Name *"
-  >
+      label="Name *">
     <input-with-addon
         [autofocus]="true"
         [(ngModel)]="selectedLibrary.id"
         formControlName="id"
-        [message]="form.get('id').errors ? 'Name is Required' : ''"
-    ></input-with-addon>
+        [message]="form.get('id').errors ? 'Name is required' : ''"></input-with-addon>
   </form-group>
   <form-group
       [control]="form.get('prefix')"
-      label="Prefix *"
-  >
+      label="Prefix *">
     <input-with-addon
         [(ngModel)]="selectedLibrary.prefix"
         formControlName="prefix"
-        [message]="form.get('prefix').errors ? 'Name is Required' : ''"
-    ></input-with-addon>
+        [message]="form.get('prefix').errors ? 'Prefix is required' : ''"></input-with-addon>
   </form-group>
   <div class="form-group">
     <label class="col-sm-2 control-label">ValidationMatchers</label>

@@ -22,7 +22,7 @@ export const SchemaRepositoryStateInit:SchemaRepositoryState = {
     repositories: {},
     schemas: {},
     mappingStrategies: []
-}
+};
 
 @Injectable()
 export class SchemaRepositoryEffects {

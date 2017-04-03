@@ -118,8 +118,8 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
                     Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(methodCall)).findAny();
 
                     if (decorator.isPresent()) {
-                        if (decorator.get().allowMethodCall()) {
-                            builder.append(decorator.get().decorate(String.format("\t\t\t.%s(%s)%n", decorator.get().decorateMethodName(), decorator.get().decorateArgument(object))));
+                        if (decorator.get().allowMethodCall(object)) {
+                            builder.append(decorator.get().decorate(String.format("\t\t\t.%s(%s)%n", decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
                         }
                     } else if (object instanceof String) {
                         builder.append(String.format("\t\t\t.%s(\"%s\")%n", methodCall, object));

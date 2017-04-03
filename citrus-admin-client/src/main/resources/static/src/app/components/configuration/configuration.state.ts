@@ -7,8 +7,8 @@ export interface ConfigurationState {
 
 export const ConfigurationStateInit:ConfigurationState = {
     schemaRepository: SchemaRepositoryStateInit
-}
+};
 
 export const reduce = combineReducers({
     schemaRepository
-})
+});

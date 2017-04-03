@@ -4,8 +4,13 @@ import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.model.config.core.SchemaModel;
 import com.consol.citrus.model.config.core.SchemaRepositoryModel;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.xml.xsd.SimpleXsdSchema;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -17,6 +22,40 @@ public class SchemaRepositoryModelConverter extends AbstractModelConverter<Schem
      */
     public SchemaRepositoryModelConverter() {
         super(SchemaRepositoryModel.class, XsdSchemaRepository.class);
+
+        addDecorator(new MethodCallDecorator("setSchemas") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(Collectors.class);
+                getAdditionalImports().add(ClassPathResource.class);
+                getAdditionalImports().add(SimpleXsdSchema.class);
+                getAdditionalImports().add(Stream.class);
+
+                SchemaRepositoryModel.Schemas schemas = (SchemaRepositoryModel.Schemas) arg;
+                StringBuilder codeBuilder = new StringBuilder();
+
+                codeBuilder.append("Stream.of(");
+                schemas.getSchemas().forEach(schema -> codeBuilder.append(String.format("%n\t\t\t\tnew SimpleXsdSchema(new ClassPathResource(\"%s\")),", schema.getLocation())));
+
+                if (CollectionUtils.isEmpty(schemas.getReferences())) {
+                    codeBuilder.deleteCharAt(codeBuilder.length() - 1);
+                }
+
+                schemas.getReferences().forEach(schemaRef -> codeBuilder.append(String.format("%n\t\t\t\t%s(),", schemaRef.getSchema())));
+                if (!CollectionUtils.isEmpty(schemas.getReferences())) {
+                    codeBuilder.deleteCharAt(codeBuilder.length() - 1);
+                }
+
+                codeBuilder.append(String.format(")%n\t\t\t.collect(Collectors.toList())"));
+
+                return codeBuilder.toString();
+            }
+
+            @Override
+            public boolean allowMethodCall(Object arg) {
+                return ((SchemaRepositoryModel.Schemas) arg).getSchemas().size() > 0;
+            }
+        });
     }
 
     @Override
