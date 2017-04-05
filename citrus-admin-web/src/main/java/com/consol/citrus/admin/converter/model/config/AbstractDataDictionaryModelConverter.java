@@ -2,12 +2,16 @@ package com.consol.citrus.admin.converter.model.config;
 
 import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.model.config.core.DataDictionaryType;
+import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -25,6 +29,38 @@ public abstract class AbstractDataDictionaryModelConverter<T, S> extends Abstrac
      */
     public AbstractDataDictionaryModelConverter(Class<T> targetModelType, Class<S> sourceModelType) {
         super(targetModelType, sourceModelType);
+
+        addDecorator(new MethodCallDecorator("setMappingStrategy", "setPathMappingStrategy") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(AbstractDataDictionary.class);
+                return "AbstractDataDictionary.PathMappingStrategy." + arg.toString();
+            }
+        });
+
+        addDecorator(new MethodCallDecorator("setMappings") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(AbstractMap.class);
+                getAdditionalImports().add(Collectors.class);
+                getAdditionalImports().add(Stream.class);
+
+                DataDictionaryType.Mappings mappings = (DataDictionaryType.Mappings) arg;
+                StringBuilder codeBuilder = new StringBuilder();
+
+                codeBuilder.append("Stream.of(");
+                mappings.getMappings().forEach(mapping -> codeBuilder.append(String.format("%n\t\t\t\tnew AbstractMap.SimpleEntry<>(\"%s\", \"%s\"),", mapping.getPath(), mapping.getValue())));
+                codeBuilder.deleteCharAt(codeBuilder.length() - 1);
+                codeBuilder.append(String.format(")%n\t\t\t.collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))"));
+
+                return codeBuilder.toString();
+            }
+
+            @Override
+            public boolean allowMethodCall(Object arg) {
+                return arg != null && ((DataDictionaryType.Mappings)arg).getMappings().size() > 0;
+            }
+        });
     }
 
     /**

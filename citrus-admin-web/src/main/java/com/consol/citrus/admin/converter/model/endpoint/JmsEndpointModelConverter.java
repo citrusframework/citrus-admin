@@ -18,7 +18,6 @@ public class JmsEndpointModelConverter extends AbstractEndpointModelConverter<Jm
     public JmsEndpointModelConverter() {
         super(JmsEndpointModel.class, JmsEndpoint.class, JmsEndpointConfiguration.class);
         addDecorator(new AbstractModelConverter.MethodCallDecorator("destinationName", "destination"));
-        addDecorator(new AbstractModelConverter.MethodCallDecorator("isPubSubDomain", "pubSubDomain"));
     }
 
     @Override
