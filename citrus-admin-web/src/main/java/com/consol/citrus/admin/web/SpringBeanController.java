@@ -126,13 +126,7 @@ public class SpringBeanController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SpringBean.class, Collections.singletonMap("class", type));
         } else if (projectService.hasSpringJavaConfig()) {
-            try {
-                List<?> beans = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), projectService.getActiveProject().getClassLoader().loadClass(type));
-                // ToDo convert beans to generic spring bean model objects
-                return new ArrayList<>();
-            } catch (ClassNotFoundException | IOException e) {
-                throw new ApplicationRuntimeException("Faiuled to access bean type", e);
-            }
+            return listBeans().stream().filter(bean -> bean.getClazz().equals(type)).collect(Collectors.toList());
         }
 
         return new ArrayList<>();

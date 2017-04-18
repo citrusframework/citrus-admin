@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.model.config.vertx.VertxEndpointModel;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
@@ -32,6 +33,13 @@ public class VertxEndpointModelConverter extends AbstractEndpointModelConverter<
      */
     public VertxEndpointModelConverter() {
         super(VertxEndpointModel.class, VertxEndpoint.class, VertxEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

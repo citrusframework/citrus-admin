@@ -16,7 +16,9 @@
 
 package com.consol.citrus.admin.service.spring;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.functions.core.RandomNumberFunction;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.model.config.core.*;
@@ -213,6 +215,10 @@ public class SpringJavaConfigServiceTest extends AbstractTestNGSpringContextTest
 
         List<WebServiceClientModel> clients = springJavaConfigService.getBeanDefinitions(GetBeanDefinitionConfig.class, project, WebServiceClientModel.class);
         Assert.assertEquals(clients.size(), 0L);
+
+        List<SpringBean> beans = springJavaConfigService.getBeanDefinitions(GetBeanDefinitionConfig.class, project, SpringBean.class);
+        Assert.assertEquals(beans.size(), 1L);
+        Assert.assertEquals(beans.get(0).getId(), "testActor");
     }
 
     @Test
@@ -225,6 +231,10 @@ public class SpringJavaConfigServiceTest extends AbstractTestNGSpringContextTest
 
         names = springJavaConfigService.getBeanNames(GetBeanDefinitionConfig.class, project, WebServiceClient.class);
         Assert.assertEquals(names.size(), 0L);
+
+        names = springJavaConfigService.getBeanNames(GetBeanDefinitionConfig.class, project, TestActor.class);
+        Assert.assertEquals(names.size(), 1L);
+        Assert.assertTrue(names.stream().anyMatch(name -> name.equals("testActor")));
     }
 
     @Test

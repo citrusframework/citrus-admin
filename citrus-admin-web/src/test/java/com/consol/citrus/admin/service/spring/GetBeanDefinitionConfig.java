@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service.spring;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
@@ -61,5 +62,12 @@ public class GetBeanDefinitionConfig {
                 .synchronous()
                 .destination("jms.inbound.sync.queue")
                 .build();
+    }
+
+    @Bean
+    public TestActor testActor() {
+        TestActor actor = new TestActor();
+        actor.setName("testActor");
+        return actor;
     }
 }

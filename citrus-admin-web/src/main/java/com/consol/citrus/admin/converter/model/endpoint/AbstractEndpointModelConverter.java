@@ -18,13 +18,11 @@ package com.consol.citrus.admin.converter.model.endpoint;
 
 import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.admin.converter.model.ModelConverter;
-import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,24 +125,20 @@ public abstract class AbstractEndpointModelConverter<T, S extends Endpoint, C ex
         builder.append(String.format("\t\treturn CitrusEndpoints.%s%n", endpointType));
 
         ReflectionUtils.doWithMethods(model.getClass(), method -> {
-            try {
-                Object object = method.invoke(model);
-                if (object != null) {
-                    String methodCall = getMethodCall(method.getName());
-                    Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(methodCall)).findAny();
+            Object object = ReflectionUtils.invokeMethod(method, model);
+            if (object != null) {
+                String methodCall = getMethodCall(method.getName());
+                Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(methodCall)).findAny();
 
-                    if (decorator.isPresent()) {
-                        if (decorator.get().allowMethodCall(object)) {
-                            builder.append(decorator.get().decorate(String.format("\t\t\t.%s(%s)%n", decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
-                        }
-                    } else if (object instanceof String) {
-                        builder.append(String.format("\t\t\t.%s(\"%s\")%n", methodCall, object));
-                    } else {
-                        builder.append(String.format("\t\t\t.%s(%s)%n", methodCall, object));
+                if (decorator.isPresent()) {
+                    if (decorator.get().allowMethodCall(object)) {
+                        builder.append(decorator.get().decorate(methodName, String.format("\t\t\t.%s(%s)%n", decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
                     }
+                } else if (object instanceof String) {
+                    builder.append(String.format("\t\t\t.%s(\"%s\")%n", methodCall, object));
+                } else {
+                    builder.append(String.format("\t\t\t.%s(%s)%n", methodCall, object));
                 }
-            } catch (InvocationTargetException e) {
-                throw new ApplicationRuntimeException("Failed to access target model property", e);
             }
         }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is"))
                 && !method.getName().equals("getClass")

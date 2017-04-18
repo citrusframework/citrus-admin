@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.model.config.ssh.SshClientModel;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
@@ -32,6 +33,13 @@ public class SshClientModelConverter extends AbstractEndpointModelConverter<SshC
      */
     public SshClientModelConverter() {
         super(SshClientModel.class, SshClient.class, SshEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

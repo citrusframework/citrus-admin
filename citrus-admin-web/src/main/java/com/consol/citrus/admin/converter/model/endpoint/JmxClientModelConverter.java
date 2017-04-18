@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.model.config.jmx.JmxClientModel;
@@ -32,6 +33,13 @@ public class JmxClientModelConverter extends AbstractEndpointModelConverter<JmxC
      */
     public JmxClientModelConverter() {
         super(JmxClientModel.class, JmxClient.class, JmxEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.model.config.rmi.RmiClientModel;
 import com.consol.citrus.rmi.client.RmiClient;
 import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
@@ -32,6 +33,13 @@ public class RmiClientModelConverter extends AbstractEndpointModelConverter<RmiC
      */
     public RmiClientModelConverter() {
         super(RmiClientModel.class, RmiClient.class, RmiEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

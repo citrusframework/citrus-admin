@@ -17,8 +17,10 @@
 package com.consol.citrus.admin.service.spring;
 
 import com.consol.citrus.admin.converter.model.ModelConverter;
+import com.consol.citrus.admin.converter.model.spring.SpringBeanModelConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,12 +98,15 @@ public class SpringJavaConfigService {
                     Object bean = beanDefinitionMethod[0].invoke(config.newInstance());
                     if (bean.getClass().equals(type)) {
                         return (T) bean;
-                    }
-
-                    for (ModelConverter converter : modelConverter) {
-                        if (converter.getSourceModelClass().equals(bean.getClass()) &&
-                                converter.getTargetModelClass().equals(type)) {
-                            return (T) converter.convert(id, bean);
+                    } else if (type.equals(SpringBean.class)) {
+                        SpringBeanModelConverter<Object> springBeanModelConverter = new SpringBeanModelConverter(bean.getClass());
+                        return (T) springBeanModelConverter.convert(id, bean);
+                    } else {
+                        for (ModelConverter converter : modelConverter) {
+                            if (converter.getSourceModelClass().equals(bean.getClass()) &&
+                                    converter.getTargetModelClass().equals(type)) {
+                                return (T) converter.convert(id, bean);
+                            }
                         }
                     }
                 } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -129,33 +134,43 @@ public class SpringJavaConfigService {
         }
 
         final List<Method> beanDefinitionMethods = new ArrayList<>();
-        ReflectionUtils.doWithMethods(configFile, method -> {
-            if (method.getReturnType().equals(type) ||
-                    modelConverter.stream().anyMatch(converter -> converter.getTargetModelClass().equals(type) && converter.getSourceModelClass().equals(method.getReturnType()))) {
-                beanDefinitionMethods.add(method);
-            }
-        }, method -> method.getAnnotation(Bean.class) != null);
+        if (type.equals(SpringBean.class)) {
+            ReflectionUtils.doWithMethods(configFile, method -> {
+                if (modelConverter.stream().noneMatch(converter -> converter.getSourceModelClass().equals(method.getReturnType()))) {
+                    beanDefinitionMethods.add(method);
+                }
+            }, method -> method.getAnnotation(Bean.class) != null);
+        } else {
+            ReflectionUtils.doWithMethods(configFile, method -> {
+                if (method.getReturnType().equals(type) ||
+                        modelConverter.stream().anyMatch(converter -> converter.getTargetModelClass().equals(type) && converter.getSourceModelClass().equals(method.getReturnType()))) {
+                    beanDefinitionMethods.add(method);
+                }
+            }, method -> method.getAnnotation(Bean.class) != null);
+        }
 
         for (Method beanDefinitionMethod : beanDefinitionMethods) {
             try {
+                String beanId = beanDefinitionMethod.getName();
+                Bean beanAnnotation = beanDefinitionMethod.getAnnotation(Bean.class);
+                if (beanAnnotation != null) {
+                    if (beanAnnotation.value().length > 0) {
+                        beanId = beanAnnotation.value()[0];
+                    } else if (beanAnnotation.name().length > 0) {
+                        beanId = beanAnnotation.name()[0];
+                    }
+                }
+
                 Object bean = beanDefinitionMethod.invoke(configFile.newInstance());
                 if (bean.getClass().equals(type)) {
                     beanDefinitions.add((T) bean);
+                } else if (type.equals(SpringBean.class)) {
+                    SpringBeanModelConverter<Object> springBeanModelConverter = new SpringBeanModelConverter(bean.getClass());
+                    beanDefinitions.add((T) springBeanModelConverter.convert(beanId, bean));
                 } else {
                     for (ModelConverter converter : modelConverter) {
                         if (converter.getSourceModelClass().equals(bean.getClass()) &&
                                 converter.getTargetModelClass().equals(type)) {
-                            String beanId = beanDefinitionMethod.getName();
-
-                            Bean beanAnnotation = beanDefinitionMethod.getAnnotation(Bean.class);
-                            if (beanAnnotation != null) {
-                                if (beanAnnotation.value().length > 0) {
-                                    beanId = beanAnnotation.value()[0];
-                                } else if (beanAnnotation.name().length > 0) {
-                                    beanId = beanAnnotation.name()[0];
-                                }
-                            }
-
                             beanDefinitions.add((T) converter.convert(beanId, bean));
                             break;
                         }
@@ -178,7 +193,7 @@ public class SpringJavaConfigService {
      * @return
      */
     public List<String> getBeanNames(Class<?> configFile, Project project, Class<?> type) {
-        List<String> beanNames = new ArrayList<String>();
+        List<String> beanNames = new ArrayList<>();
 
         List<Class<?>> importedFiles = getConfigImports(configFile, project);
         for (Class<?> importLocation : importedFiles) {
@@ -186,17 +201,15 @@ public class SpringJavaConfigService {
         }
 
         ReflectionUtils.doWithMethods(configFile, method -> {
-            if (method.getReturnType().equals(type)) {
-                Bean beanAnnotation = method.getAnnotation(Bean.class);
-                if (beanAnnotation.value().length > 0) {
-                    Collections.addAll(beanNames, beanAnnotation.value());
-                } else if (beanAnnotation.name().length > 0) {
-                    Collections.addAll(beanNames, beanAnnotation.name());
-                } else {
-                    beanNames.add(method.getName());
-                }
+            Bean beanAnnotation = method.getAnnotation(Bean.class);
+            if (beanAnnotation.value().length > 0) {
+                Collections.addAll(beanNames, beanAnnotation.value());
+            } else if (beanAnnotation.name().length > 0) {
+                Collections.addAll(beanNames, beanAnnotation.name());
+            } else {
+                beanNames.add(method.getName());
             }
-        }, method -> method.getAnnotation(Bean.class) != null);
+        }, method -> method.getAnnotation(Bean.class) != null && method.getReturnType().equals(type));
 
         return beanNames;
     }
@@ -209,7 +222,17 @@ public class SpringJavaConfigService {
     public void addBeanDefinition(File configFile, Project project, Object model) {
         ModelConverter converter = modelConverter.stream().filter(c -> c.getTargetModelClass().equals(model.getClass()))
                 .findFirst()
-                .orElseThrow(() -> new ApplicationRuntimeException(String.format("Invalid model type '%s' - no proper model converter found", model.getClass())));
+                .orElseGet(() -> {
+                    if (model instanceof SpringBean) {
+                        try {
+                            return new SpringBeanModelConverter(project.getClassLoader().loadClass(((SpringBean) model).getClazz()));
+                        } catch (ClassNotFoundException | IOException e) {
+                            log.warn("Unable to access target Spring bean model type: " + ((SpringBean) model).getClazz(), e);
+                        }
+                    }
+
+                    return new SpringBeanModelConverter(model.getClass());
+        });
 
         String javaCode;
         try (InputStream fis = new FileInputStream(configFile)) {

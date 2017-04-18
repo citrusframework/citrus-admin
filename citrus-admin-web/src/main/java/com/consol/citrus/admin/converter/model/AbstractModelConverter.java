@@ -20,7 +20,6 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -63,22 +62,19 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
                         .filter(m -> m.getName().equals(getSetterMethod(method.getName())))
                         .findFirst()
                         .orElse(null);
-                try {
-                    if (setter != null && setter.getParameterCount() == 1) {
-                        if (checkTypes(setter.getParameterTypes()[0], method.getReturnType())) {
-                            Object object = method.invoke(model);
-                            if (object != null) {
-                                setter.invoke(targetModel, object);
-                            }
-                        } else if (setter.getParameterTypes()[0].equals(String.class) && method.getReturnType().isPrimitive()) {
-                            Object object = method.invoke(model);
-                            if (object != null) {
-                                setter.invoke(targetModel, object.toString());
-                            }
+
+                if (setter != null && setter.getParameterCount() == 1) {
+                    if (checkTypes(setter.getParameterTypes()[0], method.getReturnType())) {
+                        Object object = ReflectionUtils.invokeMethod(method, model);
+                        if (object != null) {
+                            ReflectionUtils.invokeMethod(setter, targetModel, object);
+                        }
+                    } else if (setter.getParameterTypes()[0].equals(String.class) && method.getReturnType().isPrimitive()) {
+                        Object object = ReflectionUtils.invokeMethod(method, model);
+                        if (object != null) {
+                            ReflectionUtils.invokeMethod(setter, targetModel, object.toString());
                         }
                     }
-                } catch (InvocationTargetException e) {
-                    throw new ApplicationRuntimeException("Failed to get property from source model type", e);
                 }
             }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is")) && method.getParameterCount() == 0);
 
@@ -98,12 +94,13 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
         StringBuilder builder = new StringBuilder();
 
         String methodName;
-        Matcher matcher = invalidMethodNamePattern.matcher(id);
+        String beanId = StringUtils.hasText(id) ? id : StringUtils.uncapitalize(model.getClass().getSimpleName());
+        Matcher matcher = invalidMethodNamePattern.matcher(beanId);
         if (matcher.find()) {
-            methodName = StringUtils.trimAllWhitespace(id.replaceAll("\\.", "").replaceAll("-", ""));
-            builder.append(String.format("%n\t@Bean(\"%s\")%n", id));
+            methodName = StringUtils.trimAllWhitespace(beanId.replaceAll("\\.", "").replaceAll("-", ""));
+            builder.append(String.format("%n\t@Bean(\"%s\")%n", beanId));
         } else {
-            methodName = id;
+            methodName = beanId;
             builder.append(String.format("%n\t@Bean%n"));
         }
 
@@ -112,22 +109,18 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
         builder.append(String.format("\t\t%s %s = new %s();%n", getSourceModelClass().getSimpleName(), methodName, getSourceModelClass().getSimpleName()));
 
         ReflectionUtils.doWithMethods(model.getClass(), method -> {
-            try {
-                Object object = method.invoke(model);
-                if (object != null) {
-                    Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(getSetterMethod(method.getName()))).findAny();
-                    if (decorator.isPresent()) {
-                        if (decorator.get().allowMethodCall(object)) {
-                            builder.append(decorator.get().decorate(String.format("\t\t%s.%s(%s);%n", methodName, decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
-                        }
-                    } else if (object instanceof String) {
-                        builder.append(String.format("\t\t%s.%s(\"%s\");%n", methodName, getSetterMethod(method.getName()), object));
-                    } else {
-                        builder.append(String.format("\t\t%s.%s(%s);%n", methodName, getSetterMethod(method.getName()), object));
+            Object object = ReflectionUtils.invokeMethod(method, model);
+            if (object != null) {
+                Optional<AbstractModelConverter.MethodCallDecorator> decorator = decorators.stream().filter(d -> d.supports(getSetterMethod(method.getName()))).findAny();
+                if (decorator.isPresent()) {
+                    if (decorator.get().allowMethodCall(object)) {
+                        builder.append(decorator.get().decorate(methodName, String.format("\t\t%s.%s(%s);%n", methodName, decorator.get().decorateMethodName(), decorator.get().decorateArgument(object)), object));
                     }
+                } else if (object instanceof String) {
+                    builder.append(String.format("\t\t%s.%s(\"%s\");%n", methodName, getSetterMethod(method.getName()), object));
+                } else {
+                    builder.append(String.format("\t\t%s.%s(%s);%n", methodName, getSetterMethod(method.getName()), object));
                 }
-            } catch (InvocationTargetException e) {
-                throw new ApplicationRuntimeException("Failed to access target model property", e);
             }
         }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is"))
                 && !method.getName().equals("getClass")
@@ -237,11 +230,12 @@ public abstract class AbstractModelConverter<T, S> implements ModelConverter<T, 
 
         /**
          * Decorate code snippet that should call the method.
+         * @param target
          * @param code
          * @param arg
          * @return
          */
-        public String decorate(String code, Object arg) {
+        public String decorate(String target, String code, Object arg) {
             return code;
         }
 

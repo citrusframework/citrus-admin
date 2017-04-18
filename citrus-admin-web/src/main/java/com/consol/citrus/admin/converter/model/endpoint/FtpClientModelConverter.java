@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.ftp.client.FtpClient;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.model.config.ftp.FtpClientModel;
@@ -32,6 +33,13 @@ public class FtpClientModelConverter extends AbstractEndpointModelConverter<FtpC
      */
     public FtpClientModelConverter() {
         super(FtpClientModel.class, FtpClient.class, FtpEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("port") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

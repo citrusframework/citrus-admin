@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.model;
+package com.consol.citrus.admin.converter.model.endpoint;
 
-import com.consol.citrus.admin.converter.model.endpoint.*;
+import com.consol.citrus.admin.converter.model.ModelConverter;
 import com.consol.citrus.camel.endpoint.CamelEndpoint;
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.endpoint.Endpoint;
@@ -64,7 +64,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class ModelConverterTest {
+public class EndpointModelConverterTest {
 
     @Test(dataProvider = "converterData")
     public void testConvert(ModelConverter modelConverter, Object target, Endpoint source, String endpointType) throws Exception {
