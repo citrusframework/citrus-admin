@@ -21,6 +21,11 @@ import com.consol.citrus.model.config.core.NamespaceContextModel;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.stereotype.Component;
 
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * @author Christoph Deppisch
  */
@@ -31,6 +36,30 @@ public class NamespaceContextModelConverter extends AbstractModelConverter<Names
      */
     public NamespaceContextModelConverter() {
         super(NamespaceContextModel.class, NamespaceContextBuilder.class);
+
+        addDecorator(new MethodCallDecorator("setNamespaces", "setNamespaceMappings") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(AbstractMap.class);
+                getAdditionalImports().add(Collectors.class);
+                getAdditionalImports().add(Stream.class);
+
+                List<NamespaceContextModel.Namespace> namespaces = (List<NamespaceContextModel.Namespace>) arg;
+                StringBuilder codeBuilder = new StringBuilder();
+
+                codeBuilder.append("Stream.of(");
+                namespaces.forEach(namespace -> codeBuilder.append(String.format("%n\t\t\t\tnew AbstractMap.SimpleEntry<>(\"%s\", \"%s\"),", namespace.getPrefix(), namespace.getUri())));
+                codeBuilder.deleteCharAt(codeBuilder.length() - 1);
+                codeBuilder.append(String.format(")%n\t\t\t.collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))"));
+
+                return codeBuilder.toString();
+            }
+
+            @Override
+            public boolean allowMethodCall(Object arg) {
+                return ((List<NamespaceContextModel.Namespace>) arg).size() > 0;
+            }
+        });
     }
 
     @Override
