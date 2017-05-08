@@ -1,3 +1,5 @@
 export const environment = {
-    production: true
+    production: true,
+    traceRouting: false,
+    reduxTools: false,
 };

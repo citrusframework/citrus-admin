@@ -17,23 +17,16 @@
   </ul>
 </div>
 
-<h2 *ngIf="(openTests|async).length == 0">Open Test(s)</h2>
+<router-outlet></router-outlet>
 
-<tabs dynamic="false">
-  <tab *ngFor="let test of openTests|async"
-       tab-id="{{test.name}}"
-       tab-title="{{test.name}}" closable="true"
-       [active]="test === (selectedTest|async)"
-       (select)="onTabSelected(test)"
-       (close)="onTabClosed(test)">
-  </tab>
-  <router-outlet></router-outlet>
-</tabs>
-
-<div *ngIf="(openTests|async).length == 0" style="display: block; text-align: center; margin-top: 150px;">
-  <h3>Open test(s)</h3>
-  <p>Press 'O' to open test</p>
+<div *ngIf="!(selectedTest|async)">
+  <h2>Open Test(s)</h2>
+  <div style="display: block; text-align: center; margin-top: 150px;">
+    <h3>Open test(s)</h3>
+    <p>Press 'O' to open test</p>
+  </div>
 </div>
+
 
 <div class="dialog"
      dialog-id="dialog-list-tests"

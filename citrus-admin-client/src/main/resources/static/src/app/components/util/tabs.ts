@@ -88,4 +88,8 @@ export class TabComponent implements OnInit {
         this.tabs.selected.filter(tab => tab === this).subscribe(() => this.select.next(this))
     }
 
+    onSelect($event:MouseEvent) {
+        this.select.emit(this);
+    }
+
 }

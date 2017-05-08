@@ -2,10 +2,13 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
-import {AsyncActionType, AsyncActions, IdMap, toArray, toIdMap} from "../../util/redux.util";
+import {AsyncActionType, AsyncActions, IdMap, toArray, toIdMap, checkPath, notNull, log} from "../../util/redux.util";
 import {Effect, Actions} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
+import * as _ from 'lodash';
+import {routerActions, go} from '@ngrx/router-store'
+import {ActivatedRoute} from "@angular/router";
 
 export type TestMap = IdMap<Test>;
 export type TestGroupMap = IdMap<TestGroup>;
@@ -31,19 +34,6 @@ export const TestStateInit:TestState = {
     latestDetailView: 'info'
 };
 
-@Injectable()
-export class TestStateEffects {
-    constructor(
-        private actions:AsyncActions,
-        private testService:TestService,
-        private actions$:Actions
-    ) {}
-    @Effect() package = this.actions
-        .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
-
-    @Effect() detail = this.actions
-        .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
-}
 
 @Injectable()
 export class TestStateService {
@@ -62,6 +52,10 @@ export class TestStateService {
 
     get tests():Observable<Test[]> { return this.packages.map(tg => tg.reduce((c:Test[], tg:TestGroup) => [...c, ...tg.tests], [] as Test[]))}
 
+    getTestByName(name:string) {
+        return this.tests.map(tests => _.find(tests, t => t.name === name));
+    }
+
     get selectedTest():Observable<Test> {
         return (Observable.combineLatest(
             this.store.select(p => p.tests.selectedTest),
@@ -69,15 +63,62 @@ export class TestStateService {
         ).map(([s,t]) => t[s]))
     }
 
-    get selectedTestDetail():Observable<TestDetail> { return this.selectedTest.filter(t => t != null).switchMap(t => this.getDetail(t))}
+    get selectedTestDetail():Observable<TestDetail> {
+        return Observable.combineLatest(
+            this.selectedTest.filter(t => t != null),
+            this.details)
+            .switchMap(([t]) => this.getDetail(t))
+    }
+
+    get details():Observable<IdMap<TestDetail>> {
+        return this.store.select(s => s.tests.details);
+    }
 
     getDetail(test:Test):Observable<TestDetail> {
-        return this.store.select(s => s.tests.details[test.name]).filter(d => d != null)
+        return this.details
+            .map(details => details[test.name])
+            .filter(d => d != null)
     }
 
     get latestDetailView() {
-        return this.store.select(s => s.tests.latestDetailView)
+        return this.store.select(s => s.tests.latestDetailView || 'info')
     }
+}
+
+@Injectable()
+export class TestStateEffects {
+    constructor(
+        private actions:AsyncActions,
+        private testService:TestService,
+        private testState:TestStateService,
+        private actions$:Actions
+    ) {}
+    @Effect() package = this.actions
+        .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
+
+    @Effect() detail = this.actions
+        .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
+
+    @Effect() routingToLatestView = this.actions$.ofType(routerActions.GO, routerActions.UPDATE_LOCATION)
+        .map(({payload:{path}}) => path)
+        .filter(path => checkPath(path, [/^tests$/, /^detail$/, /.*/]))
+        .switchMap(path => {
+            return this.testState.latestDetailView.map(lv => lv.length ? lv : 'info').map(lv => go(`${path}/${lv}`))
+        })
+
+    @Effect() routingAfterLastTabClosed = this.actions$.ofType(TestStateActions.REMOVE_TAB)
+        .switchMap(a => this.testState.openTabs.map(ot => ot.length === 0))
+        .filter(ot => ot)
+        .map(() => go(['/tests', 'detail']))
+
+    @Effect() routingToLastOpenTabs = this.actions$.ofType(routerActions.GO, routerActions.UPDATE_LOCATION)
+        .map(({payload:{path}}) => path)
+        .map(path => Array.isArray(path) ? path.join('/') : path)
+        .filter(path => path === '/tests/detail')
+        .do(log('Will redirect'))
+        .switchMap(({path}) => {
+            return this.testState.selectedTest.filter(notNull()).map(t => go(['/tests', 'detail', t.name]))
+        })
 }
 
 @Injectable()

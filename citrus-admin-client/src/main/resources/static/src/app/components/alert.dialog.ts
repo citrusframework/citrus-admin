@@ -18,7 +18,7 @@ export class AlertDialog {
 
     @Input("errors-only") errorsOnly: boolean = true;
 
-    private alert: Alert;
+    alert: Alert;
     private addSubscription: any;
 
     constructor(private _alertService: AlertService) {

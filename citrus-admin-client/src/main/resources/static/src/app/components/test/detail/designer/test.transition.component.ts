@@ -10,4 +10,5 @@ export class TestTransitionComponent {
 
     constructor() {}
 
+    select() {}
 }

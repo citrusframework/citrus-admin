@@ -48,12 +48,9 @@ export class TestDetail extends Test {
 
 export class TestAction {
 
-    constructor() {
-        this.properties = [];
-    }
-
-    public type: string;
-    public properties: Property[];
+    public type: string = '';
+    public properties: Property[] = [];
+    public actions:TestAction[] = [];
 }
 
 export class TestResult {

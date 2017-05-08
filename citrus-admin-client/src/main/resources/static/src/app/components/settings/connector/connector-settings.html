@@ -31,7 +31,7 @@
      dialog-id="dialog-connector"
      dialog-title="Admin connector library"
      dialog-size="sm"
-     (confirmed)="manageConnector($event)">
+     (confirmed)="manageConnector()">
     <p>Add/remove connector library from project '{{project.name}}'. When connected events get pushed in real time during the test runs.</p>
 
     <h4 *ngIf="project.settings.connectorActive" class="text-success"><i class="fa fa-check-square-o"></i> Currently connector is active!</h4>

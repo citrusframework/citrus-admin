@@ -120,3 +120,12 @@ export class ReducerBuilder<T extends {}> {
 
 export const notNull = () => <T>(o:T) => o != null;
 export const log = (...args:any[]) => (...args2:any[]) => console.log.apply(console, [...args, ...args2])
+
+export const checkPath = (path:string|string[], partMatches:RegExp[]) => {
+    const parts = (Array.isArray(path) ? path : path.split('/'))
+        .filter(p => p.length > 0);
+    if(parts.length !== partMatches.length) {
+        return false;
+    }
+    return parts.reduce((ok, part, i) => ok && partMatches[i].test(part), true);
+}
