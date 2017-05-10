@@ -38,7 +38,6 @@ export class TestListComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
-        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 }

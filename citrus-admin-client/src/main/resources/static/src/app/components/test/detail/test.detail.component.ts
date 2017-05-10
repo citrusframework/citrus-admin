@@ -79,7 +79,6 @@ export class TestDetailComponent implements OnInit, OnDestroy {
     }
 
     private navigateToTest(test:Test) {
-        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 
