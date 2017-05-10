@@ -58,8 +58,8 @@ export class TestStateService {
 
     get selectedTest():Observable<Test> {
         return (Observable.combineLatest(
-            this.store.select(p => p.tests.selectedTest),
-            this.store.select(p => p.tests.tests)
+            this.store.select(s => s.tests.selectedTest),
+            this.store.select(s => s.tests.tests)
         ).map(([s,t]) => t[s]))
     }
 
@@ -93,6 +93,7 @@ export class TestStateEffects {
         private testState:TestStateService,
         private actions$:Actions
     ) {}
+
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 
@@ -103,20 +104,19 @@ export class TestStateEffects {
         .map(({payload:{path}}) => path)
         .filter(path => checkPath(path, [/^tests$/, /^detail$/, /.*/]))
         .switchMap(path => {
-            return this.testState.latestDetailView.map(lv => lv.length ? lv : 'info').map(lv => go(`${path}/${lv}`))
+            return this.testState.latestDetailView.map(lv => go(`${path}/${lv}`))
         })
 
     @Effect() routingAfterLastTabClosed = this.actions$.ofType(TestStateActions.REMOVE_TAB)
         .switchMap(a => this.testState.openTabs.map(ot => ot.length === 0))
-        .filter(ot => ot)
+        .filter(notNull())
         .map(() => go(['/tests', 'detail']))
 
     @Effect() routingToLastOpenTabs = this.actions$.ofType(routerActions.GO, routerActions.UPDATE_LOCATION)
         .map(({payload:{path}}) => path)
         .map(path => Array.isArray(path) ? path.join('/') : path)
         .filter(path => path === '/tests/detail')
-        .do(log('Will redirect'))
-        .switchMap(({path}) => {
+        .switchMap(() => {
             return this.testState.selectedTest.filter(notNull()).map(t => go(['/tests', 'detail', t.name]))
         })
 }

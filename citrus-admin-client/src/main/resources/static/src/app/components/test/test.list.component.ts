@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {TestGroup, Test} from "../../model/tests";
 import {Alert} from "../../model/alert";
 import {AlertService} from "../../service/alert.service";
-import {TestStateService, TestStateActions} from "./test.state";
+import {TestStateService} from "./test.state";
 import {Observable} from "rxjs";
-import {Router} from "@angular/router";
 import {AppState} from "../../state.module";
 import {Store} from "@ngrx/store";
 import {go} from '@ngrx/router-store';
@@ -17,7 +16,6 @@ export class TestListComponent implements OnInit {
     constructor(
             private alertService: AlertService,
             private store:Store<AppState>,
-            private testActions:TestStateActions,
             private testState:TestStateService) {
     }
 
@@ -32,18 +30,7 @@ export class TestListComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.testActions.addTab(test);
         this.navigateToTestInfo(test);
-    }
-
-    openByName(name: string) {
-        this.tests
-            .first()
-            .map(ts => ts.find(t => t.name === name))
-            .subscribe(t => {
-                this.testActions.addTab(t);
-                this.navigateToTestInfo(t);
-            })
     }
 
     notifyError(error: any) {
@@ -51,6 +38,7 @@ export class TestListComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
+        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 }

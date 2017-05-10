@@ -22,8 +22,6 @@ export class TestEditorComponent implements OnInit {
 
     constructor(
                 private alertService: AlertService,
-                private route: ActivatedRoute,
-                private testActions:TestStateActions,
                 private testState:TestStateService,
                 private store:Store<AppState>
     ) {
@@ -46,7 +44,6 @@ export class TestEditorComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.testActions.addTab(test);
         this.navigateToTestInfo(test)
     }
 
@@ -61,6 +58,7 @@ export class TestEditorComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
+        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 

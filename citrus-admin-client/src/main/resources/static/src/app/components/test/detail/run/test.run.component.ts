@@ -35,6 +35,7 @@ export class TestRunComponent {
     constructor(private _testService: TestService,
                 private _alertService: AlertService) {
         this.stompClient = Stomp.over(new SockJS(`/api/logging`) as WebSocket);
+        this.stompClient.debug = () => {};
         this.stompClient.connect({}, (frame:Frame) => {
             if (frame) {
                 this.subscribe();

@@ -25,5 +25,8 @@ describe('Utils', () => {
         });
     })
 
+    describe('checkPath with array', () => {
+        const path = ['/tests']
+    })
 
 })

@@ -14,12 +14,14 @@ export interface Environment {
     production?:boolean;
     traceRouting?:boolean;
     reduxTools?:boolean;
+    stompDebug?:boolean;
 }
 
 export const environment:Environment = {
     production: false,
-    traceRouting: true,
+    traceRouting: false,
     reduxTools: true,
+    stompDebug:false,
     ...userEnv
 };
 
