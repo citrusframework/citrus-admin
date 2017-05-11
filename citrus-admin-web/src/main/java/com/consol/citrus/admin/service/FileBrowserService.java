@@ -113,9 +113,9 @@ public class FileBrowserService {
 
         if (!StringUtils.hasText(directory)) {
             return "";
-        } else if (directory.charAt(directory.length() - 1) == '\\') {
+        } else if (directory.charAt(directory.length() - 1) == WINDOWS_SEPARATOR) {
             directory = directory.substring(0, directory.length() - 1) + "/";
-        } else if (directory.charAt(directory.length() - 1) != '/') {
+        } else if (directory.charAt(directory.length() - 1) != UNIX_SEPARATOR) {
             directory += "/";
         }
 
