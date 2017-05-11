@@ -7,7 +7,7 @@ import * as ace from 'brace';
 import 'brace/theme/chrome';
 import 'brace/mode/java';
 import 'brace/mode/xml';
-
+import Editor = AceAjax.Editor;
 
 @Component({
     selector: "source-code",
@@ -24,7 +24,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
                 private _alertService: AlertService) {}
 
     sourceCode = 'Loading sources ...';
-    editor: any;
+    editor: Editor;
 
     ngOnChanges() {
         this.getSourceCode();
@@ -34,6 +34,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
         this.editor = ace.edit(this.id);
         this.editor.setTheme("ace/theme/chrome");
         this.editor.session.setMode("ace/mode/" + this.type);
+        this.editor.$blockScrolling = Infinity;
     }
 
     getSourceCode() {
