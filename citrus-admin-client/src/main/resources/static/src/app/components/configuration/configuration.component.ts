@@ -1,12 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router, NavigationStart} from '@angular/router';
+import {Subscription} from "rxjs/Subscription";
 
-const MenuEntry = (name:string, link:string[]) => ({name, link});
+const MenuEntry = (name: string, link: string[]) => ({name, link});
 
 @Component({
     templateUrl: 'configuration.html'
 })
-export class ConfigurationComponent {
+export class ConfigurationComponent implements OnInit, OnDestroy {
+
+    private subscription = new Subscription();
 
     menuEntries = [
         MenuEntry('Endpoints', ['endpoints']),
@@ -20,14 +23,22 @@ export class ConfigurationComponent {
         MenuEntry('Namespaces', ['namespace-context'])
     ];
 
-    constructor(private router:Router) {
-        router.events
-            .startWith(new NavigationStart(42, '/configuration'))
-            .filter(e => e instanceof NavigationStart)
-            .filter((e:NavigationStart) => e.url === '/configuration')
-            .subscribe(e => {
-                router.navigate(['configuration/endpoints'])
-            })
+    constructor(private router: Router) {
+    }
+
+    ngOnInit() {
+        this.subscription.add(
+            this.router.events
+                .startWith(new NavigationStart(42, '/configuration'))
+                .filter(e => e instanceof NavigationStart)
+                .filter((e: NavigationStart) => e.url === '/configuration')
+                .subscribe(e => {
+                    this.router.navigate(['configuration/endpoints'])
+                }))
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     isActive(name: string) {

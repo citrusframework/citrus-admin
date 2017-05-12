@@ -1,6 +1,6 @@
 import {
     Component, Input, OnInit, trigger, transition, state, style, animate, Output,
-    EventEmitter
+    EventEmitter, OnDestroy
 } from "@angular/core";
 import {Endpoint} from "../../../model/endpoint";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,54 +12,61 @@ import {SpringBeanService} from "../../../service/springbean.service";
 import {FormBuilder, FormGroup, Validators, Validator, ValidatorFn, AsyncValidatorFn} from "@angular/forms";
 import {IdMap, notNull, log} from "../../../util/redux.util";
 import {RestrictAsyncValues} from "../../util/autocomplete";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'endpoint-form',
     template: `
-        <endpoint-form-presentation
+      <endpoint-form-presentation
           *ngIf="endpoint|async"
           [endpoint]="endpoint|async"
           [mode]="mode|async"
           (save)="save($event)"
           (cancel)="cancel($event)"
-        >
-        </endpoint-form-presentation>
+      >
+      </endpoint-form-presentation>
     `
 })
-export class EndpointFormComponent implements OnInit{
-    endpoint:Observable<Endpoint>;
-    mode:Observable<EditorMode>;
-    constructor(
-        private route:ActivatedRoute,
-        private router:Router,
-        private endpointState:EndPointStateService,
-        private endpointActions:EndPointActions
-    ) {
+export class EndpointFormComponent implements OnInit, OnDestroy {
+    private subscription = new Subscription();
+    endpoint: Observable<Endpoint>;
+    mode: Observable<EditorMode>;
+
+    constructor(private route: ActivatedRoute,
+                private router: Router,
+                private endpointState: EndPointStateService,
+                private endpointActions: EndPointActions) {
     }
 
     ngOnInit(): void {
         this.endpoint = this.route.params
-            .switchMap(({name}:{name:string}) => this.endpointState.getEndpoint(name))
+            .switchMap(({name}: { name: string }) => this.endpointState.getEndpoint(name))
             .switchMap(e => e ? Observable.of(e) : this.route
-                    .params
-                    .filter(({type}) => type != null).first()
-                    .do(({type}) => this.endpointActions.fetchEndpointType(type))
-                    .switchMap(({type}) => this.endpointState.getEndpointType(type)
+                .params
+                .filter(({type}) => type != null).first()
+                .do(({type}) => this.endpointActions.fetchEndpointType(type))
+                .switchMap(({type}) => this.endpointState.getEndpointType(type)
                     .filter(notNull()))
             ).filter(notNull()).first()
         this.mode = this.endpoint.map(e => e.id == null ? EditorMode.NEW : EditorMode.EDIT)
     }
 
-    save([mode, endpoint]:EditorDataTupel<Endpoint>) {
-        if(EditorMode.NEW === mode) {
+    save([mode, endpoint]: EditorDataTupel<Endpoint>) {
+        if (EditorMode.NEW === mode) {
             this.endpointActions.createEndpoint(endpoint);
-            this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
-                this.router.navigate(['configuration/endpoints/endpoint-editor', endpoint.id])
-            })
+            this.subscription.add(
+                this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
+                    this.router.navigate(['configuration/endpoints/endpoint-editor', endpoint.id])
+                })
+            )
         }
-        if(EditorMode.EDIT === mode) {
+        if (EditorMode.EDIT === mode) {
             this.endpointActions.updateEndpoint(endpoint);
         }
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     cancel() {
@@ -73,44 +80,44 @@ export class EndpointFormComponent implements OnInit{
     templateUrl: 'endpoint-form.html',
     styles: [``]
 })
-export class EndpointFormPresentationComponent implements OnInit{
-    @Input() endpoint:Endpoint;
-    @Input() mode:EditorMode;
+export class EndpointFormPresentationComponent implements OnInit {
+    @Input() endpoint: Endpoint;
+    @Input() mode: EditorMode;
 
     @Output() save = new EventEmitter<EditorDataTupel<Endpoint>>();
     @Output() cancel = new EventEmitter<any>();
 
-    form:FormGroup;
+    form: FormGroup;
 
-    beans:{[propKey:string]:Observable<string[]>} = {};
+    beans: { [propKey: string]: Observable<string[]> } = {};
 
-    constructor(
-        private fb:FormBuilder,
-        private springBeanService:SpringBeanService
-    ) {
+    constructor(private fb: FormBuilder,
+                private springBeanService: SpringBeanService) {
     }
 
-    get isNew() { return this.mode === EditorMode.NEW }
+    get isNew() {
+        return this.mode === EditorMode.NEW
+    }
 
     ngOnInit() {
         this.beans = this.endpoint.properties
             .filter(p => p.optionKey)
-            .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {})
+            .reduce((beans, p) => ({...beans, [p.optionKey]: this.springBeanService.searchBeans(p.optionKey)}), {})
         this.form = this.fb.group({
             type: [this.endpoint.type],
             id: [this.endpoint.id, Validators.required],
             ...this.endpoint.properties
-                .reduce((fg,p) => ({...fg, [p.id]: [p.value, ...this.getValidators(p)]}), {} as IdMap<any>)
+                .reduce((fg, p) => ({...fg, [p.id]: [p.value, ...this.getValidators(p)]}), {} as IdMap<any>)
         })
     }
 
-    private getValidators(p: Property):[ValidatorFn, AsyncValidatorFn] {
-        const validators:ValidatorFn[] = [(c) => null];
-        const asyncValidators:AsyncValidatorFn[] = [];
-        if(p.required) {
+    private getValidators(p: Property): [ValidatorFn, AsyncValidatorFn] {
+        const validators: ValidatorFn[] = [(c) => null];
+        const asyncValidators: AsyncValidatorFn[] = [];
+        if (p.required) {
             validators.push(Validators.required)
         }
-        if(p.optionKey) {
+        if (p.optionKey) {
             asyncValidators.push(RestrictAsyncValues(this.beans[p.optionKey]))
         }
         return [
@@ -119,7 +126,7 @@ export class EndpointFormPresentationComponent implements OnInit{
         ];
     }
 
-    invokeSave(endpoint:Endpoint) {
+    invokeSave(endpoint: Endpoint) {
         this.save.next([this.mode, endpoint]);
     }
 

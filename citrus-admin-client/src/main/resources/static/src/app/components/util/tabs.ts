@@ -1,4 +1,5 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'tabs',
@@ -12,7 +13,14 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
     <ng-content></ng-content>
   `
 })
-export class TabsComponent {
+export class TabsComponent implements OnInit{
+    ngOnInit(): void {
+        console.log('TabsComponentOnInit')
+    }
+
+    ngOnDestroy() {
+        console.log('TabsComponentOnDestroy')
+    }
 
     @Input() dynamic: boolean;
 
@@ -58,6 +66,11 @@ export class TabsComponent {
         }
 
         this.tabs.push(tab);
+        console.log(this.tabs.length);
+    }
+
+    removeTab(tabComponent: TabComponent) {
+        this.tabs = this.tabs.filter(t => t !== tabComponent);
     }
 }
 
@@ -69,7 +82,10 @@ export class TabsComponent {
     </div>
   `
 })
-export class TabComponent implements OnInit {
+export class TabComponent implements OnInit, OnDestroy {
+
+    private subscription = new Subscription;
+
     @Input('tab-id') id: string;
     @Input('tab-title') title: string;
     @Input() closable: boolean;
@@ -84,8 +100,18 @@ export class TabComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.tabs.closed.filter(tab => tab === this).subscribe(() => this.close.next(this))
-        this.tabs.selected.filter(tab => tab === this).subscribe(() => this.select.next(this))
+        console.log('Tab_init');
+        this.subscription.add(
+            this.tabs.closed.filter(tab => tab === this).subscribe(() => this.close.next(this))
+        );
+        this.subscription.add(
+            this.tabs.selected.filter(tab => tab === this).subscribe(() => this.select.next(this))
+        );
+    }
+
+    ngOnDestroy() {
+        this.tabs.removeTab(this)
+        this.subscription.unsubscribe();
     }
 
     onSelect($event:MouseEvent) {

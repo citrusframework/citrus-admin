@@ -5,8 +5,10 @@ import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import * as _ from 'lodash'
+import {environment} from "../../environments/environment";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
-export function parseBody<T = any>(t?: Type<T>) {
+export function parseBody<T = any>(factory: (mb: any) => T) {
     return (m: Message) => {
         return JSON.parse(m.body) as T;
     }
@@ -19,21 +21,19 @@ export enum ConnectionStatus {
 }
 
 export class Topic extends Subject<Message> {
-    constructor(
-        private connection:Client,
-        private topic:string
-    ) {
+    constructor(private connection: Client,
+                private topic: string) {
         super();
         connection.subscribe(topic, m => this.next(m))
     }
 }
 
 export class StompConnection {
-    private debug: boolean = true;
+    private debug: boolean = environment.stompDebug;
     private stompClient: Client;
     private topics: Map<string, Topic> = new Map();
-    private connectionObserver: Observable<StompConnection>;
-    private connectionStatus:ConnectionStatus = ConnectionStatus.NOT_CONNECTED;
+    private connectionSubject = new ReplaySubject<StompConnection>();
+    private status: ConnectionStatus = ConnectionStatus.NOT_CONNECTED;
 
     constructor(private url: string) {
         this.stompClient = over(new SockJS(this.url) as WebSocket);
@@ -49,32 +49,22 @@ export class StompConnection {
     }
 
     connect() {
-        if (!this.connectionObserver) {
-            this.connectionObserver = Observable.create((observer: Observer<StompConnection>) => {
-                if(this.connectionStatus === ConnectionStatus.NOT_CONNECTED) {
-                    this.connectionStatus = ConnectionStatus.WAITING;
-                    this.stompClient.connect({} as any,
-                        (frame: Frame) => {
-                            if (frame) {
-                                observer.next(this);
-                                this.connectionStatus = ConnectionStatus.CONNECTED;
-                            }
-                            return () => {
-                                this.stompClient.disconnect(() => {})
-                            }
-                        },
-                        (error: any) => observer.error(error)
-                    );
-                }
-                if(this.connectionStatus === ConnectionStatus.CONNECTED) {
-                    observer.next(this);
-                }
-            });
+        if(this.status == ConnectionStatus.NOT_CONNECTED) {
+            this.status = ConnectionStatus.WAITING;
+            this.stompClient.connect({} as any,
+                (frame: Frame) => {
+                    if (frame) {
+                        this.status = ConnectionStatus.CONNECTED;
+                        this.connectionSubject.next(this);
+                    }
+                },
+                (error: any) => this.connectionSubject.error(error)
+            );
         }
-        return this.connectionObserver;
+        return this.connectionSubject;
     }
 
-    subscribeToTopic(topic: string):Topic {
+    subscribeToTopic(topic: string): Topic {
         if (!this.topics.has(topic)) {
             this.topics.set(topic, new Topic(this.stompClient, topic))
         }
