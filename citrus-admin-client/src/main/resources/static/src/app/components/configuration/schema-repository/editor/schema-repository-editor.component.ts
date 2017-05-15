@@ -2,7 +2,7 @@ import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {SchemaRepository, Schema, SchemaReference} from "../../../../model/schema.repository";
+import {SchemaRepository, Schema, SchemaReference, Location, Locations} from "../../../../model/schema.repository";
 import {SchemaRepositoryStateService, SchemaRepositoryActions} from "../schema-repository.state";
 import * as _ from 'lodash'
 import {EditorMode} from "../../editor-mode.enum";
@@ -92,8 +92,9 @@ export class SchemaRepositoryEditorPresentationComponent {
     @Output() save = new EventEmitter<[EditorMode, SchemaRepository]>();
 
     selectedRef:Schema;
-    newSchemaId = ''
-    newSchemaLocation = ''
+    newSchemaId = '';
+    newSchemaLocation = '';
+    newLocation = '';
     mappingStrategy:string = "";
 
     get isNew() {
@@ -120,6 +121,18 @@ export class SchemaRepositoryEditorPresentationComponent {
 
     get repositoryReferenceCandidates() {
         return this.referenceCandidates.filter(r => !_.includes(this.repository.schemas.references.map(r => r.schema),r.id));
+    }
+
+    addLocation(location:string) {
+        if(!this.repository.locations) {
+            this.repository.locations = new Locations();
+        }
+        this.repository.locations.locations.push(new Location(location));
+        this.newLocation = '';
+    }
+
+    removeLocation(location:Location) {
+        this.repository.locations.locations = this.repository.locations.locations.filter(l => l !== location);
     }
 
     addMappingReference(schema:Schema) {

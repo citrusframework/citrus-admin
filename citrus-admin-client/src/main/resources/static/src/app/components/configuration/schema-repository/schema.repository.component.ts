@@ -43,43 +43,16 @@ export class SchemaRepositoryComponent implements OnInit {
     }
 
     createGlobalSchema() {
-        /*
-        this._configService.createSchema(this.newGlobalSchema)
-            .subscribe(
-                response => {
-                    this.notifySuccess("Created new schema '" + this.newGlobalSchema.id + "'");
-                    this.schemas.push(this.newGlobalSchema); this.newGlobalSchema = undefined;
-                },
-                error => this.notifyError(<any>error));
-                */
         this.schemaRepositoryActions.createSchema(this.newGlobalSchema)
     }
 
     removeGlobalSchema(selected: Schema, event:MouseEvent) {
-        /*
-        this._configService.deleteComponent(selected.id)
-            .subscribe(
-                response => {
-                    this.schemas.splice(this.schemas.indexOf(selected), 1);
-                    this.notifySuccess("Removed schema '" + selected.id + "'");
-                },
-                error => this.notifyError(<any>error));
-        */
         this.schemaRepositoryActions.deleteSchema(selected);
         event.stopPropagation();
         return false;
     }
 
     saveGlobalSchema() {
-        /*
-        this._configService.updateSchema(this.selectedGlobalSchema)
-            .subscribe(
-                response => {
-                    this.notifySuccess("Successfully saved schema '" + this.selectedGlobalSchema.id + "'");
-                    this.selectedGlobalSchema = undefined;
-                },
-                error => this.notifyError(<any>error));
-                */
     }
 
     removeSchema(selected: Schema) {
