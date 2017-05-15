@@ -2,7 +2,7 @@ const LOCAL_STORAGE_ENV_KEY = '$CITRUS_ADMIN';
 
 let userEnv = {};
 if(localStorage) {
-    const localStorageContent = localStorage.getItem(LOCAL_STORAGE_ENV_KEY);
+    const localStorageContent = localStorage.getItem(LOCAL_STORAGE_ENV_KEY) + '';
     try {
         userEnv = JSON.parse(localStorageContent) || {};
     } catch(e) {
@@ -21,7 +21,7 @@ export const environment:Environment = {
     production: false,
     traceRouting: false,
     reduxTools: true,
-    stompDebug:false,
+    stompDebug:true,
     ...userEnv
 };
 

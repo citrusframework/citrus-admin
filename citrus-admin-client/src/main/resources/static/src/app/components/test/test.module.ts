@@ -7,7 +7,10 @@ import {TestListComponent} from "./test.list.component";
 import {SourceCodeComponent} from "./detail/sources/source.code.component";
 import {TestDetailComponent} from "./detail/test.detail.component";
 import {TestRunComponent, TestRunOutlet} from "./detail/run/test.run.component";
-import {TestGroupRunComponent} from "./test.group.run.component";
+import {
+    ExecutionStatusPackageComponent, ExecutionStatusTestComponent,
+    TestGroupRunComponent
+} from "./test.group.run.component";
 import {TestListGroupComponent} from "./test.listgroup.component";
 import {TestMessageComponent} from "./detail/run/test.message.component";
 import {TestProgressComponent} from "./detail/run/test.progress.component";
@@ -25,6 +28,7 @@ import {TestStateActions, TestStateEffects, TestStateService} from "./test.state
 import {EffectsModule} from "@ngrx/effects";
 import {SourcesOutletComponent} from "./detail/sources/sources-outlet.component";
 import {TestResultComponent, TestResultOutletComponent} from "./detail/results/test.result.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const components = [
     TestsComponent,
@@ -47,7 +51,9 @@ const components = [
     InfoOutletComponent,
     TestRunOutlet,
     TestResultComponent,
-    TestResultOutletComponent
+    TestResultOutletComponent,
+    ExecutionStatusPackageComponent,
+    ExecutionStatusTestComponent
 ];
 
 @NgModule({
@@ -58,6 +64,7 @@ const components = [
         CommonModule,
         ServiceModule,
         TestRoutingModule,
+        BrowserAnimationsModule,
         EffectsModule.run(TestStateEffects)
     ],
     providers: [
