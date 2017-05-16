@@ -30,14 +30,18 @@ export class TestListComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.navigateToTestInfo(test);
+        this.navigateToTestInfo(test.name);
+    }
+
+    openByName(name:string) {
+        this.navigateToTestInfo(name);
     }
 
     notifyError(error: any) {
         this.alertService.add(new Alert("danger", error, false));
     }
 
-    private navigateToTestInfo(test:Test) {
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
+    private navigateToTestInfo(test:string) {
+        this.store.dispatch(go(['/tests', 'detail', test]));
     }
 }

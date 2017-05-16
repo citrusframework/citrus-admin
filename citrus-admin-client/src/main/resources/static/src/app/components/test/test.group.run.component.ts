@@ -100,7 +100,7 @@ export class TestGroupRunComponent implements OnInit, OnDestroy {
             )
     }
 
-    getExecutionInfoForPackage(_package: TestGroup) {
+    getExecutionInfoForPackage(_package: TestGroup|TestDetail) {
         return this.testState.getExecutionInfo(new Test(_package.name));
     }
 
@@ -146,7 +146,7 @@ export class TestGroupRunComponent implements OnInit, OnDestroy {
             })
     }
 
-    getPackageSuccess(_package: TestGroup) {
+    getPackageSuccess(_package: TestGroup|TestDetail) {
         return this.testState.results
             .map(rMap => _
                 .filter(rMap, r => _package.name === 'all-tests' || r.test.packageName === _package.name)
