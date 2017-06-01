@@ -47,6 +47,7 @@
     <module>citrus-admin-web</module>
     <module>citrus-admin-connector</module>
     <module>citrus-admin-docs</module>
+    <module>citrus-admin-docker</module>
   </modules>
 
   <scm>
@@ -205,16 +206,14 @@
           <version>3.0.2</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring.boot.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>repackage</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <groupId>com.github.eirslett</groupId>

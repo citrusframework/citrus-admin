@@ -45,4 +45,4 @@ export const endpointRoutes:Routes = [{
         EndpointsComponent
     ]
 })
-export class EndPointModule {}
+export class EndpointModule {}

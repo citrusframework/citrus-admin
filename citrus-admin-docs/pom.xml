@@ -10,7 +10,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin-docs</artifactId>
   <name>citrus-admin-docs</name>
   <packaging>pom</packaging>

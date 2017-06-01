@@ -1,4 +1,3 @@
-import {Property} from "./property";
 import {BuildProperty} from "./build.property";
 
 export class Project {

@@ -18,9 +18,11 @@ package com.consol.citrus.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class Application {
+public class Application extends SpringBootServletInitializer {
 
     /** System property names */
     public static final String PROJECT_HOME = "project.home";
@@ -46,6 +48,11 @@ public class Application {
      */
     public static String getRootDirectory() {
         return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(Application.class);
     }
 
     public static void main(String[] args) {

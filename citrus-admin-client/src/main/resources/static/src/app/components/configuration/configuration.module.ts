@@ -1,7 +1,6 @@
 import {NgModule} from "@angular/core";
 import {ConfigurationComponent} from "./configuration.component";
 import {DataDictionaryComponent} from "./data-dictionary/data.dictionary.component";
-import {EndpointsComponent} from "./endpoints/endpoints.component";
 import {FunctionLibraryComponent} from "./function-library/function.library.component";
 import {GlobalVariablesComponent} from "./global-variables/global.variables.component";
 import {NamespaceContextComponent} from "./namespace-context/namespace.context.component";
@@ -14,7 +13,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {UtilModule} from "../../util/util.module";
 import {SchemaRepositoryModule} from "./schema-repository/schema-repository.module";
-import {EndPointModule} from "./endpoints/endpoint.module";
+import {EndpointModule} from "./endpoints/endpoint.module";
 
 @NgModule({
     imports: [
@@ -24,7 +23,7 @@ import {EndPointModule} from "./endpoints/endpoint.module";
         CommonModule,
         ConfigurationRoutingModule,
         SchemaRepositoryModule,
-        EndPointModule,
+        EndpointModule,
         ReactiveFormsModule
     ],
     declarations: [
