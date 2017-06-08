@@ -1,106 +1,96 @@
 <div>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th width="30%">Repository</th>
-                <th>Schemas</th>
-                <th width="50">Actions</th>
-            </tr>
-            </thead>
-            <tbody *ngIf="noRepositories|async">
-            <tr>
-                <td colspan="3"><i class="fa fa-times"></i> No schema repositories defined</td>
-            </tr>
-            </tbody>
-            <tbody *ngFor="let repository of repositories|async">
-            <tr>
-                <td>
-                    <a name="{{repository.id}}" class="clickable" title="Edit repository" [routerLink]="['edit-schema-repository', repository.id]">
-                      <i class="fa fa-file-text-o"></i> {{repository.id}}
-                    </a>
-                </td>
-                <td>
-                    <ul class="properties endpoint-properties">
-                        <li *ngIf="repository.schemas?.schemas?.length > 0"><b>schemas:</b> <span
-                                *ngFor="let schema of repository.schemas?.schemas">&nbsp;{{schema.id}}&nbsp;|</span>
-                        </li>
-                        <li *ngIf="repository.schemas?.references?.length > 0"><b>references:</b> <span
-                                *ngFor="let reference of repository.schemas?.references">&nbsp;{{reference.schema}}&nbsp;|</span>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <a name="{{repository.id}}" class="clickable" title="Edit repository"
-                       [routerLink]="['edit-schema-repository', repository.id]"><i class="fa fa-edit"></i></a>
-                    &nbsp;|&nbsp;
-                    <a name="remove" (click)="removeRepository(repository, $event)" class="clickable"
-                       title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
-                </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="3">&nbsp;</td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th width="30%">Repository</th>
+          <th>Schemas</th>
+          <th width="50">Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="noRepositories|async">
+        <tr>
+          <td colspan="3"><i class="fa fa-times"></i> No schema repositories defined</td>
+        </tr>
+      </tbody>
+      <tbody *ngFor="let repository of repositories|async">
+        <tr class="clickable">
+          <td>
+            <a name="{{repository.id}}" class="clickable" title="Edit repository" [routerLink]="['edit-schema-repository', repository.id]">
+              <i class="fa fa-file-text-o"></i> {{repository.id}}
+            </a>
+          </td>
+          <td>
+            <ul class="properties endpoint-properties">
+              <li *ngIf="repository.schemas?.schemas?.length > 0"><b>schemas:</b> <span
+                      *ngFor="let schema of repository.schemas?.schemas">&nbsp;{{schema.id}}&nbsp;|</span>
+              </li>
+              <li *ngIf="repository.schemas?.references?.length > 0"><b>references:</b> <span
+                      *ngFor="let reference of repository.schemas?.references">&nbsp;{{reference.schema}}&nbsp;|</span>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <a name="{{repository.id}}" class="clickable" title="Edit repository"
+               [routerLink]="['edit-schema-repository', repository.id]"><i class="fa fa-edit"></i></a>
+            &nbsp;|&nbsp;
+            <a name="remove" (click)="removeRepository(repository, $event)" class="clickable"
+               title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div>
-    <h2 class="sub-header">
-        <span><i class="fa fa-file-code-o"></i> Schemas</span>
-        <div class="btn-group pull-right">
-            <a class="btn btn-default dropdown-toggle"
-               [routerLink]="['edit-global-schema']"
-            >New
-            </a>
-        </div>
-    </h2>
-
-    <p>Globally defined schema resources that can be reused in multiple schema repositories. Schema repositories do
-        simply reference the schemas defined in global scope. Global scoped schemas
-        should always be reused in multiple repositories otherwise please define the schema as private member of the
-        schema repository itself.</p>
-    <br/>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th width="30%">Schema</th>
-                <th>Location</th>
-                <th width="50">Actions</th>
-            </tr>
-            </thead>
-            <tbody *ngIf="noSchemas|async">
-            <tr>
-                <td colspan="3"><i class="fa fa-times"></i> No global schemas defined</td>
-            </tr>
-            </tbody>
-            <tbody *ngFor="let schema of schemas|async">
-            <tr>
-                <td>
-                    <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable" title="Edit schema">
-                      <i class="fa fa-file-text-o"></i> {{schema.id}}
-                    </a>
-                </td>
-                <td>{{schema.location}}</td>
-                <td>
-                    <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable"
-                       title="Edit schema"><i class="fa fa-file-text-o"></i></a>
-                    &nbsp;|&nbsp;
-                    <a name="remove" (click)="removeSchema(schema, $event)" class="clickable"
-                       title="Remove schema"><i class="fa fa-times" style="color: #A50000;"></i></a>
-                </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="3">&nbsp;</td>
-            </tr>
-            </tfoot>
-        </table>
+  <h2 class="sub-header">
+    <span><i class="fa fa-file-code-o"></i> Schemas</span>
+    <div class="btn-group pull-right">
+      <a class="btn btn-default dropdown-toggle"
+         [routerLink]="['edit-global-schema']"
+      >New
+      </a>
     </div>
+  </h2>
+
+  <p>Globally defined schema resources that can be reused in multiple schema repositories. Schema repositories do
+    simply reference the schemas defined in global scope. Global scoped schemas
+    should always be reused in multiple repositories otherwise please define the schema as private member of the
+    schema repository itself.</p>
+  <br/>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th width="30%">Schema</th>
+          <th>Location</th>
+          <th width="50">Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="noSchemas|async">
+        <tr>
+          <td colspan="3"><i class="fa fa-times"></i> No global schemas defined</td>
+        </tr>
+      </tbody>
+      <tbody *ngFor="let schema of schemas|async">
+        <tr class="clickable">
+          <td>
+            <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable" title="Edit schema">
+              <i class="fa fa-file-text-o"></i> {{schema.id}}
+            </a>
+          </td>
+          <td>{{schema.location}}</td>
+          <td>
+            <a name="{{schema.id}}" [routerLink]="['edit-global-schema', schema.id]" class="clickable"
+               title="Edit schema"><i class="fa fa-file-text-o"></i></a>
+            &nbsp;|&nbsp;
+            <a name="remove" (click)="removeSchema(schema, $event)" class="clickable"
+               title="Remove schema"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </div>

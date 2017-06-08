@@ -1,5 +1,5 @@
 <ul class="nav nav-sidebar">
-  <li [routerLinkActive]="['active']"><a [routerLink]="['/dashboard']"><i class="fa fa-cube"></i><span class="hidden-xs">&nbsp;&nbsp;Dashboard</span></a></li>
+  <li [routerLinkActive]="['active']"><a [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i><span class="hidden-xs">&nbsp;&nbsp;Dashboard</span></a></li>
   <li [routerLinkActive]="['active']"><a [routerLink]="['/configuration']"><i class="fa fa-wrench"></i><span class="hidden-xs">&nbsp;&nbsp;Configuration</span></a></li>
   <ul class="nav hidden-xs" *ngIf="isActive('configuration')">
     <li [routerLinkActive]="['active']"><a [routerLink]="['/configuration/endpoints']"><i class="fa fa-square-o"></i> Endpoints</a></li>
@@ -19,7 +19,7 @@
     <li [routerLinkActive]="['active']"><a [routerLink]="['/tests/detail']"><i class="fa fa-square-o"></i> Details</a></li>
   </ul>
   <li [routerLinkActive]="['active']"><a [routerLink]="['/report']"><i class="fa fa-tasks"></i><span class="hidden-xs">&nbsp;&nbsp;Test Report</span></a></li>
-  <li [routerLinkActive]="['active']"><a [routerLink]="['/settings']"><i class="fa fa-cog"></i><span class="hidden-xs">&nbsp;&nbsp;Settings</span></a></li>
+  <li [routerLinkActive]="['active']"><a [routerLink]="['/settings']"><i class="fa fa-cogs"></i><span class="hidden-xs">&nbsp;&nbsp;Settings</span></a></li>
   <ul class="nav hidden-xs" *ngIf="isActive('settings')">
     <li [routerLinkActive]="['active']"><a [routerLink]="['/settings/project']"><i class="fa fa-square-o"></i> Project</a></li>
     <li [routerLinkActive]="['active']"><a [routerLink]="['/settings/modules']"><i class="fa fa-square-o"></i> Modules</a></li>

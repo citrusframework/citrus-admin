@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import {Alert} from "../model/alert";
+import * as _ from 'lodash';
 import {AlertService} from "../service/alert.service";
 
 declare var jQuery:any;
-declare var _:any;
 
 @Component({
     selector: 'div.alert-dialog',

@@ -24,7 +24,24 @@
 
 <br/>
 
-<div class="list-group">
-  <div *ngIf="globalVariables.variables.length == 0" class="list-group-item"><i class="fa fa-times"></i> No variables defined</div>
-  <div *ngFor="let variable of globalVariables.variables" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{variable.name}}</b> = {{variable.value}}&nbsp;<a class="btn-remove pull-right" (click)="removeVariable(variable, $event)" name="remove" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th width="20"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="globalVariables.variables.length == 0">
+        <td colspan="3"><i class="fa fa-times"></i> No variables defined</td>
+      </tr>
+      <tr *ngFor="let variable of globalVariables.variables" class="clickable">
+        <td>{{variable.name}}</td>
+        <td>{{variable.value}}</td>
+        <td><a class="btn-remove" (click)="removeVariable(variable, $event)" name="remove" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

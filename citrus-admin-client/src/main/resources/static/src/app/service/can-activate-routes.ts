@@ -14,7 +14,7 @@ export class CanActivateRoutes implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>|Promise<boolean>|boolean {
         const guard$ = this.projectService.getActiveProject().map(() => true).catch((e) => Observable.of(false));
-        guard$.filter(b => !b).subscribe(() => this.router.navigate([this.setupRoute]))
+        guard$.filter(b => !b).subscribe(() => this.router.navigate([this.setupRoute]));
         return guard$;
     }
 

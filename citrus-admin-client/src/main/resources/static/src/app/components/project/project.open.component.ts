@@ -4,7 +4,6 @@ import {ProjectSettings} from "../../model/project";
 import * as jQueryVar from 'jquery'
 import {Router} from "@angular/router";
 
-// TODO: C'mon this is a dirty hack to tell TS that jQuery is basically from type jQuery but not the global jQuery will be used...
 declare var jQuery:typeof jQueryVar;
 
 @Component({

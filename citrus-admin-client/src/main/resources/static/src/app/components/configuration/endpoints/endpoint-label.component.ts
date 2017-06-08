@@ -3,7 +3,8 @@ import {Component, Input} from "@angular/core";
     selector:'endpoint-label',
     styles: [`
         .label {
-            padding: .3em;
+            font-size: 85%;
+            padding: .2em;
         }
         i {
             margin-left: 2px;
@@ -11,11 +12,11 @@ import {Component, Input} from "@angular/core";
     `],
     template: `
       <span class="label label-{{type}}">
-        <i class="fa fa-share-alt-square"></i> <span *ngIf="enclosing">{{type}}</span>
-      </span> <span *ngIf="!enclosing">&nbsp;{{type}}</span>
+        <i class="fa fa-share-alt-square"></i>
+      </span><span *ngIf="!iconOnly">&nbsp;{{type}}</span>
     `
 })
 export class EndpointLabelComponent {
     @Input() type:string;
-    @Input() enclosing = false
+    @Input() iconOnly = false;
 }

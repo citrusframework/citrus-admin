@@ -21,7 +21,7 @@ export class FunctionLibraryComponent implements OnInit {
     }
 
     mode: EditorMode;
-    form: FormGroup
+    form: FormGroup;
     newFunction: Function;
     selectedLibrary: FunctionLibrary;
     libraries: FunctionLibrary[];

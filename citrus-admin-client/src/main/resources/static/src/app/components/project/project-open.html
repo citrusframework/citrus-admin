@@ -1,14 +1,11 @@
-<div class="jumbotron">
-
-  <h1 class="page-header">Open project</h1>
+<div class="container space-top-30">
+  <h1 class="page-header">Open project <span name="edit-settings" class="clickable pull-right" (click)="showSettings()" title="Edit project settings"><i class="fa fa-wrench"></i></span></h1>
 
   <form (ngSubmit)="onSubmit()">
     <fieldset>
       <div class="form-group">
-        <h4>Open a project by selecting the Citrus project home directory <span name="edit-settings" class="clickable" (click)="showSettings()" title="Edit project settings"><i class="fa fa-wrench"></i></span></h4>
-      </div>
+        <label>Select project home directory</label>
 
-      <div class="form-group">
         <div class="input-group">
           <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Project Home" name="projectHome" />
           <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
@@ -36,13 +33,12 @@
     <button type="button" class="close" (click)="clearSuccess()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
   </div>
-
+  
   <h2 class="sub-header">Recent projects</h2>
   <ul class="list-group">
     <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
     <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
   </ul>
-
 </div>
 
 <div id="dialog-settings" class="modal fade">

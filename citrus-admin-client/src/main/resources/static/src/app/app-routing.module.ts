@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'open', component: OpenProjectComponent},
     { path: 'new', component: ComingComponent},
     { path: 'about', component: ComingComponent },
-    { path: 'log', component: LogComponent },
+    { path: 'log', component: LogComponent, canActivate:[CanActivateRoutes]},
     { path: 'setup', component: SetupComponent}
 ];
 

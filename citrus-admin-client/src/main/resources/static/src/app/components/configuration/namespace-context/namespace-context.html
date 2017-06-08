@@ -24,7 +24,24 @@
 
 <br/>
 
-<div class="list-group">
-  <div *ngIf="namespaceContext.namespaces.length == 0" class="list-group-item"><i class="fa fa-times"></i> No namespaces defined</div>
-  <div *ngFor="let namespace of namespaceContext.namespaces" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{namespace.prefix}}</b> = {{namespace.uri}}&nbsp;<a class="btn-remove pull-right" (click)="removeNamespace(namespace, $event)" name="remove" title="Remove namespace"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Prefix</th>
+        <th>Uri</th>
+        <th width="20"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="namespaceContext.namespaces.length == 0">
+        <td colspan="3"><i class="fa fa-times"></i> No namespaces defined</td>
+      </tr>
+      <tr *ngFor="let namespace of namespaceContext.namespaces" class="clickable">
+        <td>{{namespace.prefix}}</td>
+        <td>{{namespace.uri}}</td>
+        <td><a class="btn-remove" (click)="removeNamespace(namespace, $event)" name="remove" title="Remove namespace"><i class="fa fa-times" style="color: #A50000;"></i></a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

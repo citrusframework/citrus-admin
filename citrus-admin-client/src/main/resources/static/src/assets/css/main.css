@@ -18,6 +18,8 @@ body {
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #eff6fb;
     border-right: 1px solid #eee;
+    padding-top: 0;
+    padding-left: 25px;
 }
 
 /* Sidebar navigation */
@@ -26,15 +28,20 @@ body {
     margin-bottom: 20px;
     margin-left: -20px;
 }
+
 .nav-sidebar > li > a {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #dae6f3;
 }
 .nav-sidebar > li.active > a,
 .nav-sidebar > li.active > a:hover,
 .nav-sidebar > li.active > a:focus {
     color: #374d85;
     background-color: #e3effc;
+}
+
+.nav-sidebar > .nav {
+    border-bottom: 1px solid #dae6f3;
 }
 
 .nav-sidebar > .nav > li > a {
@@ -201,7 +208,19 @@ form {
     margin-left: 5px;
 }
 
-/** Box **/
+/** Tables **/
+
+.table > thead > tr > th {
+    background-color: #efefef;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #eff6fb;
+}
+
+/** Boxing **/
+
 .box {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -424,7 +443,7 @@ pre.logger {
 
 .nav > li > a:hover,
 .nav > li > a:focus {
-    background: #e3effc;
+    background: #eff6fb;
 }
 
 .nav-pills > li.active > a,

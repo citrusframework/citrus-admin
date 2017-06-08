@@ -24,7 +24,6 @@ export class ValidationMatcherComponent implements OnInit {
     mode:EditorMode;
     EditorMode = EditorMode;
     newValidationMatcher: ValidationMatcher;
-    newLibrary: ValidationMatcherLibrary;
     selectedLibrary: ValidationMatcherLibrary;
     libraries: ValidationMatcherLibrary[];
 
@@ -34,7 +33,6 @@ export class ValidationMatcherComponent implements OnInit {
 
     addValidationMatcher() {
         this.selectedLibrary.matchers.push(this.newValidationMatcher);
-
         this.newValidationMatcher = new ValidationMatcher();
     }
 

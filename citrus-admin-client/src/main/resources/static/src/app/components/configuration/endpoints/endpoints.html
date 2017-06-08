@@ -28,7 +28,7 @@
 <p></p>
 
 <div *ngIf="display == 'table'" class="table-responsive">
-  <table class="table table-hover">
+  <table class="table table-hover table-bordered">
     <thead>
       <tr>
         <th>Type</th>
@@ -42,7 +42,7 @@
         <td colspan="4"><i class="fa fa-share-alt-square"></i> No endpoints found for project</td>
       </tr>
       <tr *ngFor="let endpoint of endpoints" (click)="invokeEdit(endpoint, $event)" class="clickable">
-        <td><endpoint-label [type]="endpoint.type" [enclosing]="true"></endpoint-label></td>
+        <td><endpoint-label [type]="endpoint.type"></endpoint-label></td>
         <td>{{endpoint.id}}</td>
         <td>
           <ul class="properties endpoint-properties">
@@ -56,11 +56,6 @@
         </td>
       </tr>
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="4">&nbsp;</td>
-      </tr>
-    </tfoot>
   </table>
 </div>
 
@@ -83,7 +78,7 @@
       </ul>
     </div>
     <div class="panel-footer">
-      <endpoint-label [type]="endpoint.type" [enclosing]="true"></endpoint-label>
+      <endpoint-label [type]="endpoint.type"></endpoint-label>
       <a class="clickable pull-right"
          [routerLink]="['endpoint-editor', endpoint.id]"
          name="edit" title="Edit endpoint"><i class="fa fa-edit"></i></a>

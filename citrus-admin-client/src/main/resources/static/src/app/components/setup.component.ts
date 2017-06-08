@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ProjectSetupService} from "../service/project.setup.service";
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'setup',
-    templateUrl: 'setup-project.html'
+    templateUrl: 'setup.html'
 })
 export class SetupComponent {
 }

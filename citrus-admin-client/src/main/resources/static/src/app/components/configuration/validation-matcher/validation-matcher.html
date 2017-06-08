@@ -62,15 +62,30 @@
   </div>
 </form>
 
-<div *ngIf="!newLibrary && !selectedLibrary" class="list-group">
-  <div *ngIf="libraries.length == 0" class="list-group-item"><i class="fa fa-times"></i> No validation matcher libraries defined</div>
-
-  <div *ngFor="let library of libraries" class="list-group-item clickable" (click)="selectLibrary(library)">
-    <a class="pull-right" (click)="removeLibrary(library, $event)" name="remove" title="Remove library"><i class="fa fa-times" style="color: #A50000;"></i></a>
-    <span class="label label-primary"><i class="fa fa-check-square"></i></span>&nbsp;
-    <span><b>{{library.id}} ({{library.prefix}})</b></span>
-    <ul class="properties">
-      <li *ngFor="let matcher of library.matchers"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{matcher.name}}()</b></li>
-    </ul>
-  </div>
+<div *ngIf="!selectedLibrary" class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Prefix</th>
+        <th>Matcher</th>
+        <th width="20"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="libraries.length == 0">
+        <td colspan="4"><i class="fa fa-times"></i> No validation matcher libraries defined</td>
+      </tr>
+      <tr *ngFor="let library of libraries" (click)="selectLibrary(library)" class="clickable">
+        <td>{{library.id}}</td>
+        <td>{{library.prefix}}</td>
+        <td>
+          <ul class="properties">
+            <li *ngFor="let matcher of library.matchers"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{matcher.name}}()</b></li>
+          </ul>
+        </td>
+        <td><a class="btn-remove" (click)="removeLibrary(library, $event)" name="remove" title="Remove library"><i class="fa fa-times" style="color: #A50000;"></i></a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
