@@ -1,5 +1,4 @@
-import {Environment} from "./environment.interface";
-export const environment:Environment = {
+export const environment = {
     production: true,
     traceRouting: false,
     reduxTools: false,
