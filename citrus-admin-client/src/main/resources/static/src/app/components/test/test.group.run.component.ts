@@ -10,9 +10,6 @@ import {Frame} from "stompjs";
 import {TestStateService} from "./test.state";
 import {SocketEvent} from "../../model/socket.event";
 import {Router} from "@angular/router";
-import {AppState} from "../../state.module";
-import {Store} from "@ngrx/store";
-import {go} from "@ngrx/router-store";
 
 @Component({
     templateUrl: 'test-group-run.html'
@@ -22,12 +19,8 @@ export class TestGroupRunComponent implements OnInit {
     constructor(private testService: TestService,
                 private testState: TestStateService,
                 private alertService: AlertService,
-                private _router: Router,
-                private store:Store<AppState>
-    ) {
+                private _router: Router) {
         this.stompClient = Stomp.over(new SockJS(`/api/logging`) as WebSocket);
-        // TODO: Refactor into custom Service
-        this.stompClient.debug = () => {};
         this.stompClient.connect({}, (frame:Frame) => {
             if (frame) {
                 this.subscribe();
@@ -90,8 +83,7 @@ export class TestGroupRunComponent implements OnInit {
     }
 
     open(test: Test) {
-        console.log('Open')
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
+        this._router.navigate(['/tests', 'detail', test.name, 'info']);
     }
 
     openConsole() {

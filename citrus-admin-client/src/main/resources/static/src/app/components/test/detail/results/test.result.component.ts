@@ -54,6 +54,6 @@ export class TestResultOutletComponent implements OnInit {
 
     ngOnInit(): void {
         this.detail = this.testState.selectedTestDetail;
-        this.result = this.detail.switchMap(d => this.reportService.getTestResult(d))
+        this.result = this.detail.do(log('adsdfgdf')).switchMap(d => this.reportService.getTestResult(d))
     }
 }

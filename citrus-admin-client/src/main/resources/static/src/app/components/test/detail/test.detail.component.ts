@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Test, TestDetail} from "../../../model/tests";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TestStateService, TestStateActions} from "../test.state";
 import {Observable} from "rxjs";
-import * as _ from 'lodash';
+import * as _ from 'lodash'
+import {notNull} from "../../../util/redux.util";
 import {AppState} from "../../../state.module";
 import {Store} from "@ngrx/store";
 import {go} from '@ngrx/router-store';
-import {Subscription} from "rxjs/Subscription";
 
 declare var jQuery:any;
 
@@ -17,8 +17,7 @@ declare var jQuery:any;
     selector: "test-detail",
     templateUrl: 'test-detail.html'
 })
-export class TestDetailComponent implements OnInit, OnDestroy {
-
+export class TestDetailComponent implements OnInit {
 
     test: Test;
     openTests:Observable<Test[]>;
@@ -31,7 +30,6 @@ export class TestDetailComponent implements OnInit, OnDestroy {
         {name:"Design",     link:'design',  icon:'fa-sitemap'},
         {name:"Run",        link:'run',     icon:'fa-play-circle'}
     ]
-    private subscription: Subscription;
 
     constructor(
                 private _alertService: AlertService,
@@ -48,38 +46,31 @@ export class TestDetailComponent implements OnInit, OnDestroy {
     }
 
     onTabSelected(test:Test) {
-        this.navigateToTest(test);
+        this.testAction.selectTest(test);
+        this.navigateToTestInfo(test);
     }
 
     ngOnInit() {
         this.selectedTest = this.testState.selectedTest;
         this.openTests = this.testState.openTabs;
-
-        this.subscription = this.route
+        this.testState.selectedTest.filter(notNull()).subscribe(t => this.testAction.fetchDetails(t))
+        this.route
             .params
             .filter(p => p['name'] != null)
             .flatMap(({name}) => this.testState.getTestByName(name))
             .filter(t => t != null)
             .subscribe(t => {
+                this.testAction.fetchDetails(t);
                 this.testAction.addTab(t);
                 this.testAction.selectTest(t);
-                this.testAction.fetchDetails(t);
-            });
+            })
     }
-
-    ngOnDestroy(): void {
-        if(this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
-
 
     isActive(link:string) {
         return _.endsWith(this.router.url, link);
     }
 
-    private navigateToTest(test:Test) {
-        console.log('Open')
+    private navigateToTestInfo(test:Test) {
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 
