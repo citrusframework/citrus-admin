@@ -7,8 +7,7 @@ import * as ace from 'brace';
 import 'brace/theme/chrome';
 import 'brace/mode/java';
 import 'brace/mode/xml';
-import Editor = ace.Editor;
-
+import Editor = AceAjax.Editor;
 
 @Component({
     selector: "source-code",

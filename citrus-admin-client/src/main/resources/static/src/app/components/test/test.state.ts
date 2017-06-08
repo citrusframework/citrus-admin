@@ -16,7 +16,6 @@ import {Message} from "../../model/message";
 import * as moment from 'moment';
 import {Tupel} from "../../util/type.util";
 import {ReportService} from "../../service/report.service";
-import {TestReport} from "../../model/test.report";
 
 export type TestMap = IdMap<Test>;
 export type TestGroupMap = IdMap<TestGroup>;
@@ -30,8 +29,6 @@ export class TestExecutionInfo {
     completed = 0;
     finishedActions = 0;
     messages: Message[] = [];
-    lastUpdate:number;
-    touched = false;
 }
 
 export interface TestState {
@@ -147,7 +144,6 @@ export class TestStateService {
             this.executionInfos)
             .switchMap(([t]) => this.getExecutionInfo(t))
     }
-
 }
 
 @Injectable()
@@ -159,11 +155,6 @@ export class TestStateEffects {
                 private actions$: Actions) {
     }
 
-    socketEventFinally = this.actions$
-        .ofType(TestStateActions.SOCKET_EVENT)
-        .filter((a: GenericAction<Tupel<TestDetail, SocketEvent>>) => a.payload[1].type === SocketEvent.Types.PROCESS_SUCCESS || a.payload[1].type === SocketEvent.Types.PROCESS_FAILED)
-        .map((a: GenericAction<Tupel<TestDetail, SocketEvent>>) => a.payload[0])
-
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 
@@ -173,36 +164,14 @@ export class TestStateEffects {
     @Effect() execute = this.actions
         .handleEffect<TestDetail>(TestStateActions.EXECUTE, ({payload}) => this.testService.execute(payload));
 
-    @Effect() executeGroup = this.actions
-        .handleEffect<TestGroup>(TestStateActions.EXECUTE_GROUP, ({payload}) => this.testService.executeGroup(payload));
-
-    @Effect() executeAll = this.actions
-        .handleEffect<TestDetail>(TestStateActions.EXECUTE_ALL, () => this.testService.executeAll());
-
-    @Effect() latestResultsAfterExecution = this.actions$
-        .ofType(
-            TestStateActions.EXECUTE_ALL.SUCCESS, TestStateActions.EXECUTE_GROUP.SUCCESS
-        )
-        .switchMap(r => this.socketEventFinally)
-        .map(() => ({type:TestStateActions.REPORT_LATEST.FETCH}));
-
-
     @Effect() report = this.actions
         .handleEffect<TestDetail>(TestStateActions.REPORT, ({payload}) => this.reportService.getTestResult(payload));
 
-    @Effect() reportLatest = this.actions
-        .handleEffect<TestDetail>(TestStateActions.REPORT_LATEST, () => this.reportService.getLatest());
-
-    @Effect() ditributeLatestResults = this.actions$.ofType(TestStateActions.REPORT_LATEST.SUCCESS)
-        .switchMap(({payload:r}:GenericAction<TestReport>) => {
-            return Observable.from(r.results.map(payload => ({type:TestStateActions.REPORT.SUCCESS, payload})))
-        })
-
-
-    @Effect() resultsAfterExecute = this.socketEventFinally
-        .withLatestFrom(this.testState.testNames)
-        .filter(([td, names]) => _.includes(names, td.name))
-        .map(([payload]) => ({type: TestStateActions.REPORT.FETCH, payload}));
+    @Effect() resultsAfterExecute = this.actions$
+        .ofType(TestStateActions.SOCKET_EVENT)
+        .filter((a: GenericAction<Tupel<TestDetail, SocketEvent>>) => a.payload[1].type === SocketEvent.Types.PROCESS_SUCCESS || a.payload[1].type === SocketEvent.Types.PROCESS_FAILED)
+        .map((a: GenericAction<Tupel<TestDetail, SocketEvent>>) => a.payload[0])
+        .map((payload) => ({type: TestStateActions.REPORT.FETCH, payload}));
 
     @Effect() routingToLatestView = this.actions$.ofType(routerActions.GO, routerActions.UPDATE_LOCATION)
         .map(({payload: {path}}) => path)
@@ -237,9 +206,6 @@ export class TestStateActions {
     static SOCKET_EVENT = 'TEST.SOCKET_EVENT';
     static TEST_MESSAGE = 'TEST.TEST_MESSAGE';
     static REPORT = AsyncActionType('TEST.REPORT');
-    static EXECUTE_GROUP = AsyncActionType('TEST.EXECUTE_GROUP');
-    static EXECUTE_ALL = AsyncActionType('TEST.EXECUTE_ALL');
-    static REPORT_LATEST = AsyncActionType('Test.REPORT_LATEST');
 
     constructor(private store: Store<AppState>) {
     }
@@ -268,14 +234,6 @@ export class TestStateActions {
         this.store.dispatch({type: TestStateActions.EXECUTE.FETCH, payload});
     }
 
-    executeTestGroup(payload: TestGroup) {
-        this.store.dispatch({type: TestStateActions.EXECUTE_GROUP.FETCH, payload});
-    }
-
-    executeAll() {
-        this.store.dispatch({type: TestStateActions.EXECUTE_ALL.FETCH});
-    }
-
     resetResults(payload: TestDetail) {
         this.store.dispatch({type: TestStateActions.RESET_EXECUTION, payload})
     }
@@ -291,10 +249,6 @@ export class TestStateActions {
 
     fetchResults(payload: TestDetail) {
         this.store.dispatch({type: TestStateActions.REPORT.FETCH, payload})
-    }
-
-    resultSuccess(payload: TestResult) {
-        this.store.dispatch(({type: TestStateActions.REPORT.SUCCESS, payload}))
     }
 }
 
@@ -363,7 +317,7 @@ export function reduce(state: TestState = TestStateInit, action: Action) {
         }
         case TestStateActions.SOCKET_EVENT: {
             const {payload: [detail, event]} = action as GenericAction<Tupel<TestDetail, SocketEvent>>;
-            const info = addTimestamp(state.executionInfo[event.processId], event);
+            const info = {...state.executionInfo[event.processId]};
             return ({
                 ...state,
                 executionInfo: {
@@ -390,10 +344,6 @@ export function reduce(state: TestState = TestStateInit, action: Action) {
         }
     }
     return state;
-}
-
-export function addTimestamp(info:TestExecutionInfo, event:SocketEvent):TestExecutionInfo {
-    return ({...info, lastUpdate:event.timestamp, touched:true});
 }
 
 export function reduceSocketEvent(info: TestExecutionInfo, detail: TestDetail, event: SocketEvent): TestExecutionInfo {

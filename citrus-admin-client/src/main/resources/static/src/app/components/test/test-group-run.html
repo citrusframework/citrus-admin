@@ -16,7 +16,7 @@
           </li>
         </ul>
       </span>
-      <input type="text" class="form-control" value="{{(selected|async) ? (selected|async).name : 'All tests'}}">
+      <input type="text" class="form-control" value="{{selected ? selected.name : 'All tests'}}">
       <span class="input-group-btn">
         <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()"><i class="fa fa-play-circle"></i> Run</button>
       </span>
@@ -40,57 +40,29 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr *ngIf="!selected">
+        <td></td>
         <td>
-          <button class="btn btn-xs btn-success" (click)="executeAll()">
-            <i class="fa fa-play-circle"></i>
-          </button>
-        </td>
-        <td (click)="togglePackage()">
-          <i class="fa clickable" [ngClass]="{'fa-caret-right': !(packagesOpen|async), 'fa-caret-down': packagesOpen|async}"></i>
           <i class="fa fa-file-text-o"></i>
           <span title="All tests">All tests</span>
         </td>
-        <td (click)="togglePackage()"></td>
+        <td></td>
         <td>
-          <execution-status-package
-              [executionInfo]="getExecutionInfoForPackage(AllTests)|async"
-              [success]="getPackageSuccess(AllTests)|async"
-              (logs)="openConsole()"
-          ></execution-status-package>
+          <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+          <span *ngIf="!running">&nbsp;</span>
         </td>
       </tr>
-    </tbody>
-    <tbody *ngFor="let package of packageList|async">
-      <tr >
-        <td>
-          <button class="btn btn-xs btn-success" (click)="executeGroup(package)">
-            <i class="fa fa-play-circle"></i>
-          </button>
-        </td>
-        <td style="padding-left: 25px" (click)="toggleTests(package)">
-          <i class="fa clickable" [ngClass]="{'fa-caret-right': !(isOpen(package)|async), 'fa-caret-down': isOpen(package)|async}"></i>
-          {{package.name}}
-          <span class="badge badge-default">{{package.tests.length}}</span>
-        </td>
-        <td (click)="toggleTests(package)"></td>
-        <td>
-          <execution-status-package
-              [executionInfo]="getExecutionInfoForPackage(package)|async"
-              [success]="getPackageSuccess(package)|async"
-              (logs)="openConsole(package)"
-          ></execution-status-package>
-        </td>
-      </tr>
-      <tr *ngFor="let result of resultListFor(package)|async" (click)="open(result.test)" class="clickable">
+      <tr *ngFor="let result of results" (click)="open(result.test)" class="clickable">
         <td><span class="badge badge-{{result.test.type | lowercase}}">{{result.test.type | lowercase}}</span></td>
-        <td style="padding-left: 25px">
+        <td>
           <i class="fa fa-file-text-o"></i>
           <span title="{{result.test.className}}.{{result.test.methodName}}">{{result.test.name}}</span>
         </td>
         <td>{{result.test.className}}</td>
         <td>
-          <execution-status-test [result]="result"></execution-status-test>
+          <span *ngIf="!running && result.success == undefined">&nbsp;</span>
+          <img *ngIf="running && result.success == undefined" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+          <span *ngIf="result.success != undefined" [class]="(result.success == undefined) ? 'badge' : (result.success ? 'badge badge-success' : 'badge badge-danger')" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
         </td>
       </tr>
     </tbody>
@@ -102,6 +74,7 @@
     </tfoot>
   </table>
 </div>
+
 <div class="dialog"
      dialog-id="dialog-console"
      dialog-title="Console log output"
@@ -109,6 +82,6 @@
      dialog-size="lg">
   <p>Log output:</p>
 
-  <pre class="logger" [textContent]="currentOutput|async"></pre>
+  <pre class="logger" [textContent]="currentOutput"></pre>
 
 </div>
