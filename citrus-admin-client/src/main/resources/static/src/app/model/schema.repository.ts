@@ -7,17 +7,6 @@ export class SchemaRepository {
     public id: string;
     public schemaMappingStrategy: string;
     public schemas: Schemas;
-    public locations:Locations = new Locations();
-}
-
-export class Locations {
-    public locations:Location[]
-}
-
-export class Location {
-    constructor(
-        public path:string = ''
-    ) {}
 }
 
 export class Schemas {
