@@ -5,7 +5,6 @@ import {AlertService} from "../../../service/alert.service";
 import {SpringContext} from "../../../model/springcontext";
 
 declare var jQuery:any;
-declare var ace:any;
 
 @Component({
     selector: 'spring-context',

@@ -6,10 +6,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TestStateService, TestStateActions} from "../test.state";
 import {Observable} from "rxjs";
 import * as _ from 'lodash'
-import {notNull} from "../../../util/redux.util";
-import {AppState} from "../../../state.module";
-import {Store} from "@ngrx/store";
-import {go} from '@ngrx/router-store';
 
 declare var jQuery:any;
 
@@ -20,9 +16,6 @@ declare var jQuery:any;
 export class TestDetailComponent implements OnInit {
 
     test: Test;
-    openTests:Observable<Test[]>;
-    selectedTest: Observable<Test>;
-    detail: TestDetail;
 
     menuEntries = [
         {name:"Info",       link:'info',    icon:'fa-cube'},
@@ -35,43 +28,36 @@ export class TestDetailComponent implements OnInit {
                 private _alertService: AlertService,
                 private testState:TestStateService,
                 private testAction:TestStateActions,
-                private router:Router,
-                private route:ActivatedRoute,
-                private store:Store<AppState>
+                private activatedRoute:ActivatedRoute,
+                private router:Router
     ) {
     }
 
-    onTabClosed(test:Test) {
-        this.testAction.removeTab(test);
-    }
-
-    onTabSelected(test:Test) {
-        this.testAction.selectTest(test);
-        this.navigateToTestInfo(test);
-    }
+    detail: TestDetail;
 
     ngOnInit() {
-        this.selectedTest = this.testState.selectedTest;
-        this.openTests = this.testState.openTabs;
-        this.testState.selectedTest.filter(notNull()).subscribe(t => this.testAction.fetchDetails(t))
-        this.route
-            .params
-            .filter(p => p['name'] != null)
-            .flatMap(({name}) => this.testState.getTestByName(name))
-            .filter(t => t != null)
-            .subscribe(t => {
-                this.testAction.fetchDetails(t);
-                this.testAction.addTab(t);
-                this.testAction.selectTest(t);
-            })
+        Observable.combineLatest(
+            this.activatedRoute.params.filter(p => p["name"] != null),
+            this.testState.tests.filter(t => t != null).first(),
+        )
+        .map(([{name}, tests]) => tests.find(t => t.name === name))
+        .filter(t => t != null)
+        .subscribe(test => {
+            this.testState.openTabs
+                //.take(1)
+                .filter(openTests => !_.includes(openTests, test) && openTests.length > 0)
+                .subscribe(() => this.testAction.addTab(test))
+            this.testAction.selectTest(test);
+            this.testAction.fetchDetails(test);
+            this.testState.latestDetailView.first()
+                .delay(100) // for some reasons we need to wait a bit before routing in ngOnInit
+                .subscribe(lv => this.router.navigate(['tests','detail', test.name, lv]))
+        })
+
     }
 
     isActive(link:string) {
         return _.endsWith(this.router.url, link);
-    }
-
-    private navigateToTestInfo(test:Test) {
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 
     notifyError(error: any) {

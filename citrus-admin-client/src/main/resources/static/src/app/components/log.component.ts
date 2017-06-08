@@ -7,7 +7,7 @@ import {AlertService} from "../service/alert.service";
 })
 export class LogComponent {
 
-    alerts: Alert[] = [];
+    private alerts: Alert[] = [];
 
     constructor(private _alertService: AlertService) {}
 

@@ -6,9 +6,7 @@ import {AlertService} from "../../service/alert.service";
 import * as jQueryVar from 'jquery'
 import {TestStateActions, TestStateService} from "./test.state";
 import {Observable} from "rxjs";
-import {go} from "@ngrx/router-store";
-import {AppState} from "../../state.module";
-import {Store} from "@ngrx/store";
+import {RouterState} from "../../service/router-state.service";
 
 declare var jQuery:typeof jQueryVar;
 
@@ -22,19 +20,49 @@ export class TestEditorComponent implements OnInit {
 
     constructor(
                 private alertService: AlertService,
-                private route: ActivatedRoute,
+                private router: Router,
                 private testActions:TestStateActions,
                 private testState:TestStateService,
-                private store:Store<AppState>
+                private route:ActivatedRoute,
+                private routerState:RouterState
     ) {
     }
 
+    openTests: Observable<Test[]>;
     packages:Observable<TestGroup[]>;
-    selectedTest:Observable<Test>;
+    selectedTest: Observable<Test>;
 
     ngOnInit() {
         this.packages = this.testState.packages;
+        this.openTests = this.testState.openTabs;
         this.selectedTest = this.testState.selectedTest;
+
+        /** Navigate to the main page if we dont have opentabs in state **/
+        this.testState
+            .openTabs
+            .filter(ot => ot.length === 0)
+            .subscribe(() => this.router.navigate(['tests', 'detail']));
+
+        /** Navigate to a test route if selected tab is changed **/
+        this.testState.selectedTest.filter(t => t != null).subscribe(t => {
+            this.router.navigate([t.name])
+        })
+
+        Observable.combineLatest(
+            this.routerState.path.filter(p => p === '/tests/detail').take(1),
+            this.testState.selectedTest.filter(t => t != null).take(1)
+        )
+        .subscribe(([u, t]) => this.router.navigate(['tests','detail', t.name]))
+
+    }
+
+    onTabClosed(test:Test) {
+        this.testActions.removeTab(test);
+    }
+
+    onTabSelected(test:Test) {
+        this.testActions.selectTest(test);
+        this.navigateToTestInfo(test);
     }
 
     openTestList() {
@@ -61,7 +89,6 @@ export class TestEditorComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
+        this.router.navigate(['/tests', 'detail', test.name, 'info']);
     }
-
 }

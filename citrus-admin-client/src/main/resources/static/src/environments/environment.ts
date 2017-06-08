@@ -10,13 +10,7 @@ if(localStorage) {
     }
 }
 
-export interface Environment {
-    production?:boolean;
-    traceRouting?:boolean;
-    reduxTools?:boolean;
-}
-
-export const environment:Environment = {
+export const environment = {
     production: false,
     traceRouting: true,
     reduxTools: true,

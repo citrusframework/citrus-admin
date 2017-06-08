@@ -3,7 +3,7 @@
     <a [routerLink]="entry.link">{{entry.name}}</a>
   </li>
 </ul>
-<div class.clearfix="false"></div>
+<div [class.clearfix]="navigation && pullRight"></div>
 
 <router-outlet></router-outlet>
 

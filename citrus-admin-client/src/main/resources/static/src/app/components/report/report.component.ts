@@ -5,9 +5,6 @@ import {ReportService} from "../../service/report.service";
 import {AlertService} from "../../service/alert.service";
 import {Test} from "../../model/tests";
 import {Alert} from "../../model/alert";
-import {AppState} from "../../state.module";
-import {Store} from "@ngrx/store";
-import {go} from '@ngrx/router-store'
 
 @Component({
     templateUrl: "report.html"
@@ -16,9 +13,8 @@ export class ReportComponent implements OnInit {
 
     constructor(private _reportService: ReportService,
                 private _alertService: AlertService,
-                private _router: Router,
-                private store:Store<AppState>
-    ) {}
+                private _router: Router) {
+    }
 
     report: TestReport = new TestReport();
 
@@ -34,7 +30,7 @@ export class ReportComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
+        this._router.navigate(['/tests', 'detail', test.name, 'info']);
     }
 
     notifyError(error: any) {

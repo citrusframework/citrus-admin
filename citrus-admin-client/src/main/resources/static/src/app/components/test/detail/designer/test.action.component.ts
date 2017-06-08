@@ -12,21 +12,21 @@ import {TestAction} from "../../../../model/tests";
               </div>
               <div class="panel-body">
                 <div [ngSwitch]="action.type">
-                  <ng-template *ngSwitchCase="'send'">
+                  <template *ngSwitchCase="'send'">
                     <span>{{getProperty("endpoint")}}</span>
-                  </ng-template>
-                  <ng-template *ngSwitchCase="'receive'">
+                  </template>
+                  <template *ngSwitchCase="'receive'">
                     <span>{{getProperty("endpoint")}}</span>
-                  </ng-template>
-                  <ng-template *ngSwitchCase="'sleep'">
+                  </template>
+                  <template *ngSwitchCase="'sleep'">
                     <span>{{getProperty("milliseconds")}}</span>
-                  </ng-template>
-                  <ng-template *ngSwitchCase="'echo'">
+                  </template>
+                  <template *ngSwitchCase="'echo'">
                     <span>{{getProperty("message")}}</span>
-                  </ng-template>
-                  <ng-template *ngSwitchDefault>
+                  </template>
+                  <template *ngSwitchDefault>
                     <p *ngFor="let property of action.properties">{{property.id}}:{{property.value}}</p>
-                  </ng-template>
+                  </template>
                 </div>
               </div>
             </div>

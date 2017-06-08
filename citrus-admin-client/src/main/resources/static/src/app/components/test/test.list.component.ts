@@ -5,9 +5,6 @@ import {AlertService} from "../../service/alert.service";
 import {TestStateService, TestStateActions} from "./test.state";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
-import {AppState} from "../../state.module";
-import {Store} from "@ngrx/store";
-import {go} from '@ngrx/router-store';
 
 @Component({
     templateUrl: 'test-list.html'
@@ -16,7 +13,7 @@ export class TestListComponent implements OnInit {
 
     constructor(
             private alertService: AlertService,
-            private store:Store<AppState>,
+            private router: Router,
             private testActions:TestStateActions,
             private testState:TestStateService) {
     }
@@ -51,6 +48,6 @@ export class TestListComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
-        this.store.dispatch(go(['/tests', 'detail', test.name]));
+        this.router.navigate(['/tests', 'detail', test.name, 'info']);
     }
 }

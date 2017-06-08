@@ -1,8 +1,5 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {go} from '@ngrx/router-store';
-import {Store} from '@ngrx/store'
-import {AppState} from "../state.module";
 
 @Component({
     selector: 'sidebar',
@@ -10,13 +7,11 @@ import {AppState} from "../state.module";
 })
 export class SidebarComponent {
 
-    constructor(
-        private router: Router,
-        private store:Store<AppState>
-    ) {}
+    constructor(private router: Router) {
+    }
 
     navigate(url: string) {
-        this.store.dispatch(go([url]));
+        this.router.navigate([url]);
     }
 
     isActive(name: string) {
