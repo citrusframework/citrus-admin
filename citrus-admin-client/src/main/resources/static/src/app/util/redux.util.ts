@@ -85,7 +85,10 @@ export const toIdMap = <T>(list:T[], getId:(e:T)=>string) => list.reduce((idm, e
 export const toArray = <T>(idMap:IdMap<T>) => Object.keys(idMap).map(k => idMap[k])
 
 export const deleteFromMap = <T>(map:IdMap<T>, key:string) => {
-    return Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {})
+    console.log(`Delete ${key}`, map)
+    const r = Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {})
+    console.log(`Deleted ${key}`, r)
+    return r;
 }
 
 type ReducerCallback<T> = <A>(state:T,payload:A) => T;

@@ -1,36 +1,32 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TestDetail, TestResult} from "../../../../model/tests";
+import {TestService} from "../../../../service/test.service";
 import {SocketEvent} from "../../../../model/socket.event";
+import {Message} from "../../../../model/message";
 import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
-import {TestExecutionInfo, TestStateActions, TestStateService} from "../../test.state";
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import {Frame} from "stompjs";
+import {TestStateService} from "../../test.state";
 import {Observable} from "rxjs";
+import {parseBody, StompConnection, StompConnectionService} from "../../../../service/stomp-connection.service";
 import {LoggingService} from "../../../../service/logging.service";
-import {log} from "../../../../util/redux.util";
-import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'test-run-outlet',
-    template: `
-      <test-run
-          [detail]="detail|async"
-          [executionInfo]="executionInfo|async"
-          [result]="result|async"
-      ></test-run>
-    `
+    template: '<test-run [detail]="detail|async"></test-run>'
 })
 export class TestRunOutlet implements OnInit {
     detail: Observable<TestDetail>;
-    executionInfo: Observable<TestExecutionInfo>;
-    result: Observable<TestResult>;
 
     constructor(private testState: TestStateService) {
     }
 
     ngOnInit() {
         this.detail = this.testState.selectedTestDetail;
-        this.result = this.testState.resultsForSelectedTest;
-        this.executionInfo = this.testState.executionInfoForSelectedTest;
     }
 }
 
@@ -38,45 +34,95 @@ export class TestRunOutlet implements OnInit {
     selector: "test-run",
     templateUrl: 'test-run.html'
 })
-export class TestRunComponent implements OnInit, OnDestroy {
+export class TestRunComponent implements OnInit {
     @Input() detail: TestDetail;
-    @Input() executionInfo: TestExecutionInfo;
-    @Input() result: TestResult;
 
-    subsciption = new Subscription();
-
-    constructor(private loggingService: LoggingService,
-                private testActions: TestStateActions,
+    constructor(private _testService: TestService,
+                private loggingService: LoggingService,
                 private _alertService: AlertService) {
     }
 
+    result: TestResult;
+    running = false;
+    completed = 0;
+    failed = false;
+
+    finishedActions = 0;
+
+    processOutput = "";
+    currentOutput = "";
+
+    messages: Message[];
+
     execute() {
-        this.testActions.resetResults(this.detail);
-        this.testActions.executeTest(this.detail);
+        this.processOutput = "";
+        this.currentOutput = "";
+        this.running = true;
+        this.failed = false;
+        this.completed = 0;
+        this.finishedActions = 0;
+        this.messages = [];
+        this._testService.execute(this.detail)
+            .subscribe(
+                result => {
+                    this.result = result;
+                },
+                error => this.notifyError(<any>error));
     }
 
     ngOnInit() {
-        [
-            this.loggingService.logOutput
-                .subscribe((e: SocketEvent) => {
-                    this.testActions.handleSocketEvent(this.detail, e)
-                }),
-            this.loggingService.testEvents
-                .subscribe(e => this.testActions.handleSocketEvent(this.detail, e)),
+        this.loggingService.logOutput
+            .subscribe((e: SocketEvent) => {
+                jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
+                this.processOutput += e.msg;
+                this.currentOutput = e.msg;
+                this.handle(e);
+            });
 
-            this.loggingService.messages.do(log('Message'))
-                .subscribe(m => this.testActions.handleMessage(
-                    this.detail, m
-                ))
-        ].forEach(s => this.subsciption.add(s));
-    }
+        this.loggingService.testEvents
+            .subscribe(this.handle);
 
-    ngOnDestroy() {
-        this.subsciption.unsubscribe();
+        this.loggingService.messages
+            .subscribe(this.handleMessage);
     }
 
     openConsole() {
         (jQuery('#dialog-console') as any).modal();
+    }
+
+    handleMessage(message: any) {
+        console.log('Handle mesage', message)
+        this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
+    }
+
+    handle(event: SocketEvent) {
+        console.log('Handle', event)
+        if ("PROCESS_START" == event.type) {
+            this.completed = 1;
+        } else if ("TEST_START" == event.type) {
+            this.completed = 1;
+        } else if ("TEST_ACTION_FINISH" == event.type) {
+            this.finishedActions++;
+
+            if (this.detail.actions.length) {
+                this.completed = Math.round((this.finishedActions / this.detail.actions.length) * 100);
+            } else if (this.completed < 90) {
+                this.completed += 2;
+            }
+        } else if ("TEST_FAILED" == event.type || "PROCESS_FAILED" == event.type) {
+            this.failed = true;
+        } else {
+            if (this.completed < 11) {
+                this.completed++;
+            }
+        }
+
+        if ("PROCESS_FAILED" == event.type || "PROCESS_SUCCESS" == event.type) {
+            this.completed = 100;
+            this.running = false;
+            this.currentOutput = this.processOutput;
+            jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
+        }
     }
 
     notifyError(error: any) {

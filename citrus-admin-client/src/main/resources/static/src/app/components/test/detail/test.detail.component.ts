@@ -10,9 +10,8 @@ import {AppState} from "../../../state.module";
 import {Store} from "@ngrx/store";
 import {go} from '@ngrx/router-store';
 import {Subscription} from "rxjs/Subscription";
-import {log} from "../../../util/redux.util";
 
-declare var jQuery: any;
+declare var jQuery:any;
 
 @Component({
     selector: "test-detail",
@@ -22,31 +21,33 @@ export class TestDetailComponent implements OnInit, OnDestroy {
 
 
     test: Test;
-    openTests: Observable<Test[]>;
+    openTests:Observable<Test[]>;
     selectedTest: Observable<Test>;
     detail: TestDetail;
 
     menuEntries = [
-        {name: "Info", link: 'info', icon: 'fa-cube'},
-        {name: "Sources", link: 'sources', icon: 'fa-code'},
-        {name: "Design", link: 'design', icon: 'fa-sitemap'},
-        {name: "Run", link: 'run', icon: 'fa-play-circle'}
+        {name:"Info",       link:'info',    icon:'fa-cube'},
+        {name:"Sources",    link:'sources', icon:'fa-code'},
+        {name:"Design",     link:'design',  icon:'fa-sitemap'},
+        {name:"Run",        link:'run',     icon:'fa-play-circle'}
     ]
-    private subscription = new Subscription();
+    private subscription: Subscription;
 
-    constructor(private _alertService: AlertService,
-                private testState: TestStateService,
-                private testAction: TestStateActions,
-                private router: Router,
-                private route: ActivatedRoute,
-                private store: Store<AppState>) {
+    constructor(
+                private _alertService: AlertService,
+                private testState:TestStateService,
+                private testAction:TestStateActions,
+                private router:Router,
+                private route:ActivatedRoute,
+                private store:Store<AppState>
+    ) {
     }
 
-    onTabClosed(test: Test) {
+    onTabClosed(test:Test) {
         this.testAction.removeTab(test);
     }
 
-    onTabSelected(test: Test) {
+    onTabSelected(test:Test) {
         this.navigateToTest(test);
     }
 
@@ -54,30 +55,30 @@ export class TestDetailComponent implements OnInit, OnDestroy {
         this.selectedTest = this.testState.selectedTest;
         this.openTests = this.testState.openTabs;
 
-        this.subscription.add(
-            this.route
-                .params
-                .filter(p => p['name'] != null)
-                .flatMap(({name}) => this.testState.getTestByName(name))
-                .filter(t => t != null)
-                .subscribe(t => {
-                    this.testAction.addTab(t);
-                    this.testAction.selectTest(t);
-                    this.testAction.fetchDetails(t);
-                })
-        )
+        this.subscription = this.route
+            .params
+            .filter(p => p['name'] != null)
+            .flatMap(({name}) => this.testState.getTestByName(name))
+            .filter(t => t != null)
+            .subscribe(t => {
+                this.testAction.addTab(t);
+                this.testAction.selectTest(t);
+                this.testAction.fetchDetails(t);
+            });
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        if(this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
 
-    isActive(link: string) {
+    isActive(link:string) {
         return _.endsWith(this.router.url, link);
     }
 
-    private navigateToTest(test: Test) {
+    private navigateToTest(test:Test) {
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 
