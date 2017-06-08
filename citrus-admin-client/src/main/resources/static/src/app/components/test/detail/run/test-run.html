@@ -1,6 +1,6 @@
 <div class="space-top-30"></div>
 
-<button (click)="execute()" type="button" class="btn btn-success" [disabled]="running"><i class="fa fa-play-circle"></i> Run Test</button>
+<button (click)="execute()" type="button" class="btn btn-success" [disabled]="executionInfo?.running"><i class="fa fa-play-circle"></i> Run Test</button>
 <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
 
 <h2 class="sub-header">Exchanged messages</h2>

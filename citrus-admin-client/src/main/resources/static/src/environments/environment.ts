@@ -1,3 +1,4 @@
+import {Environment} from "./environment.interface";
 const LOCAL_STORAGE_ENV_KEY = '$CITRUS_ADMIN';
 
 let userEnv = {};
@@ -10,10 +11,11 @@ if(localStorage) {
     }
 }
 
-export const environment = {
+export const environment:Environment = {
     production: false,
-    traceRouting: true,
+    traceRouting: false,
     reduxTools: true,
+    stompDebug:true,
     ...userEnv
 };
 

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TestGroup, Test} from "../../model/tests";
 import {Alert} from "../../model/alert";
 import {AlertService} from "../../service/alert.service";
-import {TestStateService, TestStateActions} from "./test.state";
+import {TestStateService} from "./test.state";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 
@@ -14,7 +14,6 @@ export class TestListComponent implements OnInit {
     constructor(
             private alertService: AlertService,
             private router: Router,
-            private testActions:TestStateActions,
             private testState:TestStateService) {
     }
 
@@ -29,25 +28,18 @@ export class TestListComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.testActions.addTab(test);
-        this.navigateToTestInfo(test);
+        this.navigateToTestInfo(test.name);
     }
 
-    openByName(name: string) {
-        this.tests
-            .first()
-            .map(ts => ts.find(t => t.name === name))
-            .subscribe(t => {
-                this.testActions.addTab(t);
-                this.navigateToTestInfo(t);
-            })
+    openByName(name:string) {
+        this.navigateToTestInfo(name);
     }
 
     notifyError(error: any) {
         this.alertService.add(new Alert("danger", error, false));
     }
 
-    private navigateToTestInfo(test:Test) {
-        this.router.navigate(['/tests', 'detail', test.name, 'info']);
+    private navigateToTestInfo(name:string) {
+        this.router.navigate(['/tests', 'detail', name, 'info']);
     }
 }
