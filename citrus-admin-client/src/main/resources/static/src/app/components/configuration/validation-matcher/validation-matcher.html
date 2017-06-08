@@ -34,9 +34,9 @@
         [message]="form.get('prefix').errors ? 'Prefix is required' : ''"></input-with-addon>
   </form-group>
   <div class="form-group">
-    <label class="col-sm-2 control-label">ValidationMatchers</label>
+    <label class="col-sm-2 control-label">Matchers</label>
     <div class="col-sm-3">
-      <input [(ngModel)]="newValidationMatcher.name" [ngModelOptions]="{standalone: true}" type="text" class="form-control" name="newValidatorMName"/>
+      <input [(ngModel)]="newValidationMatcher.name" [ngModelOptions]="{standalone: true}" placeholder="Name" type="text" class="form-control" name="newValidatorMName"/>
     </div>
     <div class="col-sm-6">
       <input [(ngModel)]="newValidationMatcher.clazz" [ngModelOptions]="{standalone: true}" placeholder="Implementation Class" type="text" class="form-control" name="newValidatorMClazz"/>

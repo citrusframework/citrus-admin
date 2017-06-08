@@ -499,10 +499,24 @@ pre.logger {
 }
 
 /** Buttons **/
+.btn.disabled:hover,
+.btn[disabled]:hover,
+fieldset[disabled] .btn:hover,
+.btn.disabled:focus,
+.btn[disabled]:focus,
+fieldset[disabled] .btn:focus,
+.btn.disabled.focus,
+.btn[disabled].focus,
+fieldset[disabled] .btn.focus {
+    background-color: #eee;
+    border-color: #ccc;
+}
+
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
     opacity: .85;
-    background-color: #ccc;
+    background-color: #eee;
     border-color: #ccc;
+    color: #fff;
 }
 
 .btn-primary {
