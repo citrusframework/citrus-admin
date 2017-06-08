@@ -9,8 +9,6 @@ import {ReportService} from "./report.service";
 import {SpringBeanService} from "./springbean.service";
 import {TestService} from "./test.service";
 import {RouterState} from "./router-state.service";
-import {StompConnectionService} from "./stomp-connection.service";
-import {LoggingService} from "./logging.service";
 @NgModule({
     providers: [
         AlertService,
@@ -22,9 +20,7 @@ import {LoggingService} from "./logging.service";
         ReportService,
         SpringBeanService,
         TestService,
-        RouterState,
-        StompConnectionService,
-        LoggingService
+        RouterState
     ]
 })
 export class ServiceModule {}

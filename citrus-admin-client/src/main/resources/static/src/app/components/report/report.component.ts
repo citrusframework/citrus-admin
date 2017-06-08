@@ -34,6 +34,7 @@ export class ReportComponent implements OnInit {
     }
 
     open(test: Test) {
+        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 

@@ -12,19 +12,14 @@ import * as SockJS from 'sockjs-client';
 import {Frame} from "stompjs";
 import {TestStateService} from "../../test.state";
 import {Observable} from "rxjs";
-import {parseBody, StompConnection, StompConnectionService} from "../../../../service/stomp-connection.service";
-import {LoggingService} from "../../../../service/logging.service";
 
 @Component({
     selector: 'test-run-outlet',
     template: '<test-run [detail]="detail|async"></test-run>'
 })
-export class TestRunOutlet implements OnInit {
-    detail: Observable<TestDetail>;
-
-    constructor(private testState: TestStateService) {
-    }
-
+export class TestRunOutlet implements OnInit{
+    detail:Observable<TestDetail>;
+    constructor(private testState:TestStateService) {}
     ngOnInit() {
         this.detail = this.testState.selectedTestDetail;
     }
@@ -34,18 +29,25 @@ export class TestRunOutlet implements OnInit {
     selector: "test-run",
     templateUrl: 'test-run.html'
 })
-export class TestRunComponent implements OnInit {
+export class TestRunComponent {
     @Input() detail: TestDetail;
 
     constructor(private _testService: TestService,
-                private loggingService: LoggingService,
                 private _alertService: AlertService) {
+        this.stompClient = Stomp.over(new SockJS(`/api/logging`) as WebSocket);
+        this.stompClient.debug = () => {};
+        this.stompClient.connect({}, (frame:Frame) => {
+            if (frame) {
+                this.subscribe();
+            }
+        });
     }
 
     result: TestResult;
     running = false;
     completed = 0;
     failed = false;
+    stompClient: any;
 
     finishedActions = 0;
 
@@ -70,33 +72,35 @@ export class TestRunComponent implements OnInit {
                 error => this.notifyError(<any>error));
     }
 
-    ngOnInit() {
-        this.loggingService.logOutput
-            .subscribe((e: SocketEvent) => {
+    subscribe() {
+        if (this.stompClient) {
+            this.stompClient.subscribe('/topic/log-output', (output:Stomp.Message)=> {
+                var event: SocketEvent = JSON.parse(output.body);
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
-                this.processOutput += e.msg;
-                this.currentOutput = e.msg;
-                this.handle(e);
+                this.processOutput += event.msg;
+                this.currentOutput = event.msg;
+                this.handle(event);
             });
-
-        this.loggingService.testEvents
-            .subscribe(this.handle);
-
-        this.loggingService.messages
-            .subscribe(this.handleMessage);
+            this.stompClient.subscribe('/topic/test-events', (output:Stomp.Message) => {
+                var event: SocketEvent = JSON.parse(output.body);
+                this.handle(event);
+            });
+            this.stompClient.subscribe('/topic/messages', (output:Stomp.Message) => {
+                var message = JSON.parse(output.body);
+                this.handleMessage(message);
+            });
+        }
     }
 
     openConsole() {
         (jQuery('#dialog-console') as any).modal();
     }
 
-    handleMessage(message: any) {
-        console.log('Handle mesage', message)
+    handleMessage(message:any) {
         this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
     }
 
     handle(event: SocketEvent) {
-        console.log('Handle', event)
         if ("PROCESS_START" == event.type) {
             this.completed = 1;
         } else if ("TEST_START" == event.type) {

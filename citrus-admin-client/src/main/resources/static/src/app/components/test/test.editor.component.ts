@@ -58,6 +58,7 @@ export class TestEditorComponent implements OnInit {
     }
 
     private navigateToTestInfo(test:Test) {
+        console.log('Open')
         this.store.dispatch(go(['/tests', 'detail', test.name]));
     }
 
