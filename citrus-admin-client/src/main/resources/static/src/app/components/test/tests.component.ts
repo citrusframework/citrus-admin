@@ -7,12 +7,6 @@ import {TestStateActions} from "./test.state";
 })
 export class TestsComponent {
 
-    menuEntries = [
-        {name: 'List', link:['list']},
-        {name: 'Run', link:['run']},
-        {name: 'Details', link:['detail']}
-    ];
-
     constructor(private router:Router,
                 private testActions:TestStateActions) {
         testActions.fetchPackages();

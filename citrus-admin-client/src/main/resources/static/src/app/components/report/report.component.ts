@@ -30,10 +30,14 @@ export class ReportComponent implements OnInit {
     }
 
     open(test: Test) {
-        this._router.navigate(['/tests', 'detail', test.name, 'info']);
+        this.navigateToTest(test.name);
     }
 
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error, false));
+    }
+
+    private navigateToTest(name:string) {
+        this._router.navigate(['/tests', 'editor', name]);
     }
 }

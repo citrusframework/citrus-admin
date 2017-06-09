@@ -7,24 +7,7 @@ import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {TestStateService} from "../../test.state";
-import {Observable} from "rxjs";
 import {LoggingService} from "../../../../service/logging.service";
-
-@Component({
-    selector: 'test-run-outlet',
-    template: '<test-run [detail]="detail|async"></test-run>'
-})
-export class TestRunOutlet implements OnInit {
-    detail: Observable<TestDetail>;
-
-    constructor(private testState: TestStateService) {
-    }
-
-    ngOnInit() {
-        this.detail = this.testState.selectedTestDetail;
-    }
-}
 
 @Component({
     selector: "test-run",
@@ -87,12 +70,12 @@ export class TestRunComponent implements OnInit {
     }
 
     handleMessage(message: any) {
-        console.log('Handle mesage', message)
+        console.log('Handle mesage', message);
         this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
     }
 
     handle(event: SocketEvent) {
-        console.log('Handle', event)
+        console.log('Handle', event);
         if ("PROCESS_START" == event.type) {
             this.completed = 1;
         } else if ("TEST_START" == event.type) {

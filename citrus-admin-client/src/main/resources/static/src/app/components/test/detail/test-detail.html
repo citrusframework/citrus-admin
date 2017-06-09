@@ -1,9 +1,17 @@
-<ul class="nav nav-pills pills-bar justified">
-  <li *ngFor="let entry of menuEntries" [class.active]="isActive(entry.link)">
-    <a [routerLink]="[entry.link]"><i  class="{{'fa ' + entry.icon}}"></i>&nbsp;{{entry.name}}</a>
-  </li>
-</ul>
+<div>
+  <test-info [detail]="detail|async"></test-info>
 
-<router-outlet></router-outlet>
+  <test-run [detail]="detail|async"></test-run>
 
-<div [class.clearfix]="navigation && pullRight"></div>
+  <div class="space-top-30"></div>
+  <test-designer *ngIf="detail|async" [actions]="(detail|async).actions"></test-designer>
+
+  <div class="space-top-30"></div>
+  <pills *ngIf="(type|async) == 'XML'" navigation="true">
+    <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail|async" editor-id="xml-code"></source-code></pill>
+    <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
+  </pills>
+  <pills *ngIf="(type|async) == 'JAVA'" navigation="true">
+    <pill pill-id="java-sources" pill-title="Java" active="true" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
+  </pills>
+</div>

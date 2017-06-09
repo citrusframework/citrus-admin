@@ -2,7 +2,7 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {EndpointService} from '../../../service/endpoint.service';
 import {SpringBeanService} from "../../../service/springbean.service";
 import {Endpoint} from "../../../model/endpoint";
-import {EndPointStateService, EndPointActions} from "./endpoint.state";
+import {EndpointStateService, EndpointActions} from "./endpoint.state";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 
@@ -20,8 +20,8 @@ export class EndpointsComponent implements OnInit {
     endpointTypeNames: Observable<string[]>;
 
     constructor(
-        private endpointState:EndPointStateService,
-        private endpointActions:EndPointActions,
+        private endpointState:EndpointStateService,
+        private endpointActions:EndpointActions,
     ) {}
 
     ngOnInit(): void {

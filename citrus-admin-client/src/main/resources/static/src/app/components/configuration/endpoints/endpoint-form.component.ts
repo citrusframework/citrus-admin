@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 import {Endpoint} from "../../../model/endpoint";
 import {ActivatedRoute, Router} from "@angular/router";
-import {EndPointStateService, EndPointActions} from "./endpoint.state";
+import {EndpointStateService, EndpointActions} from "./endpoint.state";
 import {Observable} from "rxjs";
 import {EditorMode, EditorDataTupel} from "../editor-mode.enum";
 import {Property} from "../../../model/property";
@@ -32,8 +32,8 @@ export class EndpointFormComponent implements OnInit{
     constructor(
         private route:ActivatedRoute,
         private router:Router,
-        private endpointState:EndPointStateService,
-        private endpointActions:EndPointActions
+        private endpointState:EndpointStateService,
+        private endpointActions:EndpointActions
     ) {
     }
 

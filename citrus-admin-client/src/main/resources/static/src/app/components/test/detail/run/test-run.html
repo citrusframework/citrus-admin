@@ -32,7 +32,7 @@
 <h2 class="sub-header">Latest results</h2>
 
 <test-progress *ngIf="running || completed == 100" [completed]="completed" [failed]="failed"></test-progress>
-<test-result-outlet *ngIf="!running"></test-result-outlet>
+<test-result *ngIf="!running && detail" [detail]="detail"></test-result>
 
 <div class="dialog"
      dialog-id="dialog-console"

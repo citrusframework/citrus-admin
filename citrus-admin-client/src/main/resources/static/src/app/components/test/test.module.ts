@@ -6,7 +6,7 @@ import {TestEditorComponent} from "./test.editor.component";
 import {TestListComponent} from "./test.list.component";
 import {SourceCodeComponent} from "./detail/sources/source.code.component";
 import {TestDetailComponent} from "./detail/test.detail.component";
-import {TestRunComponent, TestRunOutlet} from "./detail/run/test.run.component";
+import {TestRunComponent} from "./detail/run/test.run.component";
 import {TestGroupRunComponent} from "./test.group.run.component";
 import {TestListGroupComponent} from "./test.listgroup.component";
 import {TestMessageComponent} from "./detail/run/test.message.component";
@@ -19,12 +19,10 @@ import {TestActionComponent} from "./detail/designer/test.action.component";
 import {UtilModule} from "../../util/util.module";
 import {FormsModule} from "@angular/forms";
 import {TestRoutingModule} from "./test-routing.module";
-import {InfoComponent, InfoOutletComponent} from "./detail/info/info.component";
-import {TestDesignerOutletComponent} from "./detail/designer/test-designer-outlet.component";
+import {TestInfoComponent} from "./detail/info/test.info.component";
 import {TestStateActions, TestStateEffects, TestStateService} from "./test.state";
 import {EffectsModule} from "@ngrx/effects";
-import {SourcesOutletComponent} from "./detail/sources/sources-outlet.component";
-import {TestResultComponent, TestResultOutletComponent} from "./detail/results/test.result.component";
+import {TestResultComponent} from "./detail/results/test.result.component";
 
 const components = [
     TestsComponent,
@@ -41,13 +39,8 @@ const components = [
     TestContainerComponent,
     TestDesignerComponent,
     TestTransitionComponent,
-    TestDesignerOutletComponent,
-    SourcesOutletComponent,
-    InfoComponent,
-    InfoOutletComponent,
-    TestRunOutlet,
+    TestInfoComponent,
     TestResultComponent,
-    TestResultOutletComponent
 ];
 
 @NgModule({

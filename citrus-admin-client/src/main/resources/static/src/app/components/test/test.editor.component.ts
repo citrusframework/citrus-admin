@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router, ActivatedRoute, NavigationStart} from '@angular/router';
 import {TestGroup, Test} from "../../model/tests";
 import {Alert} from "../../model/alert";
 import {AlertService} from "../../service/alert.service";
 import * as jQueryVar from 'jquery'
 import {TestStateActions, TestStateService} from "./test.state";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {RouterState} from "../../service/router-state.service";
 
 declare var jQuery:typeof jQueryVar;
@@ -16,17 +16,18 @@ declare var jQuery:typeof jQueryVar;
     },
     templateUrl: 'test-editor.html'
 })
-export class TestEditorComponent implements OnInit {
+export class TestEditorComponent implements OnInit, OnDestroy {
 
     constructor(
                 private alertService: AlertService,
                 private router: Router,
                 private testActions:TestStateActions,
                 private testState:TestStateService,
-                private route:ActivatedRoute,
-                private routerState:RouterState
-    ) {
-    }
+                private routerState:RouterState) {}
+
+    private openTestSubscription: Subscription;
+    private selectedTestSubscription: Subscription;
+    private lastTestSubscription: Subscription;
 
     openTests: Observable<Test[]>;
     packages:Observable<TestGroup[]>;
@@ -37,23 +38,37 @@ export class TestEditorComponent implements OnInit {
         this.openTests = this.testState.openTabs;
         this.selectedTest = this.testState.selectedTest;
 
-        /** Navigate to the main page if we dont have opentabs in state **/
-        this.testState
+        /** Navigate to the main page if we dont have open tabs in state **/
+        this.openTestSubscription = this.testState
             .openTabs
             .filter(ot => ot.length === 0)
-            .subscribe(() => this.router.navigate(['tests', 'detail']));
+            .subscribe(() => this.router.navigate(['tests', 'editor', 'open']));
 
         /** Navigate to a test route if selected tab is changed **/
-        this.testState.selectedTest.filter(t => t != null).subscribe(t => {
-            this.router.navigate([t.name])
-        })
+        this.selectedTestSubscription = this.testState.selectedTest.filter(t => t != null).subscribe(t => {
+            this.navigateToTest(t);
+        });
 
-        Observable.combineLatest(
-            this.routerState.path.filter(p => p === '/tests/detail').take(1),
+        this.lastTestSubscription = Observable.combineLatest(
+            this.routerState.path.filter(p => p === '/tests/editor').take(1),
             this.testState.selectedTest.filter(t => t != null).take(1)
-        )
-        .subscribe(([u, t]) => this.router.navigate(['tests','detail', t.name]))
+        ).subscribe(([u, t]) => {
+            this.navigateToTest(t);
+        });
+    }
 
+    ngOnDestroy(): void {
+        if(this.openTestSubscription) {
+            this.openTestSubscription.unsubscribe();
+        }
+
+        if(this.selectedTestSubscription) {
+            this.selectedTestSubscription.unsubscribe();
+        }
+
+        if(this.lastTestSubscription) {
+            this.lastTestSubscription.unsubscribe();
+        }
     }
 
     onTabClosed(test:Test) {
@@ -62,7 +77,6 @@ export class TestEditorComponent implements OnInit {
 
     onTabSelected(test:Test) {
         this.testActions.selectTest(test);
-        this.navigateToTestInfo(test);
     }
 
     openTestList() {
@@ -75,7 +89,6 @@ export class TestEditorComponent implements OnInit {
 
     open(test: Test) {
         this.testActions.addTab(test);
-        this.navigateToTestInfo(test)
     }
 
     handleKeyUp(event:KeyboardEvent) {
@@ -88,7 +101,8 @@ export class TestEditorComponent implements OnInit {
         this.alertService.add(new Alert("danger", error, false));
     }
 
-    private navigateToTestInfo(test:Test) {
-        this.router.navigate(['/tests', 'detail', test.name, 'info']);
+    private navigateToTest(test:Test) {
+        console.log("Navigate to " + test.name);
+        this.router.navigate(['/tests', 'editor', test.name]);
     }
 }

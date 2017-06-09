@@ -7,13 +7,13 @@ import {reduce as tests, TestState} from './components/test/test.state'
 import {reduce as configuration} from './components/configuration/configuration.state'
 import {ConfigurationState} from "./components/configuration/configuration.state";
 import {environment as env} from "../environments/environment";
-import {endpointReducer as endpoint, EndPointState} from "./components/configuration/endpoints/endpoint.state";
+import {endpointReducer as endpoint, EndpointState} from "./components/configuration/endpoints/endpoint.state";
 
 export interface AppState {
     router:RouterState,
     tests:TestState,
     configuration:ConfigurationState,
-    endpoint:EndPointState
+    endpoint:EndpointState
 }
 
 @NgModule({

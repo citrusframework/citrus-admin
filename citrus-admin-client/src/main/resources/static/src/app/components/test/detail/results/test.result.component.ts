@@ -3,8 +3,6 @@ import {TestResult, TestDetail, Test} from "../../../../model/tests";
 import {ReportService} from "../../../../service/report.service";
 import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
-import {Observable} from "rxjs";
-import {TestStateService} from "../../test.state";
 
 @Component({
     selector: "test-result",
@@ -45,19 +43,4 @@ export class TestResultComponent implements OnChanges {
     notifyError(error: any) {
         this._alertService.add(new Alert("danger", error, false));
     }
-}
-
-@Component({
-    selector: 'test-result-outlet',
-    template: `<test-result [detail]="detail|async"></test-result>`
-})
-export class TestResultOutletComponent implements OnInit {
-    detail:Observable<TestDetail>;
-    constructor(private testState:TestStateService) {
-    }
-
-    ngOnInit(): void {
-        this.detail = this.testState.selectedTestDetail;
-    }
-
 }

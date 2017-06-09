@@ -3,13 +3,12 @@ import {Action, Store} from "@ngrx/store";
 import {Test, TestGroup, TestDetail} from "../../model/tests";
 import {AppState} from "../../state.module";
 import {AsyncActionType, AsyncActions, IdMap, toArray, toIdMap} from "../../util/redux.util";
-import {Effect, Actions} from "@ngrx/effects";
+import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
+import * as _ from 'lodash';
 
 export type TestMap = IdMap<Test>;
-export type TestGroupMap = IdMap<TestGroup>;
-export type TestDetailMap = IdMap<TestDetail>;
 
 export interface TestState {
     tests:IdMap<Test>,
@@ -17,8 +16,7 @@ export interface TestState {
     testNames:string[],
     openTabs:string[],
     selectedTest:string,
-    details: IdMap<TestDetail>,
-    latestDetailView:string
+    details: IdMap<TestDetail>
 }
 
 export const TestStateInit:TestState = {
@@ -27,17 +25,14 @@ export const TestStateInit:TestState = {
     testNames: [],
     openTabs:[],
     selectedTest:'',
-    details: {},
-    latestDetailView: 'info'
+    details: {}
 };
 
 @Injectable()
 export class TestStateEffects {
     constructor(
         private actions:AsyncActions,
-        private testService:TestService,
-        private actions$:Actions
-    ) {}
+        private testService:TestService) {}
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 
@@ -66,24 +61,24 @@ export class TestStateService {
         return (Observable.combineLatest(
             this.store.select(p => p.tests.selectedTest),
             this.store.select(p => p.tests.tests)
-        ).map(([s,t]) => t[s]))
+        ).map(([s,t]) => t[s]));
     }
 
     get selectedTestDetail():Observable<TestDetail> { return this.selectedTest.filter(t => t != null).switchMap(t => this.getDetail(t))}
 
-    getDetail(test:Test):Observable<TestDetail> {
-        return this.store.select(s => s.tests.details[test.name]).filter(d => d != null)
+    getTestByName(name:string) {
+        return this.tests.map(tests => _.find(tests, t => t.name === name));
     }
 
-    get latestDetailView() {
-        return this.store.select(s => s.tests.latestDetailView)
+    getDetail(test:Test):Observable<TestDetail> {
+        return this.store.select(s => s.tests.details[test.name]).filter(d => d != null)
     }
 }
 
 @Injectable()
 export class TestStateActions {
-    static PACKAGES = AsyncActionType('TEST.PACKAGE')
-    static DETAIL = AsyncActionType('TEST.DETAIL')
+    static PACKAGES = AsyncActionType('TEST.PACKAGE');
+    static DETAIL = AsyncActionType('TEST.DETAIL');
     static ADD_TAB = 'TEST.ADD_TAB';
     static REMOVE_TAB = 'TEST.REMOVE_TAB';
     static SELECT_TAB = 'TEST.SELECT_TAB';
@@ -93,14 +88,17 @@ export class TestStateActions {
     }
 
     addTab(payload:Test) {
+        console.log("ADD TAB " + payload.name);
         this.store.dispatch({type:TestStateActions.ADD_TAB, payload})
     }
 
     removeTab(payload:Test) {
+        console.log("REMOVE TAB " + payload.name);
         this.store.dispatch({type:TestStateActions.REMOVE_TAB, payload})
     }
 
     selectTest(payload:Test) {
+        console.log("SELECT TAB " + payload.name);
         this.store.dispatch({type:TestStateActions.SELECT_TAB, payload})
     }
 
@@ -121,22 +119,27 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
             const {name} = action.payload as Test;
             const exists = state.openTabs.indexOf(name);
             const openTabs = exists >= 0 ? state.openTabs : [...state.openTabs, name];
-            return {...state, openTabs, selectedTest:name};
+            return {...state, openTabs, selectedTest: name};
         }
         case TestStateActions.REMOVE_TAB: {
-            const openTabs = state.openTabs.filter(t => t !== action.payload.name);
-            let {selectedTest} = state;
-            if (state.selectedTest === action.payload.name) {
-                const i = state.openTabs.findIndex(t => t === state.selectedTest);
-                selectedTest = openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)];
-            }
+            const openTabs = state.openTabs.filter(t => {
+                return t != action.payload.name;
+            });
+
+            let nextTest;
             if (openTabs.length === 0) {
-                selectedTest = '';
+                nextTest = '';
+            } else if (state.selectedTest === action.payload.name) {
+                const i = state.openTabs.findIndex(t => t === state.selectedTest);
+                nextTest = openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)];
+            } else {
+                nextTest = state.selectedTest;
             }
-            return {...state, selectedTest, openTabs};
+
+            return {...state, openTabs, selectedTest: nextTest};
         }
         case TestStateActions.SELECT_TAB: {
-            if( state.selectedTest === action.payload.name ||
+            if(state.selectedTest === action.payload.name ||
                 state.openTabs.indexOf(action.payload.name) === -1) {
                 return state;
             } else {
@@ -145,14 +148,7 @@ export function reduce(state:TestState = TestStateInit, action:Action) {
         }
         case TestStateActions.DETAIL.SUCCESS: {
             const detail = action.payload as TestDetail;
-            return {...state, details : {[detail.name]:detail}};
-        }
-        case '[Router] Update Location': {
-            const [,, latestDetailView] = /^\/tests\/detail\/([^\\\/]+?)\/([^\\\/]+?)(?:\/(?=$))?$/i.exec(action.payload.path) || ['','', ''];
-            if(latestDetailView !== '') {
-                return { ...state, latestDetailView }
-            }
-            return state;
+            return {...state, details: {[detail.name]:detail}};
         }
     }
     return state;

@@ -25,7 +25,6 @@ export class TestGroupRunComponent implements OnInit {
     packages: Observable<TestGroup[]>;
 
     running = false;
-    stompClient: any;
 
     results: TestResult[] = [];
 
@@ -87,7 +86,7 @@ export class TestGroupRunComponent implements OnInit {
     }
 
     open(test: Test) {
-        this.router.navigate(['/tests', 'detail', test.name, 'info']);
+        this.router.navigate(['/tests', 'editor', test.name]);
     }
 
     openConsole() {

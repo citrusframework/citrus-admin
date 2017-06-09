@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
-import {EndPointEffects, EndPointStateProviders} from "./endpoint.state";
+import {EndpointEffects, EndpointStateProviders} from "./endpoint.state";
 import {EffectsModule} from "@ngrx/effects";
 import {RouterModule, Routes} from "@angular/router";
 import {CommonModule} from "@angular/common";
@@ -28,11 +28,11 @@ export const endpointRoutes:Routes = [{
         FormsModule,
         CommonModule,
         RouterModule,
-        EffectsModule.run(EndPointEffects),
+        EffectsModule.run(EndpointEffects),
         ReactiveFormsModule,
     ],
     providers: [
-        ...EndPointStateProviders
+        ...EndpointStateProviders
     ],
     declarations: [
         EndpointsComponent,

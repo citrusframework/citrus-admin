@@ -5,12 +5,7 @@ import {TestsComponent} from "./tests.component";
 import {TestEditorComponent} from "./test.editor.component";
 import {TestListComponent} from "./test.list.component";
 import {ServiceModule} from "../../service/service.module";
-import {InfoOutletComponent} from "./detail/info/info.component";
-import {TestDesignerOutletComponent} from "./detail/designer/test-designer-outlet.component";
 import {TestDetailComponent} from "./detail/test.detail.component";
-import {SourcesOutletComponent} from "./detail/sources/sources-outlet.component";
-import {TestRunOutlet} from "./detail/run/test.run.component";
-import {CanActivateTestTabChild, CannotActivate, CanActivateTestEditor} from "./route-guards";
 import {TestGroupRunComponent} from "./test.group.run.component";
 
 const routes:Routes = [
@@ -22,23 +17,10 @@ const routes:Routes = [
             { path: '', redirectTo: 'run', pathMatch: 'full'},
             { path: 'list', component: TestListComponent},
             { path: 'run', component: TestGroupRunComponent},
-            {
-                path: 'detail',
-                component: TestEditorComponent,
-                canActivate: [CanActivateRoutes],
+            { path: 'editor/open', component: TestEditorComponent},
+            { path: 'editor', component: TestEditorComponent,
                 children: [
-                    {
-                        path: ':name',
-                        component: TestDetailComponent,
-                        canActivateChild: [CanActivateTestTabChild],
-                        children: [
-                            { path: '', component: InfoOutletComponent },
-                            { path: 'info', component: InfoOutletComponent},
-                            { path: 'sources', component: SourcesOutletComponent},
-                            { path: 'design', component: TestDesignerOutletComponent},
-                            { path: 'run', component: TestRunOutlet}
-                        ],
-                    }
+                    { path: ':name', component: TestDetailComponent }
                 ]
             }
         ]
@@ -49,11 +31,6 @@ const routes:Routes = [
     imports: [
         ServiceModule,
         RouterModule.forChild(routes)
-    ],
-    providers: [
-        CanActivateTestTabChild,
-        CannotActivate,
-        CanActivateTestEditor
     ],
     exports: [
         RouterModule

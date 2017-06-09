@@ -10,96 +10,96 @@ import {Effect} from "@ngrx/effects";
 import {EndpointService} from "../../../service/endpoint.service";
 import {Alert} from "../../../model/alert";
 
-export interface EndPointState {
+export interface EndpointState {
     endpoints:IdMap<Endpoint>;
     endpointTypes:IdMap<Endpoint>;
     endpointTypeNames:string[];
 }
 
-export const EndpointStateInit:EndPointState = {
+export const EndpointStateInit:EndpointState = {
     endpoints: {},
     endpointTypes: {},
     endpointTypeNames: [],
 };
 
 @Injectable()
-export class EndPointEffects {
+export class EndpointEffects {
     constructor(
        private actions:AsyncActions,
        private endPointService:EndpointService
     ) {}
 
     @Effect() endpoints = this.actions
-        .handleEffect(EndPointActions.ENDPOINTS, (a) => this.endPointService.getEndpoints())
+        .handleEffect(EndpointActions.ENDPOINTS, (a) => this.endPointService.getEndpoints())
 
     @Effect() endpointCreate = this.actions
-        .handleEffect(EndPointActions.ENDPOINT.CREATE, ({payload}) => this.endPointService.createEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.CREATE, ({payload}) => this.endPointService.createEndpoint(payload).map(r => payload))
 
     @Effect() endpointUpdate = this.actions
-        .handleEffect(EndPointActions.ENDPOINT.UPDATE, ({payload}) => this.endPointService.updateEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.UPDATE, ({payload}) => this.endPointService.updateEndpoint(payload).map(r => payload))
 
     @Effect() endpointDelete = this.actions
-        .handleEffect(EndPointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endPointService.deleteEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endPointService.deleteEndpoint(payload).map(r => payload))
 
     @Effect() endpointTypes = this.actions
-        .handleEffect(EndPointActions.ENDPOINT_TYPES, (a) => this.endPointService.getEndpointTypes())
+        .handleEffect(EndpointActions.ENDPOINT_TYPES, (a) => this.endPointService.getEndpointTypes())
 
     @Effect() endpointType = this.actions
-        .handleEffect(EndPointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endPointService.getEndpointType(payload))
+        .handleEffect(EndpointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endPointService.getEndpointType(payload))
 
     @Effect({dispatch:false}) endpointsError = this.actions
         .handleError([
-                EndPointActions.ENDPOINTS, EndPointActions.ENDPOINT_TYPES, EndPointActions.ENDPOINT_TYPE,
-                EndPointActions.ENDPOINT.CREATE, EndPointActions.ENDPOINT.DELETE,
-                EndPointActions.ENDPOINT.READ, EndPointActions.ENDPOINT.UPDATE
+                EndpointActions.ENDPOINTS, EndpointActions.ENDPOINT_TYPES, EndpointActions.ENDPOINT_TYPE,
+                EndpointActions.ENDPOINT.CREATE, EndpointActions.ENDPOINT.DELETE,
+                EndpointActions.ENDPOINT.READ, EndpointActions.ENDPOINT.UPDATE
             ],
             ({type, payload}) => Alert.danger(`Error '${ActionToString(type)}' ${payload}`, true))
 
     @Effect({dispatch:false}) endpointsSucess = this.actions
         .handleSuccess([
-                EndPointActions.ENDPOINT.CREATE, EndPointActions.ENDPOINT.DELETE,
-                EndPointActions.ENDPOINT.READ, EndPointActions.ENDPOINT.UPDATE
+                EndpointActions.ENDPOINT.CREATE, EndpointActions.ENDPOINT.DELETE,
+                EndpointActions.ENDPOINT.READ, EndpointActions.ENDPOINT.UPDATE
             ],
             ({type, payload}) => Alert.success(`Successfully '${ActionToString(type)}'`, true))
 }
 
 @Injectable()
-export class EndPointActions {
+export class EndpointActions {
     static ENDPOINT = AsyncCrudActionType('ENDPOINT');
-    static ENDPOINTS = AsyncActionType('ENDPOINTS')
+    static ENDPOINTS = AsyncActionType('ENDPOINTS');
     static ENDPOINT_TYPE = AsyncActionType('ENDPOINT_TYPE');
-    static ENDPOINT_TYPES = AsyncActionType('ENDPOINT_TYPES')
+    static ENDPOINT_TYPES = AsyncActionType('ENDPOINT_TYPES');
 
     constructor(private store:Store<AppState>) {}
 
     fetchEndpoints() {
-        this.store.dispatch(CreateVoidAction(EndPointActions.ENDPOINTS.FETCH))
+        this.store.dispatch(CreateVoidAction(EndpointActions.ENDPOINTS.FETCH))
     }
 
     createEndpoint(bean: Endpoint) {
-        this.store.dispatch(CreateAction(EndPointActions.ENDPOINT.CREATE.FETCH, bean))
+        this.store.dispatch(CreateAction(EndpointActions.ENDPOINT.CREATE.FETCH, bean))
     }
 
     updateEndpoint(bean: Endpoint) {
-        this.store.dispatch(CreateAction(EndPointActions.ENDPOINT.UPDATE.FETCH, bean))
+        this.store.dispatch(CreateAction(EndpointActions.ENDPOINT.UPDATE.FETCH, bean))
     }
 
     deleteEndpoint(id: string) {
-        this.store.dispatch(CreateAction(EndPointActions.ENDPOINT.DELETE.FETCH, id))
+        this.store.dispatch(CreateAction(EndpointActions.ENDPOINT.DELETE.FETCH, id))
     }
 
     fetchEndpointTypes() {
-        this.store.dispatch(CreateVoidAction(EndPointActions.ENDPOINT_TYPES.FETCH))
+        this.store.dispatch(CreateVoidAction(EndpointActions.ENDPOINT_TYPES.FETCH))
     }
 
     fetchEndpointType(type: string) {
-        this.store.dispatch(CreateAction(EndPointActions.ENDPOINT_TYPE.FETCH, type))
+        this.store.dispatch(CreateAction(EndpointActions.ENDPOINT_TYPE.FETCH, type))
     }
 
 }
 
 @Injectable()
-export class EndPointStateService {
+export class EndpointStateService {
     constructor(private store:Store<AppState>) {}
 
     get endpoints() { return this.store.select(s => s.endpoint.endpoints).map(toArray) }
@@ -111,23 +111,23 @@ export class EndPointStateService {
     getEndpointType(byName:string) { return  this.store.select(s => s.endpoint.endpointTypes).map(ep => ep[byName])}
 }
 
-export const EndPointStateProviders = [
-    EndPointEffects,
-    EndPointActions,
-    EndPointStateService
-]
+export const EndpointStateProviders = [
+    EndpointEffects,
+    EndpointActions,
+    EndpointStateService
+];
 
-export const endpointReducer = new ReducerBuilder<EndPointState>(EndpointStateInit)
-    .on(EndPointActions.ENDPOINTS.SUCCESS)
-        ((state:EndPointState, endPoints:Endpoint[]) => {
+export const endpointReducer = new ReducerBuilder<EndpointState>(EndpointStateInit)
+    .on(EndpointActions.ENDPOINTS.SUCCESS)
+        ((state:EndpointState, endPoints:Endpoint[]) => {
             return ({...state, endpoints: toIdMap(endPoints, e => e.id)})
         })
-    .on(EndPointActions.ENDPOINT.CREATE.SUCCESS, EndPointActions.ENDPOINT.UPDATE.SUCCESS)
-        ((state:EndPointState, endpoint:Endpoint) => ({...state, endpoints: {...state.endpoints, [endpoint.id]:endpoint}}))
-    .on(EndPointActions.ENDPOINT.DELETE.SUCCESS)
-        ((state:EndPointState, id:string) => ({...state, endpoints: deleteFromMap(state.endpoints,id)}))
-    .on(EndPointActions.ENDPOINT_TYPE.SUCCESS)
-        ((state:EndPointState, endPointType:Endpoint) => ({...state, endpointTypes: {...state.endpointTypes, [endPointType.type]:endPointType}}))
-    .on(EndPointActions.ENDPOINT_TYPES.SUCCESS)
-        ((state:EndPointState, endpointTypeNames:string[]) => ({...state, endpointTypeNames}))
+    .on(EndpointActions.ENDPOINT.CREATE.SUCCESS, EndpointActions.ENDPOINT.UPDATE.SUCCESS)
+        ((state:EndpointState, endpoint:Endpoint) => ({...state, endpoints: {...state.endpoints, [endpoint.id]:endpoint}}))
+    .on(EndpointActions.ENDPOINT.DELETE.SUCCESS)
+        ((state:EndpointState, id:string) => ({...state, endpoints: deleteFromMap(state.endpoints,id)}))
+    .on(EndpointActions.ENDPOINT_TYPE.SUCCESS)
+        ((state:EndpointState, endPointType:Endpoint) => ({...state, endpointTypes: {...state.endpointTypes, [endPointType.type]:endPointType}}))
+    .on(EndpointActions.ENDPOINT_TYPES.SUCCESS)
+        ((state:EndpointState, endpointTypeNames:string[]) => ({...state, endpointTypeNames}))
     .createReducer()
