@@ -9,20 +9,21 @@ import {TestDetailComponent} from "./detail/test.detail.component";
 import {TestRunComponent} from "./detail/run/test.run.component";
 import {TestGroupRunComponent} from "./test.group.run.component";
 import {TestListGroupComponent} from "./test.listgroup.component";
-import {TestMessageComponent} from "./detail/run/test.message.component";
+import {TestMessageListComponent} from "./detail/message/test.message.list.component";
+import {TestMessageComponent} from "./detail/message/test.message.component";
 import {TestProgressComponent} from "./detail/run/test.progress.component";
 import {UtilComponentsModule} from "../util/util.module";
 import {TestTransitionComponent} from "./detail/designer/test.transition.component";
 import {TestDesignerComponent} from "./detail/designer/test.designer.component";
 import {TestContainerComponent} from "./detail/designer/test.container.component";
 import {TestActionComponent} from "./detail/designer/test.action.component";
+import {TestResultComponent} from "./detail/results/test.result.component";
 import {UtilModule} from "../../util/util.module";
 import {FormsModule} from "@angular/forms";
 import {TestRoutingModule} from "./test-routing.module";
 import {TestInfoComponent} from "./detail/info/test.info.component";
 import {TestStateActions, TestStateEffects, TestStateService} from "./test.state";
 import {EffectsModule} from "@ngrx/effects";
-import {TestResultComponent} from "./detail/results/test.result.component";
 
 const components = [
     TestsComponent,
@@ -33,6 +34,7 @@ const components = [
     TestRunComponent,
     TestGroupRunComponent,
     TestListGroupComponent,
+    TestMessageListComponent,
     TestMessageComponent,
     TestProgressComponent,
     TestActionComponent,

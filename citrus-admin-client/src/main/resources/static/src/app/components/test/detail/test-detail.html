@@ -1,7 +1,19 @@
-<div>
-  <test-info [detail]="detail|async"></test-info>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="space-top-30"></div>
+      <test-info [detail]="detail|async"></test-info>
+    </div>
+    <div class="col-lg-6">
+      <div class="space-top-30"></div>
+      <test-run [detail]="detail|async"></test-run>
+    </div>
+  </div>
 
-  <test-run [detail]="detail|async"></test-run>
+  <test-result [detail]="detail|async"></test-result>
+
+  <div class="space-top-30"></div>
+  <test-messages [detail]="detail|async"></test-messages>
 
   <div class="space-top-30"></div>
   <test-designer *ngIf="detail|async" [actions]="(detail|async).actions"></test-designer>

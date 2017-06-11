@@ -1,38 +1,18 @@
-<div class="space-top-30"></div>
-
-<button (click)="execute()" type="button" class="btn btn-success" [disabled]="executionInfo?.running"><i class="fa fa-play-circle"></i> Run Test</button>
-<button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
-
-<h2 class="sub-header">Exchanged messages</h2>
-
-<div class="table-responsive">
-  <table class="table table-hover table-bordered">
-    <thead>
-      <tr>
-        <th width="30">Type</th>
-        <th>Message</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="!messages || messages?.length == 0">
-        <td>
-          <i *ngIf="!running" class="fa fa-envelope-o">&nbsp;</i>
-          <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
-        </td>
-        <td><span>No messages found!</span></td>
-      </tr>
-      <tr *ngFor="let message of messages" class="clickable">
-        <td><span [class]="message.type == 'OUTBOUND' ? 'badge badge-primary' : 'badge badge-success'" [textContent]="message.type == 'OUTBOUND' ? 'OUT' : 'IN'" style="min-width: 3em;"></span></td>
-        <td class="test-message" [message]="message"></td>
-      </tr>
-    </tbody>
-  </table>
+<div class="test-results">
+  <div class="test-result">
+    <a (click)="execute()" title="Test result" class="clickable">
+      <span [class]="!detail?.result || detail?.result.success ? 'badge badge-success border-success' : 'badge badge-danger border-danger'">
+        <i class="fa fa-play-circle color-success"></i>
+      </span>
+      <h4 *ngIf="detail?.result" [class]="detail?.result?.success ? 'color-success' : 'color-danger'" [textContent]="detail?.result?.success ? 'SUCCESS' : 'FAILED'"></h4>
+      <h4 *ngIf="!detail?.result">Run</h4>
+    </a>
+  </div>
 </div>
 
-<h2 class="sub-header">Latest results</h2>
+<button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
 
-<test-progress *ngIf="running || completed == 100" [completed]="completed" [failed]="failed"></test-progress>
-<test-result *ngIf="!running && detail" [detail]="detail"></test-result>
+<test-progress *ngIf="detail?.running || completed == 100" [completed]="completed" [failed]="failed"></test-progress>
 
 <div class="dialog"
      dialog-id="dialog-console"

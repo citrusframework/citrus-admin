@@ -28,12 +28,15 @@ public class TestDetail extends Test {
     private Long lastModified;
 
     private String author;
+    private String status;
     private String description;
 
     private Map<String, Object> variables = new LinkedHashMap<String, Object>();
     private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
     private List<TestAction> actions = new ArrayList<>();
+
+    private TestResult result;
 
     /**
      * Default constructor.
@@ -197,5 +200,41 @@ public class TestDetail extends Test {
      */
     public void setActions(List<TestAction> actions) {
         this.actions = actions;
+    }
+
+    /**
+     * Gets the result.
+     *
+     * @return
+     */
+    public TestResult getResult() {
+        return result;
+    }
+
+    /**
+     * Sets the result.
+     *
+     * @param result
+     */
+    public void setResult(TestResult result) {
+        this.result = result;
+    }
+
+    /**
+     * Gets the status.
+     *
+     * @return
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

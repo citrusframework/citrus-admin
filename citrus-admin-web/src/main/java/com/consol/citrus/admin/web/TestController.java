@@ -18,6 +18,8 @@ package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.*;
+import com.consol.citrus.admin.service.report.JUnitTestReportService;
+import com.consol.citrus.admin.service.report.TestNGTestReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,6 +43,13 @@ public class TestController {
     @Autowired
     private TestExecutionService testExecutionService;
 
+    @Autowired
+    private TestNGTestReportService testNGTestReportService;
+
+    @Autowired
+    private JUnitTestReportService junitTestReportService;
+
+
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestGroup> list() {
@@ -62,7 +71,20 @@ public class TestController {
     @RequestMapping(value="/detail", method = { RequestMethod.POST })
     @ResponseBody
     public TestDetail getTestDetail(@RequestBody Test test) {
-        return testCaseService.getTestDetail(projectService.getActiveProject(), test);
+        Project project = projectService.getActiveProject();
+        TestDetail detail = testCaseService.getTestDetail(project, test);
+        TestResult result = null;
+        if (testNGTestReportService.hasTestResults(project)) {
+            result = testNGTestReportService.getLatest(project, test);
+        } else if (junitTestReportService.hasTestResults(project)) {
+            result = junitTestReportService.getLatest(project, test);
+        }
+
+        if (result != null) {
+            detail.setResult(result);
+        }
+        
+        return detail;
     }
 
     @RequestMapping(value="/source", method = { RequestMethod.GET })

@@ -130,8 +130,12 @@ body {
     background-color: #fff;
 }
 
-.test-result:hover .badge {
-    background-color: #efefef;
+.test-result span.badge-success:hover {
+    border-color: #468847;
+}
+
+.test-result span.badge-danger:hover {
+    border-color: #a94442;
 }
 
 /** Common **/

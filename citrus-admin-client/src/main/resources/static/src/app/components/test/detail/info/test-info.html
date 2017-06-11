@@ -1,37 +1,63 @@
-<div class="space-top-30"></div>
-<form *ngIf="detail" class="form-horizontal">
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-10">
-            <input [(ngModel)]="detail.name" class="form-control" type="text" placeholder="Name" name="detailName"/>
-        </div>
-    </div>
+<table class="table table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>{{detail?.name}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Author</td>
+      <td>{{detail?.author}}</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>{{detail?.status}}</td>
+    </tr>
+    <tr>
+      <td>Package</td>
+      <td>{{detail?.packageName}}</td>
+    </tr>
+    <tr>
+      <td>Description</td>
+      <td>{{detail?.description}}</td>
+    </tr>
+  </tbody>
+</table>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Author</label>
-        <div class="col-sm-10">
-            <input [(ngModel)]="detail.author" class="form-control" type="text" placeholder="Author" name="detailAuthor"/>
-        </div>
+<form *ngIf="edit" class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="detail.name" class="form-control" type="text" placeholder="Name" name="detailName"/>
     </div>
+  </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Status</label>
-        <div class="col-sm-10">
-            <input [(ngModel)]="detail.status" class="form-control" type="text" placeholder="Status" name="detailStatus"/>
-        </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Author</label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="detail.author" class="form-control" type="text" placeholder="Author" name="detailAuthor"/>
     </div>
+  </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Package</label>
-        <div class="col-sm-10">
-            <input [(ngModel)]="detail.packageName" class="form-control" type="text" placeholder="Package" name="detailPackageName"/>
-        </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Status</label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="detail.status" class="form-control" type="text" placeholder="Status" name="detailStatus"/>
     </div>
+  </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Description</label>
-        <div class="col-sm-10">
-            <textarea [(ngModel)]="detail.description" rows="4" class="form-control" name="detailDesc"></textarea>
-        </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Package</label>
+    <div class="col-sm-10">
+      <input [(ngModel)]="detail.packageName" class="form-control" type="text" placeholder="Package" name="detailPackageName"/>
     </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Description</label>
+    <div class="col-sm-10">
+      <textarea [(ngModel)]="detail.description" rows="4" class="form-control" name="detailDesc"></textarea>
+    </div>
+  </div>
 </form>

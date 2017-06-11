@@ -1,4 +1,5 @@
 import {Property} from "./property";
+import {Message} from "./message";
 
 export class TestGroup {
 
@@ -23,7 +24,6 @@ export class Test {
     public type: string;
     public packageName: string;
     public relativePath: string;
-
 }
 
 export class TestDetail extends Test {
@@ -44,6 +44,12 @@ export class TestDetail extends Test {
     public parameters: any[];
 
     public actions: TestAction[];
+
+    public messages: Message[];
+
+    public running = false;
+
+    public result: TestResult;
 }
 
 export class TestAction {

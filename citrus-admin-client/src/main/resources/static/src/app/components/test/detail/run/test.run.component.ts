@@ -1,12 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TestDetail, TestResult} from "../../../../model/tests";
+import {TestDetail} from "../../../../model/tests";
 import {TestService} from "../../../../service/test.service";
 import {SocketEvent} from "../../../../model/socket.event";
-import {Message} from "../../../../model/message";
 import {Alert} from "../../../../model/alert";
 import {AlertService} from "../../../../service/alert.service";
-import * as _ from 'lodash';
-import * as moment from 'moment';
 import {LoggingService} from "../../../../service/logging.service";
 
 @Component({
@@ -21,8 +18,6 @@ export class TestRunComponent implements OnInit {
                 private _alertService: AlertService) {
     }
 
-    result: TestResult;
-    running = false;
     completed = 0;
     failed = false;
 
@@ -31,20 +26,19 @@ export class TestRunComponent implements OnInit {
     processOutput = "";
     currentOutput = "";
 
-    messages: Message[];
-
     execute() {
         this.processOutput = "";
         this.currentOutput = "";
-        this.running = true;
         this.failed = false;
         this.completed = 0;
         this.finishedActions = 0;
-        this.messages = [];
+        this.detail.messages = [];
+        this.detail.running = true;
+        this.detail.result = undefined;
         this._testService.execute(this.detail)
             .subscribe(
                 result => {
-                    this.result = result;
+                    this.detail.result = result;
                 },
                 error => this.notifyError(<any>error));
     }
@@ -60,18 +54,10 @@ export class TestRunComponent implements OnInit {
 
         this.loggingService.testEvents
             .subscribe(this.handle);
-
-        this.loggingService.messages
-            .subscribe(this.handleMessage);
     }
 
     openConsole() {
         (jQuery('#dialog-console') as any).modal();
-    }
-
-    handleMessage(message: any) {
-        console.log('Handle mesage', message);
-        this.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
     }
 
     handle(event: SocketEvent) {
@@ -98,7 +84,7 @@ export class TestRunComponent implements OnInit {
 
         if ("PROCESS_FAILED" == event.type || "PROCESS_SUCCESS" == event.type) {
             this.completed = 100;
-            this.running = false;
+            this.detail.running = false;
             this.currentOutput = this.processOutput;
             jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
         }

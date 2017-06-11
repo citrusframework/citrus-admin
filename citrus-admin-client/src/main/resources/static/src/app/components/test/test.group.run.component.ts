@@ -93,7 +93,6 @@ export class TestGroupRunComponent implements OnInit {
         (jQuery('#dialog-console') as any).modal();
     }
 
-
     handleResult(result: TestResult) {
         let found: TestResult = this.results.find(r => r.test.name == result.test.name);
 
