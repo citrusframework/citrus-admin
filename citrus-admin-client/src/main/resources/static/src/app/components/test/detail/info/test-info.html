@@ -1,29 +1,8 @@
-<table class="table table-bordered table-condensed">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>{{detail?.name}}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Author</td>
-      <td>{{detail?.author}}</td>
-    </tr>
-    <tr>
-      <td>Status</td>
-      <td>{{detail?.status}}</td>
-    </tr>
-    <tr>
-      <td>Package</td>
-      <td>{{detail?.packageName}}</td>
-    </tr>
-    <tr>
-      <td>Description</td>
-      <td>{{detail?.description}}</td>
-    </tr>
-  </tbody>
-</table>
+<h4 class="box"><i class="fa fa-play-circle color-success"></i> {{detail?.name}}</h4>
+<b>Author: </b><span class="badge badge-primary" [textContent]="detail?.author ? detail?.author : 'Unknown'"></span>
+<b>Status: </b><span class="badge badge-primary" [textContent]="detail?.status ? detail?.status : 'FINAL'"></span>
+<b *ngIf="detail?.packageName">Package: </b><span *ngIf="detail?.packageName" class="badge badge-primary">{{detail?.packageName}}</span>
+<b *ngIf="detail?.result">Result: </b><span [class]="!detail?.result || detail?.result.success ? 'badge badge-success border-success' : 'badge badge-danger border-danger'" [textContent]="detail?.result?.success ? 'SUCCESS' : 'FAILED'">
 
 <form *ngIf="edit" class="form-horizontal">
   <div class="form-group">

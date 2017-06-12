@@ -1,14 +1,4 @@
-<div class="test-results">
-  <div class="test-result">
-    <a (click)="execute()" title="Test result" class="clickable">
-      <span [class]="!detail?.result || detail?.result.success ? 'badge badge-success border-success' : 'badge badge-danger border-danger'">
-        <i class="fa fa-play-circle color-success"></i>
-      </span>
-      <h4 *ngIf="detail?.result" [class]="detail?.result?.success ? 'color-success' : 'color-danger'" [textContent]="detail?.result?.success ? 'SUCCESS' : 'FAILED'"></h4>
-      <h4 *ngIf="!detail?.result">Run</h4>
-    </a>
-  </div>
-</div>
+<button class="btn btn-success" (click)="execute()" title="Test result"><i class="fa fa-play-circle"></i> Run</button>
 
 <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
 

@@ -1,29 +1,20 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="space-top-30"></div>
-      <test-info [detail]="detail|async"></test-info>
-    </div>
-    <div class="col-lg-6">
-      <div class="space-top-30"></div>
-      <test-run [detail]="detail|async"></test-run>
-    </div>
-  </div>
+<test-info [detail]="detail|async"></test-info>
 
-  <test-result [detail]="detail|async"></test-result>
+<div class="space-top-30"></div>
+<test-run [detail]="detail|async"></test-run>
+<test-result [detail]="detail|async"></test-result>
 
-  <div class="space-top-30"></div>
-  <test-messages [detail]="detail|async"></test-messages>
+<div class="space-top-30"></div>
+<test-messages [detail]="detail|async"></test-messages>
 
-  <div class="space-top-30"></div>
-  <test-designer *ngIf="detail|async" [actions]="(detail|async).actions"></test-designer>
+<div class="space-top-30"></div>
+<test-designer *ngIf="detail|async" [actions]="(detail|async).actions"></test-designer>
 
-  <div class="space-top-30"></div>
-  <pills *ngIf="(type|async) == 'XML'" navigation="true">
-    <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail|async" editor-id="xml-code"></source-code></pill>
-    <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
-  </pills>
-  <pills *ngIf="(type|async) == 'JAVA'" navigation="true">
-    <pill pill-id="java-sources" pill-title="Java" active="true" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
-  </pills>
-</div>
+<div class="space-top-30"></div>
+<pills *ngIf="(type|async) == 'XML'" navigation="true">
+  <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail|async" editor-id="xml-code"></source-code></pill>
+  <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
+</pills>
+<pills *ngIf="(type|async) == 'JAVA'" navigation="true">
+  <pill pill-id="java-sources" pill-title="Java" active="true" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
+</pills>
