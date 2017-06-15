@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router, NavigationStart} from '@angular/router';
+import {Router} from '@angular/router';
 import {TestStateActions} from "./test.state";
 
 @Component({
@@ -10,14 +10,6 @@ export class TestsComponent {
     constructor(private router:Router,
                 private testActions:TestStateActions) {
         testActions.fetchPackages();
-
-        router.events
-            .startWith(new NavigationStart(44, '/tests'))
-            .filter(e => e instanceof NavigationStart)
-            .filter((e:NavigationStart) => e.url === '/tests')
-            .subscribe(e => {
-                router.navigate(['tests/run'])
-            });
     }
 
     isActive(name: string) {

@@ -45,7 +45,7 @@ export class TestDetail extends Test {
 
     public actions: TestAction[];
 
-    public messages: Message[];
+    public messages: Message[] = [];
 
     public running = false;
 

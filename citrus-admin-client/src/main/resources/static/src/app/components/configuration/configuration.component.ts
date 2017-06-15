@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router, NavigationStart} from '@angular/router';
+import {Router} from '@angular/router';
 
 const MenuEntry = (name:string, link:string[]) => ({name, link});
 
@@ -20,15 +20,7 @@ export class ConfigurationComponent {
         MenuEntry('Namespaces', ['namespace-context'])
     ];
 
-    constructor(private router:Router) {
-        router.events
-            .startWith(new NavigationStart(42, '/configuration'))
-            .filter(e => e instanceof NavigationStart)
-            .filter((e:NavigationStart) => e.url === '/configuration')
-            .subscribe(e => {
-                router.navigate(['configuration/endpoints'])
-            })
-    }
+    constructor(private router:Router) {}
 
     isActive(name: string) {
         return this.router.isActive('configuration/' + name, false);

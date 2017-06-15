@@ -22,7 +22,8 @@
 <tabs dynamic="false">
   <tab *ngFor="let test of openTests|async"
        tab-id="{{test.name}}"
-       tab-title="{{test.name}}" closable="true"
+       tab-title="{{test.name}}"
+       closable="true"
        [active]="test === (selectedTest|async)"
        (select)="onTabSelected(test)"
        (close)="onTabClosed(test)">

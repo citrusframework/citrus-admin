@@ -1,20 +1,30 @@
-<test-info [detail]="detail|async"></test-info>
+<div *ngIf="detail">
+  <h4 class="box"><i class="fa fa-play-circle color-success clickable" (click)="execute()"></i> {{detail.name}} <span class="badge badge-success clickable pull-right" (click)="execute()" title="Run test"><i class="fa fa-play-circle"></i> Run</span></h4>
+  <b>Author: </b><span class="label label-primary" [textContent]="detail.author ? detail.author : 'Unknown'"></span>
+  <b>Status: </b><span class="label label-primary" [textContent]="detail.status ? detail.status : 'FINAL'"></span>
+  <b *ngIf="detail.packageName">Package: </b><span *ngIf="detail.packageName" class="label label-primary">{{detail.packageName}}</span>
+  <b *ngIf="detail.result">Result: </b><span [class]="!detail.result || detail.result.success ? 'label label-success clickable' : 'label label-danger clickable'" (click)="show('RESULTS')" alt="View result details" [textContent]="!detail.result || detail.result.success ? 'SUCCESS' : 'FAILED'"></span>
 
-<div class="space-top-30"></div>
-<test-run [detail]="detail|async"></test-run>
-<test-result [detail]="detail|async"></test-result>
+  <pills navigation="true">
+    <pill pill-id="sources" pill-title="Sources" active="true" pill-icon="fa fa-code">
+      <div class="space-top-30"></div>
+      <pills>
+        <pill pill-id="design-sources" pill-title="Design" active="true" pill-icon="fa fa-sitemap"><test-designer [detail]="detail"></test-designer></pill>
+        <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-code"><source-code [detail]="detail" editor-id="java-code" type="java"></source-code></pill>
+        <pill pill-id="xml-sources" pill-title="XML" pill-icon="fa fa-file-code-o" [disabled]="!(detail.type == 'XML')"><source-code [detail]="detail" editor-id="xml-code"></source-code></pill>
+      </pills>
+    </pill>
+    <pill pill-id="logs" pill-title="Logs" pill-icon="fa fa-newspaper-o">
+      <div class="space-top-30"></div>
+      <pre class="logger" [textContent]="logs"></pre>
+    </pill>
+    <pill pill-id="results" pill-title="Results" pill-icon="fa fa-bar-chart-o" [disabled]="!detail.result">
+      <div class="space-top-30"></div>
+      <test-progress [completed]="completed" [failed]="failed"></test-progress>
+      <test-result [detail]="detail"></test-result>
+      <test-messages [detail]="detail"></test-messages>
+      <pre class="logger" [textContent]="loggingFrame"></pre>
+    </pill>
+  </pills>
 
-<div class="space-top-30"></div>
-<test-messages [detail]="detail|async"></test-messages>
-
-<div class="space-top-30"></div>
-<test-designer *ngIf="detail|async" [actions]="(detail|async).actions"></test-designer>
-
-<div class="space-top-30"></div>
-<pills *ngIf="(type|async) == 'XML'" navigation="true">
-  <pill pill-id="xml-sources" pill-title="Xml" active="true" pill-icon="fa fa-file-code-o"><source-code [detail]="detail|async" editor-id="xml-code"></source-code></pill>
-  <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
-</pills>
-<pills *ngIf="(type|async) == 'JAVA'" navigation="true">
-  <pill pill-id="java-sources" pill-title="Java" active="true" pill-icon="fa fa-file-o"><source-code [detail]="detail|async" editor-id="java-code" type="java"></source-code></pill>
-</pills>
+</div>

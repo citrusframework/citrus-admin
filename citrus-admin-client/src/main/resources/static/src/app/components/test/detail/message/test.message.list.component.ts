@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TestDetail, TestResult} from "../../../../model/tests";
-import {TestService} from "../../../../service/test.service";
+import {TestDetail} from "../../../../model/tests";
 import {SocketEvent} from "../../../../model/socket.event";
 import {Message} from "../../../../model/message";
 import {Alert} from "../../../../model/alert";
@@ -22,12 +21,7 @@ export class TestMessageListComponent implements OnInit {
 
     ngOnInit() {
         this.loggingService.messages
-            .subscribe(this.handleMessage);
-    }
-
-    handleMessage(message: any) {
-        console.log('Handle mesage', message);
-        this.detail.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString()));
+            .subscribe(message => this.detail.messages.push(new Message(_.uniqueId(), message.type, message.msg, moment().toISOString())));
     }
 
     notifyError(error: any) {

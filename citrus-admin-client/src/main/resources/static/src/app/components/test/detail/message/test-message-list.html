@@ -1,5 +1,3 @@
-<h2 class="sub-header">Exchanged messages</h2>
-
 <div class="table-responsive">
   <table class="table table-hover table-bordered">
     <thead>
@@ -9,14 +7,14 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngIf="!messages || messages?.length == 0">
+    <tr *ngIf="!detail.messages || detail.messages?.length == 0">
       <td>
-        <i *ngIf="!detail?.running" class="fa fa-envelope-o">&nbsp;</i>
-        <img *ngIf="detail?.running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+        <i *ngIf="!detail.running" class="fa fa-envelope-o">&nbsp;</i>
+        <img *ngIf="detail.running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
       </td>
       <td><span>No messages found!</span></td>
     </tr>
-    <tr *ngFor="let message of messages" class="clickable">
+    <tr *ngFor="let message of detail.messages" class="clickable">
       <td><span [class]="message.type == 'OUTBOUND' ? 'badge badge-primary' : 'badge badge-success'" [textContent]="message.type == 'OUTBOUND' ? 'OUT' : 'IN'" style="min-width: 3em;"></span></td>
       <td class="test-message" [message]="message"></td>
     </tr>

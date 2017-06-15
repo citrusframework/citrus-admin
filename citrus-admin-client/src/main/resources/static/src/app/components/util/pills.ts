@@ -6,7 +6,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     <div [class.pull-right]="navigation && pullRight">
       <ul class="nav nav-pills" [class.pills-bar]="navigation" [class.nav-justified]="justified" [class.nav-stacked]="stacked">
         <li *ngFor="let pill of pills" [class.active]="pill.active">
-          <a href="{{pill.id}}" (click)="select(pill, $event)"><i *ngIf="pill.icon" class="{{pill.icon}}"></i>&nbsp;{{pill.title}}</a>
+          <a *ngIf="!pill.disabled" href="{{pill.id}}" (click)="select(pill, $event)"><i *ngIf="pill.icon" class="{{pill.icon}}"></i>&nbsp;{{pill.title}}</a>
         </li>
       </ul>
     </div>
@@ -62,6 +62,7 @@ export class PillComponent {
     @Input('pill-title') title: string;
     @Input('pill-icon') icon: string;
     @Input() active: boolean;
+    @Input() disabled: boolean = false;
 
     constructor(pills: PillsComponent){
         pills.addPill(this);

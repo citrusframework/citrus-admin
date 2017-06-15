@@ -1,5 +1,5 @@
-import {Component,  Input, Output, EventEmitter} from '@angular/core';
-import {TestAction} from "../../../../model/tests";
+import {Component,  Input} from '@angular/core';
+import {TestAction, TestDetail} from "../../../../model/tests";
 
 @Component({
     selector: "test-designer",
@@ -8,7 +8,7 @@ import {TestAction} from "../../../../model/tests";
         <i class="fa fa-play"></i>
       </div>
 
-      <div *ngFor="let action of actions">
+      <div *ngFor="let action of detail.actions">
         <test-transition></test-transition>
         <test-action *ngIf="action.actions?.length == 0" [action]="action" (selected)="onActionSelected($event)"></test-action>
         <test-container *ngIf="action.actions?.length > 0" [container]="action" (selected)="onActionSelected($event)"></test-container>
@@ -23,7 +23,7 @@ import {TestAction} from "../../../../model/tests";
 })
 export class TestDesignerComponent {
 
-    @Input() actions: TestAction[];
+    @Input() detail: TestDetail;
 
     selectedAction: TestAction;
 
