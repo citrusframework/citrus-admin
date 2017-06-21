@@ -24,7 +24,6 @@ export class TestEditorComponent implements OnInit, OnDestroy {
 
     private routeSubscription: Subscription;
     private openTestSubscription: Subscription;
-    private selectedTestSubscription: Subscription;
     private selectedDetailSubscription: Subscription;
     private lastTestSubscription: Subscription;
 
@@ -63,15 +62,12 @@ export class TestEditorComponent implements OnInit, OnDestroy {
             });
 
         this.selectedDetailSubscription = this.testState.selectedTestDetail
-            .subscribe(detail => this.selectedDetail = detail);
-
-        /** Navigate to a test route if selected tab is changed **/
-        this.selectedTestSubscription = this.testState.selectedTest.filter(t => t != null).subscribe(t => {
-            this.navigateToTest(t);
-        });
+            .subscribe(detail => {
+                this.selectedDetail = detail;
+            });
 
         this.lastTestSubscription = Observable.combineLatest(
-            this.routerState.path.filter(p => p === '/tests/open').take(1),
+            this.routerState.path.filter(p => p === '/tests/editor').take(1),
             this.testState.selectedTest.filter(t => t != null).take(1)
         ).subscribe(([u, t]) => {
             this.navigateToTest(t);
@@ -90,12 +86,8 @@ export class TestEditorComponent implements OnInit, OnDestroy {
             this.openTestSubscription.unsubscribe();
         }
 
-        if (this.selectedTestSubscription) {
-            this.selectedTestSubscription.unsubscribe();
-        }
-
         if (this.selectedDetailSubscription) {
-            this.selectedTestSubscription.unsubscribe();
+            this.selectedDetailSubscription.unsubscribe();
         }
 
         if (this.lastTestSubscription) {
@@ -106,6 +98,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     onTabClosed(test:Test) {
         if (this.openTests.length < 2) {
             this.selectedDetail = undefined;
+            this.router.navigate(['/tests', 'editor']);
         }
 
         this.testActions.removeTab(test);

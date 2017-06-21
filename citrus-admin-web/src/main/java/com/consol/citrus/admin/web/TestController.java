@@ -16,10 +16,13 @@
 
 package com.consol.citrus.admin.web;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.*;
 import com.consol.citrus.admin.service.report.JUnitTestReportService;
 import com.consol.citrus.admin.service.report.TestNGTestReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,6 +36,9 @@ import java.util.List;
 @Controller
 @RequestMapping("api/tests")
 public class TestController {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(TestController.class);
 
     @Autowired
     private ProjectService projectService;
@@ -90,7 +96,12 @@ public class TestController {
     @RequestMapping(value="/source", method = { RequestMethod.GET })
     @ResponseBody
     public String getSourceCode(@RequestParam("relativePath") String relativePath) {
-        return testCaseService.getSourceCode(projectService.getActiveProject(), relativePath);
+        try {
+            return testCaseService.getSourceCode(projectService.getActiveProject(), relativePath);
+        } catch (ApplicationRuntimeException e) {
+            log.warn(e.getMessage());
+            return "No sources available!";
+        }
     }
 
     @RequestMapping(value="/source", method = { RequestMethod.PUT })

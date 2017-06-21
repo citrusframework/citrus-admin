@@ -30,22 +30,22 @@ export class EndpointEffects {
     ) {}
 
     @Effect() endpoints = this.actions
-        .handleEffect(EndpointActions.ENDPOINTS, (a) => this.endPointService.getEndpoints())
+        .handleEffect(EndpointActions.ENDPOINTS, (a) => this.endPointService.getEndpoints());
 
     @Effect() endpointCreate = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.CREATE, ({payload}) => this.endPointService.createEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.CREATE, ({payload}) => this.endPointService.createEndpoint(payload).map(r => payload));
 
     @Effect() endpointUpdate = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.UPDATE, ({payload}) => this.endPointService.updateEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.UPDATE, ({payload}) => this.endPointService.updateEndpoint(payload).map(r => payload));
 
     @Effect() endpointDelete = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endPointService.deleteEndpoint(payload).map(r => payload))
+        .handleEffect(EndpointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endPointService.deleteEndpoint(payload).map(r => payload));
 
     @Effect() endpointTypes = this.actions
-        .handleEffect(EndpointActions.ENDPOINT_TYPES, (a) => this.endPointService.getEndpointTypes())
+        .handleEffect(EndpointActions.ENDPOINT_TYPES, (a) => this.endPointService.getEndpointTypes());
 
     @Effect() endpointType = this.actions
-        .handleEffect(EndpointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endPointService.getEndpointType(payload))
+        .handleEffect(EndpointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endPointService.getEndpointType(payload));
 
     @Effect({dispatch:false}) endpointsError = this.actions
         .handleError([
@@ -53,9 +53,9 @@ export class EndpointEffects {
                 EndpointActions.ENDPOINT.CREATE, EndpointActions.ENDPOINT.DELETE,
                 EndpointActions.ENDPOINT.READ, EndpointActions.ENDPOINT.UPDATE
             ],
-            ({type, payload}) => Alert.danger(`Error '${ActionToString(type)}' ${payload}`, true))
+            ({type, payload}) => Alert.danger(`Error '${ActionToString(type)}' ${payload}`, false));
 
-    @Effect({dispatch:false}) endpointsSucess = this.actions
+    @Effect({dispatch:false}) endpointsSuccess = this.actions
         .handleSuccess([
                 EndpointActions.ENDPOINT.CREATE, EndpointActions.ENDPOINT.DELETE,
                 EndpointActions.ENDPOINT.READ, EndpointActions.ENDPOINT.UPDATE
@@ -130,4 +130,4 @@ export const endpointReducer = new ReducerBuilder<EndpointState>(EndpointStateIn
         ((state:EndpointState, endPointType:Endpoint) => ({...state, endpointTypes: {...state.endpointTypes, [endPointType.type]:endPointType}}))
     .on(EndpointActions.ENDPOINT_TYPES.SUCCESS)
         ((state:EndpointState, endpointTypeNames:string[]) => ({...state, endpointTypeNames}))
-    .createReducer()
+    .createReducer();

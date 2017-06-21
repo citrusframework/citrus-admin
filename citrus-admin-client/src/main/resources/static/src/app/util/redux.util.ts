@@ -17,7 +17,7 @@ export interface Action<T> extends ReduxAction {
 export const CreateAction = <T>(type:string, payload?:T) => ({type,payload});
 export const CreateVoidAction = (type:string) => CreateAction<void>(type);
 
-const AsyncActionNamesCache:IdMap<boolean> = {}
+const AsyncActionNamesCache:IdMap<boolean> = {};
 export const AsyncActionType = (name:string):IAsyncActionTypes => {
     if(AsyncActionNamesCache[name]) {
         throw new Error(`AsyncActionType: '${name}' is already defined`)
@@ -28,7 +28,7 @@ export const AsyncActionType = (name:string):IAsyncActionTypes => {
         SUCCESS: `${name}.SUCCESS`,
         FAILED: `${name}.FAILED`,
     }
-}
+};
 
 export interface ICrudActionTypes<T> {
     CREATE:T;
@@ -51,9 +51,7 @@ export const AsyncCrudActionType = (name:string):ICrudActionTypes<IAsyncActionTy
     READ: AsyncActionType(`${name}.READ`),
     UPDATE: AsyncActionType(`${name}.UPDATE`),
     DELETE: AsyncActionType(`${name}.DELETE`)
-})
-
-
+});
 
 @Injectable()
 export class AsyncActions {
@@ -82,14 +80,14 @@ export class AsyncActions {
 
 export type IdMap<T> = {[id:string]:T};
 export const toIdMap = <T>(list:T[], getId:(e:T)=>string) => list.reduce((idm, e) => ({...idm, [getId(e)]:e}), {} as IdMap<T>);
-export const toArray = <T>(idMap:IdMap<T>) => Object.keys(idMap).map(k => idMap[k])
+export const toArray = <T>(idMap:IdMap<T>) => Object.keys(idMap).map(k => idMap[k]);
 
 export const deleteFromMap = <T>(map:IdMap<T>, key:string) => {
-    console.log(`Delete ${key}`, map)
-    const r = Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {})
-    console.log(`Deleted ${key}`, r)
+    console.log(`Delete ${key}`, map);
+    const r = Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {});
+    console.log(`Deleted ${key}`, r);
     return r;
-}
+};
 
 type ReducerCallback<T> = <A>(state:T,payload:A) => T;
 type ActionReduceTupel<T> = [string[], ReducerCallback<T>]
@@ -101,10 +99,7 @@ export class ReducerBuilder<T extends {}> {
 
     on(...actionsTypes:string[]) {
         return (reducer:ReducerCallback<T>) => {
-            this.actionReducMap.push([
-                actionsTypes,
-                reducer
-            ]);
+            this.actionReducMap.push([actionsTypes, reducer]);
             return this;
         };
     }

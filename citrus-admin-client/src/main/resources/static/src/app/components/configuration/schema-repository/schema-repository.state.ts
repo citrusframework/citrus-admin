@@ -34,31 +34,31 @@ export class SchemaRepositoryEffects {
     ) {}
 
     @Effect() mappingstrategies = this.actions
-        .handleEffect(SchemaRepositoryActions.MAPPING_STRATEGIES, () => this.configurationService.getMappingStrategies())
+        .handleEffect(SchemaRepositoryActions.MAPPING_STRATEGIES, () => this.configurationService.getMappingStrategies());
 
     @Effect() package = this.actions
-        .handleEffect(SchemaRepositoryActions.SCHEMA.READ, () => this.configurationService.getSchemas())
+        .handleEffect(SchemaRepositoryActions.SCHEMA.READ, () => this.configurationService.getSchemas());
 
     @Effect() detail = this.actions
-        .handleEffect(SchemaRepositoryActions.REPOSITORY.READ, () => this.configurationService.getSchemaRepositories())
+        .handleEffect(SchemaRepositoryActions.REPOSITORY.READ, () => this.configurationService.getSchemaRepositories());
 
     @Effect() repositoryCreate = this.actions
-        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.CREATE, ({payload}) => this.configurationService.createSchemaRepository(payload).map(r => payload))
+        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.CREATE, ({payload}) => this.configurationService.createSchemaRepository(payload).map(r => payload));
 
     @Effect() repoSchemaDelete = this.actions
-        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.DELETE, ({payload}) => this.configurationService.deleteComponent(payload.id).map(r => payload))
+        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.DELETE, ({payload}) => this.configurationService.deleteComponent(payload.id).map(r => payload));
 
     @Effect() repoSchemaUpdate = this.actions
-        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.UPDATE, ({payload}) => this.configurationService.updateSchemaRepository(payload).map(r => payload))
+        .handleEffect<SchemaRepository>(SchemaRepositoryActions.REPOSITORY.UPDATE, ({payload}) => this.configurationService.updateSchemaRepository(payload).map(r => payload));
 
     @Effect() schemaCreate = this.actions
-        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.CREATE, ({payload}) => this.configurationService.createSchema(payload).map(r => payload))
+        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.CREATE, ({payload}) => this.configurationService.createSchema(payload).map(r => payload));
 
     @Effect() schemaUpdate = this.actions
-        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.UPDATE, ({payload}) => this.configurationService.updateSchema(payload).map(r => payload))
+        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.UPDATE, ({payload}) => this.configurationService.updateSchema(payload).map(r => payload));
 
     @Effect() schemaDelete = this.actions
-        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.DELETE, ({payload}) => this.configurationService.deleteComponent(payload.id).map(r => payload))
+        .handleEffect<Schema>(SchemaRepositoryActions.SCHEMA.DELETE, ({payload}) => this.configurationService.deleteComponent(payload.id).map(r => payload));
 
     @Effect({dispatch:false}) alerts = this.actions$.ofType(...Object.keys(Messages))
         .do((action) => {

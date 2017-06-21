@@ -32,8 +32,8 @@
 
 <test-detail *ngIf="selectedDetail" [detail]="selectedDetail"></test-detail>
 
-<div *ngIf="openTests.length && !selectedDetail" style="margin: auto;">
-  <img *ngIf="detail.running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 2.5em;"/>
+<div *ngIf="openTests.length > 0 && !selectedDetail" style="display: block; text-align: center; margin-top: 150px;">
+  <img class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.5em;"/>&nbsp;Loading test ...
 </div>
 
 <div *ngIf="openTests.length == 0" style="display: block; text-align: center; margin-top: 150px;">

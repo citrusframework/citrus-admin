@@ -7,6 +7,8 @@ import {Effect} from "@ngrx/effects";
 import {TestService} from "../../service/test.service";
 import {Observable} from "rxjs";
 import * as _ from 'lodash';
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 
 export type TestMap = IdMap<Test>;
 
@@ -31,12 +33,16 @@ export const TestStateInit:TestState = {
 @Injectable()
 export class TestStateEffects {
     constructor(private actions:AsyncActions,
+                private alertService:AlertService,
                 private testService:TestService) {}
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 
     @Effect() detail = this.actions
-        .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload))
+        .handleEffect<Test>(TestStateActions.DETAIL, ({payload}) => this.testService.getTestDetail(payload).catch(error => {
+            this.alertService.add(Alert.danger(error.message || JSON.stringify(error), false));
+            return Observable.throw(error.message || 'Server error');
+        }));
 }
 
 @Injectable()

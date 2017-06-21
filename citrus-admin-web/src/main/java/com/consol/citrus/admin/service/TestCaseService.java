@@ -314,8 +314,7 @@ public class TestCaseService {
             if (new File(sourcePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourcePath));
             } else {
-                log.warn("Unable to find source code for path: " + sourcePath);
-                return "No sources available!";
+                throw new ApplicationRuntimeException("Unable to find source code for path: " + sourcePath);
             }
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Failed to load test case source code", e);
