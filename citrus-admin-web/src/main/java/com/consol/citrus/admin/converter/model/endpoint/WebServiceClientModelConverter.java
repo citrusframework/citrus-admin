@@ -16,6 +16,8 @@
 
 package com.consol.citrus.admin.converter.model.endpoint;
 
+import com.consol.citrus.admin.converter.model.AbstractModelConverter;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.ws.WebServiceClientModel;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
@@ -32,6 +34,27 @@ public class WebServiceClientModelConverter extends AbstractEndpointModelConvert
      */
     public WebServiceClientModelConverter() {
         super(WebServiceClientModel.class, WebServiceClient.class, WebServiceEndpointConfiguration.class);
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("requestUrl", "defaultUri"));
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("faultStrategy") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(ErrorHandlingStrategy.class);
+                try {
+                    return ErrorHandlingStrategy.class.getSimpleName() + "." + ErrorHandlingStrategy.fromName(arg.toString()).name();
+                } catch (IllegalArgumentException e) {
+                    return ErrorHandlingStrategy.class.getSimpleName() + "." + arg.toString();
+                }
+            }
+        });
+
+        addDecorator(new AbstractModelConverter.MethodCallDecorator("pollingInterval") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                return Integer.valueOf(arg.toString());
+            }
+        });
     }
 
     @Override

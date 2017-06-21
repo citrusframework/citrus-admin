@@ -46,7 +46,7 @@ export class EndpointFormComponent implements OnInit{
                     .do(({type}) => this.endpointActions.fetchEndpointType(type))
                     .switchMap(({type}) => this.endpointState.getEndpointType(type)
                     .filter(notNull()))
-            ).filter(notNull()).first()
+            ).filter(notNull()).first();
         this.mode = this.endpoint.map(e => e.id == null ? EditorMode.NEW : EditorMode.EDIT)
     }
 
@@ -54,9 +54,10 @@ export class EndpointFormComponent implements OnInit{
         if(EditorMode.NEW === mode) {
             this.endpointActions.createEndpoint(endpoint);
             this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
-                this.router.navigate(['configuration/endpoints/endpoint-editor', endpoint.id])
+                this.router.navigate(['configuration/endpoints'])
             })
         }
+
         if(EditorMode.EDIT === mode) {
             this.endpointActions.updateEndpoint(endpoint);
         }
