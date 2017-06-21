@@ -24,6 +24,7 @@ import com.consol.citrus.admin.marshal.XmlTestMarshaller;
 import com.consol.citrus.admin.mock.Mocks;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
@@ -453,13 +454,21 @@ public class TestCaseService {
     }
 
     private Object getActionModel(com.consol.citrus.TestAction action) {
+        com.consol.citrus.TestAction model;
+
+        if (action instanceof DelegatingTestAction) {
+            model = ((DelegatingTestAction) action).getDelegate();
+        } else {
+            model = action;
+        }
+
         for (TestActionConverter converter : actionConverter) {
-            if (converter.getActionModelClass().isInstance(action)) {
-                return converter.convertModel(action);
+            if (converter.getActionModelClass().isInstance(model)) {
+                return converter.convertModel(model);
             }
         }
 
-        return new ActionConverter(action.getName()).convertModel(action);
+        return new ActionConverter(action.getName()).convertModel(model);
     }
 
 }

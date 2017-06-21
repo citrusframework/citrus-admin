@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.mock;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.Endpoint;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -24,12 +25,15 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.oxm.Marshaller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.util.Collections;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -47,8 +51,8 @@ public class Mocks {
     public static ApplicationContext getApplicationContextMock() {
         ApplicationContext mock = Mockito.mock(ApplicationContext.class);
         Marshaller marshaller = Mockito.mock(Marshaller.class);
-        Mockito.when(mock.getBeansOfType(Marshaller.class)).thenReturn(Collections.singletonMap("mockMarshaller", marshaller));
-        Mockito.when(mock.getBean(Marshaller.class)).thenReturn(marshaller);
+        when(mock.getBeansOfType(Marshaller.class)).thenReturn(Collections.singletonMap("mockMarshaller", marshaller));
+        when(mock.getBean(Marshaller.class)).thenReturn(marshaller);
         try {
             Mockito.doAnswer(invocation -> {
                 StringResult result = invocation.getArgument(1);
@@ -60,13 +64,13 @@ public class Mocks {
         }
 
         ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
-        Mockito.when(mock.getBeansOfType(ObjectMapper.class)).thenReturn(Collections.singletonMap("mockMapper", mapper));
-        Mockito.when(mock.getBean(ObjectMapper.class)).thenReturn(mapper);
+        when(mock.getBeansOfType(ObjectMapper.class)).thenReturn(Collections.singletonMap("mockMapper", mapper));
+        when(mock.getBean(ObjectMapper.class)).thenReturn(mapper);
 
         ObjectWriter writer = Mockito.mock(ObjectWriter.class);
-        Mockito.when(mapper.writer()).thenReturn(writer);
+        when(mapper.writer()).thenReturn(writer);
         try {
-            Mockito.when(writer.writeValueAsString(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0).toString());
+            when(writer.writeValueAsString(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0).toString());
         } catch (JsonProcessingException e) {
             log.warn("Failed to initialize object mapper", e);
         }
@@ -88,7 +92,15 @@ public class Mocks {
      */
     public static void injectMocks(Object target) {
         ReflectionUtils.doWithFields(target.getClass(),
-                field -> ReflectionUtils.setField(field, target, Mockito.mock(field.getType())),
+                field -> {
+                    Object mock = Mockito.mock(field.getType());
+                    if (Endpoint.class.isAssignableFrom(field.getType())) {
+                        String endpointName = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : field.getName();
+                        when(((Endpoint)mock).getName()).thenReturn(endpointName);
+                    }
+
+                    ReflectionUtils.setField(field, target, mock);
+                },
                 field -> {
                     if (field.isAnnotationPresent(Autowired.class)) {
                         if (!field.isAccessible()) {

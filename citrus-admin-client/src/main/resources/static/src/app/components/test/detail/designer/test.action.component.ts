@@ -11,23 +11,7 @@ import {TestAction} from "../../../../model/tests";
                 <h3 class="panel-title">{{action.type}}</h3>
               </div>
               <div class="panel-body">
-                <div [ngSwitch]="action.type">
-                  <template *ngSwitchCase="'send'">
-                    <span>{{getProperty("endpoint")}}</span>
-                  </template>
-                  <template *ngSwitchCase="'receive'">
-                    <span>{{getProperty("endpoint")}}</span>
-                  </template>
-                  <template *ngSwitchCase="'sleep'">
-                    <span>{{getProperty("milliseconds")}}</span>
-                  </template>
-                  <template *ngSwitchCase="'echo'">
-                    <span>{{getProperty("message")}}</span>
-                  </template>
-                  <template *ngSwitchDefault>
-                    <p *ngFor="let property of action.properties">{{property.id}}:{{property.value}}</p>
-                  </template>
-                </div>
+                <span [textContent]="getProperty()"></span>
               </div>
             </div>
         </div>`
@@ -46,13 +30,32 @@ export class TestActionComponent {
         this.selected.emit(this.action);
     }
 
-    getProperty(name: string) {
-        var property = this.action.properties.find(p => p.id === name);
+    getProperty() {
+        let propertyName: string;
+
+        switch (this.action.type) {
+            case "send":
+                propertyName = "endpoint";
+                break;
+            case "receive":
+                propertyName = "endpoint";
+                break;
+            case "sleep":
+                propertyName = "milliseconds";
+                break;
+            case "echo":
+                propertyName = "message";
+                break;
+            default:
+                propertyName = "all";
+        }
+
+        let property = this.action.properties.find(p => p.id === propertyName);
 
         if (property) {
-            return property.value;
+            return property.id + " => " + property.value;
         } else {
-            return "";
+            return this.action.properties.map(p => p.id + "=" + p.value).concat();
         }
     }
 
