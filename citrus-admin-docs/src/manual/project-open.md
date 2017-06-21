@@ -8,7 +8,7 @@ started you have to open a project first.
 The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:
 
-```java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-5.war```
+```java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-5.war```
 
 When pre selecting a project home the project is opened automatically and the [project dashboard](project-dashboard.md) is displayed. Now back to the project home selection if no project has bee pre selected yet.
 
@@ -34,8 +34,8 @@ manually in prior to opening the project.
 There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:
 
 ```
-java -Dproject.home=/Users/myaccount/path/tp/citrus/project/home -Djava.source.directory=src/it/java 
--Dxml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-5.war
+java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java 
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-5.war
 ```
 
 You can set the following system properties:
@@ -43,11 +43,13 @@ You can set the following system properties:
 | Property                   | Description                           |
 | -------------------------- | ------------------------------------- |
 | server.port                | Web server port                       |
-| project.home               | Preselect project on startup          |
-| root.directory             | System root as base of all projects (default: user home directory) |
-| java.source.directory      | Java sources directory (default: *src/test/java*)         |
-| xml.source.directory       | XML test sources directory (default: *src/test/resources*) |
-| spring.application.context | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
+| citrus.admin.project.home               | Preselect project on startup          |
+| citrus.admin.root.directory             | System root as base of all projects (default: user home directory) |
+| citrus.admin.java.source.directory      | Java sources directory (default: *src/test/java*)         |
+| citrus.admin.xml.source.directory       | XML test sources directory (default: *src/test/resources*) |
+| citrus.admin.spring.application.context | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
+| citrus.admin.spring.java.config | Java class holding Spring bean configurations (default: *com.consol.citrus.CitrusEndpointConfig*) |
+| citrus.admin.test.base.package | Base package where to add new tests (default: *com.consol.citrus*) |
 | maven.home.directory       | Path to Maven home that should be used in admin UI (when not set environment variable MAVEN_HOME or M2_HOME is used as default) |
 
 You can also use Spring boot properties, e.g. a custom server port:
@@ -55,6 +57,19 @@ You can also use Spring boot properties, e.g. a custom server port:
 ```
 java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-5.war
 ```
+
+The exact same properties are also available when set as environment variables:
+
+| Environment variable                   | Description                           |
+| -------------------------- | ------------------------------------- |
+| CITRUS_ADMIN_PROJECT_HOME               | Preselect project on startup          |
+| CITRUS_ADMIN_ROOT_DIRECTORY             | System root as base of all projects (default: user home directory) |
+| CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY      | Java sources directory (default: *src/test/java*)         |
+| CITRUS_ADMIN_XML_SOURCE_DIRECTORY       | XML test sources directory (default: *src/test/resources*) |
+| CITRUS_ADMIN_SPRING_APPLICATION_CONTEXT | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
+| CITRUS_ADMIN_SPRING_JAVA_CONFIG | Java class holding Spring bean configurations (default: *com.consol.citrus.CitrusEndpointConfig*) |
+| CITRUS_ADMIN_TEST_BASE_PACKAGE | Base package where to add new tests (default: *com.consol.citrus*) |
+
 
 A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called **citrus-project.json**. When you open a Citrus project for the first time the administration UI creates this project settings file
 automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:

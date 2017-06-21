@@ -57,7 +57,7 @@
           <arguments>
             <argument>--server.port=${server.port}</argument>
           </arguments>
-          <jvmArguments>-Dproject.home=${project.home}</jvmArguments>
+          <jvmArguments>-Dcitrus.admin.project.home=${project.home}</jvmArguments>
         </configuration>
         <executions>
           <execution>

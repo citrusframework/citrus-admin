@@ -79,8 +79,9 @@ public class ProjectService {
 
     @PostConstruct
     public void loadDefaultProject() throws Exception {
-        if (project == null && StringUtils.hasText(System.getProperty(Application.PROJECT_HOME))) {
-            load(System.getProperty(Application.PROJECT_HOME));
+        String defaultProjectHome = System.getProperty(Application.PROJECT_HOME, System.getenv(Application.PROJECT_HOME_ENV));
+        if (project == null && StringUtils.hasText(defaultProjectHome)) {
+            load(defaultProjectHome);
         }
     }
 

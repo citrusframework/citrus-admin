@@ -24,20 +24,30 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
+    private static final String CITRUS_ADMIN_PREFIX = "citrus.admin.";
+    private static final String CITRUS_ADMIN_ENV_PREFIX = "CITRUS_ADMIN_";
+
     /** System property names */
-    public static final String PROJECT_HOME = "project.home";
-    public static final String ROOT_DIRECTORY = "root.directory";
+    public static final String PROJECT_HOME = CITRUS_ADMIN_PREFIX + "project.home";
+    public static final String PROJECT_HOME_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_HOME";
+    public static final String ROOT_DIRECTORY = CITRUS_ADMIN_PREFIX + "root.directory";
+    public static final String ROOT_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "ROOT_DIRECTORY";
 
     /** Base package for test cases to look for */
-    public static final String BASE_PACKAGE = "test.base.package";
+    public static final String BASE_PACKAGE = CITRUS_ADMIN_PREFIX + "test.base.package";
+    public static final String BASE_PACKAGE_ENV = CITRUS_ADMIN_ENV_PREFIX + "TEST_BASE_PACKAGE";
 
     /** Spring application context file */
-    public static final String SPRING_APPLICATION_CONTEXT = "spring.application.context";
-    public static final String SPRING_JAVA_CONFIG = "spring.java.config";
+    public static final String SPRING_APPLICATION_CONTEXT = CITRUS_ADMIN_PREFIX + "spring.application.context";
+    public static final String SPRING_APPLICATION_CONTEXT_ENV = CITRUS_ADMIN_ENV_PREFIX + "SPRING_APPLICATION_CONTEXT";
+    public static final String SPRING_JAVA_CONFIG = CITRUS_ADMIN_PREFIX + "spring.java.config";
+    public static final String SPRING_JAVA_CONFIG_ENV = CITRUS_ADMIN_ENV_PREFIX + "SPRING_JAVA_CONFIG";
 
     /** Source directory */
-    public static final String JAVA_SRC_DIRECTORY = "java.source.directory";
-    public static final String XML_SRC_DIRECTORY = "xml.source.directory";
+    public static final String JAVA_SRC_DIRECTORY = CITRUS_ADMIN_PREFIX + "java.source.directory";
+    public static final String JAVA_SRC_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "JAVA_SOURCE_DIRECTORY";
+    public static final String XML_SRC_DIRECTORY = CITRUS_ADMIN_PREFIX + "xml.source.directory";
+    public static final String XML_SRC_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "XML_SOURCE_DIRECTORY";
 
     public static final String MVN_HOME_DIRECTORY = "maven.home.directory";
 
@@ -47,7 +57,7 @@ public class Application extends SpringBootServletInitializer {
      * @return
      */
     public static String getRootDirectory() {
-        return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+        return System.getProperty(ROOT_DIRECTORY, System.getenv(ROOT_DIRECTORY_ENV) != null ? System.getenv(ROOT_DIRECTORY_ENV) : System.getProperty("user.home"));
     }
 
     @Override

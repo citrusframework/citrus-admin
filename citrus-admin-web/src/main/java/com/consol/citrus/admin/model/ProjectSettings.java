@@ -29,13 +29,13 @@ import java.io.File;
  */
 public class ProjectSettings {
 
-    private String basePackage = System.getProperty(Application.BASE_PACKAGE, "com.consol.citrus");
+    private String basePackage = System.getProperty(Application.BASE_PACKAGE, System.getenv(Application.BASE_PACKAGE_ENV) != null ? System.getenv(Application.BASE_PACKAGE_ENV) : "com.consol.citrus");
     private String citrusVersion = Citrus.getVersion();
 
-    private String springApplicationContext = System.getProperty(Application.SPRING_APPLICATION_CONTEXT, Citrus.DEFAULT_APPLICATION_CONTEXT);
-    private String springJavaConfig = System.getProperty(Application.SPRING_JAVA_CONFIG, System.getProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, "com.consol.citrus.CitrusEndpointConfig"));
-    private String javaSrcDirectory = System.getProperty(Application.JAVA_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "java" + File.separator);
-    private String xmlSrcDirectory = System.getProperty(Application.XML_SRC_DIRECTORY, "src" + File.separator + "test" + File.separator + "resources" + File.separator);
+    private String springApplicationContext = System.getProperty(Application.SPRING_APPLICATION_CONTEXT, System.getenv(Application.SPRING_APPLICATION_CONTEXT_ENV) != null ? System.getenv(Application.SPRING_APPLICATION_CONTEXT_ENV) : Citrus.DEFAULT_APPLICATION_CONTEXT);
+    private String springJavaConfig = System.getProperty(Application.SPRING_JAVA_CONFIG, System.getenv(Application.SPRING_JAVA_CONFIG_ENV) != null ? System.getenv(Application.SPRING_JAVA_CONFIG_ENV) : System.getProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, "com.consol.citrus.CitrusEndpointConfig"));
+    private String javaSrcDirectory = System.getProperty(Application.JAVA_SRC_DIRECTORY, System.getenv(Application.JAVA_SRC_DIRECTORY_ENV) != null ? System.getenv(Application.JAVA_SRC_DIRECTORY_ENV) : "src" + File.separator + "test" + File.separator + "java" + File.separator);
+    private String xmlSrcDirectory = System.getProperty(Application.XML_SRC_DIRECTORY, System.getenv(Application.XML_SRC_DIRECTORY_ENV) != null ? System.getenv(Application.XML_SRC_DIRECTORY_ENV) : "src" + File.separator + "test" + File.separator + "resources" + File.separator);
     private String javaFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getJavaTestFileNamePattern().toArray());
     private String xmlFilePattern = StringUtils.arrayToCommaDelimitedString(Citrus.getXmlTestFileNamePattern().toArray());
 
