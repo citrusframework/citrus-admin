@@ -11,8 +11,6 @@ import {ComingComponent} from './components/coming.component';
 import {DashboardComponent} from './components/project/dashboard.component';
 import {ReportComponent} from './components/report/report.component';
 
-import {AlertConsole} from './components/alert.console';
-import {AlertDialog} from './components/alert.dialog';
 import {OpenProjectComponent} from "./components/project/project.open.component";
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
@@ -45,8 +43,6 @@ import {StateModule} from "./state.module";
         ComingComponent,
         DashboardComponent,
         ReportComponent,
-        AlertConsole,
-        AlertDialog,
         OpenProjectComponent,
         SetupComponent
     ],

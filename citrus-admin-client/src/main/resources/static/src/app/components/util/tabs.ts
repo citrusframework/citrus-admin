@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
 
 @Component({
     selector: 'tabs',
@@ -12,7 +12,7 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
     <ng-content></ng-content>
   `
 })
-export class TabsComponent {
+export class TabsComponent implements OnDestroy {
 
     @Input() dynamic: boolean;
 
@@ -22,6 +22,10 @@ export class TabsComponent {
     tabs: TabComponent[];
 
     constructor() {
+        this.tabs = [];
+    }
+
+    ngOnDestroy(): void {
         this.tabs = [];
     }
 
@@ -37,7 +41,7 @@ export class TabsComponent {
 
     close(tab: TabComponent, e:MouseEvent) {
         e.stopPropagation();
-        if(this.dynamic) {
+        if (this.dynamic) {
             this.tabs.splice(this.tabs.indexOf(tab), 1);
             this.closed.emit(tab);
 
@@ -64,7 +68,7 @@ export class TabsComponent {
 @Component({
     selector: 'tab',
     template: `
-    <div id="{{id}}" class="tab-pane" [hidden]="!active" (click)="onSelect($event)">
+    <div id="{{id}}" class="tab-pane" [hidden]="!active">
       <ng-content></ng-content>
     </div>
   `

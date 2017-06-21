@@ -10,7 +10,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
         </li>
       </ul>
     </div>
-    <div [class.clearfix]="navigation && pullRight"></div>
+    <div *ngIf="navigation && pullRight" class="clearfix"></div>
     <ng-content></ng-content>
   `
 })
@@ -52,7 +52,7 @@ export class PillsComponent {
 @Component({
     selector: 'pill',
     template: `
-    <div id="{{id}}" class="tab-pane" [hidden]="!active">
+    <div id="{{id}}" class="tab-pane fill" [hidden]="!active">
       <ng-content></ng-content>
     </div>
   `

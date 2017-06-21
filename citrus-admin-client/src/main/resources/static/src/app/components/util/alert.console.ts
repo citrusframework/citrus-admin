@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
-import {Alert} from "../model/alert";
-import {AlertService} from "../service/alert.service";
+import {Alert} from "../../model/alert";
+import {AlertService} from "../../service/alert.service";
 import * as _ from 'lodash';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'div.alert-console',
@@ -13,7 +14,7 @@ import * as _ from 'lodash';
             </div>
         </div>
         <div *ngIf="type == 'labels'">
-            <a *ngFor="let alert of alerts" routerLink="/log" style="float: left;"><span class="label label-{{alert.type}}"><i class="fa {{alert.type}}"></i>&nbsp;{{alert.type}}</span></a>
+            <a name="log-label" *ngFor="let alert of alerts" class="clickable" (click)="openLog()" style="float: left;"><span class="label label-{{alert.type}}"><i class="fa {{alert.type}}"></i>&nbsp;{{alert.type}}</span></a>
         </div>`
 })
 export class AlertConsole {
@@ -24,7 +25,8 @@ export class AlertConsole {
     private addSubscription: any;
     private clearSubscription: any;
 
-    constructor(private _alertService: AlertService) {
+    constructor(private _alertService: AlertService,
+                private router: Router) {
         this.type = "detailed";
     }
 
@@ -50,5 +52,9 @@ export class AlertConsole {
 
     clearAlert(toClear: Alert) {
         this._alertService.clear(toClear);
+    }
+
+    openLog() {
+        this.router.navigate(['/log']);
     }
 }

@@ -1,84 +1,89 @@
 <h1 class="page-header"><i class="fa fa-cube"></i> Project: {{project?.name}}</h1>
 
-<div class="row">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Name:</h4>
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Name:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4>{{project?.name}}</h4>
+    </div>
   </div>
-  <div class="col-sm-11">
-    <h4>{{project?.name}}</h4>
+  <div class="row">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Home:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4>{{project?.projectHome}}</h4>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Home:</h4>
+  <div class="row" *ngIf="project?.description">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Description:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4 >{{project?.description}}</h4>
+    </div>
   </div>
-  <div class="col-sm-11">
-    <h4>{{project?.projectHome}}</h4>
+  <div class="row">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Package:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4>{{project?.settings?.basePackage}}</h4>
+    </div>
   </div>
-</div>
-<div class="row" *ngIf="project?.description">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Description:</h4>
+  <div class="row">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Version:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4>{{project?.version}}</h4>
+    </div>
   </div>
-  <div class="col-sm-11">
-    <h4 >{{project?.description}}</h4>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Package:</h4>
-  </div>
-  <div class="col-sm-11">
-    <h4>{{project?.settings?.basePackage}}</h4>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Version:</h4>
-  </div>
-  <div class="col-sm-11">
-    <h4>{{project?.version}}</h4>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-1">
-    <h4 class="pull-right">Tests:</h4>
-  </div>
-  <div class="col-sm-11">
-    <h4>{{testCount}}</h4>
+  <div class="row">
+    <div class="col-sm-1">
+      <h4 class="pull-right">Tests:</h4>
+    </div>
+    <div class="col-sm-11">
+      <h4>{{testCount}}</h4>
+    </div>
   </div>
 </div>
 
 <h2 class="sub-header"><i class="fa fa-tasks"></i> Test results <small>{{ testReport?.executionDate | date:"MM/dd/yyyy" }}</small></h2>
 
-<div class="row test-results">
-  <div class="col-xs-6 col-sm-3 test-result">
-    <a routerLink="/report" title="View all tests">
-      <span class="badge badge-success border-success" alt="PASSED">{{testReport?.passed}}</span>
-      <h4>PASSED</h4>
-      <span class="text-muted">{{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span>
-    </a>
-  </div>
-  <div class="col-xs-6 col-sm-3 test-result">
-    <a routerLink="/report" title="View all tests">
-      <span class="badge badge-danger border-danger" alt="FAILED">{{testReport?.failed}}</span>
-      <h4>FAILED</h4>
-      <span class="text-muted">{{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span>
-    </a>
-  </div>
-  <div class="col-xs-6 col-sm-3 test-result">
-    <a routerLink="/report" title="View all tests">
-      <span class="badge badge-warning border-warning" alt="SKIPPED">{{testReport?.skipped}}</span>
-      <h4>SKIPPED</h4>
-      <span class="text-muted">{{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span>
-    </a>
-  </div>
-  <div class="col-xs-6 col-sm-3 test-result">
-    <a routerLink="/report" title="View all tests">
-      <span class="badge badge-info border-info" alt="TOTAL">{{testReport?.total}}</span>
-      <h4>TOTAL</h4>
-      <span class="text-muted">{{testReport?.total}}</span>
-    </a>
+<div class="container-fluid">
+  <div class="row test-results">
+    <div class="col-xs-6 col-sm-3 test-result">
+      <a routerLink="/report" title="View all tests">
+        <span class="badge badge-success border-success" alt="PASSED">{{testReport?.passed}}</span>
+        <h4>PASSED</h4>
+        <span class="text-muted">{{testReport?.total > 0 ? testReport?.passed / testReport?.total * 100 : 0}} %</span>
+      </a>
+    </div>
+    <div class="col-xs-6 col-sm-3 test-result">
+      <a routerLink="/report" title="View all tests">
+        <span class="badge badge-danger border-danger" alt="FAILED">{{testReport?.failed}}</span>
+        <h4>FAILED</h4>
+        <span class="text-muted">{{testReport?.total > 0 ? testReport?.failed / testReport?.total * 100 : 0}} %</span>
+      </a>
+    </div>
+    <div class="col-xs-6 col-sm-3 test-result">
+      <a routerLink="/report" title="View all tests">
+        <span class="badge badge-warning border-warning" alt="SKIPPED">{{testReport?.skipped}}</span>
+        <h4>SKIPPED</h4>
+        <span class="text-muted">{{testReport?.total > 0 ? testReport?.skipped / testReport?.total * 100 : 0}} %</span>
+      </a>
+    </div>
+    <div class="col-xs-6 col-sm-3 test-result">
+      <a routerLink="/report" title="View all tests">
+        <span class="badge badge-info border-info" alt="TOTAL">{{testReport?.total}}</span>
+        <h4>TOTAL</h4>
+        <span class="text-muted">{{testReport?.total}}</span>
+      </a>
+    </div>
   </div>
 </div>
 

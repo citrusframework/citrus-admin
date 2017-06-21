@@ -1,8 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Router} from '@angular/router';
-import {TestGroup, Test} from "../../model/tests";
-import {Alert} from "../../model/alert";
-import {AlertService} from "../../service/alert.service";
+import {Router, ActivatedRoute} from '@angular/router';
+import {TestGroup, Test, TestDetail} from "../../model/tests";
 import * as jQueryVar from 'jquery'
 import {TestStateActions, TestStateService} from "./test.state";
 import {Observable, Subscription} from "rxjs";
@@ -18,25 +16,54 @@ declare var jQuery:typeof jQueryVar;
 })
 export class TestEditorComponent implements OnInit, OnDestroy {
 
-    constructor(
-                private alertService: AlertService,
-                private router: Router,
+    constructor(private router: Router,
                 private testActions:TestStateActions,
                 private testState:TestStateService,
+                private route:ActivatedRoute,
                 private routerState:RouterState) {}
 
+    private routeSubscription: Subscription;
     private openTestSubscription: Subscription;
     private selectedTestSubscription: Subscription;
+    private selectedDetailSubscription: Subscription;
     private lastTestSubscription: Subscription;
 
-    openTests: Observable<Test[]>;
+    openTests: Test[] = [];
     packages:Observable<TestGroup[]>;
     selectedTest: Observable<Test>;
+    selectedDetail: TestDetail;
 
     ngOnInit() {
         this.packages = this.testState.packages;
-        this.openTests = this.testState.openTabs;
         this.selectedTest = this.testState.selectedTest;
+        
+        this.openTestSubscription = this.testState.openTabs.subscribe(tests => {
+            this.openTests.forEach(open => {
+                if (!tests.find(t => t.name == open.name)) {
+                    this.openTests.splice(this.openTests.indexOf(open), 1);
+                }
+            });
+
+            tests.forEach(t => {
+                if (!this.openTests.find(open => open.name == t.name)) {
+                    this.openTests.push(t);
+                }
+            });
+        });
+
+        this.routeSubscription = this.route
+            .params
+            .filter(p => p['name'] != null)
+            .flatMap(({name}) => this.testState.getTestByName(name))
+            .filter(t => t != null)
+            .subscribe(t => {
+                this.testActions.addTab(t);
+                this.testActions.selectTest(t);
+                this.testActions.fetchDetails(t);
+            });
+
+        this.selectedDetailSubscription = this.testState.selectedTestDetail
+            .subscribe(detail => this.selectedDetail = detail);
 
         /** Navigate to a test route if selected tab is changed **/
         this.selectedTestSubscription = this.testState.selectedTest.filter(t => t != null).subscribe(t => {
@@ -44,7 +71,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
         });
 
         this.lastTestSubscription = Observable.combineLatest(
-            this.routerState.path.filter(p => p === '/tests/editor').take(1),
+            this.routerState.path.filter(p => p === '/tests/open').take(1),
             this.testState.selectedTest.filter(t => t != null).take(1)
         ).subscribe(([u, t]) => {
             this.navigateToTest(t);
@@ -52,25 +79,40 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.openTestSubscription) {
+        this.selectedDetail = undefined;
+        this.openTests = [];
+        
+        if (this.routeSubscription) {
+            this.routeSubscription.unsubscribe();
+        }
+
+        if (this.openTestSubscription) {
             this.openTestSubscription.unsubscribe();
         }
 
-        if(this.selectedTestSubscription) {
+        if (this.selectedTestSubscription) {
             this.selectedTestSubscription.unsubscribe();
         }
 
-        if(this.lastTestSubscription) {
+        if (this.selectedDetailSubscription) {
+            this.selectedTestSubscription.unsubscribe();
+        }
+
+        if (this.lastTestSubscription) {
             this.lastTestSubscription.unsubscribe();
         }
     }
 
     onTabClosed(test:Test) {
+        if (this.openTests.length < 2) {
+            this.selectedDetail = undefined;
+        }
+
         this.testActions.removeTab(test);
     }
 
     onTabSelected(test:Test) {
-        this.testActions.selectTest(test);
+        this.navigateToTest(test);
     }
 
     openTestList() {
@@ -82,7 +124,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     }
 
     open(test: Test) {
-        this.testActions.addTab(test);
+        this.navigateToTest(test);
     }
 
     handleKeyUp(event:KeyboardEvent) {
@@ -91,12 +133,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    notifyError(error: any) {
-        this.alertService.add(new Alert("danger", error, false));
-    }
-
     private navigateToTest(test:Test) {
-        console.log("Navigate to " + test.name);
         this.router.navigate(['/tests', 'editor', test.name]);
     }
 }

@@ -1,34 +1,26 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {TestDetail} from "../../../model/tests";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
-import {ActivatedRoute} from "@angular/router";
-import {TestStateService, TestStateActions} from "../test.state";
 import {Subscription} from "rxjs";
 import {LoggingService} from "../../../service/logging.service";
 import {TestService} from "../../../service/test.service";
 import {SocketEvent} from "../../../model/socket.event";
-import * as moment from 'moment';
-import * as _ from 'lodash';
-import {Message} from "../../../model/message";
 
 @Component({
     selector: "test-detail",
     templateUrl: 'test-detail.html'
 })
-export class TestDetailComponent implements OnInit, OnDestroy {
+export class TestDetailComponent implements OnInit {
+
+    @Input() detail: TestDetail;
 
     constructor(private _alertService: AlertService,
                 private _testService: TestService,
-                private loggingService: LoggingService,
-                private testState:TestStateService,
-                private testAction:TestStateActions,
-                private route:ActivatedRoute) {}
+                private loggingService: LoggingService) {}
 
-    private routeSubscription: Subscription;
-    private detailSubscription: Subscription;
-
-    detail: TestDetail;
+    private logginOutputSubscription: Subscription;
+    private logginEventSubscription: Subscription;
 
     completed = 0;
     failed = false;
@@ -39,21 +31,7 @@ export class TestDetailComponent implements OnInit, OnDestroy {
     loggingFrame = "";
 
     ngOnInit() {
-        this.routeSubscription = this.route
-            .params
-            .filter(p => p['name'] != null)
-            .flatMap(({name}) => this.testState.getTestByName(name))
-            .filter(t => t != null)
-            .subscribe(t => {
-                this.testAction.addTab(t);
-                this.testAction.selectTest(t);
-                this.testAction.fetchDetails(t);
-            });
-
-        this.detailSubscription = this.testState.selectedTestDetail
-            .subscribe(detail => this.detail = detail);
-
-        this.loggingService.logOutput
+        this.logginOutputSubscription = this.loggingService.logOutput
             .subscribe((e: SocketEvent) => {
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
                 this.logs += e.msg;
@@ -61,17 +39,17 @@ export class TestDetailComponent implements OnInit, OnDestroy {
                 this.handle(e);
             });
 
-        this.loggingService.testEvents
+        this.logginEventSubscription = this.loggingService.testEvents
             .subscribe(this.handle);
     }
 
     ngOnDestroy(): void {
-        if(this.routeSubscription) {
-            this.routeSubscription.unsubscribe();
+        if(this.logginOutputSubscription) {
+            this.logginOutputSubscription.unsubscribe();
         }
 
-        if(this.detailSubscription) {
-            this.detailSubscription.unsubscribe();
+        if(this.logginEventSubscription) {
+            this.logginEventSubscription.unsubscribe();
         }
     }
 

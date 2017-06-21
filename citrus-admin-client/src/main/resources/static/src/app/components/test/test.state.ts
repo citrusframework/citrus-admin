@@ -30,9 +30,8 @@ export const TestStateInit:TestState = {
 
 @Injectable()
 export class TestStateEffects {
-    constructor(
-        private actions:AsyncActions,
-        private testService:TestService) {}
+    constructor(private actions:AsyncActions,
+                private testService:TestService) {}
     @Effect() package = this.actions
         .handleEffect(TestStateActions.PACKAGES, () => this.testService.getTestPackages());
 

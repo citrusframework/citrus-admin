@@ -3,8 +3,7 @@
         <a [routerLink]="entry.link">{{entry.name}}</a>
     </li>
 </ul>
-<div [class.clearfix]="navigation && pullRight"></div>
 
 <router-outlet></router-outlet>
 
-<div class="alert-console" type="detailed"></div>
+<div class="alert-dialog" type="detailed"></div>

@@ -450,6 +450,7 @@ public class ProjectService {
 
         allModules.stream()
                 .filter(name -> !name.equals("citrus-test"))
+                .map(name -> name.equals("citrus") ? "citrus-core" : name)
                 .map(name -> new Module(name.substring("citrus-".length()), getActiveProject().getVersion(), false))
                 .forEach(modules::add);
 

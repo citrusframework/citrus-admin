@@ -8,17 +8,19 @@
 <br/>
 
 <form>
-  <div class="row">
-    <div class="col-xs-3">
-      <input [(ngModel)]="newVariable.name" placeholder="Name" type="text" class="form-control" name="newVariableName"/>
-    </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-3">
+        <input [(ngModel)]="newVariable.name" placeholder="Name" type="text" class="form-control" name="newVariableName"/>
+      </div>
 
-    <div class="col-xs-5">
-      <input [(ngModel)]="newVariable.value" placeholder="Value" type="text" class="form-control" name="newVariableValue"/>
-    </div>
+      <div class="col-xs-5">
+        <input [(ngModel)]="newVariable.value" placeholder="Value" type="text" class="form-control" name="newVariableValue"/>
+      </div>
 
-    <button class="btn btn-primary" [disabled]="!newVariable.name || !newVariable.value" (click)="addVariable()" type="submit"><i class="fa fa-plus"></i> Add</button>
-    <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
+      <button class="btn btn-primary" [disabled]="!newVariable.name || !newVariable.value" (click)="addVariable()" type="submit"><i class="fa fa-plus"></i> Add</button>
+      <button class="btn btn-default" (click)="cancel()" type="reset">Cancel</button>
+    </div>
   </div>
 </form>
 

@@ -3,6 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
     selector: 'sidebar-menu',
     template:`
+  <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1">
             <ul class="nav nav-pills nav-stacked" style="display: inline-block;">
@@ -15,6 +16,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
           <ng-content></ng-content>
         </div>
     </div>
+  </div>  
   `
 })
 export class SidebarMenuComponent {

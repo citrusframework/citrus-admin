@@ -2,28 +2,30 @@
   <i class="fa fa-cubes"></i> Tests <small>Run tests</small>
 </h1>
 
-<div class="row">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li role="presentation">
-            <a role="menuitem" name="all" (click)="select(undefined)" class="clickable"><i class="fa fa-cubes"></i> All tests</a>
-          </li>
-          <li *ngFor="let package of packages|async" role="presentation">
-            <a role="menuitem" name="{{package.name}}" (click)="select(package)" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
-          </li>
-        </ul>
-      </span>
-      <input type="text" class="form-control" value="{{selected ? selected.name : 'All tests'}}">
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()"><i class="fa fa-play-circle"></i> Run</button>
-      </span>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="select(undefined)" class="clickable"><i class="fa fa-cubes"></i> All tests</a>
+            </li>
+            <li *ngFor="let package of packages|async" role="presentation">
+              <a role="menuitem" name="{{package.name}}" (click)="select(package)" class="clickable"><i class="fa fa-cubes"></i> {{package.name}}</a>
+            </li>
+          </ul>
+        </span>
+        <input type="text" class="form-control" value="{{selected ? selected.name : 'All tests'}}">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-success" [disabled]="running" (click)="execute()"><i class="fa fa-play-circle"></i> Run</button>
+        </span>
+      </div>
     </div>
-  </div>
-  <div class="col-lg-6">
-    <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
+    <div class="col-lg-6">
+      <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
+    </div>
   </div>
 </div>
 

@@ -3,7 +3,7 @@ import {TestAction, TestDetail} from "../../../../model/tests";
 
 @Component({
     selector: "test-designer",
-    template: `<div class="test-actions">
+    template: `<div class="test-actions fill">
       <div class="start-action">
         <i class="fa fa-play"></i>
       </div>

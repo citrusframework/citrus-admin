@@ -13,13 +13,11 @@ body {
     left: 0;
     z-index: 1000;
     display: block;
-    padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #eff6fb;
     border-right: 1px solid #eee;
-    padding-top: 0;
-    padding-left: 25px;
+    padding: 0 20px;
 }
 
 /* Sidebar navigation */
@@ -74,13 +72,25 @@ body {
  */
 
 .main {
-    padding-right: 20px;
-    padding-left: 20px;
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    padding-top: 20px;
+    padding-right: 40px;
+    padding-left: 40px;
 }
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     .main {
-        padding-right: 40px;
-        padding-left: 40px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .sidebar {
+        width: auto;
     }
 }
 .main .page-header {
@@ -154,6 +164,7 @@ a.alert-link {
 }
 
 .alert-console {
+    z-index: 2000;
     display: block;
     min-height: 1.5em;
 }
@@ -212,15 +223,20 @@ form {
     margin-left: 5px;
 }
 
+.fill {
+    height: 90%;
+}
+
 /** Tables **/
 
 .table > thead > tr > th {
-    background-color: #efefef;
+    background-color: #e3effc;
+    color: #333;
     border-bottom: 1px solid #ddd;
 }
 
 .table-hover > tbody > tr:hover {
-    background-color: #eff6fb;
+    background-color: #e3effc;
 }
 
 /** Boxing **/
@@ -281,13 +297,14 @@ form {
 }
 
 .modal-backdrop {
-    background-color: #ccc;
+    display: none;
 }
 
 /** Code editor **/
 
-.code-editor {
-    height: 800px;
+.ace-chrome .ace_gutter {
+    background-color: #e3effc !important;
+    color: #333 !important;
 }
 
 pre {
@@ -295,7 +312,7 @@ pre {
 }
 
 pre.logger {
-    height: 500px;
+    min-height: 500px;
     overflow-y: auto;
     overflow-x: auto;
     font-size: 12px;
@@ -397,8 +414,8 @@ pre.logger {
 /** TabComponent navigation **/
 
 .nav-tabs > li > a {
-    color: #fff;
-    background-color: #333;
+    color: #404040;
+    background-color: #eff6fb;
     border: 1px solid #dddddd;
     padding-right: 25px;
     cursor: pointer;
@@ -413,8 +430,8 @@ pre.logger {
 }
 
 .nav-tabs > li > a:hover {
-    color: #fff;
-    background-color: #0096D6;
+    color: #404040;
+    background-color: #e3effc;
     border-color: #dddddd;
 }
 
@@ -439,15 +456,15 @@ pre.logger {
 }
 
 .nav-pills > li > a {
-    background: #333;
-    color: #fff;
+    background: #eff6fb;
+    color: #333;
     text-align: center;
     margin: 1px;
 }
 
 .nav > li > a:hover,
 .nav > li > a:focus {
-    background: #0096D6;
+    background: #e3effc;
 }
 
 .nav-pills > li.active > a,
@@ -466,24 +483,20 @@ pre.logger {
     padding: 3px 15px;
     border-radius: 10px;
     margin: 0px 3px 0px 0px;
-    background: #333;
-    color: #fff;
+    border: 1px solid #e3effc;
+    background-color: #fff;
     cursor: pointer;
 }
 
 .pills-bar > li > a:hover {
-    background-color: #0096D6;
+    background-color: #e3effc;
 }
 
 .pills-bar > li.active > a,
-.pills-bar > li.active > a:focus {
-    background: #0096D6;
-    color: #fff;
-}
-
 .pills-bar > li.active > a:hover,
 .pills-bar > li.active > a:focus {
-    background-color: #0096D6;
+    background: #e3effc;
+    color: #333;
 }
 
 /** Container **/
@@ -522,7 +535,7 @@ fieldset[disabled] .btn.focus {
     opacity: .85;
     background-color: #eee;
     border-color: #ccc;
-    color: #fff;
+    color: #888;
 }
 
 .btn-primary {
@@ -614,7 +627,7 @@ fieldset[disabled] .btn.focus {
 }
 
 .label-java, .badge-java {
-    background-color: #f0ad4e;
+    background-color: #a94442;
 }
 
 .label-xml, .badge-xml {
@@ -632,7 +645,7 @@ fieldset[disabled] .btn.focus {
 
 .label-ssh, .label-ssh-client, .badge-ssh, .badge-ssh-client,
 .label-ssh-server, .badge-ssh-server {
-    background-color: #f42222;
+    background-color: #83a7f4;
 }
 
 .label-mail, .label-mail-client, .badge-mail, .badge-mail-client,
@@ -642,12 +655,12 @@ fieldset[disabled] .btn.focus {
 
 .label-jmx, .label-jmx-client, .badge-jmx, .badge-jmx-client,
 .label-jmx-server, .badge-jmx-server {
-    background-color: #e2da09;
+    background-color: #e29747;
 }
 
 .label-rmi, .label-rmi-client, .badge-rmi, .badge-rmi-client,
 .label-rmi-server, .badge-rmi-server {
-    background-color: #b6c11b;
+    background-color: #7dc134;
 }
 
 .label-ws, .label-ws-client, .badge-ws, .badge-ws-client,
@@ -664,17 +677,17 @@ fieldset[disabled] .btn.focus {
 }
 
 .label-vertx, .badge-vertx {
-    background-color: #b13fd2;
+    background-color: #a562ff;
 }
 
 .label-ftp, .label-ftp-client, .badge-ftp, .badge-ftp-client,
 .label-ftp-server, .badge-ftp-server {
-    background-color: #ff8dc3;
+    background-color: #78cdff;
 }
 
 .label-websocket, .label-websocket-client, .badge-websocket, .badge-websocket-client,
 .label-websocket-server, .badge-websocket-server {
-    background-color: #b06db8;
+    background-color: #30b891;
 }
 
 .label-docker, .label-docker-client, .badge-docker, .badge-docker-client,
@@ -689,12 +702,12 @@ fieldset[disabled] .btn.focus {
 
 .label-zookeeper, .label-zookeeper-client, .badge-zookeeper, .badge-zookeeper-client,
 .label-zookeeper-server, .badge-zookeeper-server {
-    background-color: #d63d2a;
+    background-color: #d66065;
 }
 
 .label-arquillian, .label-arquillian-client, .badge-arquillian, .badge-arquillian-client,
 .label-arquillian-server, .badge-arquillian-server {
-    background-color: #9cd638;
+    background-color: #374d85;
 }
 
 .label-k8s, .label-k8s-client, .badge-k8s, .badge-k8s-client,
@@ -830,7 +843,7 @@ i.channel {
 }
 
 .list-group-item:focus, .list-group-item:hover {
-    background-color: #efefef;
+    background-color: #e3effc;
 }
 
 /** Drop Down Menu **/
@@ -936,7 +949,7 @@ i.channel {
     border: 1px solid #ddd;
     padding-top: 30px;
     padding-bottom: 30px;
-    max-height: 850px;
+    min-height: 500px;
     overflow-y: scroll;
 }
 

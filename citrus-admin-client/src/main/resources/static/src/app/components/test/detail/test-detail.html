@@ -1,9 +1,16 @@
-<div *ngIf="detail">
-  <h4 class="box"><i class="fa fa-play-circle color-success clickable" (click)="execute()"></i> {{detail.name}} <span class="badge badge-success clickable pull-right" (click)="execute()" title="Run test"><i class="fa fa-play-circle"></i> Run</span></h4>
+<div *ngIf="detail" class="fill">
+  <h4 class="box">
+    <i *ngIf="!detail.running" class="fa fa-play-circle color-success clickable" (click)="execute()"></i>
+    <i *ngIf="detail.running" class="fa fa-stop-circle color-danger"></i> {{detail.name}} <span *ngIf="!detail.running" class="badge badge-success clickable pull-right" (click)="execute()" title="Run test"><i class="fa fa-play-circle"></i> Run</span><span *ngIf="detail.running" class="badge badge-danger pull-right" title="Run test"><i class="fa fa-stop-circle"></i> Run</span></h4>
+  &nbsp;&nbsp;&nbsp;<i class="fa fa-info-circle"></i>
   <b>Author: </b><span class="label label-primary" [textContent]="detail.author ? detail.author : 'Unknown'"></span>
   <b>Status: </b><span class="label label-primary" [textContent]="detail.status ? detail.status : 'FINAL'"></span>
   <b *ngIf="detail.packageName">Package: </b><span *ngIf="detail.packageName" class="label label-primary">{{detail.packageName}}</span>
-  <b *ngIf="detail.result">Result: </b><span [class]="!detail.result || detail.result.success ? 'label label-success clickable' : 'label label-danger clickable'" (click)="show('RESULTS')" alt="View result details" [textContent]="!detail.result || detail.result.success ? 'SUCCESS' : 'FAILED'"></span>
+  <b>Last Result: </b><span *ngIf="!detail.running && detail.result" [class]="!detail.result || detail.result.success ? 'label label-success' : 'label label-danger'" [textContent]="!detail.result || detail.result.success ? 'SUCCESS' : 'FAILED'"></span>
+  <span *ngIf="!detail.running && !detail.result" class="label label-default">NO_RESULTS</span>
+  <span *ngIf="detail.running" class="label label-warning">RUNNING</span>
+
+  <img *ngIf="detail.running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
 
   <pills navigation="true">
     <pill pill-id="sources" pill-title="Sources" active="true" pill-icon="fa fa-code">
@@ -16,13 +23,15 @@
     </pill>
     <pill pill-id="logs" pill-title="Logs" pill-icon="fa fa-newspaper-o">
       <div class="space-top-30"></div>
-      <pre class="logger" [textContent]="logs"></pre>
+      <p>Logging Output:</p>
+      <pre class="logger fill" [textContent]="logs"></pre>
     </pill>
-    <pill pill-id="results" pill-title="Results" pill-icon="fa fa-bar-chart-o" [disabled]="!detail.result">
+    <pill pill-id="results" pill-title="Results" pill-icon="fa fa-bar-chart-o">
       <div class="space-top-30"></div>
       <test-progress [completed]="completed" [failed]="failed"></test-progress>
       <test-result [detail]="detail"></test-result>
       <test-messages [detail]="detail"></test-messages>
+      <p>Logging Output:</p>
       <pre class="logger" [textContent]="loggingFrame"></pre>
     </pill>
   </pills>
