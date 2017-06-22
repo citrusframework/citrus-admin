@@ -30,7 +30,8 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
     private String testPlugin = "maven-failsafe";
     private String command;
     private String profiles = "";
-    private boolean useClean = false;
+    private boolean clean = false;
+    private boolean compile = true;
 
     public MavenBuildConfiguration() {
         super("maven");
@@ -91,21 +92,39 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
     }
 
     /**
-     * Sets the useClean property.
+     * Sets the clean property.
      *
-     * @param useClean
+     * @param clean
      */
-    public void setUseClean(boolean useClean) {
-        this.useClean = useClean;
+    public void setClean(boolean clean) {
+        this.clean = clean;
     }
 
     /**
-     * Gets the value of the useClean property.
+     * Gets the value of the clean property.
      *
-     * @return the useClean
+     * @return the clean
      */
-    public boolean isUseClean() {
-        return useClean;
+    public boolean isClean() {
+        return clean;
+    }
+
+    /**
+     * Gets the compile.
+     *
+     * @return
+     */
+    public boolean isCompile() {
+        return compile;
+    }
+
+    /**
+     * Sets the compile.
+     *
+     * @param compile
+     */
+    public void setCompile(boolean compile) {
+        this.compile = compile;
     }
 
     /**

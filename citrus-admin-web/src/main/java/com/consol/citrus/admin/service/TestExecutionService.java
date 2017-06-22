@@ -62,8 +62,12 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (buildConfiguration.isUseClean()) {
+        if (buildConfiguration.isClean()) {
             command.clean();
+        }
+
+        if (buildConfiguration.isCompile()) {
+            command.compile();
         }
 
         if (StringUtils.hasText(buildConfiguration.getCommand())) {
@@ -101,8 +105,12 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (buildConfiguration.isUseClean()) {
+        if (buildConfiguration.isClean()) {
             command.clean();
+        }
+
+        if (buildConfiguration.isCompile()) {
+            command.compile();
         }
 
         if (StringUtils.hasText(buildConfiguration.getCommand())) {
@@ -139,8 +147,12 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (buildConfiguration.isUseClean()) {
+        if (buildConfiguration.isClean()) {
             command.clean();
+        }
+
+        if (buildConfiguration.isCompile()) {
+            command.compile();
         }
 
         if (StringUtils.hasText(buildConfiguration.getCommand())) {

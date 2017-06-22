@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class MavenRunTestsCommand extends MavenCommand {
 
-    private static final String TEST = "surefire:test ";
-    private static final String INTEGRATION_TEST = "failsafe:integration-test ";
+    private static final String TEST = "test ";
+    private static final String INTEGRATION_TEST = "integration-test ";
 
     /** Test or group to execute */
     private TestGroup group;

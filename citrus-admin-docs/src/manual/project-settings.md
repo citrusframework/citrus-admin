@@ -30,7 +30,8 @@ If you save the project settings the administration UI will save the changes to 
        "type" : "maven",
        "properties" : [ ],
        "testPlugin" : "maven-failsafe",
-       "useClean" : false,
+       "clean" : false,
+       "compile" : true,
        "command" : null,
        "profiles" : null
      }

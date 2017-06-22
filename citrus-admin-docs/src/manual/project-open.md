@@ -101,7 +101,8 @@ automatically. But now we want to create this file manually in order to set cust
       "testPlugin" : "maven-failsafe",
       "command" : null,
       "profiles" : "",
-      "useClean" : false
+      "clean" : false,
+      "compile" : true
     }
   }
 }

@@ -36,7 +36,8 @@ export class BuildConfiguration {
 
     public type: string;
     public command: string;
-    public useClean: boolean;
+    public clean: boolean;
+    public compile: boolean;
     public profiles: string;
     public properties: BuildProperty[];
 }
