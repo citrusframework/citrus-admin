@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service.executor.maven;
+package com.consol.citrus.admin.service.command.maven;
 
 import com.consol.citrus.admin.model.build.BuildProperty;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
-import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
+import com.consol.citrus.admin.process.listener.ProcessListener;
+import com.consol.citrus.admin.service.command.AbstractTerminalCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -30,13 +31,14 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class MavenCommand extends AbstractExecuteCommand {
+public class MavenCommand extends AbstractTerminalCommand {
 
-    protected static final String MVN = "mvn ";
+    private static final String MVN = "mvn ";
     protected static final String CLEAN = "clean ";
     protected static final String COMPILE = "compile ";
-    protected static final String TEST = "surefire:test ";
-    protected static final String INTEGRATION_TEST = "failsafe:integration-test ";
+    protected static final String PACKAGE = "package ";
+    protected static final String INSTALL = "install ";
+    protected static final String VERIFY = "verify ";
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MavenCommand.class);
@@ -44,13 +46,16 @@ public class MavenCommand extends AbstractExecuteCommand {
     /** Maven build configuration */
     private final MavenBuildConfiguration buildConfiguration;
 
+    protected String lifecycleCommand = "";
+
     /**
      * Constructor for executing a command.
      * @param workingDirectory
      * @param buildConfiguration
+     * @param shellListeners
      */
-    public MavenCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration) {
-        super(workingDirectory);
+    public MavenCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration, ProcessListener... shellListeners) {
+        super(workingDirectory, shellListeners);
         this.buildConfiguration = buildConfiguration;
     }
 
@@ -58,7 +63,7 @@ public class MavenCommand extends AbstractExecuteCommand {
      * Build the execute command.
      * @return
      */
-    protected String buildCommand() {
+    public String buildCommand() {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.hasText(buildConfiguration.getMavenHome())) {
             builder.append(buildConfiguration.getMavenHome() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + MVN);
@@ -66,7 +71,7 @@ public class MavenCommand extends AbstractExecuteCommand {
             builder.append(MVN);
         }
 
-        builder.append(getLifeCycleCommand());
+        builder.append(lifecycleCommand);
 
         for (BuildProperty propertyEntry: getSystemProperties()) {
             builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
@@ -79,6 +84,61 @@ public class MavenCommand extends AbstractExecuteCommand {
         log.debug("Using Maven command: " + builder.toString());
 
         return builder.toString();
+    }
+
+    /**
+     * Use clean command.
+     * @return
+     */
+    public MavenCommand clean() {
+        lifecycleCommand += CLEAN;
+        return this;
+    }
+
+    /**
+     * Use compile command.
+     * @return
+     */
+    public MavenCommand compile() {
+        lifecycleCommand += COMPILE;
+        return this;
+    }
+
+    /**
+     * Use package command.
+     * @return
+     */
+    public MavenCommand packaging() {
+        lifecycleCommand += PACKAGE;
+        return this;
+    }
+
+    /**
+     * Use install command.
+     * @return
+     */
+    public MavenCommand install() {
+        lifecycleCommand += INSTALL;
+        return this;
+    }
+
+    /**
+     * Use verify command.
+     * @return
+     */
+    public MavenCommand verify() {
+        lifecycleCommand += VERIFY;
+        return this;
+    }
+
+    /**
+     * Use custom lifecycle command.
+     * @param command
+     * @return
+     */
+    public MavenCommand custom(String command) {
+        lifecycleCommand += command;
+        return this;
     }
 
     /**
@@ -99,10 +159,6 @@ public class MavenCommand extends AbstractExecuteCommand {
      */
     public MavenBuildConfiguration getBuildConfiguration() {
         return buildConfiguration;
-    }
-
-    protected String getLifeCycleCommand() {
-        return "";
     }
 
     protected String getActiveProfiles() {

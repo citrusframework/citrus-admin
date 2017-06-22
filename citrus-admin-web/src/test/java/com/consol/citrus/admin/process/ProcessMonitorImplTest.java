@@ -108,10 +108,10 @@ public class ProcessMonitorImplTest {
 
         // stop known process
         testling.add(processLauncherMock1);
-        testling.stopProcess("p1");
+        testling.stop("p1");
 
         // stop unknown process
-        testling.stopProcess("p2");
+        testling.stop("p2");
     }
 
     @Test
@@ -124,6 +124,6 @@ public class ProcessMonitorImplTest {
         testling.add(processLauncherMock1);
         testling.add(processLauncherMock2);
 
-        testling.stopAllProcesses();
+        testling.stopAll();
     }
 }

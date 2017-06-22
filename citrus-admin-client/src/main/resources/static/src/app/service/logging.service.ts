@@ -26,7 +26,7 @@ export class LoggingService {
     constructor(
        private stompConnection:StompConnectionService
     ) {
-        this.stomp = stompConnection.getConnection('/api/logging')
+        this.stomp = stompConnection.getConnection('/api/socket')
     }
 
     private getConnectedTopicObservable(topic:string) {

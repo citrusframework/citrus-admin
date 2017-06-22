@@ -21,8 +21,16 @@ import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.model.maven.Archetype;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.admin.service.command.filesystem.DeleteCommand;
+import com.consol.citrus.admin.service.command.filesystem.MoveCommand;
+import com.consol.citrus.admin.service.command.git.GitCommand;
+import com.consol.citrus.admin.service.command.maven.MavenArchetypeCommand;
+import com.consol.citrus.admin.service.command.util.CurlCommand;
+import com.consol.citrus.admin.service.command.util.UnzipCommand;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -46,6 +54,8 @@ import org.w3c.dom.*;
 import javax.annotation.PostConstruct;
 import javax.xml.xpath.XPathConstants;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,6 +82,9 @@ public class ProjectService {
     private SpringJavaConfigService springJavaConfigService;
 
     @Autowired
+    private TerminalService terminalService;
+
+    @Autowired
     private Environment environment;
 
     /** Logger */
@@ -82,6 +95,11 @@ public class ProjectService {
         String defaultProjectHome = System.getProperty(Application.PROJECT_HOME, System.getenv(Application.PROJECT_HOME_ENV));
         if (project == null && StringUtils.hasText(defaultProjectHome)) {
             load(defaultProjectHome);
+        }
+
+        String projectRepository = System.getProperty(Application.PROJECT_REPOSITORY, System.getenv(Application.PROJECT_REPOSITORY_ENV));
+        if (project == null && StringUtils.hasText(projectRepository)) {
+            create(projectRepository);
         }
     }
 
@@ -159,6 +177,52 @@ public class ProjectService {
             }
         }
         System.setProperty(Application.PROJECT_HOME, projectHomeDir);
+    }
+
+    /**
+     * Create and open new project from repository url.
+     * @param repository
+     * @return
+     */
+    public Project create(String repository) {
+        try {
+            File rootDirectory = new File(Application.getWorkingDirectory());
+            String cloneTarget = repository.substring(repository.lastIndexOf('/') + 1, repository.length() - ".git".length());
+            boolean gitCloneSuccess = terminalService.executeAndWait(new GitCommand(rootDirectory).version()) &&
+                    terminalService.executeAndWait(new GitCommand(rootDirectory)
+                            .clone(new URL(repository), cloneTarget));
+
+            if (!gitCloneSuccess && terminalService.executeAndWait(new CurlCommand(rootDirectory).get(new URL(getCloneDownloadUrl(repository)), cloneTarget + ".zip"))) {
+                terminalService.executeAndWait(new UnzipCommand(rootDirectory).archive(cloneTarget + ".zip"));
+
+                terminalService.executeAndWait(new MoveCommand(rootDirectory)
+                        .source(cloneTarget + File.separator + "**/*")
+                        .target(cloneTarget));
+
+                terminalService.executeAndWait(new DeleteCommand(rootDirectory)
+                        .file(cloneTarget + ".zip"));
+            }
+
+            load(Application.getWorkingDirectory() + File.separator + cloneTarget);
+            return getActiveProject();
+        } catch (MalformedURLException e) {
+            throw new ApplicationRuntimeException("Invalid project repository url", e);
+        }
+    }
+
+    /**
+     * Create and open new project from Maven archetype.
+     * @param archetype
+     * @return
+     */
+    public Project create(Archetype archetype) {
+        if (terminalService.executeAndWait(new MavenArchetypeCommand(new File(Application.getWorkingDirectory()), new MavenBuildConfiguration())
+                .generate(archetype))) {
+            load(Application.getWorkingDirectory() + File.separator + archetype.getArtifactId());
+            return getActiveProject();
+        } else {
+            throw new ApplicationRuntimeException("Failed to create project from Maven archetype");
+        }
     }
 
     /**
@@ -517,6 +581,22 @@ public class ProjectService {
                 throw new ApplicationRuntimeException("Failed to remove Citrus module dependency from Maven pom.xml file", e);
             }
         }
+    }
+
+    /**
+     * Construct proper clone zip download url from git repository url. Return proper download url based on git
+     * repository server (github, gitlab).
+     * @param repository
+     * @return
+     */
+    public String getCloneDownloadUrl(String repository) {
+        if (repository.contains("gitlab")) {
+            return repository.substring(0, (repository.length() - ".git".length())) + "/repository/archive.zip?ref=master";
+        } else if (repository.startsWith("https://github.com")) {
+            return String.format("https://codeload.github.com/%s/zip/master", repository.substring("https://github.com/".length(), (repository.length() - ".git".length())));
+        }
+
+        throw new ApplicationRuntimeException("Unable to create zip download url for git repository: " + repository);
     }
 
     /**

@@ -11,9 +11,9 @@
 
   <context:component-scan base-package="com.consol.citrus.admin.converter"/>
   <context:component-scan base-package="com.consol.citrus.admin.process"/>
-  <context:component-scan base-package="com.consol.citrus.admin.service.executor.maven"/>
   <context:component-scan base-package="com.consol.citrus.admin.web"/>
 
+  <bean class="com.consol.citrus.admin.service.local.LocalTerminalService"/>
   <bean class="com.consol.citrus.admin.service.TestCaseService"/>
   <bean class="com.consol.citrus.admin.service.ProjectService"/>
   <bean class="com.consol.citrus.admin.service.FileBrowserService"/>

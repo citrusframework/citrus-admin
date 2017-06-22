@@ -12,6 +12,7 @@ import {DashboardComponent} from './components/project/dashboard.component';
 import {ReportComponent} from './components/report/report.component';
 
 import {OpenProjectComponent} from "./components/project/project.open.component";
+import {NewProjectComponent} from "./components/project/project.new.component";
 import {SetupComponent} from "./components/setup.component";
 import {ConfigurationModule} from "./components/configuration/configuration.module";
 import {UtilComponentsModule} from "./components/util/util.module";
@@ -44,6 +45,7 @@ import {StateModule} from "./state.module";
         DashboardComponent,
         ReportComponent,
         OpenProjectComponent,
+        NewProjectComponent,
         SetupComponent
     ],
     providers: [

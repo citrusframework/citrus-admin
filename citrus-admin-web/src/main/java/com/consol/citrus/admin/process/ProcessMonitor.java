@@ -41,6 +41,13 @@ public interface ProcessMonitor {
     void remove(ProcessLauncher processLauncher);
 
     /**
+     * Gets the process with given id.
+     * @param processId
+     * @return
+     */
+    ProcessLauncher get(String processId);
+
+    /**
      * Returns the IDs of all active processes.
      * @return
      */
@@ -54,10 +61,10 @@ public interface ProcessMonitor {
      *
      * @param processId
      */
-    void stopProcess(String processId);
+    void stop(String processId);
 
     /**
      * Used for terminating all active process.
      */
-    void stopAllProcesses();
+    void stopAll();
 }

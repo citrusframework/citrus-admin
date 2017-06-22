@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
  * @author Christoph Deppisch
  */
 @Component
-public class WebSocketProcessListener implements ProcessListener {
+public class WebSocketProcessListener extends AbstractProcessListener {
 
     private static final String TOPIC_LOG_OUTPUT = "/topic/log-output";
     private static final String TOPIC_TEST_EVENTS = "/topic/test-events";

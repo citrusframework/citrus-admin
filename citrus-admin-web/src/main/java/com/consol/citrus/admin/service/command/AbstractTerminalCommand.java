@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service.executor;
+package com.consol.citrus.admin.service.command;
 
+import com.consol.citrus.admin.process.listener.ProcessListener;
 import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ import java.util.List;
  *
  * @author Martin.Maher@consol.de
  */
-public abstract class AbstractExecuteCommand {
+public abstract class AbstractTerminalCommand implements TerminalCommand {
 
     /** Logger */
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -41,18 +42,32 @@ public abstract class AbstractExecuteCommand {
 
     private File workingDirectory;
 
+    private List<String> arguments = new ArrayList<>();
+
+    private ProcessListener[] shellListeners;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractTerminalCommand() {
+        super();
+    }
+
     /**
      * Constructor initializes with working directory.
      * @param workingDirectory the working directory where the command is to be executed from
+     * @param shellListeners
      */
-    public AbstractExecuteCommand(File workingDirectory) {
+    public AbstractTerminalCommand(File workingDirectory, ProcessListener... shellListeners) {
         this.workingDirectory = workingDirectory;
+        this.shellListeners = shellListeners;
     }
 
+    @Override
     public ProcessBuilder getProcessBuilder() {
         validateWorkingDirectory(workingDirectory);
 
-        List<String> commands = new ArrayList<String>();
+        List<String> commands = new ArrayList<>();
         if (SystemUtils.IS_OS_UNIX) {
             commands.add(BASH);
             commands.add(BASH_OPTION_C);
@@ -70,15 +85,71 @@ public abstract class AbstractExecuteCommand {
         return pb;
     }
 
-    protected abstract String buildCommand();
+    @Override
+    public ProcessBuilder getShell() {
+        validateWorkingDirectory(workingDirectory);
 
-    private void validateWorkingDirectory(File workingDirectory) {
+        List<String> commands = new ArrayList<>();
+        if (SystemUtils.IS_OS_UNIX) {
+            commands.add(BASH);
+        } else {
+            commands.add(CMD);
+        }
+
+        ProcessBuilder pb = new ProcessBuilder(commands);
+        pb.directory(workingDirectory);
+        return pb;
+    }
+
+    /**
+     * Validate the working directory.
+     * @param workingDirectory
+     */
+    protected void validateWorkingDirectory(File workingDirectory) {
         if (workingDirectory == null) {
             throw new IllegalStateException("Working directory has not been set");
         }
+
         if (!workingDirectory.isDirectory()) {
             throw new IllegalStateException(String.format("Invalid working directory '%s'", workingDirectory.getAbsolutePath()));
         }
+    }
+
+    /**
+     * Gets the arguments.
+     *
+     * @return
+     */
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Sets the workingDirectory.
+     *
+     * @param workingDirectory
+     */
+    public void setWorkingDirectory(File workingDirectory) {
+        this.workingDirectory = workingDirectory;
+    }
+
+    /**
+     * Gets the workingDirectory.
+     *
+     * @return
+     */
+    public File getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    /**
+     * Gets the shellListeners.
+     *
+     * @return
+     */
+    @Override
+    public ProcessListener[] getShellListeners() {
+        return shellListeners;
     }
 }
 

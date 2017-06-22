@@ -32,6 +32,12 @@ public class Application extends SpringBootServletInitializer {
     public static final String PROJECT_HOME_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_HOME";
     public static final String ROOT_DIRECTORY = CITRUS_ADMIN_PREFIX + "root.directory";
     public static final String ROOT_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "ROOT_DIRECTORY";
+    public static final String WORKING_DIRECTORY = CITRUS_ADMIN_PREFIX + "working.directory";
+    public static final String WORKING_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "WORKING_DIRECTORY";
+
+    /** Git repository to load on startup */
+    public static final String PROJECT_REPOSITORY = CITRUS_ADMIN_PREFIX + "project.repository";
+    public static final String PROJECT_REPOSITORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY";
 
     /** Base package for test cases to look for */
     public static final String BASE_PACKAGE = CITRUS_ADMIN_PREFIX + "test.base.package";
@@ -58,6 +64,14 @@ public class Application extends SpringBootServletInitializer {
      */
     public static String getRootDirectory() {
         return System.getProperty(ROOT_DIRECTORY, System.getenv(ROOT_DIRECTORY_ENV) != null ? System.getenv(ROOT_DIRECTORY_ENV) : System.getProperty("user.home"));
+    }
+
+    /**
+     * Gets the working directory from system property. By default this is the root directory.
+     * @return
+     */
+    public static String getWorkingDirectory() {
+        return System.getProperty(WORKING_DIRECTORY, System.getenv(WORKING_DIRECTORY_ENV) != null ? System.getenv(WORKING_DIRECTORY_ENV) : getRootDirectory());
     }
 
     @Override

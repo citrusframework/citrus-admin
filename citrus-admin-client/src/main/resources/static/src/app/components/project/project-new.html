@@ -1,0 +1,116 @@
+<div class="container space-top-30">
+  <h1 class="page-header">New project</h1>
+
+  <form class="form-horizontal" (ngSubmit)="onSubmit()">
+    <fieldset>
+      <legend>Git repository</legend>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Repository URL</label>
+
+        <div class="col-sm-10">
+          <input [(ngModel)]="repositoryUrl" type="text" class="form-control" placeholder="Repository URL" name="repositoryUrl" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-primary" type="submit" [disabled]="repositoryUrl?.length > 0 ? false : true">Load project</button>
+          <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <form class="form-horizontal" (ngSubmit)="onSubmit()">
+    <fieldset>
+      <legend>Maven Archetype</legend>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">GroupId</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.archetypeGroupId" type="text" class="form-control" placeholder="GroupId" name="archetypeGroupId" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">ArtifactId</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.archetypeArtifactId" type="text" class="form-control" placeholder="ArtifactId" name="archetypeArtifactId" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Version</label>
+        <div class="col-sm-10">
+          <select [(ngModel)]="archetype.archetypeVersion" class="form-control" name="archetypeVersion">
+            <option value="2.7.2-SNAPSHOT">2.7.2-SNAPSHOT</option>
+            <option value="2.7.1">2.7.1</option>
+            <option value="2.7">2.7</option>
+            <option value="2.6.2">2.6.2</option>
+            <option value="2.6.1">2.6.1</option>
+            <option value="2.6">2.6</option>
+            <option value="2.5.2">2.5.2</option>
+            <option value="2.5.1">2.5.1</option>
+            <option value="2.5">2.5</option>
+            <option value="2.4">2.4</option>
+            <option value="2.3">2.3</option>
+            <option value="2.2">2.2</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Project</legend>
+      
+      <div class="form-group">
+        <label class="col-sm-2 control-label">GroupId</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.groupId" type="text" class="form-control" placeholder="GroupId" name="groupId" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">ArtifactId</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.artifactId" type="text" class="form-control" placeholder="ArtifactId" name="artifactId" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Version</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.version" type="text" class="form-control" placeholder="Version" name="version" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Package</label>
+        <div class="col-sm-10">
+          <input [(ngModel)]="archetype.packageName" type="text" class="form-control" placeholder="Package" name="packageName" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-primary" type="submit" [disabled]="(archetype.groupId?.length > 0 && archetype.artifactId?.length > 0) ? false : true">Create project</button>
+          <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Error!</strong>&nbsp;Failed to create new project.
+    <p>&nbsp;</p>
+    <p><strong>What happened!?</strong></p>
+    <p [textContent]="error.message"></p>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" (click)="clearSuccess()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
+  </div>
+</div>

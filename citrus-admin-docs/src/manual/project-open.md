@@ -45,6 +45,8 @@ You can set the following system properties:
 | server.port                | Web server port                       |
 | citrus.admin.project.home               | Preselect project on startup          |
 | citrus.admin.root.directory             | System root as base of all projects (default: user home directory) |
+| citrus.admin.working.directory          | Base directory for new projects (default: root directory) |
+| citrus.admin.project.repository         | Git project repository to load on startup (default: not set) |
 | citrus.admin.java.source.directory      | Java sources directory (default: *src/test/java*)         |
 | citrus.admin.xml.source.directory       | XML test sources directory (default: *src/test/resources*) |
 | citrus.admin.spring.application.context | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |
@@ -64,6 +66,8 @@ The exact same properties are also available when set as environment variables:
 | -------------------------- | ------------------------------------- |
 | CITRUS_ADMIN_PROJECT_HOME               | Preselect project on startup          |
 | CITRUS_ADMIN_ROOT_DIRECTORY             | System root as base of all projects (default: user home directory) |
+| CITRUS_ADMIN_WORKING_DIRECTORY          | Base directory for new projects (default: root directory) |
+| CITRUS_ADMIN_PROJECT_REPOSITORY         | Git project repository to load on startup (default: not set) |
 | CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY      | Java sources directory (default: *src/test/java*)         |
 | CITRUS_ADMIN_XML_SOURCE_DIRECTORY       | XML test sources directory (default: *src/test/resources*) |
 | CITRUS_ADMIN_SPRING_APPLICATION_CONTEXT | Path to Spring application context file (default: *src/test/resources/citrus-context.xml*) |

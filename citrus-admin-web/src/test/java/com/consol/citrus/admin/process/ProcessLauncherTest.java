@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.process;
 
 import com.consol.citrus.admin.process.listener.ProcessListener;
-import com.consol.citrus.admin.service.executor.AbstractExecuteCommand;
+import com.consol.citrus.admin.process.local.LocalProcessLauncher;
+import com.consol.citrus.admin.service.command.AbstractTerminalCommand;
+import com.consol.citrus.admin.service.command.TerminalCommand;
 import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class ProcessLauncherTest {
     private final static int FAILED_EXIT_CODE = 2;
     private final static int FAILED_EXCEPTION = 3;
 
-    private List<Boolean> callbacks = Arrays.asList(new Boolean[]{false, false, false, false});
+    private List<Boolean> callbacks = Arrays.asList(false, false, false, false);
 
     private ProcessMonitor processMonitor;
 
@@ -57,38 +59,37 @@ public class ProcessLauncherTest {
 
     @Test
     public void testSyncSuccess_noMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(1);
-        ProcessLauncher pl = launchAndWait(pb, "sync-success-no-timeout");
-        assertSuccess(pl);
+        TerminalCommand command = getSleepCommand(1);
+        launchAndWait(command, "sync-success-no-timeout");
+        assertSuccess(true);
     }
 
     @Test
     public void testSyncSuccess_withMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(1);
-        ProcessLauncher pl = launchAndWait(pb, "sync-success-with-timeout", 5);
-        assertSuccess(pl);
+        TerminalCommand command = getSleepCommand(1);
+        launchAndWait(command, "sync-success-with-timeout", 5);
+        assertSuccess(true);
     }
 
     @Test
     public void testSyncFailed_exceededMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(5);
-        ProcessLauncher pl = launchAndWait(pb, "sync-failed-timeout", 2);
-        assertFailed(pl);
+        TerminalCommand command = getSleepCommand(5);
+        launchAndWait(command, "sync-failed-timeout", 2);
+        assertFailed(true);
     }
 
     @Test
     public void testAsyncSuccess_noMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(3);
-        ProcessLauncher pl = launchAndContinue(pb, "async-success-no-timeout");
+        TerminalCommand command = getSleepCommand(3);
+        ProcessLauncher pl = launchAndContinue(command, "async-success-no-timeout");
 
         // check started
         Thread.sleep(1000);
-        Assert.assertFalse(pl.isComplete());
-        assertStarted(pl);
+        assertStarted();
 
         // check completed successfully
         Thread.sleep(3000);
-        assertSuccess(pl);
+        assertSuccess(false);
 
         // check calling stop on stopped process is OK
         pl.stop();
@@ -97,83 +98,78 @@ public class ProcessLauncherTest {
 
     @Test
     public void testAsyncSuccess_withMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(2);
-        ProcessLauncher pl = launchAndContinue(pb, "async-success-with-timeout", 3);
+        TerminalCommand command = getSleepCommand(2);
+        launchAndContinue(command, "async-success-with-timeout", 3);
 
         // check started
         Thread.sleep(1000);
-        Assert.assertFalse(pl.isComplete());
-        assertStarted(pl);
+        assertStarted();
 
         // check completed successfully
         Thread.sleep(2000);
-        assertSuccess(pl);
+        assertSuccess(false);
     }
 
     @Test
     public void testAsyncFailed_exceededMaxExecutionTime() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(5);
-        ProcessLauncher pl = launchAndContinue(pb, "async-failed-timeout", 2);
+        TerminalCommand command = getSleepCommand(5);
+        launchAndContinue(command, "async-failed-timeout", 2);
 
         // check started
         Thread.sleep(1000);
-        Assert.assertFalse(pl.isComplete());
-        assertStarted(pl);
+        assertStarted();
 
         // check failed
         Thread.sleep(5000);
-        assertFailed(pl);
+        assertFailed(false);
     }
 
     @Test
     public void testAsyncFailed_stopped() throws Exception {
-        ProcessBuilder pb = getSleepProcessBuilder(5);
-        ProcessLauncher pl = launchAndContinue(pb, "async-failed-stopped", 2);
+        TerminalCommand command = getSleepCommand(5);
+        ProcessLauncher pl = launchAndContinue(command, "async-failed-stopped", 2);
 
         // check started
         Thread.sleep(1000);
-        Assert.assertFalse(pl.isComplete());
-        assertStarted(pl);
+        assertStarted();
 
         // stop
         pl.stop();
 
         // check failed
         Thread.sleep(5000);
-        assertFailed(pl);
+        assertFailed(true);
     }
 
-    private ProcessBuilder getSleepProcessBuilder(int sleepInSeconds) throws InterruptedException {
+    private TerminalCommand getSleepCommand(int sleepInSeconds) throws InterruptedException {
         String command;
         if (SystemUtils.IS_OS_UNIX) {
             command = String.format("ping -c %s 127.0.0.1", sleepInSeconds);
         } else {
             command = String.format("ping -n %s 127.0.0.1", sleepInSeconds);
         }
-        return new AbstractExecuteCommand(new File(System.getProperty("user.dir"))) { public String buildCommand() { return command; } }.getProcessBuilder();
+        return new AbstractTerminalCommand(new File(System.getProperty("user.dir"))) { public String buildCommand() { return command; } };
     }
 
-    private ProcessLauncher launchAndWait(ProcessBuilder processBuilder, String processName) throws InterruptedException {
-        return launchAndWait(processBuilder, processName, 0);
+    private ProcessLauncher launchAndWait(TerminalCommand command, String processName) throws InterruptedException {
+        return launchAndWait(command, processName, 0);
     }
 
-    private ProcessLauncher launchAndWait(ProcessBuilder processBuilder, String processName, int maxExecutionTime) throws InterruptedException {
+    private ProcessLauncher launchAndWait(TerminalCommand command, String processName, int maxExecutionTime) throws InterruptedException {
         ProcessListener pli = getProcessListener(callbacks);
-        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, processName);
-        pla.addProcessListener(pli);
-        pla.launchAndWait(processBuilder, maxExecutionTime);
+        LocalProcessLauncher pla = new LocalProcessLauncher(processMonitor, processName);
+        pla.launchAndWait(command, maxExecutionTime, pli);
         return pla;
     }
 
-    private ProcessLauncher launchAndContinue(ProcessBuilder processBuilder, String processName) throws InterruptedException {
-        return launchAndContinue(processBuilder, processName, 0);
+    private ProcessLauncher launchAndContinue(TerminalCommand command, String processName) throws InterruptedException {
+        return launchAndContinue(command, processName, 0);
     }
 
-    private ProcessLauncher launchAndContinue(ProcessBuilder processBuilder, String processName, int maxExecutionTime) throws InterruptedException {
+    private ProcessLauncher launchAndContinue(TerminalCommand command, String processName, int maxExecutionTime) throws InterruptedException {
         ProcessListener pli = getProcessListener(callbacks);
-        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, processName);
-        pla.addProcessListener(pli);
-        pla.launchAndContinue(processBuilder, maxExecutionTime);
+        LocalProcessLauncher pla = new LocalProcessLauncher(processMonitor, processName);
+        pla.launchAndContinue(command, maxExecutionTime, pli);
         return pla;
     }
 
@@ -186,23 +182,23 @@ public class ProcessLauncherTest {
         return new ProcessListener() {
             public void onProcessStart(String processId) {
                 System.out.println("Starting:" + processId + ", " + new Date());
-                callbacks.set(0, Boolean.TRUE);
+                callbacks.set(STARTED, Boolean.TRUE);
             }
 
             public void onProcessSuccess(String processId) {
                 System.out.println("Success:" + processId);
-                callbacks.set(1, Boolean.TRUE);
+                callbacks.set(SUCCESS, Boolean.TRUE);
             }
 
             public void onProcessFail(String processId, int exitCode) {
                 System.err.println("Failed:" + processId + ", errorCode:" + exitCode);
-                callbacks.set(2, Boolean.TRUE);
+                callbacks.set(FAILED_EXIT_CODE, Boolean.TRUE);
             }
 
             public void onProcessFail(String processId, Throwable e) {
                 System.err.println("Failed:" + processId + ", ex:" + e.getLocalizedMessage());
                 log.error("Failed", e);
-                callbacks.set(3, Boolean.TRUE);
+                callbacks.set(FAILED_EXCEPTION, Boolean.TRUE);
             }
 
             public void onProcessOutput(String processId, String output) {
@@ -215,28 +211,27 @@ public class ProcessLauncherTest {
         };
     }
 
-    private void assertCallbacks(Boolean expectStart, Boolean expectSuccess, Boolean expectFailCode, Boolean expectFailEx) {
-        Assert.assertEquals(callbacks.get(STARTED), expectStart);
-        Assert.assertEquals(callbacks.get(SUCCESS), expectSuccess);
-        Assert.assertEquals(callbacks.get(FAILED_EXIT_CODE), expectFailCode);
-        Assert.assertEquals(callbacks.get(FAILED_EXCEPTION), expectFailEx);
-    }
-
-    private void assertStarted(ProcessLauncher pl) {
+    private void assertStarted() {
         Assert.assertTrue(callbacks.get(STARTED));
         Assert.assertEquals(processMonitor.getProcessIds().size(), 1);
     }
 
-    private void assertSuccess(ProcessLauncher pl) {
+    private void assertSuccess(boolean processMonitorStopped) {
         Assert.assertTrue(callbacks.get(SUCCESS));
-        Assert.assertTrue(pl.isComplete());
-        Assert.assertTrue(processMonitor.getProcessIds().isEmpty());
+        if (processMonitorStopped) {
+            Assert.assertTrue(processMonitor.getProcessIds().isEmpty());
+        } else {
+            Assert.assertFalse(processMonitor.getProcessIds().isEmpty());
+        }
     }
 
-    private void assertFailed(ProcessLauncher pl) {
+    private void assertFailed(boolean processMonitorStopped) {
         Assert.assertTrue(callbacks.get(FAILED_EXIT_CODE) || callbacks.get(FAILED_EXCEPTION));
-        Assert.assertTrue(pl.isComplete());
-        Assert.assertTrue(processMonitor.getProcessIds().isEmpty());
+        if (processMonitorStopped) {
+            Assert.assertTrue(processMonitor.getProcessIds().isEmpty());
+        } else {
+            Assert.assertFalse(processMonitor.getProcessIds().isEmpty());
+        }
     }
 
 }

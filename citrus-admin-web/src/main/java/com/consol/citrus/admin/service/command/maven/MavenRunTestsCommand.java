@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service.executor.maven;
+package com.consol.citrus.admin.service.command.maven;
 
 import com.consol.citrus.admin.model.Test;
 import com.consol.citrus.admin.model.TestGroup;
 import com.consol.citrus.admin.model.build.BuildProperty;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.process.listener.ProcessListener;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -32,36 +33,80 @@ import java.util.List;
  */
 public class MavenRunTestsCommand extends MavenCommand {
 
+    private static final String TEST = "surefire:test ";
+    private static final String INTEGRATION_TEST = "failsafe:integration-test ";
+
     /** Test or group to execute */
     private TestGroup group;
     private Test test;
 
-    public MavenRunTestsCommand(File projectDirectory, Test test, MavenBuildConfiguration buildConfiguration) {
-        this(projectDirectory, buildConfiguration);
+    /**
+     * Constructor for executing a command.
+     *
+     * @param workingDirectory
+     * @param buildConfiguration
+     * @param shellListeners
+     */
+    public MavenRunTestsCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration, ProcessListener... shellListeners) {
+        super(workingDirectory, buildConfiguration, shellListeners);
+    }
+
+    /**
+     * Use test command.
+     * @return
+     */
+    public MavenRunTestsCommand test() {
+        lifecycleCommand += TEST;
+        return this;
+    }
+
+    /**
+     * Use test command for single test.
+     * @param test
+     * @return
+     */
+    public MavenRunTestsCommand test(Test test) {
         this.test = test;
+        return this.test();
     }
 
-    public MavenRunTestsCommand(File projectDirectory, TestGroup group, MavenBuildConfiguration buildConfiguration) {
-        this(projectDirectory, buildConfiguration);
+    /**
+     * Use test command for single test group.
+     * @param group
+     * @return
+     */
+    public MavenRunTestsCommand test(TestGroup group) {
         this.group = group;
+        return this.test();
     }
 
-    public MavenRunTestsCommand(File projectDirectory, MavenBuildConfiguration buildConfiguration) {
-        super(projectDirectory, buildConfiguration);
+    /**
+     * Use integration test command.
+     * @return
+     */
+    public MavenRunTestsCommand integrationTest() {
+        lifecycleCommand += INTEGRATION_TEST;
+        return this;
     }
 
-    @Override
-    protected String getLifeCycleCommand() {
-        String commandLine = getBuildConfiguration().isUseClean() ? CLEAN : "";
-        if (StringUtils.hasText(getBuildConfiguration().getCommand())) {
-            return commandLine + getBuildConfiguration().getCommand() + " ";
-        } else if (getBuildConfiguration().getTestPlugin().equals("maven-failsafe")) {
-            return commandLine + COMPILE + INTEGRATION_TEST;
-        } else if (getBuildConfiguration().getTestPlugin().equals("maven-surefire")) {
-            return commandLine + COMPILE + TEST;
-        }
+    /**
+     * Use integration test command for single test.
+     * @param test
+     * @return
+     */
+    public MavenRunTestsCommand integrationTest(Test test) {
+        this.test = test;
+        return this.integrationTest();
+    }
 
-        return commandLine;
+    /**
+     * Use integration test command for single test group.
+     * @param group
+     * @return
+     */
+    public MavenRunTestsCommand integrationTest(TestGroup group) {
+        this.group = group;
+        return this.integrationTest();
     }
 
     @Override
@@ -73,8 +118,8 @@ public class MavenRunTestsCommand extends MavenCommand {
             utTestNameProperty = new BuildProperty("test", test.getClassName() + "#" + test.getMethodName());
             itTestNameProperty = new BuildProperty("it.test", test.getClassName() + "#" + test.getMethodName());
         } else if (group != null && StringUtils.hasText(group.getName())) {
-            utTestNameProperty = new BuildProperty("test", group.getName() + ".*");
-            itTestNameProperty = new BuildProperty("it.test", group.getName() + ".*");
+            utTestNameProperty = new BuildProperty("test", group.getName().replaceAll("\\.", "/") + "/*");
+            itTestNameProperty = new BuildProperty("it.test", group.getName().replaceAll("\\.", "/") + "/*");
         }
 
         List<BuildProperty> properties = super.getSystemProperties();

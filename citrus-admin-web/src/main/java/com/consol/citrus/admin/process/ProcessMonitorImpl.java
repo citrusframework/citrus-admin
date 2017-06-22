@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.process;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,61 +34,48 @@ public class ProcessMonitorImpl implements ProcessMonitor {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(ProcessMonitorImpl.class);
 
-    private Map<String, ProcessLauncher> processMap = new ConcurrentHashMap<String, ProcessLauncher>();
+    private Map<String, ProcessLauncher> processMap = new ConcurrentHashMap<>();
 
-    /**
-     * Adds a new process to the monitor. This is usually invoked when the process begins execution.
-     *
-     * @param processLauncher the process to be added
-     */
+    @Override
+    public ProcessLauncher get(String processId) {
+        if (processMap.containsKey(processId)) {
+            return processMap.get(processId);
+        } else {
+            throw new ApplicationRuntimeException("Failed to find process with id:" + processId);
+        }
+    }
+
+    @Override
     public void add(ProcessLauncher processLauncher) {
         String id = processLauncher.getProcessId();
-        if(processMap.containsKey(id)) {
+        if (processMap.containsKey(id)) {
             String msg = String.format("An active process already exists with the Id '%s'", id);
             LOG.error(msg);
             throw new ProcessLauncherException(msg);
         }
-        processMap.put(id,processLauncher);
+        processMap.put(id, processLauncher);
     }
 
-    /**
-     * Removes the process from the process monitor. This is usually invoked when the process completes execution.
-     *
-     * @param processLauncher the process to be removed
-     */
+    @Override
     public void remove(ProcessLauncher processLauncher) {
-        String id = processLauncher.getProcessId();
-        processMap.remove(id);
+        processMap.remove(processLauncher.getProcessId());
     }
 
-    /**
-     * Returns the IDs of all active processes.
-     *
-     * @return
-     */
+    @Override
     public Set<String> getProcessIds() {
         return processMap.keySet();
     }
 
-    /**
-     * Used for terminating a process.
-     * <p/>
-     * If the supplied processId is unknown or the corresponding process has already terminated then no exception is
-     * thrown.
-     *
-     * @param processId
-     */
-    public void stopProcess(String processId) {
-        if(processMap.containsKey(processId)) {
-            processMap.get(processId).stop();
+    @Override
+    public void stop(String processId) {
+        if (processMap.containsKey(processId)) {
+            processMap.remove(processId).stop();
         }
     }
 
-    /**
-     * Used for terminating all active process.
-     */
-    public void stopAllProcesses() {
-        for(Map.Entry<String,ProcessLauncher> entry: processMap.entrySet()) {
+    @Override
+    public void stopAll() {
+        for (Map.Entry<String,ProcessLauncher> entry: processMap.entrySet()) {
             entry.getValue().stop();
         }
     }

@@ -16,16 +16,21 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.model.build.BuildConfiguration;
+import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
 import com.consol.citrus.admin.process.ProcessMonitor;
-import com.consol.citrus.admin.service.executor.TestExecutor;
+import com.consol.citrus.admin.process.listener.ProcessListener;
+import com.consol.citrus.admin.service.command.maven.MavenRunTestsCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +45,10 @@ public class TestExecutionService {
     private ProcessMonitor processMonitor;
 
     @Autowired
-    private TestExecutor testExecutor;
+    private TerminalService terminalService;
+
+    @Autowired
+    private List<ProcessListener> processListeners;
 
     /**
      * Runs all test cases and returns result outcome (success or failure).
@@ -50,8 +58,26 @@ public class TestExecutionService {
     public TestResult execute(Project project) {
         TestResult result = new TestResult();
 
+        File projectHome = new File(project.getProjectHome());
+        MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
+        MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
+
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        }
+
+        if (buildConfiguration.isUseClean()) {
+            command.clean();
+        }
+
+        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+            command.integrationTest();
+        } else {
+            command.test();
+        }
+
         try {
-            String processId = testExecutor.execute(project);
+            String processId = terminalService.execute(command);
 
             result.setProcessId(processId);
             result.setSuccess(true);
@@ -73,8 +99,26 @@ public class TestExecutionService {
         TestResult result = new TestResult();
         result.setTest(test);
 
+        File projectHome = new File(project.getProjectHome());
+        MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
+        MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
+
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        }
+
+        if (buildConfiguration.isUseClean()) {
+            command.clean();
+        }
+
+        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+            command.integrationTest(test);
+        } else {
+            command.test(test);
+        }
+
         try {
-            String processId = testExecutor.execute(project, test);
+            String processId = terminalService.execute(command);
 
             result.setProcessId(processId);
             result.setSuccess(true);
@@ -95,8 +139,26 @@ public class TestExecutionService {
     public TestResult execute(Project project, TestGroup group) {
         TestResult result = new TestResult();
 
+        File projectHome = new File(project.getProjectHome());
+        MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
+        MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
+
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        }
+
+        if (buildConfiguration.isUseClean()) {
+            command.clean();
+        }
+
+        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+            command.integrationTest(group);
+        } else {
+            command.test(group);
+        }
+
         try {
-            String processId = testExecutor.execute(project, group);
+            String processId = terminalService.execute(command);
 
             result.setProcessId(processId);
             result.setSuccess(true);
@@ -113,7 +175,7 @@ public class TestExecutionService {
      * @param processId
      */
     public void stop(String processId) {
-        processMonitor.stopProcess(processId);
+        processMonitor.stop(processId);
     }
 
     /**
@@ -129,5 +191,19 @@ public class TestExecutionService {
         result.setErrorMessage(e.getMessage());
         result.setErrorCause(e.getClass().getName());
         result.setStackTrace("Caused by: " + os.toString());
+    }
+
+    /**
+     * Check that maven build configuration is set and get it from project settings.
+     * @param project
+     * @return
+     */
+    private MavenBuildConfiguration getBuildConfiguration(Project project) {
+        BuildConfiguration buildConfiguration = project.getSettings().getBuild();
+        if (!MavenBuildConfiguration.class.isInstance(buildConfiguration)) {
+            throw new ApplicationRuntimeException("Unable to execute Maven command with non-maven build configuration: " + buildConfiguration.getClass());
+        }
+
+        return (MavenBuildConfiguration) buildConfiguration;
     }
 }

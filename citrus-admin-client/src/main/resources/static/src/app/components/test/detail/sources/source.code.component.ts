@@ -11,9 +11,7 @@ import Editor = AceAjax.Editor;
 
 @Component({
     selector: "source-code",
-    template: `<pre id="{{id}}" class="code-editor fill"></pre>
-               <button class="btn btn-primary" (click)="saveSourceCode()">Save</button>
-               <button class="btn btn-primary" (click)="resetSourceCode()">Reset</button>`
+    template: `<pre id="{{id}}" class="code-editor fill"></pre>`
 })
 export class SourceCodeComponent implements OnChanges, AfterViewInit {
     @Input('editor-id') id: string;

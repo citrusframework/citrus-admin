@@ -16,43 +16,31 @@
 
 package com.consol.citrus.admin.process.listener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 /**
  * @author Christoph Deppisch
  */
-@Component
-public class LoggingProcessListener extends AbstractProcessListener {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoggingProcessListener.class);
-
+public abstract class AbstractProcessListener implements ProcessListener {
     @Override
     public void onProcessStart(String processId) {
-        log.info(String.format("Starting new process: %s", processId));
     }
 
     @Override
     public void onProcessSuccess(String processId) {
-        log.info(String.format("Success process: %s", processId));
     }
 
     @Override
     public void onProcessFail(String processId, int exitCode) {
-        log.info(String.format("Failed process: %s (%s)", processId, exitCode));
     }
 
     @Override
     public void onProcessFail(String processId, Throwable e) {
-        log.error(String.format("Failed process: %s", processId), e);
     }
 
     @Override
     public void onProcessOutput(String processId, String output) {
-        if (log.isTraceEnabled()) {
-            System.out.print(output);
-        }
+    }
+
+    @Override
+    public void onProcessActivity(String processId, String output) {
     }
 }
