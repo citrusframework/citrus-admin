@@ -4,7 +4,7 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {LogComponent}   from './components/log.component';
 import {OpenProjectComponent}   from './components/project/project.open.component';
 import {NewProjectComponent} from "./components/project/project.new.component";
-import {ComingComponent}   from './components/coming.component';
+import {AboutComponent}   from './components/about.component';
 import {ReportComponent} from "./components/report/report.component";
 import {DashboardComponent} from "./components/project/dashboard.component";
 import {SetupComponent} from "./components/setup.component";
@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'report', component: ReportComponent, canActivate:[CanActivateRoutes]},
     { path: 'open', component: OpenProjectComponent},
     { path: 'new', component: NewProjectComponent},
-    { path: 'about', component: ComingComponent },
+    { path: 'about', component: AboutComponent},
     { path: 'log', component: LogComponent, canActivate:[CanActivateRoutes]},
     { path: 'setup', component: SetupComponent}
 ];

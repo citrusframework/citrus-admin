@@ -17,6 +17,7 @@ export class NewProjectComponent {
     archetype: Archetype = new Archetype();
     success: string;
     error: any;
+    loading: boolean = false;
 
     cancel() {
         this._router.navigate(["/"]);
@@ -31,6 +32,7 @@ export class NewProjectComponent {
     }
 
     onSubmit() {
+        this.loading = true;
         if (this.repositoryUrl) {
             this._projectSetupService.loadProject(this.repositoryUrl)
                 .subscribe(

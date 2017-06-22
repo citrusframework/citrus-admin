@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.consol.citrus</groupId>
     <artifactId>citrus-admin</artifactId>
-    <version>1.0.0-beta-5</version>
+    <version>1.0.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -68,6 +68,32 @@
             </goals>
             <configuration>
               <classifier>executable</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-version-property</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/META-INF</directory>
+                  <targetPath>${project.build.outputDirectory}/META-INF/</targetPath>
+                  <includes>
+                    <include>app.version</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>

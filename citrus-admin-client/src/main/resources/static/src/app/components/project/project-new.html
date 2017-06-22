@@ -29,34 +29,90 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">GroupId</label>
         <div class="col-sm-10">
-          <input [(ngModel)]="archetype.archetypeGroupId" type="text" class="form-control" placeholder="GroupId" name="archetypeGroupId" />
+          <div class="input-group">
+            <input [(ngModel)]="archetype.archetypeGroupId" type="text" class="form-control" placeholder="GroupId" name="archetypeGroupId" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeGroupId = 'com.consol.citrus.mvn'" class="clickable"><i class="fa fa-cubes"></i> com.consol.citrus.mvn</a>
+                </li>
+              </ul>
+            </span>
+          </div>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-2 control-label">ArtifactId</label>
         <div class="col-sm-10">
-          <input [(ngModel)]="archetype.archetypeArtifactId" type="text" class="form-control" placeholder="ArtifactId" name="archetypeArtifactId" />
+          <div class="input-group">
+            <input [(ngModel)]="archetype.archetypeArtifactId" type="text" class="form-control" placeholder="ArtifactId" name="archetypeArtifactId" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeArtifactId = 'citrus-quickstart'" class="clickable"><i class="fa fa-cube"></i> citrus-quickstart</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeArtifactId = 'citrus-quickstart-jms'" class="clickable"><i class="fa fa-cube"></i> citrus-quickstart-jms</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeArtifactId = 'citrus-quickstart-soap'" class="clickable"><i class="fa fa-cube"></i> citrus-quickstart-soap</a>
+                </li>
+              </ul>
+            </span>
+          </div>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-2 control-label">Version</label>
         <div class="col-sm-10">
-          <select [(ngModel)]="archetype.archetypeVersion" class="form-control" name="archetypeVersion">
-            <option value="2.7.2-SNAPSHOT">2.7.2-SNAPSHOT</option>
-            <option value="2.7.1">2.7.1</option>
-            <option value="2.7">2.7</option>
-            <option value="2.6.2">2.6.2</option>
-            <option value="2.6.1">2.6.1</option>
-            <option value="2.6">2.6</option>
-            <option value="2.5.2">2.5.2</option>
-            <option value="2.5.1">2.5.1</option>
-            <option value="2.5">2.5</option>
-            <option value="2.4">2.4</option>
-            <option value="2.3">2.3</option>
-            <option value="2.2">2.2</option>
-          </select>
+          <div class="input-group">
+            <input [(ngModel)]="archetype.archetypeVersion" type="text" class="form-control" placeholder="GroupId" name="archetypeVersion" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.7.2-SNAPSHOT'" class="clickable"><i class="fa fa-cubes"></i> 2.7.2-SNAPSHOT</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.7.1'" class="clickable"><i class="fa fa-cubes"></i> 2.7.1</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.7'" class="clickable"><i class="fa fa-cubes"></i> 2.7</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.6.2'" class="clickable"><i class="fa fa-cubes"></i> 2.6.2</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.6.1'" class="clickable"><i class="fa fa-cubes"></i> 2.6.1</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.6'" class="clickable"><i class="fa fa-cubes"></i> 2.6</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.5.2'" class="clickable"><i class="fa fa-cubes"></i> 2.5.2</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.5.1'" class="clickable"><i class="fa fa-cubes"></i> 2.5.1</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.5'" class="clickable"><i class="fa fa-cubes"></i> 2.5</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.4'" class="clickable"><i class="fa fa-cubes"></i> 2.4</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.3'" class="clickable"><i class="fa fa-cubes"></i> 2.3</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.2'" class="clickable"><i class="fa fa-cubes"></i> 2.2</a>
+                </li>
+              </ul>
+            </span>
+          </div>
         </div>
       </div>
     </fieldset>
@@ -100,6 +156,10 @@
       </div>
     </fieldset>
   </form>
+
+  <div *ngIf="loading" style="display: block; text-align: center; margin-top: 25px;">
+    <img class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.5em;"/>&nbsp;Loading project ...
+  </div>
 
   <div *ngIf="error" class="alert alert-danger alert-dismissible" role="alert">
     <button type="button" class="close" (click)="clearError()" aria-label="Close"><span aria-hidden="true">&times;</span></button>

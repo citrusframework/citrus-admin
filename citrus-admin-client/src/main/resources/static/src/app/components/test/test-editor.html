@@ -1,7 +1,6 @@
 <div class="btn-group pull-right">
   <button type="button" class="btn btn-default" (click)="openTestList()">Open</button>
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>
-  </button>
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
   <ul class="dropdown-menu">
     <li *ngIf="(packages|async).length == 0" role="presentation"><a role="menuitem" name="tests">No tests found</a></li>
     <li *ngFor="let package of packages|async" role="presentation" class="dropdown-submenu pull-left">

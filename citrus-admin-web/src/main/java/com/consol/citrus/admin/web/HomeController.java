@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.web;
 
+import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Christoph Deppisch
@@ -39,5 +39,11 @@ public class HomeController {
         }
 
         return "forward:/index.html";
+    }
+
+    @RequestMapping(value = "api/version", method = RequestMethod.GET)
+    @ResponseBody
+    public String version() {
+        return Application.getVersion();
     }
 }

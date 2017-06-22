@@ -16,13 +16,26 @@
 
 package com.consol.citrus.admin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(Application.class);
+
+    /** Application version */
+    private static String version;
 
     private static final String CITRUS_ADMIN_PREFIX = "citrus.admin.";
     private static final String CITRUS_ADMIN_ENV_PREFIX = "CITRUS_ADMIN_";
@@ -56,6 +69,27 @@ public class Application extends SpringBootServletInitializer {
     public static final String XML_SRC_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "XML_SOURCE_DIRECTORY";
 
     public static final String MVN_HOME_DIRECTORY = "maven.home.directory";
+
+    /* Load application version */
+    static {
+        try (final InputStream in = new ClassPathResource("META-INF/app.version").getInputStream()) {
+            Properties versionProperties = new Properties();
+            versionProperties.load(in);
+            version = versionProperties.get("app.version").toString();
+        } catch (IOException e) {
+            log.warn("Unable to read application version information", e);
+            version = "";
+        }
+    }
+
+    /**
+     * Gets the application version.
+     *
+     * @return
+     */
+    public static String getVersion() {
+        return version;
+    }
 
     /**
      * Gets the root directory from system property. By default user.home system

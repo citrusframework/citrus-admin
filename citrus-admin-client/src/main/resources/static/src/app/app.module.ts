@@ -8,6 +8,7 @@ import {HeaderComponent} from './components/header.component';
 import {SidebarComponent} from './components/sidebar.component';
 import {LogComponent} from './components/log.component';
 import {ComingComponent} from './components/coming.component';
+import {AboutComponent} from './components/about.component';
 import {DashboardComponent} from './components/project/dashboard.component';
 import {ReportComponent} from './components/report/report.component';
 
@@ -42,6 +43,7 @@ import {StateModule} from "./state.module";
         SidebarComponent,
         LogComponent,
         ComingComponent,
+        AboutComponent,
         DashboardComponent,
         ReportComponent,
         OpenProjectComponent,

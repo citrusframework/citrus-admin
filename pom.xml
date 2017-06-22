@@ -6,7 +6,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin</artifactId>
   <name>citrus-admin</name>
-  <version>1.0.0-beta-5</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -274,6 +274,12 @@
               <arg>--allow-weak-digest-algos</arg>
             </gpgArguments>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.12</version>
         </plugin>
       </plugins>
     </pluginManagement>

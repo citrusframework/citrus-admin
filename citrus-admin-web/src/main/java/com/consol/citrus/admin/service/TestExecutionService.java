@@ -62,15 +62,13 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (StringUtils.hasText(buildConfiguration.getCommand())) {
-            command.custom(buildConfiguration.getCommand());
-        }
-
         if (buildConfiguration.isUseClean()) {
             command.clean();
         }
 
-        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        } else if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
             command.integrationTest();
         } else {
             command.test();
@@ -103,15 +101,13 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (StringUtils.hasText(buildConfiguration.getCommand())) {
-            command.custom(buildConfiguration.getCommand());
-        }
-
         if (buildConfiguration.isUseClean()) {
             command.clean();
         }
 
-        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        } else if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
             command.integrationTest(test);
         } else {
             command.test(test);
@@ -143,15 +139,13 @@ public class TestExecutionService {
         MavenBuildConfiguration buildConfiguration = getBuildConfiguration(project);
         MavenRunTestsCommand command = new MavenRunTestsCommand(projectHome, buildConfiguration, processListeners.toArray(new ProcessListener[processListeners.size()]));
 
-        if (StringUtils.hasText(buildConfiguration.getCommand())) {
-            command.custom(buildConfiguration.getCommand());
-        }
-
         if (buildConfiguration.isUseClean()) {
             command.clean();
         }
 
-        if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
+        if (StringUtils.hasText(buildConfiguration.getCommand())) {
+            command.custom(buildConfiguration.getCommand());
+        } else if (buildConfiguration.getTestPlugin().equals("maven-failsafe")) {
             command.integrationTest(group);
         } else {
             command.test(group);

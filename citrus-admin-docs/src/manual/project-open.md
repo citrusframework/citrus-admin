@@ -8,7 +8,7 @@ started you have to open a project first.
 The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
 by setting a system environment variable at startup:
 
-```java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0-beta-5.war```
+```java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0.war```
 
 When pre selecting a project home the project is opened automatically and the [project dashboard](project-dashboard.md) is displayed. Now back to the project home selection if no project has bee pre selected yet.
 
@@ -35,7 +35,7 @@ There are two different approaches to customizing the project settings: First of
 
 ```
 java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java 
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0-beta-5.war
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0.war
 ```
 
 You can set the following system properties:
@@ -57,7 +57,7 @@ You can set the following system properties:
 You can also use Spring boot properties, e.g. a custom server port:
 
 ```
-java -Dserver.port=8181 -jar citrus-admin-web-1.0.0-beta-5.war
+java -Dserver.port=8181 -jar citrus-admin-web-1.0.0.war
 ```
 
 The exact same properties are also available when set as environment variables:
