@@ -1,7 +1,4 @@
-import {
-    Component, Input, OnInit, trigger, transition, state, style, animate, Output,
-    EventEmitter
-} from "@angular/core";
+import {Component, Input, OnInit, Output, EventEmitter} from "@angular/core";
 import {Endpoint} from "../../../model/endpoint";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EndpointStateService, EndpointActions} from "./endpoint.state";
@@ -9,8 +6,8 @@ import {Observable} from "rxjs";
 import {EditorMode, EditorDataTupel} from "../editor-mode.enum";
 import {Property} from "../../../model/property";
 import {SpringBeanService} from "../../../service/springbean.service";
-import {FormBuilder, FormGroup, Validators, Validator, ValidatorFn, AsyncValidatorFn} from "@angular/forms";
-import {IdMap, notNull, log} from "../../../util/redux.util";
+import {FormBuilder, FormGroup, Validators, ValidatorFn, AsyncValidatorFn} from "@angular/forms";
+import {IdMap, notNull} from "../../../util/redux.util";
 import {RestrictAsyncValues} from "../../util/autocomplete";
 
 @Component({
@@ -21,8 +18,7 @@ import {RestrictAsyncValues} from "../../util/autocomplete";
           [endpoint]="endpoint|async"
           [mode]="mode|async"
           (save)="save($event)"
-          (cancel)="cancel($event)"
-        >
+          (cancel)="cancel($event)">
         </endpoint-form-presentation>
     `
 })
@@ -96,7 +92,7 @@ export class EndpointFormPresentationComponent implements OnInit{
     ngOnInit() {
         this.beans = this.endpoint.properties
             .filter(p => p.optionKey)
-            .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {})
+            .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {});
         this.form = this.fb.group({
             type: [this.endpoint.type],
             id: [this.endpoint.id, Validators.required],
@@ -108,10 +104,11 @@ export class EndpointFormPresentationComponent implements OnInit{
     private getValidators(p: Property):[ValidatorFn, AsyncValidatorFn] {
         const validators:ValidatorFn[] = [(c) => null];
         const asyncValidators:AsyncValidatorFn[] = [];
-        if(p.required) {
+        if (p.required) {
             validators.push(Validators.required)
         }
-        if(p.optionKey) {
+
+        if (p.optionKey) {
             asyncValidators.push(RestrictAsyncValues(this.beans[p.optionKey]))
         }
         return [

@@ -57,24 +57,24 @@ export function RestrictAsyncValues(values:Observable<string[]>) {
     },
     template: `
     <div [class]="addon ? 'input-group' : 'form-group'">
-      <input    id="{{id}}" 
-                type="text" 
-                autocomplete="off" 
-                placeholder="{{placeholder}}" 
-                class="form-control" 
-                [(ngModel)]="query" 
-                (ngModelChange)="filter()"
-                (focus)="onInputFocus()"
-                #inputRef
-        >
+    <input id="{{id}}" 
+            type="text" 
+            autocomplete="off" 
+            placeholder="{{placeholder}}" 
+            class="form-control" 
+            [disabled]="items?.length == 0"
+            [(ngModel)]="query" 
+            (ngModelChange)="filter()"
+            (focus)="onInputFocus()"
+            #inputRef>
       <span *ngIf="addon" class="input-group-addon clickable" (click)="showAll()"><i class="fa fa-{{addon}} fa-white"></i></span>
     </div>
     <ul class="dropdown-menu autocomplete" 
         #suggestionListRef
         [style.display]="suggestions?.length > 0 ? 'block': 'none'" >
         <li *ngFor="let suggestion of suggestions" [class.active]="activeSelected === suggestion" (mouseover)="setActiveSelected(suggestion)">
-            <a *ngIf="suggestion == 'No elements found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a> 
-            <a *ngIf="suggestion != 'No elements found'" name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
+            <a *ngIf="suggestion == 'No beans found'" name="empty-results"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a> 
+            <a *ngIf="suggestion != 'No beans found'" name="{{suggestion}}" class="clickable" (click)="select(suggestion)"><i *ngIf="icon" class="fa fa-{{icon}}"></i> {{suggestion}}</a>
         </li>
     </ul>`,
     providers: [{
@@ -140,7 +140,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
             var substrRegex = new RegExp(this.query, 'i');
             this.suggestions = this.items.filter(item => substrRegex.test(item));
             if (this.suggestions.length == 0) {
-                this.suggestions = ["No elements found"];
+                this.suggestions = ["No beans found"];
             }
         } else {
             this.suggestions = [];

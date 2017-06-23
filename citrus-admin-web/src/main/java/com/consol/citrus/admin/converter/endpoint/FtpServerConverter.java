@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.model.config.ftp.FtpServerModel;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.springframework.stereotype.Component;
@@ -39,8 +38,7 @@ public class FtpServerConverter extends AbstractEndpointConverter<FtpServerModel
         endpointModel.add(property("port", model));
         endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
-        endpointModel.add(property("endpointAdapter", model)
-                .optionKey(EndpointAdapter.class.getName()));
+        endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("userManager", model)
                 .optionKey(UserManager.class.getName()));
         endpointModel.add(property("userManagerProperties", model));

@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.mail.MailServerModel;
 import org.springframework.stereotype.Component;
@@ -46,8 +45,7 @@ public class MailServerConverter extends AbstractEndpointConverter<MailServerMod
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointModel.add(property("endpointAdapter", model)
-                .optionKey(EndpointAdapter.class.getName()));
+        endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("mailProperties", model)
                 .optionKey(Properties.class.getName()));
 

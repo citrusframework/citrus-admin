@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.ssh.SshServerModel;
 import org.springframework.stereotype.Component;
@@ -42,8 +41,7 @@ public class SshServerConverter extends AbstractEndpointConverter<SshServerModel
         endpointModel.add(property("allowedKeyPath", model));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointModel.add(property("endpointAdapter", model)
-                .optionKey(EndpointAdapter.class.getName()));
+        endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("interceptors", model));
         endpointModel.add(property("user", model));
         endpointModel.add(property("password", model));

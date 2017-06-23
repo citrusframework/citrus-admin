@@ -17,9 +17,11 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.websocket.WebSocketServerModel;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,11 +47,13 @@ public class WebSocketServerConverter extends AbstractEndpointConverter<WebSocke
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointModel.add(property("endpointAdapter", model)
-                .optionKey(EndpointAdapter.class.getName()));
-        endpointModel.add(property("securityHandler", model));
-        endpointModel.add(property("servletHandler", model));
-        endpointModel.add(property("connector", model));
+        endpointModel.add(property("endpointAdapter", model));
+        endpointModel.add(property("securityHandler", model)
+                .optionKey(SecurityHandler.class.getName()));
+        endpointModel.add(property("servletHandler", model)
+                .optionKey(ServletHandler.class.getName()));
+        endpointModel.add(property("connector", model)
+                .optionKey(Connector.class.getName()));
         endpointModel.add(property("connectors", model));
         endpointModel.add(property("servletName", model));
         endpointModel.add(property("servletMappingPath", model));
