@@ -50,7 +50,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
                 .optionKey(EndpointUriResolver.class.getName()));
         endpointModel.add(property("messageConverter", model)
                 .optionKey(MessageConverter.class.getName()));
-        endpointModel.add(property("faultStrategy", model, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
+        endpointModel.add(property("faultStrategy", model, ErrorHandlingStrategy.THROWS_EXCEPTION.getName())
                 .options(getErrorHandlingStrategyOptions()));
         endpointModel.add(property("pollingInterval", model));
 
