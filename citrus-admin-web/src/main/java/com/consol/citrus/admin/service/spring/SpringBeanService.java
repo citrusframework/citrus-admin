@@ -43,6 +43,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Christoph Deppisch
@@ -185,7 +187,8 @@ public class SpringBeanService {
         try {
             xsltSource = new StreamSource(new ClassPathResource("transform/add-bean.xsl").getInputStream());
             xsltSource.setSystemId("add-bean");
-            xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+            String source = FileUtils.readToString(new FileInputStream(configFile));
+            xmlSource = new StringSource(source);
 
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
@@ -195,7 +198,7 @@ public class SpringBeanService {
             //transform
             StringResult result = new StringResult();
             transformer.transform(xmlSource, result);
-            FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), configFile);
+            FileUtils.writeToFile(format(postProcess(source, result.toString()), project.getSettings().getTabSize()), configFile);
             return;
         } catch (IOException e) {
             throw new ApplicationRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
@@ -222,7 +225,8 @@ public class SpringBeanService {
             configFiles.addAll(getConfigImports(configFile, project));
 
             for (File file : configFiles) {
-                xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+                String source = FileUtils.readToString(new FileInputStream(configFile));
+                xmlSource = new StringSource(source);
 
                 //create transformer
                 Transformer transformer = transformerFactory.newTransformer(xsltSource);
@@ -231,7 +235,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
+                FileUtils.writeToFile(format(postProcess(source, result.toString()), project.getSettings().getTabSize()), file);
                 return;
             }
         } catch (IOException e) {
@@ -269,7 +273,8 @@ public class SpringBeanService {
             configFiles.addAll(getConfigImports(configFile, project));
 
             for (File file : configFiles) {
-                xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+                String source = FileUtils.readToString(new FileInputStream(configFile));
+                xmlSource = new StringSource(source);
 
                 String beanElement = type.getAnnotation(XmlRootElement.class).name();
                 String beanNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
@@ -287,7 +292,7 @@ public class SpringBeanService {
                 //transform
                 StringResult result = new StringResult();
                 transformer.transform(xmlSource, result);
-                FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
+                FileUtils.writeToFile(format(postProcess(source, result.toString()), project.getSettings().getTabSize()), file);
                 return;
             }
         } catch (IOException e) {
@@ -322,7 +327,8 @@ public class SpringBeanService {
             for (File file : configFiles) {
                 parser.parseURI(file.toURI().toString());
                 if (getBeanFilter.getBeanDefinition() != null) {
-                    xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(file)));
+                    String source = FileUtils.readToString(new FileInputStream(file));
+                    xmlSource = new StringSource(source);
 
                     //create transformer
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
@@ -334,7 +340,7 @@ public class SpringBeanService {
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
+                    FileUtils.writeToFile(format(postProcess(source, result.toString()), project.getSettings().getTabSize()), file);
                     return;
                 }
             }
@@ -343,6 +349,27 @@ public class SpringBeanService {
         } catch (TransformerException e) {
             throw new ApplicationRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
+    }
+
+    /**
+     * Post process transformed data with CDATA sections preserved.
+     * @param source
+     * @param result
+     * @return
+     */
+    private String postProcess(String source, String result) {
+        Pattern cdata = Pattern.compile("^\\s*<!\\[CDATA\\[(?<text>(?>[^]]+|](?!]>))*)]]>", Pattern.MULTILINE);
+        Matcher cdataMatcher = cdata.matcher(source);
+
+        while (cdataMatcher.find()) {
+            Pattern nocdata = Pattern.compile("^[\\s\\n\\r]*" + cdataMatcher.group(1) + "[\\s\\n\\r]*$", Pattern.MULTILINE);
+            Matcher nocdataMatcher = nocdata.matcher(result);
+            if (nocdataMatcher.find()) {
+                result = nocdataMatcher.replaceFirst(cdataMatcher.group());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -385,7 +412,8 @@ public class SpringBeanService {
             for (File file : configFiles) {
                 parser.parseURI(file.toURI().toString());
                 if (!CollectionUtils.isEmpty(getBeanFilter.getBeanDefinitions())) {
-                    xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(file)));
+                    String source = FileUtils.readToString(new FileInputStream(file));
+                    xmlSource = new StringSource(source);
 
                     String beanElement = type.getAnnotation(XmlRootElement.class).name();
                     String beanNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
@@ -406,7 +434,7 @@ public class SpringBeanService {
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-                    FileUtils.writeToFile(format(result.toString(), project.getSettings().getTabSize()), file);
+                    FileUtils.writeToFile(format(postProcess(source, result.toString()), project.getSettings().getTabSize()), file);
                     return;
                 }
             }

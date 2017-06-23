@@ -7,6 +7,30 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
+    <!-- This is a comment -->
+
+    <bean id="otherBean" class="com.consol.citrus.SampleClass">
+        <property name="some">
+          <value>
+            <![CDATA[
+              some
+            ]]>
+          </value>
+        </property>
+    </bean>
+
+    <bean id="anotherBean" class="com.consol.citrus.SampleClass">
+        <property name="some">
+          <value>
+            <![CDATA[
+              <some>
+                <text>This is a CDATA text</text>
+              </some>
+            ]]>
+          </value>
+        </property>
+    </bean>
+
     <!-- Schemas -->
     <citrus:schema id="helloSchema"
                    location="classpath:com/consol/citrus/demo/sayHello.xsd" />

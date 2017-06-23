@@ -138,6 +138,9 @@ public class SpringBeanServiceTest {
 
         Assert.assertTrue(result.contains("<citrus:schema id=\"helloSchema\" location=\"newLocation\"/>"), "Failed to validate " + result);
         Assert.assertTrue(result.contains("<property name=\"helloSchema\" value=\"some\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<!-- This is a comment -->"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<![CDATA[" + System.lineSeparator() + "              some" + System.lineSeparator() + "            ]]>" + System.lineSeparator()), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<![CDATA[" + System.lineSeparator() + "              <some>" + System.lineSeparator() + "                <text>This is a CDATA text</text>" + System.lineSeparator()), "Failed to validate " + result);
     }
 
     @Test
