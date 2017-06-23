@@ -59,7 +59,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     }
 
     notifyError(error: any) {
-        this._alertService.add(new Alert("danger", error, false));
+        this._alertService.add(new Alert("danger", JSON.stringify(error), false));
     }
 
     private getRelativePath() {

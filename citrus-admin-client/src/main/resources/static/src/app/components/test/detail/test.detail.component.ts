@@ -101,7 +101,7 @@ export class TestDetailComponent implements OnInit {
     }
 
     notifyError(error: any) {
-        this._alertService.add(new Alert("danger", error, false));
+        this._alertService.add(new Alert("danger", JSON.stringify(error), false));
     }
 }
 
