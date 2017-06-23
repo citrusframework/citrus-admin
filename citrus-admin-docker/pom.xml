@@ -28,9 +28,9 @@
           <images>
             <image>
               <alias>citrus-admin</alias>
-              <name>citrus/citrus-admin:${project.version}</name>
+              <name>consol/citrus-admin:${project.version}</name>
               <build>
-                <dockerFileDir>${project.basedir}/src/main/docker</dockerFileDir>
+                <dockerFileDir>${project.basedir}/src/main/docker/${project.version}</dockerFileDir>
               </build>
               <run>
                 <namingStrategy>alias</namingStrategy>
@@ -42,7 +42,7 @@
                 </ports>
                 <wait>
                   <http>
-                    <url>http://localhost:8080/dashboard</url>
+                    <url>http://localhost:8080/setup</url>
                     <method>GET</method>
                     <status>200</status>
                   </http>
@@ -54,6 +54,13 @@
                   <color>green</color>
                 </log>
               </run>
+            </image>
+            <image>
+              <alias>citrus-admin-alpine</alias>
+              <name>consol/citrus-admin:${project.version}-alpine</name>
+              <build>
+                <dockerFile>${project.basedir}/src/main/docker/${project.version}/Dockerfile.alpine</dockerFile>
+              </build>
             </image>
           </images>
         </configuration>
