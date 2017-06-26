@@ -1,0 +1,41 @@
+= Welcome
+
+This is a web administration user interface for the integration test framework
+Citrus http://www.citrusframework.org[www.citrusframework.org] written in Angular2. Major functionality objectives
+are project and configuration management as well as test execution and reporting.
+
+**NOTE:** *This project is still still under construction!*
+
+== Stable features
+
+Consider following features to be in a stable state:
+
+* link:#project[Project]
+  - link:#project-open[Open project]
+  - link:#project-new[New project]
+  - link:#project-dashboard[Dashboard]
+  - link:#project-settings[Settings]
+* link:#configuration[Configuration]
+  - link:#config-endpoints[Endpoints]
+  - link:#config-global-variables[Global Variables]
+  - link:#config-namespace[Namespace Context]
+  - link:#config-dictionaries[Data Dictionaries]
+  - link:#config-functions[Functions]
+  - link:#config-matcher[Validation Matcher]
+  - link:#config-schemas[Schema Repositories]
+* link:#tests[Test management]
+  - link:#test-search[Search tests]
+  - link:#test-editor[Editor]
+  - link:#test-execute[Execute tests]
+
+== Unstable and heavily under construction
+
+Consider following features to be under construction:
+
+* Project
+  - link:#project-statistics[Statistics]
+* Test management
+  - link:#test-desginer[Test designer]
+  - link:#test-reporting[Reporting]
+
+Please let us know if you are missing a feature and/or like to vote for features.
