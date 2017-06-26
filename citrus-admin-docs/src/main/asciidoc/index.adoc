@@ -10,19 +10,24 @@ Christoph Deppisch;
 :toc-title: citrus-admin
 :doctype: book
 :icons: font
+:docinfo1:
 :plugindir: {plugindir}
 
 ifndef::ebook-format[:leveloffset: 1]
 
-*Copyright © 2017 ConSol Software GmbH - https://www.citrusframework.org[www.citrusframework.org]*
+*Copyright © 2017 ConSol Software GmbH*
 
 ifdef::basebackend-html[toc::[]]
 
 :numbered:
 :imagesdir: images
 
-image:citrus-logo.png[citrus-logo]
+image:citrus-logo-small.png[citrus-logo]
 
-include::manual/welcome.adoc[]
-include::manual/preconditions.adoc[]
+include::manual/introduction.adoc[]
 include::manual/installation.adoc[]
+include::manual/project.adoc[]
+include::manual/configuration.adoc[]
+include::manual/tests.adoc[]
+
+include::manual/links.adoc[]

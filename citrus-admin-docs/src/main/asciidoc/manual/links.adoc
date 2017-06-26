@@ -1,0 +1,11 @@
+[[links]]
+= Links & Further reading
+
+* The http://www.citrusframework.org/reference/html/[Citrus reference manual] gives you a detailed description of all Citrus features.
+* Examples:
+    ** https://github.com/christophd/citrus-samples[Sample projects]
+    ** https://github.com/christophd/citrus-demo-devoxx[Devoxx '15 sample project] with Microservices and Docker
+    ** https://github.com/christophd/citrus-demo-javaland[JavaLand '16 sample project] with Arquillian
+* http://www.citrusframework.org/changes-report.html[ChangeLog] shows the release history.
+* https://github.com/christophd/citrus-admin/blob/master/citrus-admin-docs/contributing.md[Contributing]
+ explains how you can contribute to this project. Pull requests are highly appreciated!

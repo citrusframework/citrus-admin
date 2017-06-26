@@ -1,0 +1,72 @@
+[[configuration]]
+= Configuration
+
+The Citrus components such as endpoints, variables, functions, schemas and dictionaries are configured in a Spring application context.
+The administration UI is able to read and change the Citrus components configuration. Each component category is represented with a separate page
+in the configuration section.
+
+image:screenshots/config-menu.png[ConfigMenu]
+
+[[config-endpoints]]
+== Endpoint configuration
+
+Endpoints are essential in a Citrus project. They define client and server components as well as producer and consumer for different message transports.
+
+image:screenshots/config-endpoints.png[Endpoints]
+
+First of all the list of all available endpoints in the project is displayed. Each endpoint represents a message transport such as SOAP, JMS, REST, Mail, FTP and so on.
+You can add new endpoints using the _New_ context menu on the right. You need to chose the endpoint type first. Then a HTML form is displayed holding the endpoint settings.
+
+image:screenshots/config-endpoints-menu.png[Menu]
+image:screenshots/config-endpoints-new.png[New]
+
+Click save to add the new endpoint. Citrus is working with Spring XML configuration files. This means that the new endpoint component is saved as XML Spring bean to the basic
+Spring application context file. Usually this is a file located in _src/test/resources/citrus-context.xml_ in your project. After you have saved the new component you will see that a new
+entry has been added to this file.
+
+You can also edit endpoint components in the administration UI. Just click an an existing endpoint component and you will see the HTML form with all the settings to this endpoint.
+
+image:screenshots/config-endpoints-edit.png[Edit]
+
+If you save the changes Citrus will again change the Spring bean component in the XML configuration file. You can manually review the changes made. All manual changes in the Spring application context
+will also affect the administration UI. Just hit the reload button in your browser to reload the configuration.
+
+[[config-application-context]]
+== Spring application context
+
+TODO
+
+[[config-spring-beans]]
+== Spring beans
+
+TODO
+
+[[config-global-variables]]
+== Global Variables
+
+TODO
+
+[[config-schemas]]
+== Schema Repositories
+
+TODO
+
+[[config-namespace]]
+== Namespace Context
+
+TODO
+
+[[config-dictionaries]]
+== Data Dictionaries
+
+TODO
+
+[[config-functions]]
+== Functions
+
+TODO
+
+[[config-matcher]]
+== Validation Matcher
+
+TODO

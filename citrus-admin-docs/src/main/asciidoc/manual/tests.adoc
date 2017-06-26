@@ -1,0 +1,107 @@
+[[tests]]
+= Tests
+
+Managing all your tests is a basic thing to do with the administration UI. You are able to search for tests, open tests and execute tests with
+the UI.
+
+You can do the following things regarding test management
+
+* link:#test-search[Search tests]
+* link:#test-list[List tests]
+* link:#test-editor[Open tests]
+* link:#test-execute[Execute tests]
+* link:#test-designer[Test designer]
+* link:#test-reporting[Reporting]
+
+[[test-search]]
+== Search tests
+
+Searching for test cases is very simple. Open the tests page and you will se a search form input field at the top right.
+
+image:screenshots/test-search-input.png[Search]
+
+Citrus administration UI will search for tests in your project. These includes XML and Java DSL test cases. The search is a full text search on
+all test names available. So the result is always a matching list of tests.
+
+You can open the test by selecting the test from the result list.
+
+image:screenshots/test-search-results.png[Results]
+
+The test is opened and displayed in link:test-detail[test detail] panel.
+
+[[test-list]]
+== List tests
+
+Your project usually contains a lot of tests. All found tests are listed by their class and method. Also you can filter the displayed tests by the Java package.
+Each test can be opened in a editor for exploring further test details.
+
+image:screenshots/test-list.png[Results]
+
+[[test-editor]]
+== Editor
+
+The administration UI is able to open your test cases. Both XML and Java DSL test cases are supported.
+
+*NOTE:* Java DSL test cases might cause some problems when loading the test design view. this is because we do have to make the Java DSL code interpretation more stable.
+
+You can open the tests using the _Open_ context menu. All available test cases are grouped by their package.
+
+image:screenshots/test-open.png[Open]
+
+Choose a test and open it in order to see the basic test case information such as name, author, status and description.
+
+image:screenshots/test-info.png[Info]
+
+Next to to the test case info you can view the test source code.
+
+image:screenshots/test-sources.png[Sources Java]
+
+If your test uses the XML DSL to describe the test actions you can also view the XML sources.
+
+image:screenshots/test-sources-xml.png[Sources XML]
+
+At the moment these information is read only. Stay tuned for some code editing features that might come in the future. Another representation of the test sources is
+the link:test-designer[test designer] view. The design view brings the test actions to a graphical representation.
+
+Now a very powerful feature is to execute the test using the administration UI. Let's go and read about link:test-execute[test execution].
+
+[[test-execute]]
+== Execute tests
+
+Test execution is a very powerful feature as it enables you to execute your tests within a browser environment almost everywhere. Just hit the _Run_ button and Citrus will start a new background process that executes the
+test case immediately. At the moment we do only support Maven test execution. This means that a new Maven process is launched in background executing the test.
+
+image:screenshots/test-execute.png[Execution]
+
+As you can see the test log output is forwarded to your browser. Also the test progress and result (success or failure) is tracked by the administration UI. In the messages table you are able to review all messages (inbound/outbound)
+that were part of the test run.
+
+image:screenshots/test-messages.png[Execution]
+
+The message panel displays all inbound and outbound messages. Click on the message row to see the message content details. The mechanism for tracking inbound and outbound messages during a test run is done with either the link:#project-settings-connector[admin connector library]
+that you need to activate in your project. If for some reason you are not able to activate the connector library in your project the administration UI will try to read the messages from the normal Citrus
+logging output. This of course is only working if you have logging enabled in addition to using at least with logging level _DEBUG_.
+
+If non of these approaches is working for you the admin UI will not display exchanged messages after the test run.
+
+[[test-designer]]
+== Test designer
+
+The next feature is quite experimental. In the test design view Citrus tries to give you a graphical representation of the test actions in your test. Each test action
+is displayed as a graphical node. If you enter the action with the mouse or if you click on a test action node some more details are displayed.
+
+image:screenshots/test-design.png[Design]
+
+*NOTE:* The test design view is not complete for all test actions. Some actions may not be displayed or may have limited display.
+
+[[test-reporting]]
+== Test reporting
+
+The administration UI is able to read and parse basic TestNG and JUnit reports. Usually these reports are written after each test run to the build output
+directory of your project. The admin UI will automatically find those reports and display the results to you.
+
+image:screenshots/test-report.png[Test reports]
+
+When a test case is failing for some reason exception and failure information will be provided.
+
+image:screenshots/test-results.png[Test results]

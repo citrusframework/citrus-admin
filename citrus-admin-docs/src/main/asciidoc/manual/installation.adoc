@@ -2,17 +2,24 @@
 = Installation
 
 The Citrus administration UI is a web application that uses Spring boot and Angular2. First of all download the latest distribution which
-is a Java JAR file located at https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web[labs.consol.de/maven/repository]:
+is a Java WAR file located at https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web[labs.consol.de/maven/repository]:
 
-Save the Java archive to a folder on your local machine and start the Spring boot web application. The downloaded JAR should be executable 
+[source,bash]
+----
+curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.0/citrus-admin-web-1.0.0-executable.war
+----
+
+Save the Java web archive to a folder on your local machine and start the Spring boot web application. The downloaded artifact should be executable
 from command line like this:
 
 [source,bash]
 ----
-java -jar citrus-admin-web-1.0.0.war
+java -jar citrus-admin.war
 ----
 
 You will see the application starting up. Usually you will see some console log output. The web server should start within seconds. Once the application is up and running
-you can open your browser and point to 'http://localhost:8080'.
+you can open your browser and point to link:http://localhost:8080[http://localhost:8080].
  
-That's it you are ready to use the Citrus administration UI. Next thing to do is to link:#project-open[open a project].
+That's it you are ready to use the Citrus administration UI. Next thing to do is to link:#project-new[create] or link:#project-open[open] a project.
+
+image:screenshots/project-setup.png[Project Setup]

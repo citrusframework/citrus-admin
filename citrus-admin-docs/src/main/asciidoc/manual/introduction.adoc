@@ -1,0 +1,88 @@
+[[introduction]]
+= Introduction
+
+This is a web administration user interface for the integration test framework
+Citrus http://www.citrusframework.org[www.citrusframework.org] written in Angular2. Major functionality objectives
+are project and configuration management as well as test execution and reporting.
+
+*NOTE: This project is still still under construction!*
+
+[[features]]
+== Features
+
+=== Stable
+
+Consider following features to be in a stable state:
+
+* link:#project[Project]
+  - link:#project-open[Open project]
+  - link:#project-new[New project]
+  - link:#project-dashboard[Dashboard]
+  - link:#project-settings[Settings]
+* link:#configuration[Configuration]
+  - link:#config-endpoints[Endpoints]
+  - link:#config-global-variables[Global Variables]
+  - link:#config-namespace[Namespace Context]
+  - link:#config-dictionaries[Data Dictionaries]
+  - link:#config-functions[Functions]
+  - link:#config-matcher[Validation Matcher]
+  - link:#config-schemas[Schema Repositories]
+* link:#tests[Tests]
+  - link:#test-search[Search tests]
+  - link:#test-list[List tests]
+  - link:#test-editor[Editor]
+  - link:#test-execute[Execute tests]
+
+=== Under construction
+
+Consider following features to be under construction:
+
+* Project
+  - link:#project-statistics[Statistics]
+* Tests
+  - link:#test-designer[Test designer]
+  - link:#test-reporting[Reporting]
+
+Please let us know if you are missing a feature and/or like to vote for features.
+
+[[limitations]]
+== Limitations
+
+*NOTE: This project is still still under construction!*
+
+The administration UI is stable not yet finished. Some features are still under construction. Some aspects are simply not covered yet.
+
+Following from that we have to deal with some limitations and trade offs until the project emerges (hopefully with the help of the community, keeping our fingers crossed!).
+However the administration UI is usable and most features are considered to be stable.
+
+Please consider following limitations that we have right now:
+
+=== Java 8
+
+The administration UI is implemented using Java 8. You need at least Java 8 runtime in order to run the Citrus admin web application on your machine.
+
+=== Maven
+
+At the moment we are limited to Citrus projects using Maven as build tool. Gradle projects are currently not supported. The build tool used is quite important as the administration UI is reading
+the build information and uses Maven to execute test cases. We are working on Gradle support, please stay tuned and maybe poke us when things are not evolving.
+
+=== Version
+
+Your project should use Citrus version 2.6 or higher in order to be able to work with the administration UI. Earlier Citrus versions might work too but are
+not tested and will not get support with bugfixes.
+
+In addition to that we expect you to use the Citrus annotations when declaring test methods. The administration UI is looking fo all tests in your project.
+It is required that you use *@CitrusTest* and *@CitrusXmlTest* annotations on your test methods. Otherwise the test cases will not be found and displayed.
+
+=== Browsers
+
+At this early state we do not support browsers other than Chrome. This does not mean that other browsers are not working with the administration UI but the features are not tested yet with other browsers. The
+Citrus development team is using Chrome so you can be sure that errors related to browser incompatibility will be fixed very soon for Chrome.
+
+=== Java DSL
+
+Citrus provides both XML and Java DSL for writing test cases. The administration UI is definitely able to read your XML test cases. The UI should also be able to read and manage your Java DSL test cases but
+there might be some limitations when reading your Java DSL code especially when you use object marshalling/unmarshalling as well as highly customized methods.
+
+Please be curious and find out weather the current UI state is working with your project. And please let us know when there is something
+wrong.
