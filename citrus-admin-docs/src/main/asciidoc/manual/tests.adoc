@@ -76,7 +76,7 @@ image:screenshots/test-execute.png[Execution]
 As you can see the test log output is forwarded to your browser. Also the test progress and result (success or failure) is tracked by the administration UI. In the messages table you are able to review all messages (inbound/outbound)
 that were part of the test run.
 
-image:screenshots/test-messages.png[Execution]
+image:screenshots/test-messages.png[Messages]
 
 The message panel displays all inbound and outbound messages. Click on the message row to see the message content details. The mechanism for tracking inbound and outbound messages during a test run is done with either the link:#project-settings-connector[admin connector library]
 that you need to activate in your project. If for some reason you are not able to activate the connector library in your project the administration UI will try to read the messages from the normal Citrus

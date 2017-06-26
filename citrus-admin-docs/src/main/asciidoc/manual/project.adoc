@@ -308,7 +308,7 @@ Stay tuned for future releases to come*
 Citrus as a framework is modular. You can add and remove Citrus capabilities by adding and removing module dependencies in your project. Usually
 these Citrus modules are managed as Maven dependencies in your project. The Citrus administration UI is able to manage these dependencies for you.
 
-image:screenshots/project-connector.png[Connector library]
+image:screenshots/project-modules.png[Project modules]
 
 On the modules settings page you see all currently activated modules. And you get a list of available modules that you can add. Just check or uncheck the
 modules and the administration UI will automatically add/remove Maven dependencies in your project.
