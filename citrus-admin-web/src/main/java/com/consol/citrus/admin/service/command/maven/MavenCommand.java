@@ -137,7 +137,7 @@ public class MavenCommand extends AbstractTerminalCommand {
      * @return
      */
     public MavenCommand custom(String command) {
-        lifecycleCommand += command;
+        lifecycleCommand += command + " ";
         return this;
     }
 
