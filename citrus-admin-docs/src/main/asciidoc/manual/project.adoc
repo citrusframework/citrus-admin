@@ -39,7 +39,7 @@ by setting a system environment variable at startup:
 
 [source,bash]
 ----
-java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0.war
 ----
 
 When pre selecting a project home the project is opened automatically and the link:#project-dashboard[project dashboard] is displayed. Now back to the project home selection if no project has bee pre selected yet.
@@ -78,7 +78,7 @@ There are two different approaches to customizing the project settings: First of
 [source,bash]
 ----
 java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0.war
 ----
 
 You can set the following system properties:
@@ -125,7 +125,7 @@ You can also use Spring boot properties, e.g. a custom server port:
 
 [source,bash]
 ----
-java -Dserver.port=8181 -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+java -Dserver.port=8181 -jar citrus-admin-web-1.0.0.war
 ----
 
 The exact same properties are also available when set as environment variables:
