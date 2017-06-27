@@ -6,7 +6,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin</artifactId>
   <name>citrus-admin</name>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>Citrus Administration UI</description>
   <url>http://www.citrusframework.org</url>
@@ -15,7 +15,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.boot.version>1.5.0.RELEASE</spring.boot.version>
-    <citrus.version>2.7</citrus.version>
+    <citrus.version>2.7.1</citrus.version>
     <slf4j.version>1.7.22</slf4j.version>
     <testng.version>6.10</testng.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
