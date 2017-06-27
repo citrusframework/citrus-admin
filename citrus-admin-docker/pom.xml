@@ -30,7 +30,7 @@
               <alias>citrus-admin</alias>
               <name>consol/citrus-admin:${project.version}</name>
               <build>
-                <dockerFileDir>${project.basedir}/src/main/docker</dockerFileDir>
+                <dockerFileDir>${project.basedir}/src/main/docker/default</dockerFileDir>
               </build>
               <run>
                 <namingStrategy>alias</namingStrategy>
@@ -59,7 +59,7 @@
               <alias>citrus-admin-alpine</alias>
               <name>consol/citrus-admin:${project.version}-alpine</name>
               <build>
-                <dockerFile>${project.basedir}/src/main/docker/Dockerfile.alpine</dockerFile>
+                <dockerFileDir>${project.basedir}/src/main/docker/alpine</dockerFileDir>
               </build>
             </image>
           </images>
