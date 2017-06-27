@@ -103,7 +103,7 @@ The Citrus administration UI is a web application that uses Spring boot and Angu
 is a Java WAR file located at [labs.consol.de/maven/repository](https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web):
 
 ```
-curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.0/citrus-admin-web-1.0.0-executable.war
+curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.1-SNAPSHOT/citrus-admin-web-1.0.1-SNAPSHOT-executable.war
 ```
 
 Save the Java web archive to a folder on your local machine and start the Spring boot web application. The downloaded artifact should be executable
