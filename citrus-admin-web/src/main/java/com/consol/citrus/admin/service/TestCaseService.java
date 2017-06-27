@@ -408,8 +408,6 @@ public class TestCaseService {
                     testMethod.invoke(testInstance);
 
                     return getTestcaseModel(testInstance.getTestCase());
-                } else {
-                    throw new ApplicationRuntimeException("Unsupported test case type: " + testClass);
                 }
             } catch (MalformedURLException e) {
                 throw new ApplicationRuntimeException("Failed to access Java classes output folder", e);
