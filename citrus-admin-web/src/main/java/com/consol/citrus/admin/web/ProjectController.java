@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.Archetype;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,8 @@ public class ProjectController {
 
     @RequestMapping(value = "/load/repository", method = RequestMethod.POST)
     @ResponseBody
-    public Project loadProject(@RequestBody String url) {
-        return projectService.create(url);
+    public Project loadProject(@RequestBody Repository repository) {
+        return projectService.create(repository);
     }
 
     @RequestMapping(value = "/create/archetype", method = RequestMethod.POST)

@@ -313,6 +313,7 @@ pre {
 
 pre.logger {
     min-height: 500px;
+    max-height: 1000px;
     overflow-y: auto;
     overflow-x: auto;
     font-size: 12px;
@@ -1096,6 +1097,10 @@ i.channel {
 .icon-receive:before {
     content: "\f090";
     color: #5ab15a;
+}
+
+.icon-empty:before {
+    content: "\f05e";
 }
 
 /** Colors */

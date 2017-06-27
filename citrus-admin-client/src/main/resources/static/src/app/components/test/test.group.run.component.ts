@@ -28,6 +28,7 @@ export class TestGroupRunComponent implements OnInit {
 
     results: TestResult[] = [];
 
+    logging = false;
     processOutput = "";
     currentOutput = "";
 
@@ -89,8 +90,8 @@ export class TestGroupRunComponent implements OnInit {
         this.router.navigate(['/tests', 'editor', test.name]);
     }
 
-    openConsole() {
-        (jQuery('#dialog-console') as any).modal();
+    toggleLogs() {
+        this.logging = !this.logging;
     }
 
     handleResult(result: TestResult) {

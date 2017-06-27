@@ -34,6 +34,7 @@ public class GitCommand extends AbstractTerminalCommand {
 
     private static final String GIT = "git ";
     private static final String CLONE = "clone %s";
+    private static final String CHECKOUT = "checkout %s";
     private static final String VERSION = "--version";
 
     private String operation = CLONE;
@@ -74,6 +75,17 @@ public class GitCommand extends AbstractTerminalCommand {
     }
 
     /**
+     * Use git checkout command.
+     * @param branch
+     * @return
+     */
+    public GitCommand checkout(String branch) {
+        getArguments().add(branch);
+        operation = CHECKOUT;
+        return this;
+    }
+
+    /**
      * Use git clone command to custom directory.
      * @param repositoryUrl
      * @param directory
@@ -86,6 +98,10 @@ public class GitCommand extends AbstractTerminalCommand {
         return this;
     }
 
+    /**
+     * Version command.
+     * @return
+     */
     public GitCommand version() {
         operation = VERSION;
         return this;

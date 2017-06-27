@@ -24,14 +24,18 @@
       </div>
     </div>
     <div class="col-lg-6">
-      <button type="button" class="btn btn-default pull-right" (click)="openConsole()"><i class="fa fa-newspaper-o"></i> View logs</button>
+      <button *ngIf="!logging" type="button" class="btn btn-default pull-right" (click)="toggleLogs()"><i class="fa fa-newspaper-o"></i> View logs</button>
+      <button *ngIf="logging" type="button" class="btn btn-default pull-right" (click)="toggleLogs()"><i class="fa fa-newspaper-o"></i> Hide logs</button>
     </div>
   </div>
 </div>
 
-<p></p>
+<div *ngIf="logging" class="space-top-30">
+  <p>Log output:</p>
+  <pre class="logger" [textContent]="currentOutput"></pre>
+</div>
 
-<div class="table-responsive">
+<div *ngIf="!logging" class="table-responsive space-top-30">
   <table class="table table-hover table-bordered">
     <thead>
       <tr>
@@ -69,15 +73,4 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<div class="dialog"
-     dialog-id="dialog-console"
-     dialog-title="Console log output"
-     dialog-confirm="no"
-     dialog-size="lg">
-  <p>Log output:</p>
-
-  <pre class="logger" [textContent]="currentOutput"></pre>
-
 </div>

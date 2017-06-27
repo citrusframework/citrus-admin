@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ProjectSetupService} from "../../service/project.setup.service";
 import {Router} from "@angular/router";
 import {Archetype} from "../../model/archetype";
+import {Repository} from "../../model/repository";
 
 @Component({
     selector: 'project-new',
@@ -13,7 +14,7 @@ export class NewProjectComponent {
         private _projectSetupService: ProjectSetupService) {
     }
 
-    repositoryUrl: string;
+    repository: Repository = new Repository();
     archetype: Archetype = new Archetype();
     success: string;
     error: any;
@@ -33,8 +34,8 @@ export class NewProjectComponent {
 
     onSubmit() {
         this.loading = true;
-        if (this.repositoryUrl) {
-            this._projectSetupService.loadProject(this.repositoryUrl)
+        if (this.repository.url) {
+            this._projectSetupService.loadProject(this.repository)
                 .subscribe(
                     success => window.location.href = "/",
                     error => this.error = error.json());

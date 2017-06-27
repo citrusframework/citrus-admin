@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {ProjectSettings} from "../model/project";
 import {Archetype} from "../model/archetype";
+import {Repository} from "../model/repository";
 
 @Injectable()
 export class ProjectSetupService {
@@ -22,7 +23,7 @@ export class ProjectSetupService {
         return this.http.get(this._serviceUrl + "/settings/default");
     }
 
-    loadProject(repository: string) {
+    loadProject(repository: Repository) {
         return this.http.post(this._serviceUrl + "/load/repository", repository);
     }
     

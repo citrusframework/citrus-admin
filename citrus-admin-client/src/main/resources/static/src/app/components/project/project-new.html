@@ -9,13 +9,29 @@
         <label class="col-sm-2 control-label">Repository URL</label>
 
         <div class="col-sm-10">
-          <input [(ngModel)]="repositoryUrl" type="text" class="form-control" placeholder="Repository URL" name="repositoryUrl" />
+          <input [(ngModel)]="repository.url" type="text" class="form-control" placeholder="Repository URL" name="url" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Branch</label>
+
+        <div class="col-sm-10">
+          <input [(ngModel)]="repository.branch" type="text" class="form-control" placeholder="Branch" name="branch" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Module</label>
+
+        <div class="col-sm-10">
+          <input [(ngModel)]="repository.module" type="text" class="form-control" placeholder="Module" name="module" />
         </div>
       </div>
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button class="btn btn-primary" type="submit" [disabled]="repositoryUrl?.length > 0 ? false : true">Load project</button>
+          <button class="btn btn-primary" type="submit" [disabled]="repository.url?.length > 0 ? false : true">Load project</button>
           <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
         </div>
       </div>
@@ -74,9 +90,6 @@
             <span class="input-group-btn">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
               <ul class="dropdown-menu">
-                <li role="presentation">
-                  <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.7.2-SNAPSHOT'" class="clickable"><i class="fa fa-cubes"></i> 2.7.2-SNAPSHOT</a>
-                </li>
                 <li role="presentation">
                   <a role="menuitem" name="all" (click)="archetype.archetypeVersion = '2.7.1'" class="clickable"><i class="fa fa-cubes"></i> 2.7.1</a>
                 </li>

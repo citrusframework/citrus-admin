@@ -51,6 +51,10 @@ public class Application extends SpringBootServletInitializer {
     /** Git repository to load on startup */
     public static final String PROJECT_REPOSITORY = CITRUS_ADMIN_PREFIX + "project.repository";
     public static final String PROJECT_REPOSITORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY";
+    public static final String PROJECT_REPOSITORY_BRANCH = CITRUS_ADMIN_PREFIX + "project.repository.branch";
+    public static final String PROJECT_REPOSITORY_BRANCH_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_BRANCH";
+    public static final String PROJECT_REPOSITORY_MODULE = CITRUS_ADMIN_PREFIX + "project.repository.module";
+    public static final String PROJECT_REPOSITORY_MODULE_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_MODULE";
 
     /** Base package for test cases to look for */
     public static final String BASE_PACKAGE = CITRUS_ADMIN_PREFIX + "test.base.package";

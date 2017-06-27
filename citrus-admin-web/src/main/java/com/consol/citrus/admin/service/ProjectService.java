@@ -22,6 +22,7 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.Archetype;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
@@ -97,9 +98,17 @@ public class ProjectService {
             load(defaultProjectHome);
         }
 
-        String projectRepository = System.getProperty(Application.PROJECT_REPOSITORY, System.getenv(Application.PROJECT_REPOSITORY_ENV));
-        if (project == null && StringUtils.hasText(projectRepository)) {
-            create(projectRepository);
+        String repositoryUrl = System.getProperty(Application.PROJECT_REPOSITORY, System.getenv(Application.PROJECT_REPOSITORY_ENV));
+        if (project == null && StringUtils.hasText(repositoryUrl)) {
+            Repository repository = new Repository();
+            repository.setUrl(repositoryUrl);
+
+            repository.setBranch(System.getProperty(Application.PROJECT_REPOSITORY_BRANCH,
+                    System.getenv(Application.PROJECT_REPOSITORY_BRANCH_ENV) != null ? System.getenv(Application.PROJECT_REPOSITORY_BRANCH_ENV) : repository.getBranch()));
+            repository.setModule(System.getProperty(Application.PROJECT_REPOSITORY_MODULE,
+                    System.getenv(Application.PROJECT_REPOSITORY_MODULE_ENV) != null ? System.getenv(Application.PROJECT_REPOSITORY_MODULE_ENV) : repository.getModule()));
+
+            create(repository);
         }
     }
 
@@ -184,15 +193,17 @@ public class ProjectService {
      * @param repository
      * @return
      */
-    public Project create(String repository) {
+    public Project create(Repository repository) {
         try {
             File rootDirectory = new File(Application.getWorkingDirectory());
-            String cloneTarget = repository.substring(repository.lastIndexOf('/') + 1, repository.length() - ".git".length());
+            String cloneTarget = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1, repository.getUrl().length() - ".git".length());
             boolean gitCloneSuccess = terminalService.executeAndWait(new GitCommand(rootDirectory).version()) &&
                     terminalService.executeAndWait(new GitCommand(rootDirectory)
-                            .clone(new URL(repository), cloneTarget));
+                            .clone(new URL(repository.getUrl()), cloneTarget));
 
-            if (!gitCloneSuccess && terminalService.executeAndWait(new CurlCommand(rootDirectory).get(new URL(getCloneDownloadUrl(repository)), cloneTarget + ".zip"))) {
+            if (gitCloneSuccess && !repository.getBranch().equals("master")) {
+                terminalService.executeAndWait(new GitCommand(rootDirectory).checkout(repository.getBranch()));
+            } else if (!gitCloneSuccess && terminalService.executeAndWait(new CurlCommand(rootDirectory).get(new URL(getCloneDownloadUrl(repository)), cloneTarget + ".zip"))) {
                 terminalService.executeAndWait(new UnzipCommand(rootDirectory).archive(cloneTarget + ".zip"));
 
                 terminalService.executeAndWait(new MoveCommand(rootDirectory)
@@ -203,7 +214,7 @@ public class ProjectService {
                         .file(cloneTarget + ".zip"));
             }
 
-            load(Application.getWorkingDirectory() + File.separator + cloneTarget);
+            load(Application.getWorkingDirectory() + File.separator + cloneTarget + (repository.getModule().length() > 1 ? repository.getModule() : ""));
             return getActiveProject();
         } catch (MalformedURLException e) {
             throw new ApplicationRuntimeException("Invalid project repository url", e);
@@ -395,7 +406,7 @@ public class ProjectService {
                         Matcher matcher = Pattern.compile(pattern).matcher(pomXml);
 
                         if (matcher.find()) {
-                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-admin-connector</artifactId>%n      <version>" + Application.getVersion() + "</version>%n    </dependency>") + pomXml.substring(matcher.end());
+                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-admin-connector</artifactId>%n      <version>1.0.1-SNAPSHOT</version>%n    </dependency>") + pomXml.substring(matcher.end());
                             break;
                         }
                     }
@@ -589,14 +600,14 @@ public class ProjectService {
      * @param repository
      * @return
      */
-    public String getCloneDownloadUrl(String repository) {
-        if (repository.contains("gitlab")) {
-            return repository.substring(0, (repository.length() - ".git".length())) + "/repository/archive.zip?ref=master";
-        } else if (repository.startsWith("https://github.com")) {
-            return String.format("https://codeload.github.com/%s/zip/master", repository.substring("https://github.com/".length(), (repository.length() - ".git".length())));
+    public String getCloneDownloadUrl(Repository repository) {
+        if (repository.getUrl().contains("gitlab")) {
+            return repository.getUrl().substring(0, (repository.getUrl().length() - ".git".length())) + "/repository/archive.zip?ref=" + repository.getBranch();
+        } else if (repository.getUrl().startsWith("https://github.com")) {
+            return String.format("https://codeload.github.com/%s/zip/%s", repository.getUrl().substring("https://github.com/".length(), (repository.getUrl().length() - ".git".length())), repository.getBranch());
         }
 
-        throw new ApplicationRuntimeException("Unable to create zip download url for git repository: " + repository);
+        throw new ApplicationRuntimeException("Unable to create zip download url for git repository: " + repository.getUrl());
     }
 
     /**
