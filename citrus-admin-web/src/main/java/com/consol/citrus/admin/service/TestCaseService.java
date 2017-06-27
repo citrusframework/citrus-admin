@@ -29,6 +29,7 @@ import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.jboss.shrinkwrap.resolver.api.NoResolvedResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -411,7 +412,7 @@ public class TestCaseService {
                 }
             } catch (MalformedURLException e) {
                 throw new ApplicationRuntimeException("Failed to access Java classes output folder", e);
-            } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            } catch (ClassNotFoundException | NoClassDefFoundError | NoResolvedResultException e) {
                 log.error("Failed to load Java test class", e);
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to access project output folder", e);
