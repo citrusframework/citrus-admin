@@ -17,6 +17,7 @@
     <spring.boot.version>1.5.0.RELEASE</spring.boot.version>
     <citrus.version>2.7.1</citrus.version>
     <slf4j.version>1.7.22</slf4j.version>
+    <logback.classic.version>1.1.9</logback.classic.version>
     <testng.version>6.10</testng.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
 
@@ -240,7 +241,7 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.1.9</version>
+        <version>${logback.classic.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -251,8 +252,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.5.1</version>
           <configuration>
+            <encoding>${project.build.sourceEncoding}</encoding>
             <source>1.8</source>
             <target>1.8</target>
           </configuration>
@@ -260,12 +262,16 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.1</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <addMavenDescriptor>true</addMavenDescriptor>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -335,7 +341,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-plugin</artifactId>
-          <version>1.9.4</version>
+          <version>1.9.5</version>
         </plugin>
 
         <plugin>

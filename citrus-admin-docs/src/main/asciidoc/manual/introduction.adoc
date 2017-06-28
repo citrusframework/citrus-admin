@@ -59,7 +59,7 @@ Please let us know if you are missing a feature and/or like to vote for features
 [[limitations]]
 == Limitations
 
-*NOTE: This project is still still under construction!*
+*NOTE:* _This project is considered stable but still under construction!_
 
 The administration UI is stable not yet finished. Some features are still under construction. Some aspects are simply not covered yet.
 
