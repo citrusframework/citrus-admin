@@ -526,8 +526,8 @@ table.CodeRay td.code>pre{padding:0}
 <h1>Citrus Administration UI</h1>
 <div class="details">
 <span id="author" class="author">Christoph Deppisch</span><br>
-<span id="revnumber">version 1.0.0,</span>
-<span id="revdate">2017-06-27</span>
+<span id="revnumber">version 1.0.1-SNAPSHOT,</span>
+<span id="revdate">2017-07-06</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus-admin</div>
@@ -607,12 +607,13 @@ table.CodeRay td.code>pre{padding:0}
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Copyright © 2017 ConSol Software GmbH</strong></p>
+<p><strong>Copyright © 2017 ConSol Software GmbH</strong><br>
+<strong>Version: 1.0.1-SNAPSHOT</strong></p>
 </div>
-<!-- toc disabled -->
 <div class="paragraph">
 <p><span class="image"><img src="images/citrus-logo-small.png" alt="citrus-logo"></span></p>
 </div>
+<!-- toc disabled -->
 </div>
 </div>
 <div class="sect1">
@@ -758,7 +759,7 @@ your containerized test environment.</p>
 <div class="sect2">
 <h3 id="limitations"><a class="anchor" href="#limitations"></a>1.2. Limitations</h3>
 <div class="paragraph">
-<p><strong>NOTE: This project is still still under construction!</strong></p>
+<p><strong>NOTE:</strong> <em>This project is considered stable but still under construction!</em></p>
 </div>
 <div class="paragraph">
 <p>The administration UI is stable not yet finished. Some features are still under construction. Some aspects are simply not covered yet.</p>
@@ -824,7 +825,7 @@ is a Java WAR file located at <a href="https://labs.consol.de/maven/repository/c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.0/citrus-admin-web-1.0.0-executable.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.1-SNAPSHOT/citrus-admin-web-1.0.1-SNAPSHOT-executable.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -899,7 +900,7 @@ by setting a system environment variable at startup:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.0.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -958,7 +959,7 @@ manually in prior to opening the project.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.0.war</code></pre>
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1028,7 +1029,7 @@ manually in prior to opening the project.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">java -Dserver.port=8181 -jar citrus-admin-web-1.0.0.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">java -Dserver.port=8181 -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1597,7 +1598,8 @@ directory of your project. The admin UI will automatically find those reports an
 <div class="ulist">
 <ul>
 <li>
-<p>The <a href="http://www.citrusframework.org/reference/html/">Citrus reference manual</a> gives you a detailed description of all Citrus features.</p>
+<p>The <a href="https://www.citrusframework.org/reference/html/">Citrus reference manual</a>
+gives you a detailed description of all Citrus features.</p>
 </li>
 <li>
 <p>Examples:</p>
@@ -1616,7 +1618,7 @@ directory of your project. The admin UI will automatically find those reports an
 </div>
 </li>
 <li>
-<p><a href="http://www.citrusframework.org/changes-report.html">ChangeLog</a> shows the release history.</p>
+<p><a href="https://www.citrusframework.org/docs/history">ChangeLog</a> shows the release history.</p>
 </li>
 <li>
 <p><a href="https://github.com/christophd/citrus-admin/blob/master/citrus-admin-docs/contributing.md">Contributing</a>
@@ -1629,8 +1631,8 @@ explains how you can contribute to this project. Pull requests are highly apprec
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.0<br>
-Last updated 2017-06-26 15:00:33 MESZ
+Version 1.0.1-SNAPSHOT<br>
+Last updated 2017-07-06 13:18:19 MESZ
 </div>
 </div>
 <style>
