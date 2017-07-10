@@ -102,6 +102,12 @@ You can set the following system properties:
 | citrus.admin.project.repository
 | Git project repository to load on startup (default: not set)
 
+| citrus.admin.project.repository.branch
+| Git project branch (default: master)
+
+| citrus.admin.project.repository.module
+| Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
+
 | citrus.admin.java.source.directory
 | Java sources directory (default: *src/test/java*)
 
@@ -145,6 +151,12 @@ The exact same properties are also available when set as environment variables:
 
 | CITRUS_ADMIN_PROJECT_REPOSITORY
 | Git project repository to load on startup (default: not set)
+
+| CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH
+| Git project branch (default: master)
+
+| CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE
+| Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
 
 | CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY
 | Java sources directory (default: *src/test/java*)

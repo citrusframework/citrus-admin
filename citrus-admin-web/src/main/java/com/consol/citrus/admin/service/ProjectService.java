@@ -214,7 +214,7 @@ public class ProjectService {
                         .file(cloneTarget + ".zip"));
             }
 
-            load(Application.getWorkingDirectory() + File.separator + cloneTarget + (repository.getModule().length() > 1 ? repository.getModule() : ""));
+            load(Application.getWorkingDirectory() + File.separator + cloneTarget + (repository.getModule().length() > 1 ? File.separator + repository.getModule() : ""));
             return getActiveProject();
         } catch (MalformedURLException e) {
             throw new ApplicationRuntimeException("Invalid project repository url", e);
