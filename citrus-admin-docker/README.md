@@ -1,5 +1,5 @@
 Citrus Admin Docker Image
-==============
+=========
 
 This project builds and runs the [Docker](https://www.docker.com/) images for the Citrus admin web application.
 
@@ -38,4 +38,10 @@ Pod in Kubernetes the Citrus admin resources are able to access exposed services
 Team
 ---------
 
-ConSol* Software GmbH
+```
+ConSol Software GmbH
+Christoph Deppisch
+christoph.deppisch@consol.de
+
+http://www.citrusframework.org
+```

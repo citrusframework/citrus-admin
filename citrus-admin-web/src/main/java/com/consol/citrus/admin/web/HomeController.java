@@ -46,4 +46,49 @@ public class HomeController {
     public String version() {
         return Application.getVersion();
     }
+
+    @RequestMapping(value = "dashboard", method = RequestMethod.GET)
+    public String dashboard() {
+        return index();
+    }
+
+    @RequestMapping(value = "report", method = RequestMethod.GET)
+    public String report() {
+        return index();
+    }
+
+    @RequestMapping(value = "open", method = RequestMethod.GET)
+    public String open() {
+        return index();
+    }
+
+    @RequestMapping(value = "new", method = RequestMethod.GET)
+    public String newRoute() {
+        return index();
+    }
+
+    @RequestMapping(value = "about", method = RequestMethod.GET)
+    public String about() {
+        return index();
+    }
+
+    @RequestMapping(value = "configuration/*", method = RequestMethod.GET)
+    public String configuration() {
+        return index();
+    }
+
+    @RequestMapping(value = "tests/*", method = RequestMethod.GET)
+    public String tests() {
+        return index();
+    }
+
+    @RequestMapping(value = "settings/*", method = RequestMethod.GET)
+    public String settings() {
+        return index();
+    }
+
+    @RequestMapping(value = "log", method = RequestMethod.GET)
+    public String log() {
+        return index();
+    }
 }

@@ -1,5 +1,5 @@
 Citrus Admin Web UI ![Logo][1]
-==============
+=========
 
 This is a web administration user interface for the integration test framework 
 Citrus [www.citrusframework.org][2]. Major functionality objectives
