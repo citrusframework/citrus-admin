@@ -48,7 +48,7 @@ by setting a system property or environment variable at startup:
 
 [source,bash]
 ----
-java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1.war
 ----
 
 When pre selecting a project home the project is opened automatically and the link:#project-dashboard[project dashboard] is displayed.
@@ -85,7 +85,7 @@ When you are using a different project layout than expected there are different 
 [source,bash]
 ----
 java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1.war
 ----
 
 As you can see we can customize the project file paths that are scanned by the UI. This enables us to open projects with different project file locations. Please refer to the complete list of available system properties
@@ -162,14 +162,14 @@ These properties are specified in the CLI command when starting the application.
 
 [source,bash]
 ----
-java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1.war
 ----
 
 You can also use Spring boot properties, e.g. a custom server port:
 
 [source,bash]
 ----
-java -Dserver.port=8181 -jar citrus-admin-web-1.0.1-SNAPSHOT.war
+java -Dserver.port=8181 -jar citrus-admin-web-1.0.1.war
 ----
 
 The system properties are automatically identified in the admin UI web application during startup.

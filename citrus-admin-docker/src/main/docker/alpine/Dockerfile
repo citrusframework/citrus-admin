@@ -2,7 +2,7 @@ FROM maven:3.5.0-jdk-8-alpine
 
 MAINTAINER citrusframework.org <citrus-dev-l@consol.de>
 
-ENV APP_VERSION=1.0.1-SNAPSHOT
+ENV APP_VERSION=1.0.1
 ENV APP_ARTIFACT=citrus-admin-web
 ENV DEPLOY_DIR /app
 ENV APP_DIR /maven
