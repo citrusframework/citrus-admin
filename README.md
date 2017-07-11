@@ -8,25 +8,26 @@ are project and configuration management as well as test execution and reporting
 See the complete [User Manual](https://christophd.github.io/citrus-admin/) for a detailed description 
 on all features ond how to use them.
 
-Preconditions
----------
-
-At the moment we are focused on supporting standard Citrus projects using Maven, 
-TestNG/JUnit and Java 8.
-
-Usage Docker
+Docker image
 ---------
 
 The administration UI is available as Docker image (`consol/citrus-admin:latest`). You can pull the image and link it to your local Citrus project:
 
 ```
-docker run -p 8080:8080 -v $PWD:/maven consol/citrus-admin:latest
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_HOME=/maven consol/citrus-admin:latest
 ```
 
-The current directory is mounted to the container and should be the Citrus project parent directory or some base directory 
-that can navigate to the Citrus target project.
+The command above loads the Docker image and runs a new Citrus web UI container. The container is provided with a volume mount that makes the current directory accessible from within the container.
+This current directory is then used as project home so the admin UI will automatically open the Citrus project from that directory. Once the container is running
+you can point your local browser to [http://localhost:8080]() in order to access the web UI.
 
-Usage Docker Maven plugin
+The `CITRUS_ADMIN_PROJECT_HOME` environment setting is optional and provides auto project opening for you. You can leave out this setting in order to select a project folder
+in your mounted working directory.
+
+In case you do not have a Citrus project ready yet, the admin UI can create a new project for you. Just select one of the Maven archetypes available for Citrus and
+give your project coordinates (groupId, artifactId). The UI will load the archetype sources and create a new project ready for testing. 
+
+Use Docker Maven plugin
 ---------
 
 The citrus-admin Docker image works great with the Fabric8 Docker Maven plugin (https://dmp.fabric8.io/). You can add the plugin configuration as follows in your
@@ -130,7 +131,7 @@ mvn -pl citrus-admin-web spring-boot:run
 For active development and a short round trip you can use the angular-cli dev-server in order to automatically compile typescript sources on the fly when they change.
 
 ```
-mvn -pl citrus-admin-client frontend:npm -P development
+mvn -pl citrus-admin-client frontend:npm -Pdevelopment
 ```
 
 If you change a source file (e.e *.js, *.ts, *.css) the sources will automatically be compiled and copied to the Maven target folder. The running
@@ -138,6 +139,12 @@ spring-boot application is able to automatically grab the newly compiled sources
 If you change server Java sources spring-boot automatically restarts the web application so you may just hit refresh in your browser, too.
 
 The development server is running on its own port 4200 ([http://localhost:4200](http://localhost:4200)). To avoid cors issues a api proxy to the backend is provided out of the box. You can configure the proxy settings in [proxy.conf.json](citrus-admin-client/src/main/resources/static/proxy.conf.json). 
+
+Limitations
+---------
+
+At the moment we are focused on supporting standard Citrus projects using Maven, 
+TestNG/JUnit and Java 8.
 
 Resources
 ---------

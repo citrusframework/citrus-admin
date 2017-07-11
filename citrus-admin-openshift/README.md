@@ -55,17 +55,20 @@ You can manage the environment settings with your Openshift namespace web UI.
 
 These are the available settings:
 
-* `CITRUS_ADMIN_PROJECT_HOME`
-* `CITRUS_ADMIN_ROOT_DIRECTORY`
-* `CITRUS_ADMIN_WORKING_DIRECTORY`
-* `CITRUS_ADMIN_PROJECT_REPOSITORY`
-* `CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH`
-* `CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE`
-* `CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY`
-* `CITRUS_ADMIN_XML_SOURCE_DIRECTORY`
-* `CITRUS_ADMIN_SPRING_APPLICATION_CONTEXT`
-* `CITRUS_ADMIN_SPRING_JAVA_CONFIG`
-* `CITRUS_ADMIN_TEST_BASE_PACKAGE`
+* `CITRUS_ADMIN_PROJECT_HOME`: Preselect project on startup
+* `CITRUS_ADMIN_ROOT_DIRECTORY`: System root as base of all projects (default: user home directory)
+* `CITRUS_ADMIN_WORKING_DIRECTORY`: Base directory for new projects (default: root directory)
+* `CITRUS_ADMIN_PROJECT_REPOSITORY`: Git project repository to load on startup (default: not set)
+* `CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH`: Git project branch (default: master)
+* `CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE`: Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
+* `CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES`: Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)
+* `CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES`: Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)
+* `CITRUS_ADMIN_MAVEN_PROJECT_PACKAGE`: Package name for newly generated project (default: com.consol.citrus)
+* `CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY`: Java sources directory (default: *src/test/java*)
+* `CITRUS_ADMIN_XML_SOURCE_DIRECTORY`: XML test sources directory (default: *src/test/resources*)
+* `CITRUS_ADMIN_SPRING_APPLICATION_CONTEXT`: Path to Spring application context file (default: *src/test/resources/citrus-context.xml*)
+* `CITRUS_ADMIN_SPRING_JAVA_CONFIG`: Java class holding Spring bean configurations (default: *com.consol.citrus.CitrusEndpointConfig*)
+* `CITRUS_ADMIN_TEST_BASE_PACKAGE`: Base package where to add new tests (default: *com.consol.citrus*)
 
 If you want to automatically load tutorials from a git repository you can set the env **CITRUS_ADMIN_PROJECT_REPOSITORY** pointing to a git clone url. The
 citrus-admin will automatically clone the repository at startup.

@@ -108,6 +108,15 @@ You can set the following system properties:
 | citrus.admin.project.repository.module
 | Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
 
+| citrus.admin.maven.archetype.coordinates
+| Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)
+
+| citrus.admin.maven.project.coordinates
+| Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)
+
+| citrus.admin.maven.project.package
+| Package name for newly generated project (default: com.consol.citrus)
+
 | citrus.admin.java.source.directory
 | Java sources directory (default: *src/test/java*)
 
@@ -157,6 +166,15 @@ The exact same properties are also available when set as environment variables:
 
 | CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE
 | Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
+
+| CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES
+| Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)
+
+| CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES
+| Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)
+
+| CITRUS_ADMIN_MAVEN_PROJECT_PACKAGE
+| Package name for newly generated project (default: com.consol.citrus)
 
 | CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY
 | Java sources directory (default: *src/test/java*)

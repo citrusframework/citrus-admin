@@ -72,17 +72,17 @@ public class HomeController {
         return index();
     }
 
-    @RequestMapping(value = "configuration/*", method = RequestMethod.GET)
+    @RequestMapping(value = "configuration*", method = RequestMethod.GET)
     public String configuration() {
         return index();
     }
 
-    @RequestMapping(value = "tests/*", method = RequestMethod.GET)
+    @RequestMapping(value = "tests*", method = RequestMethod.GET)
     public String tests() {
         return index();
     }
 
-    @RequestMapping(value = "settings/*", method = RequestMethod.GET)
+    @RequestMapping(value = "settings*", method = RequestMethod.GET)
     public String settings() {
         return index();
     }

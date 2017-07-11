@@ -38,6 +38,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +112,29 @@ public class ProjectService {
 
             create(repository);
         }
+
+        String mavenArchetype = System.getProperty(Application.MAVEN_ARCHETYPE_COORDINATES, System.getenv(Application.MAVEN_ARCHETYPE_COORDINATES_ENV));
+        if (project == null && StringUtils.hasText(mavenArchetype)) {
+            Archetype archetype = new Archetype();
+
+            MavenCoordinate archetypeCoordinates = MavenCoordinates.createCoordinate(mavenArchetype);
+            archetype.setArchetypeGroupId(archetypeCoordinates.getGroupId());
+            archetype.setArchetypeArtifactId(archetypeCoordinates.getArtifactId());
+            archetype.setArchetypeVersion(archetypeCoordinates.getVersion());
+
+            String mavenProject = System.getProperty(Application.MAVEN_PROJECT_COORDINATES,
+                    System.getenv(Application.MAVEN_PROJECT_COORDINATES_ENV) != null ? System.getenv(Application.MAVEN_PROJECT_COORDINATES_ENV) : "com.consol.citrus:citrus-project:1.0.0");
+
+            MavenCoordinate projectCoordinates = MavenCoordinates.createCoordinate(mavenProject);
+            archetype.setGroupId(projectCoordinates.getGroupId());
+            archetype.setArtifactId(projectCoordinates.getArtifactId());
+            archetype.setVersion(projectCoordinates.getVersion());
+
+            archetype.setPackageName(System.getProperty(Application.MAVEN_PROJECT_PACKAGE,
+                    System.getenv(Application.MAVEN_PROJECT_PACKAGE_ENV) != null ? System.getenv(Application.MAVEN_PROJECT_PACKAGE_ENV) : projectCoordinates.getGroupId()));
+
+            create(archetype);
+        }
     }
 
     /**
@@ -122,8 +147,10 @@ public class ProjectService {
         if (project.getProjectInfoFile().exists()) {
             project.loadSettings();
         } else if (!validateProject(project)) {
-            throw new ApplicationRuntimeException("Invalid project home - not a proper Citrus project");
+            throw new ApplicationRuntimeException(String.format("Invalid project home '%s' - not a proper Citrus project", projectHomeDir));
         }
+
+        log.info("Loading project: " + projectHomeDir);
 
         if (project.isMavenProject()) {
             try {
@@ -194,6 +221,8 @@ public class ProjectService {
      * @return
      */
     public Project create(Repository repository) {
+        log.info("Loading project sources from git: " + repository.getUrl());
+
         try {
             File rootDirectory = new File(Application.getWorkingDirectory());
             String cloneTarget = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1, repository.getUrl().length() - ".git".length());
@@ -214,7 +243,12 @@ public class ProjectService {
                         .file(cloneTarget + ".zip"));
             }
 
-            load(Application.getWorkingDirectory() + File.separator + cloneTarget + (repository.getModule().length() > 1 ? File.separator + repository.getModule() : ""));
+            String module = "";
+            if (StringUtils.hasText(repository.getModule()) && repository.getModule().length() > 1) {
+                module = repository.getModule().startsWith("/") ? repository.getModule() : File.separator + repository.getModule();
+            }
+
+            load(Application.getWorkingDirectory() + File.separator + cloneTarget + module);
             return getActiveProject();
         } catch (MalformedURLException e) {
             throw new ApplicationRuntimeException("Invalid project repository url", e);
@@ -227,6 +261,8 @@ public class ProjectService {
      * @return
      */
     public Project create(Archetype archetype) {
+        log.info("Generating project sources from Maven archetype: " + archetype.getArchetypeArtifactId());
+
         if (terminalService.executeAndWait(new MavenArchetypeCommand(new File(Application.getWorkingDirectory()), new MavenBuildConfiguration())
                 .generate(archetype))) {
             load(Application.getWorkingDirectory() + File.separator + archetype.getArtifactId());

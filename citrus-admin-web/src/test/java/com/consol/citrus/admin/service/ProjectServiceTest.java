@@ -172,7 +172,7 @@ public class ProjectServiceTest {
     }
 
     @Test(expectedExceptions = { ApplicationRuntimeException.class },
-            expectedExceptionsMessageRegExp = "Invalid project home - not a proper Citrus project")
+            expectedExceptionsMessageRegExp = "Invalid project home 'invalid' - not a proper Citrus project")
     public void testInvalidProjectHome() {
         projectService.load("invalid");
     }

@@ -56,6 +56,14 @@ public class Application extends SpringBootServletInitializer {
     public static final String PROJECT_REPOSITORY_MODULE = CITRUS_ADMIN_PREFIX + "project.repository.module";
     public static final String PROJECT_REPOSITORY_MODULE_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_MODULE";
 
+    /** Maven archetype to load on startup */
+    public static final String MAVEN_ARCHETYPE_COORDINATES = CITRUS_ADMIN_PREFIX + "maven.archetype.coordinates";
+    public static final String MAVEN_ARCHETYPE_COORDINATES_ENV = CITRUS_ADMIN_ENV_PREFIX + "MAVEN_ARCHETYPE_COORDINATES";
+    public static final String MAVEN_PROJECT_COORDINATES = CITRUS_ADMIN_PREFIX + "maven.project.coordinates";
+    public static final String MAVEN_PROJECT_COORDINATES_ENV = CITRUS_ADMIN_PREFIX + "MAVEN_PROJECT_COORDINATES";
+    public static final String MAVEN_PROJECT_PACKAGE = CITRUS_ADMIN_PREFIX + "maven.project.package";
+    public static final String MAVEN_PROJECT_PACKAGE_ENV = CITRUS_ADMIN_PREFIX + "MAVEN_PROJECT_PACKAGE";
+
     /** Base package for test cases to look for */
     public static final String BASE_PACKAGE = CITRUS_ADMIN_PREFIX + "test.base.package";
     public static final String BASE_PACKAGE_ENV = CITRUS_ADMIN_ENV_PREFIX + "TEST_BASE_PACKAGE";
