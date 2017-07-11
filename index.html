@@ -561,10 +561,13 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#setup-open">3.2. Open project</a></li>
-<li><a href="#setup-configuration">3.3. System configuration</a></li>
-<li><a href="#setup-system-properties">3.4. System properties</a></li>
-<li><a href="#setup-environment-variables">3.5. Environment variables</a></li>
-<li><a href="#setup-json-settings-file">3.6. Json project settings</a></li>
+<li><a href="#setup-configuration">3.3. System configuration</a>
+<ul class="sectlevel3">
+<li><a href="#setup-system-properties">3.3.1. System properties</a></li>
+<li><a href="#setup-environment-variables">3.3.2. Environment variables</a></li>
+<li><a href="#setup-json-settings-file">3.3.3. Json project settings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#project">4. Project</a>
@@ -995,9 +998,8 @@ So you can adjust the project file locations using environment variables, too. P
 <p>The administration UI is a web application that is started as standalone Spring Boot application or as a deployment in a Java web application server. The admin UI application uses some general settings and customization parameters that describe how the UI should behave.
 You can set those parameters as system properties or environment variables on server startup in order to tell the UI how to load projects for instance.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="setup-system-properties"><a class="anchor" href="#setup-system-properties"></a>3.4. System properties</h3>
+<div class="sect3">
+<h4 id="setup-system-properties"><a class="anchor" href="#setup-system-properties"></a>3.3.1. System properties</h4>
 <div class="paragraph">
 <p>You can set the following system properties in order to customize the admin Ui application:</p>
 </div>
@@ -1100,8 +1102,8 @@ You can set those parameters as system properties or environment variables on se
 <p>The system properties are automatically identified in the admin UI web application during startup.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="setup-environment-variables"><a class="anchor" href="#setup-environment-variables"></a>3.5. Environment variables</h3>
+<div class="sect3">
+<h4 id="setup-environment-variables"><a class="anchor" href="#setup-environment-variables"></a>3.3.2. Environment variables</h4>
 <div class="paragraph">
 <p>The exact same properties that we have seen in the previous system properties section are also available when set as environment variables:</p>
 </div>
@@ -1181,8 +1183,8 @@ You can set those parameters as system properties or environment variables on se
 well suited for configuring Docker related container instances. Read more about that in chapter <a href="#docker">docker</a>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="setup-json-settings-file"><a class="anchor" href="#setup-json-settings-file"></a>3.6. Json project settings</h3>
+<div class="sect3">
+<h4 id="setup-json-settings-file"><a class="anchor" href="#setup-json-settings-file"></a>3.3.3. Json project settings</h4>
 <div class="paragraph">
 <p>Every time the UI has opened a Citrus project settings are stored to the general project settings file located in the root project folder. This is done because the next time
 you open that project the admin UI should use the exact same project settings as before. The project settings file is stored in the project root folder and is called <strong>citrus-project.json</strong>.</p>
@@ -1228,6 +1230,7 @@ So you can also adjust this file manually in order to manipulate the way the UI 
 </div>
 <div class="paragraph">
 <p>So you can always review the project settings when looking at this file.</p>
+</div>
 </div>
 </div>
 </div>
