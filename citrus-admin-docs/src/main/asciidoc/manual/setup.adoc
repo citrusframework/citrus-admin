@@ -249,7 +249,7 @@ The setting file uses Json data format and looks like this:
   "version" : "1.0.0",
   "settings" : {
     "basePackage" : "com.consol.citrus.samples",
-    "citrusVersion" : "2.7.1",
+    "citrusVersion" : "2.7.2",
     "springApplicationContext" : "src/test/resources/citrus-context.xml",
     "javaSrcDirectory" : "src/test/java/",
     "xmlSrcDirectory" : "src/test/resources/",
