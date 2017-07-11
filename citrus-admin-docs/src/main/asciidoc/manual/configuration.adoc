@@ -34,39 +34,93 @@ will also affect the administration UI. Just hit the reload button in your brows
 [[config-application-context]]
 == Spring application context
 
-TODO
+Citrus uses the Spring framework for dependency injection and component configuration. Usually a Citrus project comes with a set of Spring configuration files that define Citrus components and other
+project related settings. The admin UI scanns the project sources for typical Spring configuration files and displays all components (Spring beans) in that configuraiton.
 
-[[config-spring-beans]]
-== Spring beans
+You can review the beans with all properties and you can edit the Spring configuration files.
 
-TODO
+image:screenshots/config-spring-context.png[Spring context]
+
+image:screenshots/config-spring-beans.png[Spring beans]
 
 [[config-global-variables]]
 == Global Variables
 
-TODO
+Test variables represent a common concept in Citrus. Variables define reusable identifiers and values that are referenced multiple times in a test case. The global variables are visible
+to all Citrus test cases and represent static constant values valid for the whole project. The global variables are editable via HTML forms on the configuration page:
+
+image:screenshots/config-global-variables.png[Global variables]
+
+The variables are saved to the Spring bean configuration as Citrus *global-variables* component:
+
+[source,xml]
+----
+<citrus:global-variables>
+    <citrus:variable name="projectName" value="Citrus Integration Testing"/>
+    <citrus:variable name="userName" value="TestUser"/>
+</citrus:global-variables>
+----
 
 [[config-schemas]]
 == Schema Repositories
 
-TODO
+Every time Citrus receives a message over some kind of messaging transport the validation mechanism will try to validate the syntax of the message payload with some
+schema rules. When using XML payloads these are XSD or WSDL files that define the syntax rules. In Citrus you can define schema repositories that hold one to many XML
+schema definition files. The Citrus XML message validators consult these schema repositories during message validation for matching schema definitions.
+
+The schema repositories and schema definition files are managed on configuration page.
+
+image:screenshots/config-schema-repository.png[Schema repository]
+
+The configuration made here is saved to the Spring bean configuration files as Citrus schema components.
 
 [[config-namespace]]
 == Namespace Context
 
-TODO
+When using Xpath expressions in Citrus XML namespaces may be required to identify elements and attributes in XML payloads. The XML namespaces used in Xpath
+are identified with a prefix that evaluates to a target namespace value. You can define all namespaces and prefix values globally using the namespace context configuration.
+
+image:screenshots/config-namespace-context.png[Namespace context]
+
+The namespace context configuration is save as Citrus Spring bean component in the application context.
+
+[source,xml]
+----
+<citrus:namespace-context>
+    <citrus:namespace prefix="hello" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+</citrus:namespace-context>
+----
 
 [[config-dictionaries]]
 == Data Dictionaries
 
-TODO
+Data dictionaries help to define reusable expressions that manipulate message payloads before a message is sent or received. Usually these are Xpath or JsonPath expressions
+that overwrite values in message payloads throughout the whole project. Each message payload will consult the data dictionary for translation of values before being sent or received.
+
+This way you can add centralized expressions that overwrite message payload elements in multiple test cases.
+
+The data dictionary configuration is done on the configuration pages.
+
+image:screenshots/config-data-dictionary.png[Data dictionary]
 
 [[config-functions]]
 == Functions
 
-TODO
+Functions apply on message payloads and test variables for dynamic value generation. The functions can be used in multiple places throughout the Citrus framework (e.g. payload, header, variables, etc.)
+Each function is provided with parameters and generates a String value as outcome. This way the user can place functions in order to generate more dynamic test data for instance. There are lots of predefined
+functions ready for usage in Citrus (e.g. citrus:randomUUID(), citrus:currentDate() and many more).
+
+In addition to that you can create custom functions that implement very specific algorithms matching your very specific project needs. These functions and its implementations are configured here:
+
+image:screenshots/config-functions.png[Functions]
 
 [[config-matcher]]
 == Validation Matcher
 
-TODO
+Similar to adding custom functions in Citrus you can also add custom validation matcher implementations. The matcher helpers do implement specific validation logic that applies to message
+validation when receiving messages in Citrus. There are lots of predefined matchers available in Citrus (e.g. @contains()@, @equalsIgnoreCase()@ and many more).
+
+Custom validation matchers are configurable via HTML forms on the configuration pages.
+
+image:screenshots/config-validation-matcher.png[Validation matcher]
+

@@ -26,8 +26,11 @@ ifdef::basebackend-html[toc::[]]
 
 include::manual/introduction.adoc[]
 include::manual/installation.adoc[]
+include::manual/setup.adoc[]
 include::manual/project.adoc[]
 include::manual/configuration.adoc[]
 include::manual/tests.adoc[]
+
+include::manual/docker.adoc[]
 
 include::manual/links.adoc[]

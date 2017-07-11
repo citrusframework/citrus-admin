@@ -1,232 +1,10 @@
 [[project]]
 = Project
 
-The basic objective of the administration UI is to manage your Citrus projects. The UI is able to open your project in order
-to view and edit your project configuration as well as your test cases.
-
-[[project-new]]
-== New project
-
-New projects are created in the admin UI working directory. By default this is the user home directory. You can change the working directory location by
-setting a system property or environment variable (*citrus.admin.working.directory* | *CITRUS_ADMIN_WORKING_DIRECTORY*).
-
-image:screenshots/project-new-git.png[Git repository]
-
-=== Git clone
-
-The administration UI is able to create new Citrus projects. The first approach would be to load the project sources from a Git repository.
-This repository should contain the Citrus project sources exclusively. Just give the repository URL and the UI will try to load the sources to
-your local file system. This is done either by git clone command (if the git binaries are available). As a fallback from that clone the UI will load
-the zipped project from git and unpack it on the local file system.
-
-image:screenshots/project-new-archetype.png[Maven Archetype]
-
-=== Maven archetype
-
-The second approach for creating new projects is to generate the project from a Maven archetype. Citrus provides several archetypes for that. Just
-fill out the archetype form with the respective Maven coordinates (groupId, artifactId, version).
-
-[[project-open]]
-== Open project
-
-You can open any Citrus project. The only prerequisite is that you have access to the project home on your local machine. When the administration UI is
-started you have to open a project first.
-
-image:screenshots/project-open.png[Open]
-
-The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
-by setting a system environment variable at startup:
-
-[source,bash]
-----
-java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war
-----
-
-When pre selecting a project home the project is opened automatically and the link:#project-dashboard[project dashboard] is displayed. Now back to the project home selection if no project has bee pre selected yet.
-
-You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.
-
-image:screenshots/project-home.png[Select project home]
-
-Once you have specified the project home you are ready to hit the *Open* button. Citrus will read the project information and open the link:#project-dashboard[project dashboard]. The administration UI is looking
-for several things in your project in order to gain information about the project. The files scanned are:
-
-.Project files
-|===
-|Path |Description
-
-| *${project-home}/pom.xml*
-| Reads information from Maven POM
-
-| *${project-home}/src/test/resources*
-| Reads XML test cases
-
-| *${project-home}/src/test/resources/citrus-context.xml*
-| Reads Spring bean configuration
-
-| *${project-home}/src/test/java*
-| Reads test cases
-|===
-
-=== Customize settings
-
-It is possible that your project uses a different folder layout for test resources and test sources (e.g. *src/it/resources* and *src/it/java*). Then the project open operation will fail with errors. We can fix this by customizing the project settings
-manually in prior to opening the project.
-
-There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:
-
-[source,bash]
-----
-java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1-SNAPSHOT.war
-----
-
-You can set the following system properties:
-
-.System properties
-|===
-|Property |Description
-
-| server.port
-| Web server port
-
-| citrus.admin.project.home
-| Preselect project on startup
-
-| citrus.admin.root.directory
-| System root as base of all projects (default: user home directory)
-
-| citrus.admin.working.directory
-| Base directory for new projects (default: root directory)
-
-| citrus.admin.project.repository
-| Git project repository to load on startup (default: not set)
-
-| citrus.admin.project.repository.branch
-| Git project branch (default: master)
-
-| citrus.admin.project.repository.module
-| Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
-
-| citrus.admin.maven.archetype.coordinates
-| Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)
-
-| citrus.admin.maven.project.coordinates
-| Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)
-
-| citrus.admin.maven.project.package
-| Package name for newly generated project (default: com.consol.citrus)
-
-| citrus.admin.java.source.directory
-| Java sources directory (default: *src/test/java*)
-
-| citrus.admin.xml.source.directory
-| XML test sources directory (default: *src/test/resources*)
-
-| citrus.admin.spring.application.context
-| Path to Spring application context file (default: *src/test/resources/citrus-context.xml*)
-
-| citrus.admin.spring.java.config
-| Java class holding Spring bean configurations (default: *com.consol.citrus.CitrusEndpointConfig*)
-
-| citrus.admin.test.base.package
-| Base package where to add new tests (default: *com.consol.citrus*)
-
-| maven.home.directory
-| Path to Maven home that should be used in admin UI (when not set environment variable MAVEN_HOME or M2_HOME is used as default)
-|===
-
-You can also use Spring boot properties, e.g. a custom server port:
-
-[source,bash]
-----
-java -Dserver.port=8181 -jar citrus-admin-web-1.0.1-SNAPSHOT.war
-----
-
-The exact same properties are also available when set as environment variables:
-
-.Environment variables
-|===
-|Environment variable |Description
-
-| CITRUS_ADMIN_PROJECT_HOME
-| Preselect project on startup
-
-| CITRUS_ADMIN_ROOT_DIRECTORY
-| System root as base of all projects (default: user home directory)
-
-| CITRUS_ADMIN_WORKING_DIRECTORY
-| Base directory for new projects (default: root directory)
-
-| CITRUS_ADMIN_PROJECT_REPOSITORY
-| Git project repository to load on startup (default: not set)
-
-| CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH
-| Git project branch (default: master)
-
-| CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE
-| Module name (directory) representing the sub module in a Maven multi module repository (default: not set)
-
-| CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES
-| Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)
-
-| CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES
-| Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)
-
-| CITRUS_ADMIN_MAVEN_PROJECT_PACKAGE
-| Package name for newly generated project (default: com.consol.citrus)
-
-| CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY
-| Java sources directory (default: *src/test/java*)
-
-| CITRUS_ADMIN_XML_SOURCE_DIRECTORY
-| XML test sources directory (default: *src/test/resources*)
-
-| CITRUS_ADMIN_SPRING_APPLICATION_CONTEXT
-| Path to Spring application context file (default: *src/test/resources/citrus-context.xml*)
-
-| CITRUS_ADMIN_SPRING_JAVA_CONFIG
-| Java class holding Spring bean configurations (default: *com.consol.citrus.CitrusEndpointConfig*)
-
-| CITRUS_ADMIN_TEST_BASE_PACKAGE
-| Base package where to add new tests (default: *com.consol.citrus*)
-|===
-
-A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called *citrus-project.json*. When you open a Citrus project for the first time the administration UI creates this project settings file
-automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:
-
-[source,bash]
-----
-{
-  "name" : "citrus-sample-project",
-  "description" : "",
-  "version" : "1.0.0",
-  "settings" : {
-    "basePackage" : "com.consol.citrus.samples",
-    "citrusVersion" : "2.7.1",
-    "springApplicationContext" : "src/test/resources/citrus-context.xml",
-    "javaSrcDirectory" : "src/test/java/",
-    "xmlSrcDirectory" : "src/test/resources/",
-    "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
-    "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
-    "useConnector" : true,
-    "connectorActive" : true,
-    "tabSize" : 2,
-    "build" : {
-      "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
-      "type" : "maven",
-      "properties" : [ ],
-      "testPlugin" : "maven-failsafe",
-      "command" : null,
-      "profiles" : "",
-      "clean" : false,
-      "compile" : true
-    }
-  }
-}
-----
-
-So you can force the administration UI to use these settings when opening the project. Just create the *citrus-project.json* file in the Citrus project home directory before opening the project.
+The basic objective of the administration UI is to manage your Citrus projects. The UI is able to open projects in order
+to view and edit your project configuration and test cases. Usually the projects are located somewhere on your local machine so
+the UI can open those projects from local file system. In addition to that the UI is able to load project sources from git repositories. As an alternative
+you can create completely new projects from Maven archetypes. The following sections walk through all these options in more detail.
 
 [[project-dashboard]]
 == Dashboard
@@ -247,9 +25,9 @@ You can review and change these project related settings with an HTML form on th
 image:screenshots/project-settings.png[Settings]
 
 Some project settings are read only at the moment, e.g. we do not support renaming of projects yet. If you want to rename a project or change the project version you need to do this manually
-in the Maven POM configuration.
+in the Maven POM configuration for now.
 
-If you save the project settings the administration UI will save the changes to the project settings file *citrus-project.json* which is located in your project home directory. This file uses the JSON syntax and looks like follows:
+If you save the project settings the administration UI will save the changes to the project settings file *citrus-project.json* which is located in your project home directory. This file uses the Json syntax and looks like follows:
 
 [source,json]
 ----
@@ -280,6 +58,9 @@ If you save the project settings the administration UI will save the changes to 
    }
 }
 ----
+
+This project Json file is automatically created whenever the admin UI opens a project on your local file system. This file should be part of your coder versioning platform in order to save settings related to that project. When the project is reopened
+the UI will read project settings from that file in order to make sure that the project is loaded with the exact same settings as in the past. So you can also adjust this file manually in order to manipulate the way the UI is opening your project.
 
 [[project-settings-general]]
 === General

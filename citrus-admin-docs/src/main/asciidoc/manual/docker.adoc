@@ -1,0 +1,131 @@
+[[docker]]
+= Docker support
+
+[[docker-image]]
+== Docker image
+
+The administration UI is available as Docker image (`consol/citrus-admin:latest`). You can pull the image and link it to your local Citrus project:
+
+[source]
+----
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_HOME=/maven consol/citrus-admin:latest
+----
+
+The command above loads the Docker image and runs a new Citrus web UI container. The container is provided with a volume mount that makes the current directory accessible from within the container.
+This current directory is then used as project home so the admin UI will automatically open the Citrus project from that directory. Once the container is running
+you can point your local browser to link:[http://localhost:8080] in order to access the web UI.
+
+The `CITRUS_ADMIN_PROJECT_HOME` environment setting is optional and is used to automatically open a project on container startup. You can leave out this setting in order to select a project folder
+in your mounted working directory when starting the web UI.
+
+In case you do not have a Citrus project ready yet, the admin UI can also create a new project for you. It is possible to run a Maven archetype on container startup that creates a complete new project for you.
+You can set the Maven archetype coordinates (*groupId*, *artifactId*, *version*) as environment variables when running the container.
+
+[source]
+----
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.2 consol/citrus-admin:latest
+----
+
+The UI will load the Maven archetype and create the project sources when the container is started. The new project gets its Maven coordinates from another environment setting:
+
+[source]
+----
+-e CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES=com.consol.citrus:citrus-sample:1.0.0
+----
+
+Another way to load a new project on container startup is to specify a git repository URL. The Citrus admin Docker container will then load the project sources from that git repository on startup:
+
+[source]
+----
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_REPOSITORY=https://github.com/account/citrus-project.git consol/citrus-admin:latest
+----
+
+The command above will load the project sources from git with URL `https://github.com/account/citrus-project.git` and open that project afterwards. The git repository of course should hold the Citrus project sources. In case
+the Citrus project is located in a sub module in that git repository you can load that sub module by specifying additional environment properties:
+
+[source]
+----
+-e CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE=/integration/citrus-test -e CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH=bugfix
+----
+
+With these options we are able to start the Docker image as container with special customizations via environment settings. Please refer to the complete list of supported environment variables in chapter link:#setup-environment-variables[system configuration].
+
+[[docker-maven-plugin]]
+== Use Docker Maven plugin
+
+The citrus-admin Docker image works great with the Fabric8 Docker Maven plugin (https://dmp.fabric8.io/)[https://dmp.fabric8.io/)]. You can add the plugin configuration as follows in your
+Maven POM:
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>docker-maven-plugin</artifactId>
+    <configuration>
+      <verbose>true</verbose>
+      <images>
+        <image>
+          <alias>citrus-admin</alias>
+          <name>consol/citrus-admin:latest</name>
+          <run>
+            <namingStrategy>alias</namingStrategy>
+            <ports>
+              <port>8080:8080</port>
+            </ports>
+            <volumes>
+              <from>
+                <image>application</image>
+              </from>
+            </volumes>
+            <env>
+              <CITRUS_ADMIN_PROJECT_HOME>/maven</CITRUS_ADMIN_PROJECT_HOME>
+            </env>
+            <wait>
+              <http>
+                <url>http://localhost:8080/setup</url>
+                <method>GET</method>
+                <status>200</status>
+              </http>
+              <time>60000</time>
+              <shutdown>500</shutdown>
+            </wait>
+            <log>
+              <enabled>true</enabled>
+              <color>green</color>
+            </log>
+          </run>
+        </image>
+        <image>
+          <alias>application</alias>
+          <name>application:${project.version}</name>
+          <build>
+            <assembly>
+              <descriptorRef>project</descriptorRef>
+            </assembly>
+          </build>
+        </image>
+      </images>
+    </configuration>
+</plugin>
+----
+
+Now you can build the images locally with Maven calling
+
+[source]
+----
+mvn docker:build
+----
+
+After that you should have a set of new images on your Docker host. You can run these images as Docker container.
+
+[source]
+----
+mvn docker:start
+----
+
+[[docker-environment-settings]]
+== Environment settings
+
+When using Docker images it is good practice to provide environment variables that are able to overwrite general properties in the
+application in order to adjust the container behavior. The Docker image is able to set several environment properties. For a detailed list of
+these variables and their meaning in the admin UI web application please refer to chapter link:#setup-environment-variables[setup environment variables].

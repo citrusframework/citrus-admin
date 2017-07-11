@@ -21,11 +21,36 @@ The command above loads the Docker image and runs a new Citrus web UI container.
 This current directory is then used as project home so the admin UI will automatically open the Citrus project from that directory. Once the container is running
 you can point your local browser to [http://localhost:8080]() in order to access the web UI.
 
-The `CITRUS_ADMIN_PROJECT_HOME` environment setting is optional and provides auto project opening for you. You can leave out this setting in order to select a project folder
-in your mounted working directory.
+The `CITRUS_ADMIN_PROJECT_HOME` environment setting is optional and is used to automatically open a project on container startup. You can leave out this setting in order to select a project folder
+in your mounted working directory when starting the web UI.
 
-In case you do not have a Citrus project ready yet, the admin UI can create a new project for you. Just select one of the Maven archetypes available for Citrus and
-give your project coordinates (groupId, artifactId). The UI will load the archetype sources and create a new project ready for testing. 
+In case you do not have a Citrus project ready yet, the admin UI can also create a new project for you. It is possible to run a Maven archetype on container startup that creates a complete new project for you.
+You can set the Maven archetype coordinates (*groupId*, *artifactId*, *version*) as environment variables when running the container.
+
+```
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.2 consol/citrus-admin:latest
+```
+
+The UI will load the Maven archetype and create the project sources when the container is started. The new project gets its Maven coordinates from another environment setting:
+
+```
+-e CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES=com.consol.citrus:citrus-sample:1.0.0
+```
+
+Another way to load a new project on container startup is to specify a git repository URL. The Citrus admin Docker container will then load the project sources from that git repository on startup:
+
+```
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_REPOSITORY=https://github.com/account/citrus-project.git consol/citrus-admin:latest
+```
+
+The command above will load the project sources from git with URL `https://github.com/account/citrus-project.git` and open that project afterwards. The git repository of course should hold the Citrus project sources. In case
+the Citrus project is located in a sub module in that git repository you can load that sub module by specifying additional environment properties:
+
+```
+-e CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE=/integration/citrus-test -e CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH=bugfix
+```
+
+With these options we are able to start the Docker image as container with special customizations via environment settings. 
 
 Use Docker Maven plugin
 ---------
