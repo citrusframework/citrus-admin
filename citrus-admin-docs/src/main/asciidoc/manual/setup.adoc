@@ -101,7 +101,7 @@ The administration UI is a web application that is started as standalone Spring 
 You can set those parameters as system properties or environment variables on server startup in order to tell the UI how to load projects for instance.
 
 [[setup-system-properties]]
-== System properties
+=== System properties
 
 You can set the following system properties in order to customize the admin Ui application:
 
@@ -175,7 +175,7 @@ java -Dserver.port=8181 -jar citrus-admin-web-1.0.2-SNAPSHOT.war
 The system properties are automatically identified in the admin UI web application during startup.
 
 [[setup-environment-variables]]
-== Environment variables
+=== Environment variables
 
 The exact same properties that we have seen in the previous system properties section are also available when set as environment variables:
 
@@ -230,7 +230,7 @@ The environment settings are very useful when running the admin UI as part of a 
 well suited for configuring Docker related container instances. Read more about that in chapter link:#docker[docker].
 
 [[setup-json-settings-file]]
-== Json project settings
+=== Json project settings
 
 Every time the UI has opened a Citrus project settings are stored to the general project settings file located in the root project folder. This is done because the next time
 you open that project the admin UI should use the exact same project settings as before. The project settings file is stored in the project root folder and is called *citrus-project.json*.
