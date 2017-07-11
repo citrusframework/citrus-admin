@@ -526,8 +526,8 @@ table.CodeRay td.code>pre{padding:0}
 <h1>Citrus Administration UI</h1>
 <div class="details">
 <span id="author" class="author">Christoph Deppisch</span><br>
-<span id="revnumber">version 1.0.1-SNAPSHOT,</span>
-<span id="revdate">2017-07-06</span>
+<span id="revnumber">version 1.0.1,</span>
+<span id="revdate">2017-07-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus-admin</div>
@@ -552,54 +552,64 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#installation">2. Installation</a></li>
-<li><a href="#project">3. Project</a>
+<li><a href="#setup">3. Setup</a>
 <ul class="sectlevel2">
-<li><a href="#project-new">3.1. New project</a>
+<li><a href="#setup-new">3.1. New project</a>
 <ul class="sectlevel3">
-<li><a href="#git-clone">3.1.1. Git clone</a></li>
-<li><a href="#maven-archetype">3.1.2. Maven archetype</a></li>
+<li><a href="#setup-git-repository">3.1.1. Git clone</a></li>
+<li><a href="#setup-maven-archetype">3.1.2. Maven archetype</a></li>
 </ul>
 </li>
-<li><a href="#project-open">3.2. Open project</a>
-<ul class="sectlevel3">
-<li><a href="#customize-settings">3.2.1. Customize settings</a></li>
+<li><a href="#setup-open">3.2. Open project</a></li>
+<li><a href="#setup-configuration">3.3. System configuration</a></li>
+<li><a href="#setup-system-properties">3.4. System properties</a></li>
+<li><a href="#setup-environment-variables">3.5. Environment variables</a></li>
+<li><a href="#setup-json-settings-file">3.6. Json project settings</a></li>
 </ul>
 </li>
-<li><a href="#project-dashboard">3.3. Dashboard</a></li>
-<li><a href="#project-settings">3.4. Settings</a>
-<ul class="sectlevel3">
-<li><a href="#project-settings-general">3.4.1. General</a></li>
-<li><a href="#project-settings-build">3.4.2. Build configuration</a></li>
-<li><a href="#project-settings-modules">3.4.3. Modules</a></li>
-<li><a href="#project-settings-connector">3.4.4. Admin connector</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#configuration">4. Configuration</a>
+<li><a href="#project">4. Project</a>
 <ul class="sectlevel2">
-<li><a href="#config-endpoints">4.1. Endpoint configuration</a></li>
-<li><a href="#config-application-context">4.2. Spring application context</a></li>
-<li><a href="#config-spring-beans">4.3. Spring beans</a></li>
-<li><a href="#config-global-variables">4.4. Global Variables</a></li>
-<li><a href="#config-schemas">4.5. Schema Repositories</a></li>
-<li><a href="#config-namespace">4.6. Namespace Context</a></li>
-<li><a href="#config-dictionaries">4.7. Data Dictionaries</a></li>
-<li><a href="#config-functions">4.8. Functions</a></li>
-<li><a href="#config-matcher">4.9. Validation Matcher</a></li>
+<li><a href="#project-dashboard">4.1. Dashboard</a></li>
+<li><a href="#project-settings">4.2. Settings</a>
+<ul class="sectlevel3">
+<li><a href="#project-settings-general">4.2.1. General</a></li>
+<li><a href="#project-settings-build">4.2.2. Build configuration</a></li>
+<li><a href="#project-settings-modules">4.2.3. Modules</a></li>
+<li><a href="#project-settings-connector">4.2.4. Admin connector</a></li>
 </ul>
 </li>
-<li><a href="#tests">5. Tests</a>
+</ul>
+</li>
+<li><a href="#configuration">5. Configuration</a>
 <ul class="sectlevel2">
-<li><a href="#test-search">5.1. Search tests</a></li>
-<li><a href="#test-list">5.2. List tests</a></li>
-<li><a href="#test-editor">5.3. Editor</a></li>
-<li><a href="#test-execute">5.4. Execute tests</a></li>
-<li><a href="#test-designer">5.5. Test designer</a></li>
-<li><a href="#test-reporting">5.6. Test reporting</a></li>
+<li><a href="#config-endpoints">5.1. Endpoint configuration</a></li>
+<li><a href="#config-application-context">5.2. Spring application context</a></li>
+<li><a href="#config-global-variables">5.3. Global Variables</a></li>
+<li><a href="#config-schemas">5.4. Schema Repositories</a></li>
+<li><a href="#config-namespace">5.5. Namespace Context</a></li>
+<li><a href="#config-dictionaries">5.6. Data Dictionaries</a></li>
+<li><a href="#config-functions">5.7. Functions</a></li>
+<li><a href="#config-matcher">5.8. Validation Matcher</a></li>
 </ul>
 </li>
-<li><a href="#links">6. Links &amp; Further reading</a></li>
+<li><a href="#tests">6. Tests</a>
+<ul class="sectlevel2">
+<li><a href="#test-search">6.1. Search tests</a></li>
+<li><a href="#test-list">6.2. List tests</a></li>
+<li><a href="#test-editor">6.3. Editor</a></li>
+<li><a href="#test-execute">6.4. Execute tests</a></li>
+<li><a href="#test-designer">6.5. Test designer</a></li>
+<li><a href="#test-reporting">6.6. Test reporting</a></li>
+</ul>
+</li>
+<li><a href="#docker">7. Docker support</a>
+<ul class="sectlevel2">
+<li><a href="#docker-image">7.1. Docker image</a></li>
+<li><a href="#docker-maven-plugin">7.2. Use Docker Maven plugin</a></li>
+<li><a href="#docker-environment-settings">7.3. Environment settings</a></li>
+</ul>
+</li>
+<li><a href="#links">8. Links &amp; Further reading</a></li>
 </ul>
 </div>
 </div>
@@ -608,7 +618,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Copyright © 2017 ConSol Software GmbH</strong><br>
-<strong>Version: 1.0.1-SNAPSHOT</strong></p>
+<strong>Version: 1.0.1</strong></p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/citrus-logo-small.png" alt="citrus-logo"></span></p>
@@ -825,7 +835,7 @@ is a Java WAR file located at <a href="https://labs.consol.de/maven/repository/c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.1-SNAPSHOT/citrus-admin-web-1.0.1-SNAPSHOT-executable.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.1/citrus-admin-web-1.0.1-executable.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -850,64 +860,74 @@ you can open your browser and point to <a href="http://localhost:8080">http://lo
 </div>
 </div>
 <div class="sect1">
-<h2 id="project"><a class="anchor" href="#project"></a>3. Project</h2>
+<h2 id="setup"><a class="anchor" href="#setup"></a>3. Setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The basic objective of the administration UI is to manage your Citrus projects. The UI is able to open your project in order
-to view and edit your project configuration as well as your test cases.</p>
+<p>The administration UI provides several settings and customization parameters that describe how the UI should behave. You can set those parameters as
+system properties or environment variables on server startup in order to tell the UI how to load projects for instance.</p>
+</div>
+<div class="paragraph">
+<p>The UI is able to open projects in order to view and edit your project configuration and test cases. Usually the projects are located somewhere on your local machine so
+the UI can open those projects from local file system. In addition to that the UI is able to load project sources from git repositories. As an alternative
+you can create completely new projects from Maven archetypes. The following sections walk through all these options in more detail.</p>
 </div>
 <div class="sect2">
-<h3 id="project-new"><a class="anchor" href="#project-new"></a>3.1. New project</h3>
+<h3 id="setup-new"><a class="anchor" href="#setup-new"></a>3.1. New project</h3>
 <div class="paragraph">
-<p>New projects are created in the admin UI working directory. By default this is the user home directory. You can change the working directory location by
-setting a system property or environment variable (<strong>citrus.admin.working.directory</strong> | <strong>CITRUS_ADMIN_WORKING_DIRECTORY</strong>).</p>
+<p>The admin UI is able to create completely new projects. The project sources are saved to your local file system in the admin UI working directory. The working directory
+is settable via system property or environment variable (see <a href="#setup-configuration">system configuration</a>). By default this is the user home directory on your local system.</p>
+</div>
+<div class="sect3">
+<h4 id="setup-git-repository"><a class="anchor" href="#setup-git-repository"></a>3.1.1. Git clone</h4>
+<div class="paragraph">
+<p>First of all you can load Citrus project sources from git repositories. Just specify the git repository URL in combination with branch settings and optional sub module names
+and the UI will load the project sources to your local file system before opening that project.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/screenshots/project-new-git.png" alt="Git repository"></span></p>
 </div>
-<div class="sect3">
-<h4 id="git-clone"><a class="anchor" href="#git-clone"></a>3.1.1. Git clone</h4>
 <div class="paragraph">
-<p>The administration UI is able to create new Citrus projects. The first approach would be to load the project sources from a Git repository.
-This repository should contain the Citrus project sources exclusively. Just give the repository URL and the UI will try to load the sources to
-your local file system. This is done either by git clone command (if the git binaries are available). As a fallback from that clone the UI will load
-the zipped project from git and unpack it on the local file system.</p>
+<p>The admin UI performs a git clone command (if the git binaries are available). As a fallback the UI will load the zipped project via Http and unpack the sources to the
+local file system. Once again the new project sources are saved to the admin UI working directory which is settable via system properties and environment variables (see <a href="#setup-configuration">system configuration</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="setup-maven-archetype"><a class="anchor" href="#setup-maven-archetype"></a>3.1.2. Maven archetype</h4>
+<div class="paragraph">
+<p>The second approach for creating new projects is to generate the project sources from a Maven archetype. Citrus provides several archetypes on Maven central (<a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.consol.citrus.mvn%22">search.maven.org</a>). Just
+fill out the archetype forms and enter the Maven archetype coordinates (<strong>groupId</strong>, <strong>artifactId</strong> and <strong>version</strong>) that should be used.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/screenshots/project-new-archetype.png" alt="Maven Archetype"></span></p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="maven-archetype"><a class="anchor" href="#maven-archetype"></a>3.1.2. Maven archetype</h4>
 <div class="paragraph">
-<p>The second approach for creating new projects is to generate the project from a Maven archetype. Citrus provides several archetypes for that. Just
-fill out the archetype form with the respective Maven coordinates (groupId, artifactId, version).</p>
+<p>In addition to that you should set new project Maven coordinates for the project that is about to be created on your local file system. As usual these are Maven <strong>groupId</strong>, <strong>archetypeId</strong> and <strong>version</strong>. As a result the admin UI automatically loads
+the Maven archetype and generates the project sources in the admin UI working directory. The newly create project is then automatically opened in the UI.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="project-open"><a class="anchor" href="#project-open"></a>3.2. Open project</h3>
+<h3 id="setup-open"><a class="anchor" href="#setup-open"></a>3.2. Open project</h3>
 <div class="paragraph">
-<p>You can open any Citrus project. The only prerequisite is that you have access to the project home on your local machine. When the administration UI is
-started you have to open a project first.</p>
+<p>Of course you can open existing Citrus projects that are located on your local file system. When the administration UI is started without any further options you need to open a Citrus project first.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/screenshots/project-open.png" alt="Open"></span></p>
 </div>
 <div class="paragraph">
 <p>The project home selection form is displayed automatically when no project has been selected yet. You can preselect a project home when starting the administration UI
-by setting a system environment variable at startup:</p>
+by setting a system property or environment variable at startup:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When pre selecting a project home the project is opened automatically and the <a href="#project-dashboard">project dashboard</a> is displayed. Now back to the project home selection if no project has bee pre selected yet.</p>
+<p>When pre selecting a project home the project is opened automatically and the <a href="#project-dashboard">project dashboard</a> is displayed.</p>
 </div>
 <div class="paragraph">
-<p>You need to specify the project home which is the root directory of your Citrus project. You can specify the complete path manually or pick the home directory over the file browser.</p>
+<p>The project home should point to a project root directory on your local file system that contains the Citrus project sources. You can specify the complete path manually or pick the home directory via the file browser.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/screenshots/project-home.png" alt="Select project home"></span></p>
@@ -947,23 +967,39 @@ for several things in your project in order to gain information about the projec
 </tr>
 </tbody>
 </table>
-<div class="sect3">
-<h4 id="customize-settings"><a class="anchor" href="#customize-settings"></a>3.2.1. Customize settings</h4>
 <div class="paragraph">
-<p>It is possible that your project uses a different folder layout for test resources and test sources (e.g. <strong>src/it/resources</strong> and <strong>src/it/java</strong>). Then the project open operation will fail with errors. We can fix this by customizing the project settings
-manually in prior to opening the project.</p>
+<p>In case one of these mentioned files and directories is not present in your project sources the UI will not open the project due to invalid project sources. Sometimes projects use different file locations and project source file names for some reason.
+Fortunately you can customize thee folder path and file name settings on admin UI startup.</p>
 </div>
 <div class="paragraph">
-<p>There are two different approaches to customizing the project settings: First of all you can use system properties when starting the administration UI application:</p>
+<p>When you are using a different project layout than expected there are different approaches to customizing these project settings. First of all you can use system properties when starting the administration UI application:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -Dcitrus.admin.java.source.directory=src/it/java
--Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
+-Dcitrus.admin.xml.source.directory=src/it/resources -jar citrus-admin-web-1.0.1.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can set the following system properties:</p>
+<p>As you can see we can customize the project file paths that are scanned by the UI. This enables us to open projects with different project file locations. Please refer to the complete list of available system properties
+in chapter <a href="#setup-configuration">system configuration</a>.</p>
+</div>
+<div class="paragraph">
+<p>The exact same parameters as seen in the system properties are also available when set as environment variables. The admin UI will automatically read those environment settings on startup.
+So you can adjust the project file locations using environment variables, too. Please see the complete list of available environment settings in chapter <a href="#setup-configuration">system configuration</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-configuration"><a class="anchor" href="#setup-configuration"></a>3.3. System configuration</h3>
+<div class="paragraph">
+<p>The administration UI is a web application that is started as standalone Spring Boot application or as a deployment in a Java web application server. The admin UI application uses some general settings and customization parameters that describe how the UI should behave.
+You can set those parameters as system properties or environment variables on server startup in order to tell the UI how to load projects for instance.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-system-properties"><a class="anchor" href="#setup-system-properties"></a>3.4. System properties</h3>
+<div class="paragraph">
+<p>You can set the following system properties in order to customize the admin Ui application:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 2. System properties</caption>
@@ -999,6 +1035,26 @@ manually in prior to opening the project.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Git project repository to load on startup (default: not set)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.project.repository.branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git project branch (default: master)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.project.repository.module</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module name (directory) representing the sub module in a Maven multi module repository (default: not set)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.maven.archetype.coordinates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.maven.project.coordinates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.maven.project.package</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Package name for newly generated project (default: com.consol.citrus)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.admin.java.source.directory</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java sources directory (default: <strong>src/test/java</strong>)</p></td>
 </tr>
@@ -1025,15 +1081,29 @@ manually in prior to opening the project.</p>
 </tbody>
 </table>
 <div class="paragraph">
+<p>These properties are specified in the CLI command when starting the application. For instance</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">java -Dcitrus.admin.project.home=/Users/myaccount/path/tp/citrus/project/home -jar citrus-admin-web-1.0.1.war</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>You can also use Spring boot properties, e.g. a custom server port:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">java -Dserver.port=8181 -jar citrus-admin-web-1.0.1-SNAPSHOT.war</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">java -Dserver.port=8181 -jar citrus-admin-web-1.0.1.war</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The exact same properties are also available when set as environment variables:</p>
+<p>The system properties are automatically identified in the admin UI web application during startup.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-environment-variables"><a class="anchor" href="#setup-environment-variables"></a>3.5. Environment variables</h3>
+<div class="paragraph">
+<p>The exact same properties that we have seen in the previous system properties section are also available when set as environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 3. Environment variables</caption>
@@ -1065,6 +1135,26 @@ manually in prior to opening the project.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Git project repository to load on startup (default: not set)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git project branch (default: master)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module name (directory) representing the sub module in a Maven multi module repository (default: not set)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maven archetype coordinates (groupId:artifactId:version) to auto generate new project on startup (default: not set)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Project coordinates for new project generated from archetype (default: com.consol.citrus:citrus-project:1.0.0)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_MAVEN_PROJECT_PACKAGE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Package name for newly generated project (default: com.consol.citrus)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ADMIN_JAVA_SOURCE_DIRECTORY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java sources directory (default: <strong>src/test/java</strong>)</p></td>
 </tr>
@@ -1087,8 +1177,23 @@ manually in prior to opening the project.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>A second approach would be to create a project settings file in your Citrus project root directory. The project settings are stored in a file called <strong>citrus-project.json</strong>. When you open a Citrus project for the first time the administration UI creates this project settings file
-automatically. But now we want to create this file manually in order to set custom directories and settings prior to opening the project. The setting file uses JSON data format and looks like this:</p>
+<p>The environment settings are very useful when running the admin UI as part of a Docker container infrastructure. Also when running the UI in Kubernetes the use of environment settings is very comfortable as these settings are
+well suited for configuring Docker related container instances. Read more about that in chapter <a href="#docker">docker</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-json-settings-file"><a class="anchor" href="#setup-json-settings-file"></a>3.6. Json project settings</h3>
+<div class="paragraph">
+<p>Every time the UI has opened a Citrus project settings are stored to the general project settings file located in the root project folder. This is done because the next time
+you open that project the admin UI should use the exact same project settings as before. The project settings file is stored in the project root folder and is called <strong>citrus-project.json</strong>.</p>
+</div>
+<div class="paragraph">
+<p>As already mentioned the administration UI creates this project settings file automatically in case it is not present. So when you open a Citrus project for the first time this file is created automatically. Following from that this project settings file should
+be part of your code versioning platform in order to save settings related to that project. When the project is reopened the UI will read project settings from that file in order to make sure that the project is loaded with the exact same settings as in the past.
+So you can also adjust this file manually in order to manipulate the way the UI is opening your project. Of course you can also create this file manually prior to opening the project with the admin UI in order to set custom directories and settings from the very beginning.</p>
+</div>
+<div class="paragraph">
+<p>The setting file uses Json data format and looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1098,7 +1203,7 @@ automatically. But now we want to create this file manually in order to set cust
   &quot;version&quot; : &quot;1.0.0&quot;,
   &quot;settings&quot; : {
     &quot;basePackage&quot; : &quot;com.consol.citrus.samples&quot;,
-    &quot;citrusVersion&quot; : &quot;2.7.1&quot;,
+    &quot;citrusVersion&quot; : &quot;2.7.2&quot;,
     &quot;springApplicationContext&quot; : &quot;src/test/resources/citrus-context.xml&quot;,
     &quot;javaSrcDirectory&quot; : &quot;src/test/java/&quot;,
     &quot;xmlSrcDirectory&quot; : &quot;src/test/resources/&quot;,
@@ -1122,12 +1227,22 @@ automatically. But now we want to create this file manually in order to set cust
 </div>
 </div>
 <div class="paragraph">
-<p>So you can force the administration UI to use these settings when opening the project. Just create the <strong>citrus-project.json</strong> file in the Citrus project home directory before opening the project.</p>
+<p>So you can always review the project settings when looking at this file.</p>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="project"><a class="anchor" href="#project"></a>4. Project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The basic objective of the administration UI is to manage your Citrus projects. The UI is able to open projects in order
+to view and edit your project configuration and test cases. Usually the projects are located somewhere on your local machine so
+the UI can open those projects from local file system. In addition to that the UI is able to load project sources from git repositories. As an alternative
+you can create completely new projects from Maven archetypes. The following sections walk through all these options in more detail.</p>
 </div>
 <div class="sect2">
-<h3 id="project-dashboard"><a class="anchor" href="#project-dashboard"></a>3.3. Dashboard</h3>
+<h3 id="project-dashboard"><a class="anchor" href="#project-dashboard"></a>4.1. Dashboard</h3>
 <div class="paragraph">
 <p>The dashboard gives you a quick overview of what your project looks like. Citrus reads information about your project such as
 name, package, description, test count, latest reports and so on.</p>
@@ -1140,7 +1255,7 @@ name, package, description, test count, latest reports and so on.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="project-settings"><a class="anchor" href="#project-settings"></a>3.4. Settings</h3>
+<h3 id="project-settings"><a class="anchor" href="#project-settings"></a>4.2. Settings</h3>
 <div class="paragraph">
 <p>Each Citrus project has properties and settings that influence the administration UI. These properties are project names, descriptions, versions and source folders.
 You can review and change these project related settings with an HTML form on the project settings page.</p>
@@ -1150,10 +1265,10 @@ You can review and change these project related settings with an HTML form on th
 </div>
 <div class="paragraph">
 <p>Some project settings are read only at the moment, e.g. we do not support renaming of projects yet. If you want to rename a project or change the project version you need to do this manually
-in the Maven POM configuration.</p>
+in the Maven POM configuration for now.</p>
 </div>
 <div class="paragraph">
-<p>If you save the project settings the administration UI will save the changes to the project settings file <strong>citrus-project.json</strong> which is located in your project home directory. This file uses the JSON syntax and looks like follows:</p>
+<p>If you save the project settings the administration UI will save the changes to the project settings file <strong>citrus-project.json</strong> which is located in your project home directory. This file uses the Json syntax and looks like follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1185,8 +1300,12 @@ in the Maven POM configuration.</p>
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>This project Json file is automatically created whenever the admin UI opens a project on your local file system. This file should be part of your coder versioning platform in order to save settings related to that project. When the project is reopened
+the UI will read project settings from that file in order to make sure that the project is loaded with the exact same settings as in the past. So you can also adjust this file manually in order to manipulate the way the UI is opening your project.</p>
+</div>
 <div class="sect3">
-<h4 id="project-settings-general"><a class="anchor" href="#project-settings-general"></a>3.4.1. General</h4>
+<h4 id="project-settings-general"><a class="anchor" href="#project-settings-general"></a>4.2.1. General</h4>
 <div class="paragraph">
 <p>Each Citrus project works with Java classes and resources. These files are located in project folders inside the Maven project. Citrus admin is working with these defaults:</p>
 </div>
@@ -1211,7 +1330,7 @@ in the Maven POM configuration.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="project-settings-build"><a class="anchor" href="#project-settings-build"></a>3.4.2. Build configuration</h4>
+<h4 id="project-settings-build"><a class="anchor" href="#project-settings-build"></a>4.2.2. Build configuration</h4>
 <div class="paragraph">
 <p>The administration web UI is able to execute tests. This test execution is done by calling the Maven build lifecylce for the opened project. You can adjust
 the build settings accordingly. By default Citrus admin uses the <strong>maven-failsafe</strong> to execute the Citrus tests. This causes Citrus to call</p>
@@ -1256,7 +1375,7 @@ Stay tuned for future releases to come</strong></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="project-settings-modules"><a class="anchor" href="#project-settings-modules"></a>3.4.3. Modules</h4>
+<h4 id="project-settings-modules"><a class="anchor" href="#project-settings-modules"></a>4.2.3. Modules</h4>
 <div class="paragraph">
 <p>Citrus as a framework is modular. You can add and remove Citrus capabilities by adding and removing module dependencies in your project. Usually
 these Citrus modules are managed as Maven dependencies in your project. The Citrus administration UI is able to manage these dependencies for you.</p>
@@ -1273,7 +1392,7 @@ modules and the administration UI will automatically add/remove Maven dependenci
 </div>
 </div>
 <div class="sect3">
-<h4 id="project-settings-connector"><a class="anchor" href="#project-settings-connector"></a>3.4.4. Admin connector</h4>
+<h4 id="project-settings-connector"><a class="anchor" href="#project-settings-connector"></a>4.2.4. Admin connector</h4>
 <div class="paragraph">
 <p>In the previous chapter we have seen how to customize the project and build settings for the active project. Now when
 the administration UI executes some Citrus tests we can make use of a special connector library that provides detailed
@@ -1340,7 +1459,7 @@ This will automatically add or remove the citrus-admin-connector Maven dependenc
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="anchor" href="#configuration"></a>4. Configuration</h2>
+<h2 id="configuration"><a class="anchor" href="#configuration"></a>5. Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Citrus components such as endpoints, variables, functions, schemas and dictionaries are configured in a Spring application context.
@@ -1351,7 +1470,7 @@ in the configuration section.</p>
 <p><span class="image"><img src="images/screenshots/config-menu.png" alt="ConfigMenu"></span></p>
 </div>
 <div class="sect2">
-<h3 id="config-endpoints"><a class="anchor" href="#config-endpoints"></a>4.1. Endpoint configuration</h3>
+<h3 id="config-endpoints"><a class="anchor" href="#config-endpoints"></a>5.1. Endpoint configuration</h3>
 <div class="paragraph">
 <p>Endpoints are essential in a Citrus project. They define client and server components as well as producer and consumer for different message transports.</p>
 </div>
@@ -1383,57 +1502,126 @@ will also affect the administration UI. Just hit the reload button in your brows
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-application-context"><a class="anchor" href="#config-application-context"></a>4.2. Spring application context</h3>
+<h3 id="config-application-context"><a class="anchor" href="#config-application-context"></a>5.2. Spring application context</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Citrus uses the Spring framework for dependency injection and component configuration. Usually a Citrus project comes with a set of Spring configuration files that define Citrus components and other
+project related settings. The admin UI scanns the project sources for typical Spring configuration files and displays all components (Spring beans) in that configuraiton.</p>
+</div>
+<div class="paragraph">
+<p>You can review the beans with all properties and you can edit the Spring configuration files.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-spring-context.png" alt="Spring context"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-spring-beans.png" alt="Spring beans"></span></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-spring-beans"><a class="anchor" href="#config-spring-beans"></a>4.3. Spring beans</h3>
+<h3 id="config-global-variables"><a class="anchor" href="#config-global-variables"></a>5.3. Global Variables</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Test variables represent a common concept in Citrus. Variables define reusable identifiers and values that are referenced multiple times in a test case. The global variables are visible
+to all Citrus test cases and represent static constant values valid for the whole project. The global variables are editable via HTML forms on the configuration page:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-global-variables.png" alt="Global variables"></span></p>
+</div>
+<div class="paragraph">
+<p>The variables are saved to the Spring bean configuration as Citrus <strong>global-variables</strong> component:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus:global-variables&gt;</span>
+    <span class="tag">&lt;citrus:variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">projectName</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus Integration Testing</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;citrus:variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">userName</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TestUser</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/citrus:global-variables&gt;</span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-global-variables"><a class="anchor" href="#config-global-variables"></a>4.4. Global Variables</h3>
+<h3 id="config-schemas"><a class="anchor" href="#config-schemas"></a>5.4. Schema Repositories</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Every time Citrus receives a message over some kind of messaging transport the validation mechanism will try to validate the syntax of the message payload with some
+schema rules. When using XML payloads these are XSD or WSDL files that define the syntax rules. In Citrus you can define schema repositories that hold one to many XML
+schema definition files. The Citrus XML message validators consult these schema repositories during message validation for matching schema definitions.</p>
+</div>
+<div class="paragraph">
+<p>The schema repositories and schema definition files are managed on configuration page.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-schema-repository.png" alt="Schema repository"></span></p>
+</div>
+<div class="paragraph">
+<p>The configuration made here is saved to the Spring bean configuration files as Citrus schema components.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-schemas"><a class="anchor" href="#config-schemas"></a>4.5. Schema Repositories</h3>
+<h3 id="config-namespace"><a class="anchor" href="#config-namespace"></a>5.5. Namespace Context</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>When using Xpath expressions in Citrus XML namespaces may be required to identify elements and attributes in XML payloads. The XML namespaces used in Xpath
+are identified with a prefix that evaluates to a target namespace value. You can define all namespaces and prefix values globally using the namespace context configuration.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-namespace-context.png" alt="Namespace context"></span></p>
+</div>
+<div class="paragraph">
+<p>The namespace context configuration is save as Citrus Spring bean component in the application context.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus:namespace-context&gt;</span>
+    <span class="tag">&lt;citrus:namespace</span> <span class="attribute-name">prefix</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schemas/samples/HelloService.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/citrus:namespace-context&gt;</span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-namespace"><a class="anchor" href="#config-namespace"></a>4.6. Namespace Context</h3>
+<h3 id="config-dictionaries"><a class="anchor" href="#config-dictionaries"></a>5.6. Data Dictionaries</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Data dictionaries help to define reusable expressions that manipulate message payloads before a message is sent or received. Usually these are Xpath or JsonPath expressions
+that overwrite values in message payloads throughout the whole project. Each message payload will consult the data dictionary for translation of values before being sent or received.</p>
+</div>
+<div class="paragraph">
+<p>This way you can add centralized expressions that overwrite message payload elements in multiple test cases.</p>
+</div>
+<div class="paragraph">
+<p>The data dictionary configuration is done on the configuration pages.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-data-dictionary.png" alt="Data dictionary"></span></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-dictionaries"><a class="anchor" href="#config-dictionaries"></a>4.7. Data Dictionaries</h3>
+<h3 id="config-functions"><a class="anchor" href="#config-functions"></a>5.7. Functions</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Functions apply on message payloads and test variables for dynamic value generation. The functions can be used in multiple places throughout the Citrus framework (e.g. payload, header, variables, etc.)
+Each function is provided with parameters and generates a String value as outcome. This way the user can place functions in order to generate more dynamic test data for instance. There are lots of predefined
+functions ready for usage in Citrus (e.g. citrus:randomUUID(), citrus:currentDate() and many more).</p>
+</div>
+<div class="paragraph">
+<p>In addition to that you can create custom functions that implement very specific algorithms matching your very specific project needs. These functions and its implementations are configured here:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-functions.png" alt="Functions"></span></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-functions"><a class="anchor" href="#config-functions"></a>4.8. Functions</h3>
+<h3 id="config-matcher"><a class="anchor" href="#config-matcher"></a>5.8. Validation Matcher</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Similar to adding custom functions in Citrus you can also add custom validation matcher implementations. The matcher helpers do implement specific validation logic that applies to message
+validation when receiving messages in Citrus. There are lots of predefined matchers available in Citrus (e.g. @contains()@, @equalsIgnoreCase()@ and many more).</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="config-matcher"><a class="anchor" href="#config-matcher"></a>4.9. Validation Matcher</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Custom validation matchers are configurable via HTML forms on the configuration pages.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/screenshots/config-validation-matcher.png" alt="Validation matcher"></span></p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tests"><a class="anchor" href="#tests"></a>5. Tests</h2>
+<h2 id="tests"><a class="anchor" href="#tests"></a>6. Tests</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Managing all your tests is a basic thing to do with the administration UI. You are able to search for tests, open tests and execute tests with
@@ -1465,7 +1653,7 @@ the UI.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="test-search"><a class="anchor" href="#test-search"></a>5.1. Search tests</h3>
+<h3 id="test-search"><a class="anchor" href="#test-search"></a>6.1. Search tests</h3>
 <div class="paragraph">
 <p>Searching for test cases is very simple. Open the tests page and you will se a search form input field at the top right.</p>
 </div>
@@ -1487,7 +1675,7 @@ all test names available. So the result is always a matching list of tests.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-list"><a class="anchor" href="#test-list"></a>5.2. List tests</h3>
+<h3 id="test-list"><a class="anchor" href="#test-list"></a>6.2. List tests</h3>
 <div class="paragraph">
 <p>Your project usually contains a lot of tests. All found tests are listed by their class and method. Also you can filter the displayed tests by the Java package.
 Each test can be opened in a editor for exploring further test details.</p>
@@ -1497,7 +1685,7 @@ Each test can be opened in a editor for exploring further test details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-editor"><a class="anchor" href="#test-editor"></a>5.3. Editor</h3>
+<h3 id="test-editor"><a class="anchor" href="#test-editor"></a>6.3. Editor</h3>
 <div class="paragraph">
 <p>The administration UI is able to open your test cases. Both XML and Java DSL test cases are supported.</p>
 </div>
@@ -1537,7 +1725,7 @@ the <a href="test-designer">test designer</a> view. The design view brings the t
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-execute"><a class="anchor" href="#test-execute"></a>5.4. Execute tests</h3>
+<h3 id="test-execute"><a class="anchor" href="#test-execute"></a>6.4. Execute tests</h3>
 <div class="paragraph">
 <p>Test execution is a very powerful feature as it enables you to execute your tests within a browser environment almost everywhere. Just hit the <em>Run</em> button and Citrus will start a new background process that executes the
 test case immediately. At the moment we do only support Maven test execution. This means that a new Maven process is launched in background executing the test.</p>
@@ -1562,7 +1750,7 @@ logging output. This of course is only working if you have logging enabled in ad
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-designer"><a class="anchor" href="#test-designer"></a>5.5. Test designer</h3>
+<h3 id="test-designer"><a class="anchor" href="#test-designer"></a>6.5. Test designer</h3>
 <div class="paragraph">
 <p>The next feature is quite experimental. In the test design view Citrus tries to give you a graphical representation of the test actions in your test. Each test action
 is displayed as a graphical node. If you enter the action with the mouse or if you click on a test action node some more details are displayed.</p>
@@ -1575,7 +1763,7 @@ is displayed as a graphical node. If you enter the action with the mouse or if y
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-reporting"><a class="anchor" href="#test-reporting"></a>5.6. Test reporting</h3>
+<h3 id="test-reporting"><a class="anchor" href="#test-reporting"></a>6.6. Test reporting</h3>
 <div class="paragraph">
 <p>The administration UI is able to read and parse basic TestNG and JUnit reports. Usually these reports are written after each test run to the build output
 directory of your project. The admin UI will automatically find those reports and display the results to you.</p>
@@ -1593,7 +1781,153 @@ directory of your project. The admin UI will automatically find those reports an
 </div>
 </div>
 <div class="sect1">
-<h2 id="links"><a class="anchor" href="#links"></a>6. Links &amp; Further reading</h2>
+<h2 id="docker"><a class="anchor" href="#docker"></a>7. Docker support</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="docker-image"><a class="anchor" href="#docker-image"></a>7.1. Docker image</h3>
+<div class="paragraph">
+<p>The administration UI is available as Docker image (<code>consol/citrus-admin:latest</code>). You can pull the image and link it to your local Citrus project:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_HOME=/maven consol/citrus-admin:latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command above loads the Docker image and runs a new Citrus web UI container. The container is provided with a volume mount that makes the current directory accessible from within the container.
+This current directory is then used as project home so the admin UI will automatically open the Citrus project from that directory. Once the container is running
+you can point your local browser to link:[<a href="http://localhost:8080" class="bare">http://localhost:8080</a>] in order to access the web UI.</p>
+</div>
+<div class="paragraph">
+<p>The <code>CITRUS_ADMIN_PROJECT_HOME</code> environment setting is optional and is used to automatically open a project on container startup. You can leave out this setting in order to select a project folder
+in your mounted working directory when starting the web UI.</p>
+</div>
+<div class="paragraph">
+<p>In case you do not have a Citrus project ready yet, the admin UI can also create a new project for you. It is possible to run a Maven archetype on container startup that creates a complete new project for you.
+You can set the Maven archetype coordinates (<strong>groupId</strong>, <strong>artifactId</strong>, <strong>version</strong>) as environment variables when running the container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.2 consol/citrus-admin:latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The UI will load the Maven archetype and create the project sources when the container is started. The new project gets its Maven coordinates from another environment setting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>-e CITRUS_ADMIN_MAVEN_PROJECT_COORDINATES=com.consol.citrus:citrus-sample:1.0.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another way to load a new project on container startup is to specify a git repository URL. The Citrus admin Docker container will then load the project sources from that git repository on startup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_PROJECT_REPOSITORY=https://github.com/account/citrus-project.git consol/citrus-admin:latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command above will load the project sources from git with URL <code><a href="https://github.com/account/citrus-project.git" class="bare">https://github.com/account/citrus-project.git</a></code> and open that project afterwards. The git repository of course should hold the Citrus project sources. In case
+the Citrus project is located in a sub module in that git repository you can load that sub module by specifying additional environment properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>-e CITRUS_ADMIN_PROJECT_REPOSITORY_MODULE=/integration/citrus-test -e CITRUS_ADMIN_PROJECT_REPOSITORY_BRANCH=bugfix</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With these options we are able to start the Docker image as container with special customizations via environment settings. Please refer to the complete list of supported environment variables in chapter <a href="#setup-environment-variables">system configuration</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="docker-maven-plugin"><a class="anchor" href="#docker-maven-plugin"></a>7.2. Use Docker Maven plugin</h3>
+<div class="paragraph">
+<p>The citrus-admin Docker image works great with the Fabric8 Docker Maven plugin (<a href="https://dmp.fabric8.io/)">https://dmp.fabric8.io/)</a>. You can add the plugin configuration as follows in your
+Maven POM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>io.fabric8<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>docker-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;configuration&gt;</span>
+      <span class="tag">&lt;verbose&gt;</span>true<span class="tag">&lt;/verbose&gt;</span>
+      <span class="tag">&lt;images&gt;</span>
+        <span class="tag">&lt;image&gt;</span>
+          <span class="tag">&lt;alias&gt;</span>citrus-admin<span class="tag">&lt;/alias&gt;</span>
+          <span class="tag">&lt;name&gt;</span>consol/citrus-admin:latest<span class="tag">&lt;/name&gt;</span>
+          <span class="tag">&lt;run&gt;</span>
+            <span class="tag">&lt;namingStrategy&gt;</span>alias<span class="tag">&lt;/namingStrategy&gt;</span>
+            <span class="tag">&lt;ports&gt;</span>
+              <span class="tag">&lt;port&gt;</span>8080:8080<span class="tag">&lt;/port&gt;</span>
+            <span class="tag">&lt;/ports&gt;</span>
+            <span class="tag">&lt;volumes&gt;</span>
+              <span class="tag">&lt;from&gt;</span>
+                <span class="tag">&lt;image&gt;</span>application<span class="tag">&lt;/image&gt;</span>
+              <span class="tag">&lt;/from&gt;</span>
+            <span class="tag">&lt;/volumes&gt;</span>
+            <span class="tag">&lt;env&gt;</span>
+              <span class="tag">&lt;CITRUS_ADMIN_PROJECT_HOME&gt;</span>/maven<span class="tag">&lt;/CITRUS_ADMIN_PROJECT_HOME&gt;</span>
+            <span class="tag">&lt;/env&gt;</span>
+            <span class="tag">&lt;wait&gt;</span>
+              <span class="tag">&lt;http&gt;</span>
+                <span class="tag">&lt;url&gt;</span>http://localhost:8080/setup<span class="tag">&lt;/url&gt;</span>
+                <span class="tag">&lt;method&gt;</span>GET<span class="tag">&lt;/method&gt;</span>
+                <span class="tag">&lt;status&gt;</span>200<span class="tag">&lt;/status&gt;</span>
+              <span class="tag">&lt;/http&gt;</span>
+              <span class="tag">&lt;time&gt;</span>60000<span class="tag">&lt;/time&gt;</span>
+              <span class="tag">&lt;shutdown&gt;</span>500<span class="tag">&lt;/shutdown&gt;</span>
+            <span class="tag">&lt;/wait&gt;</span>
+            <span class="tag">&lt;log&gt;</span>
+              <span class="tag">&lt;enabled&gt;</span>true<span class="tag">&lt;/enabled&gt;</span>
+              <span class="tag">&lt;color&gt;</span>green<span class="tag">&lt;/color&gt;</span>
+            <span class="tag">&lt;/log&gt;</span>
+          <span class="tag">&lt;/run&gt;</span>
+        <span class="tag">&lt;/image&gt;</span>
+        <span class="tag">&lt;image&gt;</span>
+          <span class="tag">&lt;alias&gt;</span>application<span class="tag">&lt;/alias&gt;</span>
+          <span class="tag">&lt;name&gt;</span>application:${project.version}<span class="tag">&lt;/name&gt;</span>
+          <span class="tag">&lt;build&gt;</span>
+            <span class="tag">&lt;assembly&gt;</span>
+              <span class="tag">&lt;descriptorRef&gt;</span>project<span class="tag">&lt;/descriptorRef&gt;</span>
+            <span class="tag">&lt;/assembly&gt;</span>
+          <span class="tag">&lt;/build&gt;</span>
+        <span class="tag">&lt;/image&gt;</span>
+      <span class="tag">&lt;/images&gt;</span>
+    <span class="tag">&lt;/configuration&gt;</span>
+<span class="tag">&lt;/plugin&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you can build the images locally with Maven calling</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn docker:build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After that you should have a set of new images on your Docker host. You can run these images as Docker container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn docker:start</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="docker-environment-settings"><a class="anchor" href="#docker-environment-settings"></a>7.3. Environment settings</h3>
+<div class="paragraph">
+<p>When using Docker images it is good practice to provide environment variables that are able to overwrite general properties in the
+application in order to adjust the container behavior. The Docker image is able to set several environment properties. For a detailed list of
+these variables and their meaning in the admin UI web application please refer to chapter <a href="#setup-environment-variables">setup environment variables</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="links"><a class="anchor" href="#links"></a>8. Links &amp; Further reading</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1631,8 +1965,8 @@ explains how you can contribute to this project. Pull requests are highly apprec
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.1-SNAPSHOT<br>
-Last updated 2017-07-06 13:18:19 MESZ
+Version 1.0.1<br>
+Last updated 2017-07-11 15:49:10 MESZ
 </div>
 </div>
 <style>
