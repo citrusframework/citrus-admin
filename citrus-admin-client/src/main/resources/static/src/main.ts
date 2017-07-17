@@ -7,4 +7,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const platform = platformBrowserDynamic();
-platform.bootstrapModule(AppModule)
+platform.bootstrapModule(AppModule);

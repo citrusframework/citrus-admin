@@ -5,6 +5,8 @@ This is a web administration user interface for the integration test framework
 Citrus [www.citrusframework.org][2]. Major functionality objectives
 are project and configuration management as well as test execution and reporting.
 
+![Dashboard](citrus-admin-docs/src/main/asciidoc/images/screenshots/project-dashboard.png)
+
 See the complete [User Manual](https://christophd.github.io/citrus-admin/) for a detailed description 
 on all features ond how to use them.
 
@@ -150,20 +152,27 @@ Development
 After forking/cloning the source code repository from [https://github.com/christophd/citrus-admin](https://github.com/christophd/citrus-admin) you can build the application locally with Maven:
 
 ```
+mvn clean install
+```
+
+You can start the web server as Spring Boot application.
+
+```
 mvn -pl citrus-admin-web spring-boot:run
 ```
 
 For active development and a short round trip you can use the angular-cli dev-server in order to automatically compile typescript sources on the fly when they change.
 
 ```
-mvn -pl citrus-admin-client frontend:npm -Pdevelopment
+mvn -pl citrus-admin-client package -Pdevelopment
 ```
 
 If you change a source file (e.e *.js, *.ts, *.css) the sources will automatically be compiled and copied to the Maven target folder. The running
 spring-boot application is able to automatically grab the newly compiled sources. Just go to the browser and hit refresh to see the changes.
 If you change server Java sources spring-boot automatically restarts the web application so you may just hit refresh in your browser, too.
 
-The development server is running on its own port 4200 ([http://localhost:4200](http://localhost:4200)). To avoid cors issues a api proxy to the backend is provided out of the box. You can configure the proxy settings in [proxy.conf.json](citrus-admin-client/src/main/resources/static/proxy.conf.json). 
+The development server is running on its own port 4200 ([http://localhost:4200](http://localhost:4200)). To avoid cors issues an api proxy to the backend is provided out of the box. 
+You can configure the proxy settings in [proxy.conf.json](citrus-admin-client/src/main/resources/static/proxy.conf.json). 
 
 Limitations
 ---------
