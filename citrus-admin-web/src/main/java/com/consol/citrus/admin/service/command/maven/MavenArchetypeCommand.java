@@ -51,7 +51,6 @@ public class MavenArchetypeCommand extends MavenCommand {
 
         commandBuilder.append(GENERATE);
 
-        commandBuilder.append("-B ");
         commandBuilder.append(String.format("-DarchetypeGroupId=%s ", archetype.getArchetypeGroupId()));
         commandBuilder.append(String.format("-DarchetypeArtifactId=%s ", archetype.getArchetypeArtifactId()));
         commandBuilder.append(String.format("-DarchetypeVersion=%s ", archetype.getArchetypeVersion()));
