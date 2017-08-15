@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class MavenCommand extends AbstractTerminalCommand {
 
-    private static final String MVN = "mvn ";
+    private static final String MVN = "mvn -B";
     protected static final String CLEAN = "clean ";
     protected static final String COMPILE = "compile ";
     protected static final String PACKAGE = "package ";
