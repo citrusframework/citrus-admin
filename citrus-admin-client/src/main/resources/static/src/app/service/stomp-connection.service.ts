@@ -1,6 +1,5 @@
-import {Injectable, Type} from "@angular/core";
-import * as SockJS from 'sockjs-client';
-import {over, Frame, Client, Message} from "stompjs";
+import {Injectable} from "@angular/core";
+import {Frame, Client, Message, overWS} from "stompjs";
 import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
@@ -30,7 +29,7 @@ export class StompConnection {
     private connectionStatus:ConnectionStatus = ConnectionStatus.NOT_CONNECTED;
 
     constructor(private url: string) {
-        this.stompClient = over(new SockJS(this.url) as WebSocket);
+        this.stompClient = overWS(this.url);
 
         this.stompClient.debug = _.wrap(this.stompClient.debug, (fn: (...args: string[]) => any, ...args: string[]) => {
             if (this.debug) {
