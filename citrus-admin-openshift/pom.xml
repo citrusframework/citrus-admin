@@ -10,7 +10,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <openshift.domain>paas.osp.consol.de</openshift.domain>
+    <openshift.domain>paasint.consol.de</openshift.domain>
     <openshift.namespace>citrus</openshift.namespace>
     <application.name>citrus-admin</application.name>
   </properties>

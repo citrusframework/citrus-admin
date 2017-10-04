@@ -12,7 +12,7 @@ This project contains YAML configuration files that describe the resources to de
 
 The configuration uses some properties that you can customize while performing the deployment:
 
-* `openshift.domain` the cluster domain **default=paas.osp.consol.de**
+* `openshift.domain` the cluster domain **default=paasint.consol.de**
 * `openshift.namespace` the target project namspace **default=citrus**
 * `application.name` the application name **default=citrus-admin**
 
@@ -43,7 +43,7 @@ to a Openshift cluster.
  
 You will see the citrus-admin deployment with a new pod running and a service that connects you to the citrus-admin application web UI. The service is exposed to the world with
 
-http://{application.name}.paas.osp.consol.de
+http://{application.name}.paasint.consol.de
 
 Open your browser pointing to the citrus-admin instance web UI and you can start to create new tutorial sessions.
 
