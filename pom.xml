@@ -14,10 +14,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>1.5.4.RELEASE</spring.boot.version>
+    <spring.boot.version>1.5.7.RELEASE</spring.boot.version>
     <citrus.version>2.7.2</citrus.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <logback.classic.version>1.1.11</logback.classic.version>
+    <logback.classic.version>1.2.3</logback.classic.version>
     <testng.version>6.11</testng.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
 
@@ -253,7 +253,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.7.0</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
             <source>1.8</source>
@@ -287,7 +287,7 @@
         <plugin>
           <groupId>com.github.eirslett</groupId>
           <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.4</version>
+          <version>1.6</version>
         </plugin>
 
         <plugin>
@@ -321,7 +321,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20</version>
+          <version>2.20.1</version>
           <configuration>
             <forkMode>once</forkMode>
             <failIfNoTests>false</failIfNoTests>
@@ -432,7 +432,7 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.7.201606060606</version>
+            <version>0.7.9</version>
             <executions>
               <execution>
                 <id>jacoco-unit-init</id>
