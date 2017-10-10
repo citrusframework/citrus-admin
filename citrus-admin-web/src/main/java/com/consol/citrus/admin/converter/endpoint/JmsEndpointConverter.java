@@ -33,7 +33,7 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointM
 
     @Override
     public EndpointModel convert(JmsEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("destinationName", "Destination Name", model));
         endpointModel.add(property("destination", "Destination", model)

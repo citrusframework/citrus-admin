@@ -34,7 +34,7 @@ public class MailServerConverter extends AbstractEndpointConverter<MailServerMod
 
     @Override
     public EndpointModel convert(MailServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("port", model, true));
         endpointModel.add(property("autoStart", model, TRUE)

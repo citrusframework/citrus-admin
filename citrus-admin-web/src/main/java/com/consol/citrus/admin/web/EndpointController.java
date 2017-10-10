@@ -25,7 +25,6 @@ import com.consol.citrus.admin.service.spring.SpringBeanService;
 import com.consol.citrus.admin.service.spring.SpringJavaConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -157,12 +156,12 @@ public class EndpointController {
      * @return
      */
     private Object convertToModel(EndpointModel endpointDefinition) {
-        if (!StringUtils.hasText(endpointDefinition.getModelType())) {
+        if (endpointDefinition.getModelType() == null) {
             throw new ApplicationRuntimeException("Missing model type in endpoint definition");
         }
 
         for (EndpointConverter converter : endpointConverter) {
-            if (converter.getSourceModelClass().getName().equals(endpointDefinition.getModelType())) {
+            if (converter.getSourceModelClass().equals(endpointDefinition.getModelType())) {
                 return converter.convertBack(endpointDefinition);
             }
         }

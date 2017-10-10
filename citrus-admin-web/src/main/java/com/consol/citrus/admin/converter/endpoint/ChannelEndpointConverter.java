@@ -31,7 +31,7 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
 
     @Override
     public EndpointModel convert(ChannelEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         if (StringUtils.hasText(model.getChannelName())) {
             endpointModel.add(property("channelName", "Channel", model));

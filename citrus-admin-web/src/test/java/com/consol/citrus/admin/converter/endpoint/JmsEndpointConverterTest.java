@@ -33,7 +33,7 @@ public class JmsEndpointConverterTest {
         EndpointModel definition = new EndpointModel();
         definition.setId("newEndpoint");
         definition.setType(endpointConverter.getEndpointType());
-        definition.setModelType(endpointConverter.getSourceModelClass().getName());
+        definition.setModelType(endpointConverter.getSourceModelClass());
 
         definition.add(new Property("destinationName", "destinationName", "Destination", "JMS.Queue", false));
         definition.add(new Property("pubSubDomain", "pubSubDomain", "PubSubDomain", "TRUE", false));

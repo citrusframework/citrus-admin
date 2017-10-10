@@ -32,7 +32,7 @@ public class SshServerConverter extends AbstractEndpointConverter<SshServerModel
 
     @Override
     public EndpointModel convert(SshServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("port", model, true));
         endpointModel.add(property("autoStart", model, TRUE)

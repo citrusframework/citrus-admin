@@ -30,7 +30,7 @@ public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpo
 
     @Override
     public EndpointModel convert(VertxEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("host", model, true));
         endpointModel.add(property("port", model, true));

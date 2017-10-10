@@ -30,7 +30,7 @@ public class RmiClientConverter extends AbstractEndpointConverter<RmiClientModel
 
     @Override
     public EndpointModel convert(RmiClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("serverUrl", model));
         endpointModel.add(property("host", model));

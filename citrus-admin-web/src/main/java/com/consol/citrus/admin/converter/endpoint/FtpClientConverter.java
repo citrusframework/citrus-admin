@@ -29,7 +29,7 @@ public class FtpClientConverter extends AbstractEndpointConverter<FtpClientModel
 
     @Override
     public EndpointModel convert(FtpClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("host", model));
         endpointModel.add(property("port", model));

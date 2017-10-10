@@ -26,7 +26,7 @@ public class EndpointModel {
 
     private String id;
     private String type;
-    private String modelType;
+    private Class modelType;
     private List<Property> properties = new ArrayList<Property>();
 
     /**
@@ -41,7 +41,7 @@ public class EndpointModel {
      * @param type
      * @param id
      */
-    public EndpointModel(String type, String id, String modelType) {
+    public EndpointModel(String type, String id, Class modelType) {
         this.id = id;
         this.modelType = modelType;
         this.type = type;
@@ -95,7 +95,7 @@ public class EndpointModel {
      * Gets the model type that is logically linked to this endpoint data.
      * @return
      */
-    public String getModelType() {
+    public Class getModelType() {
         return modelType;
     }
 
@@ -104,7 +104,7 @@ public class EndpointModel {
      *
      * @param modelType
      */
-    public void setModelType(String modelType) {
+    public void setModelType(Class modelType) {
         this.modelType = modelType;
     }
 

@@ -35,7 +35,7 @@ public class WebServiceServerConverter extends AbstractEndpointConverter<WebServ
 
     @Override
     public EndpointModel convert(WebServiceServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("port", model, true));
         endpointModel.add(property("autoStart", model, TRUE)

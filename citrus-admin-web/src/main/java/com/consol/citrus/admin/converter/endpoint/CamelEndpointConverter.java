@@ -29,7 +29,7 @@ public class CamelEndpointConverter extends AbstractEndpointConverter<CamelEndpo
 
     @Override
     public EndpointModel convert(CamelEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("camelContext", model));
         endpointModel.add(property("endpointUri", model, true));

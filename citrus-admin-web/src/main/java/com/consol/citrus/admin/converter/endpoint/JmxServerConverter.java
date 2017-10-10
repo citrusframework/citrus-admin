@@ -32,7 +32,7 @@ public class JmxServerConverter extends AbstractEndpointConverter<JmxServerModel
 
     @Override
     public EndpointModel convert(JmxServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("serverUrl", model));
         endpointModel.add(property("host", model));

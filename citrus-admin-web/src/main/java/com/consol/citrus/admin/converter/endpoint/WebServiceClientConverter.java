@@ -35,7 +35,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
 
     @Override
     public EndpointModel convert(WebServiceClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("requestUrl", model, true));
         endpointModel.add(property("webServiceTemplate", model)

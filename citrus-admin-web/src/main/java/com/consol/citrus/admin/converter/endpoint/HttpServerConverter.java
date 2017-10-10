@@ -35,7 +35,7 @@ public class HttpServerConverter extends AbstractEndpointConverter<HttpServerMod
 
     @Override
     public EndpointModel convert(HttpServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("port", model, true));
         endpointModel.add(property("autoStart", model, TRUE)

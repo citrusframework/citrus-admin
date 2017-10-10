@@ -30,7 +30,7 @@ public class MailClientConverter extends AbstractEndpointConverter<MailClientMod
 
     @Override
     public EndpointModel convert(MailClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass().getName());
+        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
 
         endpointModel.add(property("host", model, "localhost", true));
         endpointModel.add(property("port", model, "25", true));
