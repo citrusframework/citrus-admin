@@ -516,17 +516,6 @@ public class ProjectService {
     }
 
     /**
-     * Sets new settings as defaults.
-     * @param settings
-     */
-    public void applySettings(ProjectSettings settings) {
-        System.setProperty(Application.JAVA_SRC_DIRECTORY, settings.getJavaSrcDirectory());
-        System.setProperty(Application.XML_SRC_DIRECTORY, settings.getXmlSrcDirectory());
-        System.setProperty(Application.SPRING_APPLICATION_CONTEXT, settings.getSpringApplicationContext());
-        System.setProperty(Application.SPRING_JAVA_CONFIG, settings.getSpringJavaConfig());
-    }
-
-    /**
      * Get the Citrus modules for this project based on the build dependencies.
      * @return
      */

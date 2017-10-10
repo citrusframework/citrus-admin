@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.web;
 
+import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.Archetype;
@@ -86,7 +87,7 @@ public class ProjectController {
     @RequestMapping(value = "/settings/default", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity saveProjectSettings(@RequestBody ProjectSettings settings) {
-        projectService.applySettings(settings);
+        ConfigurationProvider.apply(settings);
         return ResponseEntity.ok().build();
     }
 

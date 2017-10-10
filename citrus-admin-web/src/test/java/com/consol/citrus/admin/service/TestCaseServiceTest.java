@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
@@ -47,7 +48,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestPackages() throws IOException {
         reset(project);
-        when(project.getSettings()).thenReturn(new ProjectSettings());
+        when(project.getSettings()).thenReturn(ConfigurationProvider.load(ProjectSettings.class));
         String projectHome = new ClassPathResource("projects/sample").getFile().getAbsolutePath();
         when(project.getProjectHome()).thenReturn(projectHome);
         when(project.getJavaDirectory()).thenReturn(projectHome + "/src/test/java/");
@@ -123,7 +124,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestDetailXml() throws Exception {
         reset(project);
-        when(project.getSettings()).thenReturn(new ProjectSettings());
+        when(project.getSettings()).thenReturn(ConfigurationProvider.load(ProjectSettings.class));
         when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
         when(project.getAbsolutePath("foo/FooTest.xml")).thenReturn(new ClassPathResource("projects/sample/src/test/resources/foo/FooTest.xml").getFile().getAbsolutePath());
 
@@ -162,7 +163,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTestDetailXmlWithoutLastUpdatedOn() throws Exception {
         reset(project);
-        when(project.getSettings()).thenReturn(new ProjectSettings());
+        when(project.getSettings()).thenReturn(ConfigurationProvider.load(ProjectSettings.class));
         when(project.getProjectHome()).thenReturn(new ClassPathResource("projects/sample").getFile().getAbsolutePath());
         when(project.getAbsolutePath("foo/WithoutLastUpdatedOnTest.xml")).thenReturn(new ClassPathResource("projects/sample/src/test/resources/foo/WithoutLastUpdatedOnTest.xml").getFile().getAbsolutePath());
 
@@ -177,7 +178,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         when(project.getName()).thenReturn("citrus-core");
         when(project.getVersion()).thenReturn(Citrus.getVersion());
         when(project.isMavenProject()).thenReturn(true);
-        when(project.getSettings()).thenReturn(new ProjectSettings());
+        when(project.getSettings()).thenReturn(ConfigurationProvider.load(ProjectSettings.class));
         String projectHome = new ClassPathResource("projects/maven").getFile().getAbsolutePath();
         when(project.getProjectHome()).thenReturn(projectHome);
         when(project.getJavaDirectory()).thenReturn(projectHome + "projects/maven/src/test/java/");

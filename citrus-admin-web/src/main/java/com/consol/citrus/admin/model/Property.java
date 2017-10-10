@@ -22,15 +22,15 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class Property {
+public class Property<T> {
 
     private String id;
     private String fieldName;
     private String displayName;
-    private String value;
+    private T value;
 
     private String optionKey;
-    private List<String> options;
+    private List<T> options;
 
     private boolean required = false;
 
@@ -42,14 +42,23 @@ public class Property {
     }
 
     /**
-     * Constructor using form field id, displayName and value.
+     * Constructor using is and value fields.
+     * @param id
+     * @param value
+     */
+    public Property(String id, T value) {
+        this(id, id, id, value, false);
+    }
+
+    /**
+     * Constructor using fields id, field name, displayName, value and required.
      * @param id
      * @param fieldName
      * @param displayName
      * @param value
      * @param required
      */
-    public Property(String id, String fieldName, String displayName, String value, boolean required) {
+    public Property(String id, String fieldName, String displayName, T value, boolean required) {
         this.id = id;
         this.fieldName = fieldName;
         this.displayName = displayName;
@@ -72,7 +81,7 @@ public class Property {
      * @param options
      * @return
      */
-    public Property options(String ... options) {
+    public Property options(T ... options) {
         this.options = Arrays.asList(options);
         return this;
     }
@@ -82,7 +91,7 @@ public class Property {
      * @param options
      * @return
      */
-    public Property options(List<String> options) {
+    public Property options(List<T> options) {
         this.options = options;
         return this;
     }
@@ -142,7 +151,7 @@ public class Property {
      * Gets the parameter value.
      * @return
      */
-    public String getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -151,7 +160,7 @@ public class Property {
      *
      * @param value
      */
-    public void setValue(String value) {
+    public void setValue(T value) {
         this.value = value;
     }
 
@@ -159,7 +168,7 @@ public class Property {
      * Gets the parameter options when using drop down list.
      * @return
      */
-    public List<String> getOptions() {
+    public List<T> getOptions() {
         return options;
     }
 
@@ -168,7 +177,7 @@ public class Property {
      *
      * @param options
      */
-    public void setOptions(List<String> options) {
+    public void setOptions(List<T> options) {
         this.options = options;
     }
 

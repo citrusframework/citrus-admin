@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.model;
 
+import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,7 +41,7 @@ public class Project {
     private String description;
     private String version = "1.0.0";
 
-    private ProjectSettings settings = new ProjectSettings();
+    private ProjectSettings settings = ConfigurationProvider.load(ProjectSettings.class);
 
     /** Citrus project information as Json file */
     public static final String PROJECT_INFO_FILENAME = "citrus-project.json";

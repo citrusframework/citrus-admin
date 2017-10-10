@@ -60,9 +60,9 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
             ReflectionUtils.invokeMethod(findSetter(getSourceModelClass(), "id"), instance, definition.getId());
 
             for (Property property : definition.getProperties()) {
-                if (StringUtils.hasText(property.getValue())) {
+                if (property.getValue() != null) {
                     Method setter = findSetter(getSourceModelClass(), property.getFieldName());
-                    ReflectionUtils.invokeMethod(setter, instance, getMethodArgument(setter, property.getValue()));
+                    ReflectionUtils.invokeMethod(setter, instance, getMethodArgument(setter.getParameterTypes()[0], property.getValue()));
                 }
             }
 
@@ -77,22 +77,20 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
         return EndpointModel.class;
     }
 
+    /**
+     * Finds setter method on class for given field name.
+     * @param modelClass
+     * @param fieldName
+     * @return
+     */
     private Method findSetter(Class<S> modelClass, String fieldName) {
         final Method[] setter = {null};
 
-        ReflectionUtils.doWithMethods(modelClass, new ReflectionUtils.MethodCallback() {
-            @Override
-            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                if (method.getName().equals("set" + StringUtils.capitalize(fieldName))) {
-                    setter[0] = method;
-                }
+        ReflectionUtils.doWithMethods(modelClass, method -> {
+            if (method.getName().equals("set" + StringUtils.capitalize(fieldName))) {
+                setter[0] = method;
             }
-        }, new ReflectionUtils.MethodFilter() {
-            @Override
-            public boolean matches(Method method) {
-                return method.getName().startsWith("set");
-            }
-        });
+        }, method -> method.getName().startsWith("set"));
 
         if (setter[0] == null) {
             throw new ApplicationRuntimeException(String.format("Unable to find proper setter for field '%s' on model class '%s'", fieldName, modelClass));
@@ -102,22 +100,21 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
     }
 
     /**
-     *
-     * @param setter
+     * Gets properly typed method argument.
+     * @param parameterType
      * @param value
      * @return
      */
-    private Object getMethodArgument(Method setter, String value) {
-        Class<?> type = setter.getParameterTypes()[0];
-        if (type.isInstance(value)) {
-            return type.cast(value);
+    private <T> T getMethodArgument(Class<T> parameterType, Object value) {
+        if (parameterType.isInstance(value)) {
+            return parameterType.cast(value);
         }
 
         try {
-            return new SimpleTypeConverter().convertIfNecessary(value, type);
+            return new SimpleTypeConverter().convertIfNecessary(value, parameterType);
         } catch (ConversionNotSupportedException e) {
-            if (String.class.equals(type)) {
-                return value.toString();
+            if (String.class.equals(parameterType)) {
+                return (T) String.valueOf(value);
             }
 
             throw new ApplicationRuntimeException("Unable to convert method argument type", e);
