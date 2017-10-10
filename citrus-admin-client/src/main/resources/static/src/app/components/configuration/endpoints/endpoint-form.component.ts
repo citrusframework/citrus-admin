@@ -91,8 +91,8 @@ export class EndpointFormPresentationComponent implements OnInit{
 
     ngOnInit() {
         this.beans = this.endpoint.properties
-            .filter(p => p.optionKey)
-            .reduce((beans, p) => ({...beans, [p.optionKey]:this.springBeanService.searchBeans(p.optionKey)}), {});
+            .filter(p => p.optionType)
+            .reduce((beans, p) => ({...beans, [p.optionType]:this.springBeanService.searchBeans(p.optionType)}), {});
         this.form = this.fb.group({
             type: [this.endpoint.type],
             id: [this.endpoint.id, Validators.required],
@@ -108,8 +108,8 @@ export class EndpointFormPresentationComponent implements OnInit{
             validators.push(Validators.required)
         }
 
-        if (p.optionKey) {
-            asyncValidators.push(RestrictAsyncValues(this.beans[p.optionKey]))
+        if (p.optionType) {
+            asyncValidators.push(RestrictAsyncValues(this.beans[p.optionType]))
         }
         return [
             Validators.compose(validators),

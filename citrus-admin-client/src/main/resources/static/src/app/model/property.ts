@@ -3,11 +3,11 @@ export class Property {
     constructor() {}
 
     public id: string;
-    public value: string;
+    public value: any;
 
     public fieldName: string;
     public displayName: string;
-    public optionKey: string;
-    public options: string[];
+    public optionType: string;
+    public options: any[];
     public required:boolean
 }

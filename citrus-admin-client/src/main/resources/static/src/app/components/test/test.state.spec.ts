@@ -324,7 +324,7 @@ describe('TesState.reducer', () => {
                                     "fieldName": "description",
                                     "displayName": "Description",
                                     "value": null,
-                                    "optionKey": null,
+                                    "optionType": null,
                                     "options": null,
                                     "required": false
                                 }
@@ -339,7 +339,7 @@ describe('TesState.reducer', () => {
                                             "fieldName": "endpoint",
                                             "displayName": "Endpoint",
                                             "value": "bookStoreClient",
-                                            "optionKey": null,
+                                            "optionType": null,
                                             "options": null,
                                             "required": false
                                         },
@@ -348,7 +348,7 @@ describe('TesState.reducer', () => {
                                             "fieldName": "message.data",
                                             "displayName": "Message Data",
                                             "value": "\n                                \n                                    <bkr:AddBookRequestMessage xmlns:bkr=\"http://www.consol.com/schemas/bookstore\">\n                                        <bkr:book>\n                                            <bkr:title>Maven: The Definitive Guide</bkr:title>\n                                            <bkr:author>Mike Loukides, Sonatype</bkr:author>\n                                            <bkr:isbn>${isbn}</bkr:isbn>\n                                            <bkr:year>03.Okt.2008</bkr:year>\n                                        </bkr:book>\n                                    </bkr:AddBookRequestMessage>\n                                \n                            ",
-                                            "optionKey": null,
+                                            "optionType": null,
                                             "options": null,
                                             "required": false
                                         },
@@ -357,7 +357,7 @@ describe('TesState.reducer', () => {
                                             "fieldName": "fork",
                                             "displayName": "Fork",
                                             "value": "false",
-                                            "optionKey": null,
+                                            "optionType": null,
                                             "options": [
                                                 "true",
                                                 "false"
@@ -369,7 +369,7 @@ describe('TesState.reducer', () => {
                                             "fieldName": "actor",
                                             "displayName": "TestActor",
                                             "value": null,
-                                            "optionKey": null,
+                                            "optionType": null,
                                             "options": null,
                                             "required": false
                                         }

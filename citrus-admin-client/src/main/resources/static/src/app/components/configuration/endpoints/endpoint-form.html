@@ -19,13 +19,13 @@
               [control]="form.get(property.id)"
               [label]="property.displayName + (property.required ? ' *' : '')">
     <input-with-addon
-        *ngIf="!property.optionKey && !property.options"
+        *ngIf="!property.optionType && !property.options"
         [formControlName]="property.id"
         [message]="form.get(property.id).errors ? property.displayName + ' is required' : ''"
         [(ngModel)]="property.value"></input-with-addon>
-    <div *ngIf="property.optionKey" style="display: flex">
+    <div *ngIf="property.optionType" style="display: flex">
       <autocomplete
-          [items]="beans[property.optionKey]|async"
+          [items]="beans[property.optionType]|async"
           icon="coffee"
           addon="search"
           [(ngModel)]="property.value"
