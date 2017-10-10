@@ -39,17 +39,17 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<WebServ
 
         endpointModel.add(property("requestUrl", model, true));
         endpointModel.add(property("webServiceTemplate", model)
-                .optionKey(WebServiceTemplate.class.getName()));
+                .optionType(WebServiceTemplate.class));
         endpointModel.add(property("messageFactory", model)
-                .optionKey(SoapMessageFactory.class.getName()));
+                .optionType(SoapMessageFactory.class));
         endpointModel.add(property("messageSender", model));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
         endpointModel.add(property("interceptors", model));
         endpointModel.add(property("endpointResolver", model)
-                .optionKey(EndpointUriResolver.class.getName()));
+                .optionType(EndpointUriResolver.class));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("faultStrategy", model, ErrorHandlingStrategy.THROWS_EXCEPTION.getName())
                 .options(getErrorHandlingStrategyOptions()));
         endpointModel.add(property("pollingInterval", model));

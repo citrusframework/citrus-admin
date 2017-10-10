@@ -26,7 +26,7 @@ public class TestAction {
 
     private final String type;
     private final Class<?> modelType;
-    private List<Property> properties = new ArrayList<Property>();
+    private List<Property> properties = new ArrayList<>();
 
     private List<TestAction> actions = new ArrayList<>();
 

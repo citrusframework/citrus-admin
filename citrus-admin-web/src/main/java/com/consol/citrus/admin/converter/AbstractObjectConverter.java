@@ -45,7 +45,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param fieldName
      * @param definition
      */
-    protected Property property(String fieldName, S definition) {
+    protected <V> Property<V> property(String fieldName, S definition) {
         return property(fieldName, definition, false);
     }
 
@@ -55,7 +55,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param definition
      * @param required
      */
-    protected Property property(String fieldName, S definition, boolean required) {
+    protected <V> Property<V> property(String fieldName, S definition, boolean required) {
         return property(fieldName, definition, null, required);
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param definition
      * @param defaultValue
      */
-    protected Property property(String fieldName, S definition, String defaultValue) {
+    protected <V> Property<V> property(String fieldName, S definition, V defaultValue) {
         return property(fieldName, definition, defaultValue, false);
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param defaultValue
      * @param required
      */
-    protected Property property(String fieldName, S definition, String defaultValue, boolean required) {
+    protected <V> Property<V> property(String fieldName, S definition, V defaultValue, boolean required) {
         return property(fieldName, StringUtils.capitalize(fieldName), definition, defaultValue, required);
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param displayName
      * @param definition
      */
-    protected Property property(String fieldName, String displayName, S definition) {
+    protected <V> Property<V> property(String fieldName, String displayName, S definition) {
         return property(fieldName, displayName, definition, false);
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param definition
      * @param required
      */
-    protected Property property(String fieldName, String displayName, S definition, boolean required) {
+    protected <V> Property<V> property(String fieldName, String displayName, S definition, boolean required) {
         return property(fieldName, displayName, definition, null, required);
     }
 
@@ -109,28 +109,28 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param defaultValue
      * @param required
      */
-    protected Property property(String fieldName, String displayName, S definition, String defaultValue, boolean required) {
+    protected <V> Property<V> property(String fieldName, String displayName, S definition, V defaultValue, boolean required) {
         Field field = ReflectionUtils.findField(definition.getClass(), fieldName);
 
         if (field != null) {
             Method getter = ReflectionUtils.findMethod(definition.getClass(), getMethodName(fieldName));
 
-            String value = defaultValue;
+            V value = defaultValue;
             if (getter != null) {
                 Object getterResult = ReflectionUtils.invokeMethod(getter, definition);
                 if (getterResult != null) {
-                    value = getterResult.toString();
+                    value = (V) getterResult;
                 }
             }
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    return new Property(field.getAnnotation(XmlAttribute.class).name(), fieldName, displayName, resolvePropertyExpression(value), required);
+                    return new Property<>(field.getAnnotation(XmlAttribute.class).name(), fieldName, displayName, resolvePropertyExpression(value), required);
                 } else {
-                    return new Property(fieldName, fieldName, displayName, resolvePropertyExpression(value), required);
+                    return new Property<>(fieldName, fieldName, displayName, resolvePropertyExpression(value), required);
                 }
             } else {
-                return new Property(fieldName, fieldName, displayName, null, required);
+                return new Property<>(fieldName, fieldName, displayName, null, required);
             }
         } else {
             log.warn(String.format("Unknown field '%s' on source type '%s'", fieldName, definition.getClass()));
@@ -143,9 +143,9 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @param value
      * @return
      */
-    protected String resolvePropertyExpression(String value) {
-        if (VariableUtils.isVariableName(value)) {
-            return projectService.getProjectProperties().getProperty(VariableUtils.cutOffVariablesPrefix(value));
+    protected <V> V resolvePropertyExpression(V value) {
+        if (value instanceof String && VariableUtils.isVariableName(String.valueOf(value))) {
+            return (V) projectService.getProjectProperties().getProperty(VariableUtils.cutOffVariablesPrefix(String.valueOf(value)));
         } else {
             return value;
         }

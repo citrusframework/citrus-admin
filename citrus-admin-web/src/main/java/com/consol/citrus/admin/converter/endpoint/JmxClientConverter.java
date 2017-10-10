@@ -38,9 +38,9 @@ public class JmxClientConverter extends AbstractEndpointConverter<JmxClientModel
         endpointModel.add(property("autoReconnect", model));
         endpointModel.add(property("delayOnReconnect", model));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("pollingInterval", model, "500"));
 
         addEndpointProperties(endpointModel, model);

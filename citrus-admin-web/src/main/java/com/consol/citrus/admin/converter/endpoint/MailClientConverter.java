@@ -39,7 +39,7 @@ public class MailClientConverter extends AbstractEndpointConverter<MailClientMod
         endpointModel.add(property("password", model));
         endpointModel.add(property("properties", model));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
 
         endpointModel.add(property("actor", "TestActor", model));
 

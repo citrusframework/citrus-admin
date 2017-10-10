@@ -36,7 +36,7 @@ public class FtpClientConverter extends AbstractEndpointConverter<FtpClientModel
         endpointModel.add(property("username", model));
         endpointModel.add(property("password", model));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
 
         endpointModel.add(property("pollingInterval", model));
 

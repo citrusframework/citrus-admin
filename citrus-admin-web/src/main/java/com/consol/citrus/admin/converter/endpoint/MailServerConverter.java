@@ -44,10 +44,10 @@ public class MailServerConverter extends AbstractEndpointConverter<MailServerMod
         endpointModel.add(property("splitMultipart", model, FALSE)
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("mailProperties", model)
-                .optionKey(Properties.class.getName()));
+                .optionType(Properties.class));
 
         endpointModel.add(property("timeout", model, "5000"));
 

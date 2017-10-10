@@ -38,10 +38,10 @@ public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpo
         endpointModel.add(property("pollingInterval", model, "500"));
 
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
 
         endpointModel.add(property("vertxFactory", model)
-                .optionKey(VertxInstanceFactory.class.getName()));
+                .optionType(VertxInstanceFactory.class));
 
         endpointModel.add(property("pubSubDomain", model, "false")
                 .options("true", "false"));

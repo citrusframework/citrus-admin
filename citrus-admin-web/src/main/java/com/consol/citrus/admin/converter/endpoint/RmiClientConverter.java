@@ -38,9 +38,9 @@ public class RmiClientConverter extends AbstractEndpointConverter<RmiClientModel
         endpointModel.add(property("binding", model));
         endpointModel.add(property("method", model));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("pollingInterval", model, "500"));
 
         addEndpointProperties(endpointModel, model);

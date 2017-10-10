@@ -37,14 +37,14 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointM
 
         endpointModel.add(property("destinationName", "Destination Name", model));
         endpointModel.add(property("destination", "Destination", model)
-                .optionKey(Destination.class.getName()));
+                .optionType(Destination.class));
 
         endpointModel.add(property("connectionFactory", model)
-                .optionKey(ConnectionFactory.class.getName()));
+                .optionType(ConnectionFactory.class));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("jmsTemplate", model)
-                .optionKey(JmsTemplate.class.getName()));
+                .optionType(JmsTemplate.class));
         endpointModel.add(property("pubSubDomain", model, "false")
                 .options("true", "false"));
 

@@ -45,16 +45,16 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
 
         if (model.getMessage() != null) {
             if (StringUtils.hasText(model.getMessage().getData())) {
-                action.add(new Property("message.data", "message.data", "Message Data", model.getMessage().getData(), false));
+                action.add(new Property<>("message.data", "message.data", "Message Data", model.getMessage().getData(), false));
             }
 
             if (model.getMessage().getPayload()!= null) {
-                action.add(new Property("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(model.getMessage().getPayload().getAnies().get(0)), false));
+                action.add(new Property<>("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(model.getMessage().getPayload().getAnies().get(0)), false));
             }
 
             if (model.getMessage().getResource() != null &&
                     StringUtils.hasText(model.getMessage().getResource().getFile())) {
-                action.add(new Property("message.resource", "message.resource", "Message Resource", model.getMessage().getResource().getFile(), false));
+                action.add(new Property<>("message.resource", "message.resource", "Message Resource", model.getMessage().getResource().getFile(), false));
             }
         }
 

@@ -29,7 +29,7 @@ public class Property<T> {
     private String displayName;
     private T value;
 
-    private String optionKey;
+    private Class optionType;
     private List<T> options;
 
     private boolean required = false;
@@ -67,12 +67,12 @@ public class Property<T> {
     }
 
     /**
-     * Adds option key to search for when collecting options at runtime.
-     * @param key
+     * Adds option type to search for when collecting options at runtime.
+     * @param type
      * @return
      */
-    public Property optionKey(String key) {
-        this.optionKey = key;
+    public Property optionType(Class type) {
+        this.optionType = type;
         return this;
     }
 
@@ -182,20 +182,20 @@ public class Property<T> {
     }
 
     /**
-     * Returns the option key used when searching for options.
+     * Returns the option type used when searching for options.
      * @return
      */
-    public String getOptionKey() {
-        return optionKey;
+    public Class getOptionType() {
+        return optionType;
     }
 
     /**
-     * Sets the optionKey property.
+     * Sets the optionType property.
      *
-     * @param optionKey
+     * @param optionType
      */
-    public void setOptionKey(String optionKey) {
-        this.optionKey = optionKey;
+    public void setOptionType(Class optionType) {
+        this.optionType = optionType;
     }
 
     /**

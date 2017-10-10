@@ -46,14 +46,14 @@ public class WebSocketServerConverter extends AbstractEndpointConverter<WebSocke
         endpointModel.add(property("rootParentContext", model, TRUE)
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("securityHandler", model)
-                .optionKey(SecurityHandler.class.getName()));
+                .optionType(SecurityHandler.class));
         endpointModel.add(property("servletHandler", model)
-                .optionKey(ServletHandler.class.getName()));
+                .optionType(ServletHandler.class));
         endpointModel.add(property("connector", model)
-                .optionKey(Connector.class.getName()));
+                .optionType(Connector.class));
         endpointModel.add(property("connectors", model));
         endpointModel.add(property("servletName", model));
         endpointModel.add(property("servletMappingPath", model));

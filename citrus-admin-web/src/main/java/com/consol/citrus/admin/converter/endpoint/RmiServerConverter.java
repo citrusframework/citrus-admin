@@ -43,7 +43,7 @@ public class RmiServerConverter extends AbstractEndpointConverter<RmiServerModel
         endpointModel.add(property("autoStart", model, TRUE)
                 .options(TRUE, FALSE));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
 
         addEndpointProperties(endpointModel, model);
 

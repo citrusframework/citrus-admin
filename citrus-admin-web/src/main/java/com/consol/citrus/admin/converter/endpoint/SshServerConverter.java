@@ -40,7 +40,7 @@ public class SshServerConverter extends AbstractEndpointConverter<SshServerModel
         endpointModel.add(property("hostKeyPath", model));
         endpointModel.add(property("allowedKeyPath", model));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("interceptors", model));
         endpointModel.add(property("user", model));

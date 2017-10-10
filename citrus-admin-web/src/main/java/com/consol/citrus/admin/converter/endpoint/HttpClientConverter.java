@@ -44,13 +44,13 @@ public class HttpClientConverter extends AbstractEndpointConverter<HttpClientMod
                 .options(getErrorHandlingStrategyOptions()));
         endpointModel.add(property("pollingInterval", model, "500"));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
         endpointModel.add(property("messageConverter", model)
-                .optionKey(MessageConverter.class.getName()));
+                .optionType(MessageConverter.class));
         endpointModel.add(property("requestFactory", model)
-                .optionKey(ClientHttpRequestFactory.class.getName()));
+                .optionType(ClientHttpRequestFactory.class));
         endpointModel.add(property("restTemplate", model)
-                .optionKey(RestTemplate.class.getName()));
+                .optionType(RestTemplate.class));
         endpointModel.add(property("charset", model));
         endpointModel.add(property("contentType", model));
         endpointModel.add(property("interceptors", model));

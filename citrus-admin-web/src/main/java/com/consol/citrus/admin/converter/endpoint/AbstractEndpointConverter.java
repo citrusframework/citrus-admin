@@ -43,7 +43,7 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
      */
     protected void addEndpointProperties(EndpointModel endpointModel, S sourceModel) {
         endpointModel.add(property("timeout", sourceModel, "5000"));
-        endpointModel.add(property("actor", "TestActor", sourceModel).optionKey(TestActor.class.getName()));
+        endpointModel.add(property("actor", "TestActor", sourceModel).optionType(TestActor.class));
     }
 
     @Override

@@ -35,8 +35,8 @@ public class JmsEndpointConverterTest {
         definition.setType(endpointConverter.getEndpointType());
         definition.setModelType(endpointConverter.getSourceModelClass());
 
-        definition.add(new Property("destinationName", "destinationName", "Destination", "JMS.Queue", false));
-        definition.add(new Property("pubSubDomain", "pubSubDomain", "PubSubDomain", "TRUE", false));
+        definition.add(new Property<>("destinationName", "destinationName", "Destination", "JMS.Queue", false));
+        definition.add(new Property<>("pubSubDomain", "pubSubDomain", "PubSubDomain", "TRUE", false));
 
         JmsEndpointModel result = endpointConverter.convertBack(definition);
         Assert.assertEquals(result.getId(), "newEndpoint");

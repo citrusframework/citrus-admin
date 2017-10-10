@@ -41,7 +41,7 @@ public class SshClientConverter extends AbstractEndpointConverter<SshClientModel
         endpointModel.add(property("commandTimeout", model));
         endpointModel.add(property("connectionTimeout", model));
         endpointModel.add(property("messageCorrelator", model)
-                .optionKey(MessageCorrelator.class.getName()));
+                .optionType(MessageCorrelator.class));
         endpointModel.add(property("pollingInterval", model, "500"));
 
         addEndpointProperties(endpointModel, model);

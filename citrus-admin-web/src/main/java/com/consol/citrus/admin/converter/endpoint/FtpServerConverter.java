@@ -40,7 +40,7 @@ public class FtpServerConverter extends AbstractEndpointConverter<FtpServerModel
                 .options(TRUE, FALSE));
         endpointModel.add(property("endpointAdapter", model));
         endpointModel.add(property("userManager", model)
-                .optionKey(UserManager.class.getName()));
+                .optionType(UserManager.class));
         endpointModel.add(property("userManagerProperties", model));
 
         endpointModel.add(property("timeout", model, "5000"));

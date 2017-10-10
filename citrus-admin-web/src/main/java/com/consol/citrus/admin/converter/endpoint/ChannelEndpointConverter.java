@@ -40,9 +40,9 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
         }
 
         endpointModel.add(property("messagingTemplate", model)
-                .optionKey(MessagingTemplate.class.getName()));
+                .optionType(MessagingTemplate.class));
         endpointModel.add(property("channelResolver", model)
-                .optionKey(DestinationResolver.class.getName()));
+                .optionType(DestinationResolver.class));
 
         addEndpointProperties(endpointModel, model);
 
