@@ -19,7 +19,7 @@ package com.consol.citrus.admin.model.maven;
 /**
  * @author Christoph Deppisch
  */
-public class Archetype {
+public class MavenArchetype {
 
     private String archetypeGroupId;
     private String archetypeArtifactId;

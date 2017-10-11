@@ -20,8 +20,8 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.configuration.SystemConfigurable;
 import com.consol.citrus.admin.configuration.SystemProperty;
-import com.consol.citrus.admin.model.build.BuildConfiguration;
-import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.model.build.BuildContext;
+import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class ProjectSettings {
 
     private int tabSize = 2;
 
-    private BuildConfiguration build = new MavenBuildConfiguration();
+    private BuildContext build = new MavenBuildContext();
 
     /**
      * Gets the value of the javaSrcDirectory property.
@@ -153,7 +153,7 @@ public class ProjectSettings {
      * Sets the build configuration.
      * @param build
      */
-    public void setBuild(BuildConfiguration build) {
+    public void setBuild(BuildContext build) {
         this.build = build;
     }
 
@@ -161,7 +161,7 @@ public class ProjectSettings {
      * Gets the build configuration.
      * @return
      */
-    public BuildConfiguration getBuild() {
+    public BuildContext getBuild() {
         return build;
     }
 

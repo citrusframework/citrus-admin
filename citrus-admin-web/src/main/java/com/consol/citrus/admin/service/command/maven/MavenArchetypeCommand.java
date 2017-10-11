@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service.command.maven;
 
-import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
-import com.consol.citrus.admin.model.maven.Archetype;
+import com.consol.citrus.admin.model.maven.MavenArchetype;
 import com.consol.citrus.admin.process.listener.ProcessListener;
 import org.springframework.util.StringUtils;
 
@@ -34,11 +33,11 @@ public class MavenArchetypeCommand extends MavenCommand {
      * Constructor for executing a command.
      *
      * @param workingDirectory
-     * @param buildConfiguration
+     * @param buildContext
      * @param shellListeners
      */
-    public MavenArchetypeCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration, ProcessListener... shellListeners) {
-        super(workingDirectory, buildConfiguration, shellListeners);
+    public MavenArchetypeCommand(File workingDirectory, MavenBuildContext buildContext, ProcessListener... shellListeners) {
+        super(workingDirectory, buildContext, shellListeners);
     }
 
     /**
@@ -46,20 +45,17 @@ public class MavenArchetypeCommand extends MavenCommand {
      * @param archetype
      * @return
      */
-    public MavenArchetypeCommand generate(Archetype archetype) {
-        StringBuilder commandBuilder = new StringBuilder();
+    public MavenArchetypeCommand generate(MavenArchetype archetype) {
+        String commandBuilder = GENERATE +
+                String.format("-DarchetypeGroupId=%s ", archetype.getArchetypeGroupId()) +
+                String.format("-DarchetypeArtifactId=%s ", archetype.getArchetypeArtifactId()) +
+                String.format("-DarchetypeVersion=%s ", archetype.getArchetypeVersion()) +
+                String.format("-DgroupId=%s ", archetype.getGroupId()) +
+                String.format("-DartifactId=%s ", archetype.getArtifactId()) +
+                String.format("-Dversion=%s ", archetype.getVersion()) +
+                String.format("-Dpackage=%s ", StringUtils.hasText(archetype.getPackageName()) ? archetype.getPackageName() : archetype.getGroupId());
 
-        commandBuilder.append(GENERATE);
-
-        commandBuilder.append(String.format("-DarchetypeGroupId=%s ", archetype.getArchetypeGroupId()));
-        commandBuilder.append(String.format("-DarchetypeArtifactId=%s ", archetype.getArchetypeArtifactId()));
-        commandBuilder.append(String.format("-DarchetypeVersion=%s ", archetype.getArchetypeVersion()));
-        commandBuilder.append(String.format("-DgroupId=%s ", archetype.getGroupId()));
-        commandBuilder.append(String.format("-DartifactId=%s ", archetype.getArtifactId()));
-        commandBuilder.append(String.format("-Dversion=%s ", archetype.getVersion()));
-        commandBuilder.append(String.format("-Dpackage=%s ", StringUtils.hasText(archetype.getPackageName()) ? archetype.getPackageName() : archetype.getGroupId()));
-
-        lifecycleCommand += commandBuilder.toString();
+        lifecycleCommand += commandBuilder;
         return this;
     }
 

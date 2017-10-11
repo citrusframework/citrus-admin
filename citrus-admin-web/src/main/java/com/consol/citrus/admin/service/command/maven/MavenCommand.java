@@ -16,12 +16,13 @@
 
 package com.consol.citrus.admin.service.command.maven;
 
-import com.consol.citrus.admin.model.build.BuildProperty;
-import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.configuration.ConfigurationProvider;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.process.listener.ProcessListener;
 import com.consol.citrus.admin.service.command.AbstractTerminalCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -33,10 +34,12 @@ import java.util.List;
  */
 public class MavenCommand extends AbstractTerminalCommand {
 
-    private static final String MVN = "mvn -B";
+    private static final String MVN = "mvn ";
     protected static final String CLEAN = "clean ";
     protected static final String COMPILE = "compile ";
+    protected static final String TEST = "test ";
     protected static final String PACKAGE = "package ";
+    protected static final String INTEGRATION_TEST = "integration-test ";
     protected static final String INSTALL = "install ";
     protected static final String VERIFY = "verify ";
 
@@ -44,19 +47,24 @@ public class MavenCommand extends AbstractTerminalCommand {
     private static Logger log = LoggerFactory.getLogger(MavenCommand.class);
 
     /** Maven build configuration */
-    private final MavenBuildConfiguration buildConfiguration;
+    private MavenConfiguration configuration = ConfigurationProvider.load(MavenConfiguration.class);
+    private final MavenBuildContext buildContext;
 
     protected String lifecycleCommand = "";
+
+    /** Test or group to execute */
+    private TestGroup group;
+    private Test test;
 
     /**
      * Constructor for executing a command.
      * @param workingDirectory
-     * @param buildConfiguration
+     * @param buildContext
      * @param shellListeners
      */
-    public MavenCommand(File workingDirectory, MavenBuildConfiguration buildConfiguration, ProcessListener... shellListeners) {
+    public MavenCommand(File workingDirectory, MavenBuildContext buildContext, ProcessListener... shellListeners) {
         super(workingDirectory, shellListeners);
-        this.buildConfiguration = buildConfiguration;
+        this.buildContext = buildContext;
     }
 
     /**
@@ -65,25 +73,34 @@ public class MavenCommand extends AbstractTerminalCommand {
      */
     public String buildCommand() {
         StringBuilder builder = new StringBuilder();
-        if (StringUtils.hasText(buildConfiguration.getMavenHome())) {
-            builder.append(buildConfiguration.getMavenHome() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + MVN);
+        if (StringUtils.hasText(configuration.getMavenHome())) {
+            builder.append(configuration.getMavenHome() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + MVN);
         } else {
             builder.append(MVN);
         }
 
         builder.append(lifecycleCommand);
 
-        for (BuildProperty propertyEntry: getSystemProperties()) {
-            builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
+        for (Property propertyEntry: getSystemProperties()) {
+            builder.append(String.format("-D%s=%s ", propertyEntry.getId(), propertyEntry.getValue()));
         }
 
-        if (StringUtils.hasText(getActiveProfiles())) {
-            builder.append(String.format("-P%s ", getActiveProfiles()));
+        if (!CollectionUtils.isEmpty(buildContext.getProfiles())) {
+            builder.append(String.format("-P%s ", StringUtils.collectionToCommaDelimitedString(buildContext.getProfiles())));
         }
 
         log.debug("Using Maven command: " + builder.toString());
 
         return builder.toString();
+    }
+
+    /**
+     * Use custom configuration.
+     * @return
+     */
+    public MavenCommand configuration(MavenConfiguration configuration) {
+        this.configuration = configuration;
+        return this;
     }
 
     /**
@@ -102,6 +119,35 @@ public class MavenCommand extends AbstractTerminalCommand {
     public MavenCommand compile() {
         lifecycleCommand += COMPILE;
         return this;
+    }
+
+    /**
+     * Use test command.
+     * @return
+     */
+    public MavenCommand test() {
+        lifecycleCommand += TEST;
+        return this;
+    }
+
+    /**
+     * Use test command for single test.
+     * @param test
+     * @return
+     */
+    public MavenCommand test(Test test) {
+        this.test = test;
+        return this.test();
+    }
+
+    /**
+     * Use test command for single test group.
+     * @param group
+     * @return
+     */
+    public MavenCommand test(TestGroup group) {
+        this.group = group;
+        return this.test();
     }
 
     /**
@@ -142,13 +188,63 @@ public class MavenCommand extends AbstractTerminalCommand {
     }
 
     /**
+     * Use integration test command.
+     * @return
+     */
+    public MavenCommand integrationTest() {
+        lifecycleCommand += INTEGRATION_TEST;
+        return this;
+    }
+
+    /**
+     * Use integration test command for single test.
+     * @param test
+     * @return
+     */
+    public MavenCommand integrationTest(Test test) {
+        this.test = test;
+        return this.integrationTest();
+    }
+
+    /**
+     * Use integration test command for single test group.
+     * @param group
+     * @return
+     */
+    public MavenCommand integrationTest(TestGroup group) {
+        this.group = group;
+        return this.integrationTest();
+    }
+
+    /**
      * Gets the build system properties.
      * @return
      */
-    protected List<BuildProperty> getSystemProperties() {
-        List<BuildProperty> systemProperties = new ArrayList<>();
+    protected List<Property> getSystemProperties() {
+        List<Property> systemProperties = new ArrayList<>();
 
-        systemProperties.addAll(buildConfiguration.getProperties());
+        Property utTestNameProperty = null;
+        Property itTestNameProperty = null;
+
+        if (test != null && StringUtils.hasText(test.getName())) {
+            utTestNameProperty = new Property<>("test", test.getClassName() + "#" + test.getMethodName());
+            itTestNameProperty = new Property<>("it.test", test.getClassName() + "#" + test.getMethodName());
+        } else if (group != null && StringUtils.hasText(group.getName())) {
+            utTestNameProperty = new Property<>("test", group.getName().replaceAll("\\.", "/") + "/*");
+            itTestNameProperty = new Property<>("it.test", group.getName().replaceAll("\\.", "/") + "/*");
+        }
+
+        systemProperties.addAll(buildContext.getProperties());
+
+        if (itTestNameProperty != null && buildContext.getTestPlugin().equals("maven-failsafe")) {
+            systemProperties.add(itTestNameProperty);
+        } else if (utTestNameProperty != null && buildContext.getTestPlugin().equals("maven-surefire")) {
+            systemProperties.add(utTestNameProperty);
+        } else if (utTestNameProperty != null) {
+            systemProperties.add(utTestNameProperty);
+            systemProperties.add(itTestNameProperty);
+        }
+
         return systemProperties;
     }
 
@@ -157,11 +253,16 @@ public class MavenCommand extends AbstractTerminalCommand {
      *
      * @return the buildConfiguration
      */
-    public MavenBuildConfiguration getBuildConfiguration() {
-        return buildConfiguration;
+    public MavenConfiguration getConfiguration() {
+        return configuration;
     }
 
-    protected String getActiveProfiles() {
-        return getBuildConfiguration().getProfiles();
+    /**
+     * Gets the buildContext.
+     *
+     * @return
+     */
+    public MavenBuildContext getBuildContext() {
+        return buildContext;
     }
 }

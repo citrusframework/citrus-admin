@@ -16,27 +16,29 @@
 
 package com.consol.citrus.admin.model.build;
 
+import com.consol.citrus.admin.model.Property;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Christoph Deppisch
  */
-public class AbstractBuildConfiguration implements BuildConfiguration {
+public class AbstractBuildContext implements BuildContext {
 
     protected final String type;
-    protected List<BuildProperty> properties = new ArrayList<>();
+    protected List<Property> properties = new ArrayList<>();
 
     /**
      * Constructor
      * @param type
      */
-    public AbstractBuildConfiguration(String type) {
+    public AbstractBuildContext(String type) {
         this.type = type;
     }
 
     @Override
-    public List<BuildProperty> getProperties() {
+    public List<Property> getProperties() {
         return properties;
     }
 
@@ -44,7 +46,7 @@ public class AbstractBuildConfiguration implements BuildConfiguration {
      * Sets the build properties.
      * @param properties
      */
-    public void setProperties(List<BuildProperty> properties) {
+    public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
 

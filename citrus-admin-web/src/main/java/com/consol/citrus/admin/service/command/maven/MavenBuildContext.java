@@ -14,54 +14,34 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.model.build.maven;
+package com.consol.citrus.admin.service.command.maven;
 
-import com.consol.citrus.admin.Application;
-import com.consol.citrus.admin.model.build.AbstractBuildConfiguration;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.util.StringUtils;
+import com.consol.citrus.admin.model.build.AbstractBuildContext;
+
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
  */
-public class MavenBuildConfiguration extends AbstractBuildConfiguration {
+public class MavenBuildContext extends AbstractBuildContext {
 
-    private final String mavenHome;
-    private String testPlugin = "maven-failsafe";
     private String command;
-    private String profiles = "";
     private boolean clean = false;
     private boolean compile = true;
 
-    public MavenBuildConfiguration() {
+    private String testPlugin = "maven-failsafe";
+
+    private List<String> profiles;
+
+    public MavenBuildContext() {
         super("maven");
-
-        if (System.getProperty(Application.MVN_HOME_DIRECTORY) != null) {
-            mavenHome = System.getProperty(Application.MVN_HOME_DIRECTORY);
-        } else if (StringUtils.hasText(System.getenv("MAVEN_HOME"))) {
-            mavenHome = System.getenv("MAVEN_HOME");
-        } else if (StringUtils.hasText(System.getenv("M2_HOME"))) {
-            mavenHome = System.getenv("M2_HOME");
-        } else {
-            mavenHome = "";
-        }
-    }
-
-    /**
-     * Gets the value of the mavenHome property.
-     *
-     * @return the mavenHome
-     */
-    @JsonIgnore
-    public String getMavenHome() {
-        return mavenHome;
     }
 
     /**
      * Sets the active profiles.
      * @param profiles
      */
-    public void setProfiles(String profiles) {
+    public void setProfiles(List<String> profiles) {
         this.profiles = profiles;
     }
 
@@ -69,7 +49,7 @@ public class MavenBuildConfiguration extends AbstractBuildConfiguration {
      * Gets the active profiles.
      * @return
      */
-    public String getProfiles() {
+    public List<String> getProfiles() {
         return profiles;
     }
 

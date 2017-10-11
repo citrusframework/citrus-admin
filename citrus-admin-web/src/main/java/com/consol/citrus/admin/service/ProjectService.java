@@ -21,9 +21,9 @@ import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
 import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration;
+import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
 import com.consol.citrus.admin.model.git.Repository;
-import com.consol.citrus.admin.model.maven.Archetype;
+import com.consol.citrus.admin.model.maven.MavenArchetype;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
 import com.consol.citrus.admin.service.command.filesystem.DeleteCommand;
@@ -115,7 +115,7 @@ public class ProjectService {
 
         String mavenArchetype = System.getProperty(Application.MAVEN_ARCHETYPE_COORDINATES, System.getenv(Application.MAVEN_ARCHETYPE_COORDINATES_ENV));
         if (project == null && StringUtils.hasText(mavenArchetype)) {
-            Archetype archetype = new Archetype();
+            MavenArchetype archetype = new MavenArchetype();
 
             MavenCoordinate archetypeCoordinates = MavenCoordinates.createCoordinate(mavenArchetype);
             archetype.setArchetypeGroupId(archetypeCoordinates.getGroupId());
@@ -260,10 +260,10 @@ public class ProjectService {
      * @param archetype
      * @return
      */
-    public Project create(Archetype archetype) {
+    public Project create(MavenArchetype archetype) {
         log.info("Generating project sources from Maven archetype: " + archetype.getArchetypeArtifactId());
 
-        if (terminalService.executeAndWait(new MavenArchetypeCommand(new File(Application.getWorkingDirectory()), new MavenBuildConfiguration())
+        if (terminalService.executeAndWait(new MavenArchetypeCommand(new File(Application.getWorkingDirectory()), new MavenBuildContext())
                 .generate(archetype))) {
             load(Application.getWorkingDirectory() + File.separator + archetype.getArtifactId());
             return getActiveProject();

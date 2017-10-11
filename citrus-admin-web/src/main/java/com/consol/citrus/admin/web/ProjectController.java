@@ -19,7 +19,7 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.git.Repository;
-import com.consol.citrus.admin.model.maven.Archetype;
+import com.consol.citrus.admin.model.maven.MavenArchetype;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +52,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/create/archetype", method = RequestMethod.POST)
     @ResponseBody
-    public Project createProject(@RequestBody Archetype archetype) {
+    public Project createProject(@RequestBody MavenArchetype archetype) {
         return projectService.create(archetype);
     }
 

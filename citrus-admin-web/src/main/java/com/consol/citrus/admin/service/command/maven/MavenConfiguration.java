@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.model.build;
+package com.consol.citrus.admin.service.command.maven;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import java.util.List;
+import com.consol.citrus.admin.configuration.SystemConfigurable;
+import com.consol.citrus.admin.configuration.SystemProperty;
 
 /**
  * @author Christoph Deppisch
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public interface BuildConfiguration {
+@SystemConfigurable
+public class MavenConfiguration {
+
+    @SystemProperty(name = "sweetest.maven.home", environment = "MAVEN_HOME", defaultValue = "")
+    private String mavenHome;
 
     /**
-     * Gets the type of the build (e.g. maven, gradle, ant).
+     * Gets the mavenHome.
+     *
      * @return
      */
-    String getType();
+    public String getMavenHome() {
+        return mavenHome;
+    }
 
     /**
-     * Gets the build properties.
-     * @return
+     * Sets the mavenHome.
+     *
+     * @param mavenHome
      */
-    List<BuildProperty> getProperties();
+    public void setMavenHome(String mavenHome) {
+        this.mavenHome = mavenHome;
+    }
 }
