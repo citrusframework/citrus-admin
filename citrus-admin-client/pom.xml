@@ -23,7 +23,7 @@
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <configuration>
-          <workingDirectory>src/main/resources/static</workingDirectory>
+          <workingDirectory>src/main/resources</workingDirectory>
           <installDirectory>target</installDirectory>
         </configuration>
         <executions>
@@ -63,8 +63,9 @@
             <fileset>
               <directory>src/main/resources</directory>
               <includes>
-                <include>static/dist/**</include>
-                <include>static/node_modules/**</include>
+                <include>dist/**</include>
+                <include>static/**</include>
+                <include>node_modules/**</include>
               </includes>
             </fileset>
           </filesets>
@@ -75,7 +76,7 @@
       <resource>
         <directory>src/main/resources</directory>
         <includes>
-          <include>static/dist/**</include>
+          <include>static/**</include>
         </includes>
       </resource>
     </resources>
@@ -93,7 +94,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
-              <arguments>run serve</arguments>
+              <arguments>run start</arguments>
             </configuration>
           </plugin>
         </plugins>
