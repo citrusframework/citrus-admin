@@ -28,7 +28,7 @@ export const endpointRoutes:Routes = [{
         FormsModule,
         CommonModule,
         RouterModule,
-        EffectsModule.run(EndpointEffects),
+        EffectsModule.forFeature([EndpointEffects]),
         ReactiveFormsModule,
     ],
     providers: [

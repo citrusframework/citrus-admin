@@ -60,6 +60,7 @@ export class TestAction {
 
     public type: string;
     public properties: Property[];
+    public actions: TestAction;
 }
 
 export class TestResult {

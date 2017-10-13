@@ -3,6 +3,7 @@ import {SpringBeanService} from "../../../service/springbean.service";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
 import {SpringContext} from "../../../model/springcontext";
+import * as ace from 'brace';
 
 declare var jQuery:any;
 
@@ -21,7 +22,7 @@ export class SpringContextComponent implements OnInit {
     selectedContext: SpringContext;
     contexts: SpringContext[];
 
-    editor: any;
+    editor: ace.Editor;
 
     ngOnInit() {
         this.getContexts();
@@ -40,7 +41,7 @@ export class SpringContextComponent implements OnInit {
             .subscribe(
                 content => {
                     this.selectedContext.source = content;
-                    
+
                     this.editor = ace.edit("context-editor");
                     this.editor.setTheme("ace/theme/chrome");
                     this.editor.session.setMode("ace/mode/xml");

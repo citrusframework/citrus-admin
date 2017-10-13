@@ -18,7 +18,7 @@ export class AboutComponent implements OnInit {
     constructor(private http: Http) {
     }
 
-    private version: string = "";
+    version: string = "";
 
     ngOnInit(): void {
         this.http.get("api/version")

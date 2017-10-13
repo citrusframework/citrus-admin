@@ -49,7 +49,7 @@ const components = [
         CommonModule,
         ServiceModule,
         TestRoutingModule,
-        EffectsModule.run(TestStateEffects)
+        EffectsModule.forFeature([TestStateEffects])
     ],
     providers: [
         TestStateActions,

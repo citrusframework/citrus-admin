@@ -41,7 +41,7 @@ export const routes:Routes = [{
         FormsModule,
         CommonModule,
         RouterModule,
-        EffectsModule.run(SchemaRepositoryEffects),
+        EffectsModule.forFeature([SchemaRepositoryEffects]),
         ReactiveFormsModule,
     ],
     providers: [

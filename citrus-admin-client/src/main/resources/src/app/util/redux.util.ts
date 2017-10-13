@@ -79,17 +79,14 @@ export class AsyncActions {
 }
 
 export type IdMap<T> = {[id:string]:T};
-export const toIdMap = <T>(list:T[], getId:(e:T)=>string) => list.reduce((idm, e) => ({...idm, [getId(e)]:e}), {} as IdMap<T>);
+export const toIdMap = <T>(list:T[], getId:(e:T)=>string): IdMap<T> => list.reduce((idm, e) => ({...idm, [getId(e)]:e}), {} as IdMap<T>);
 export const toArray = <T>(idMap:IdMap<T>) => Object.keys(idMap).map(k => idMap[k]);
 
 export const deleteFromMap = <T>(map:IdMap<T>, key:string) => {
-    console.log(`Delete ${key}`, map);
-    const r = Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {});
-    console.log(`Deleted ${key}`, r);
-    return r;
+    return Object.keys(map).filter(k => k !== key).reduce((no, k) => ({...no, [k]:map[k]}), {});
 };
 
-type ReducerCallback<T> = <A>(state:T,payload:A) => T;
+type ReducerCallback<T> = (state:T,payload:any) => T;
 type ActionReduceTupel<T> = [string[], ReducerCallback<T>]
 export class ReducerBuilder<T extends {}> {
 
@@ -105,7 +102,7 @@ export class ReducerBuilder<T extends {}> {
     }
 
     createReducer() {
-        return (state:T = this.init, action:ReduxAction) => {
+        return (state:T = this.init, action:Action<any>) => {
             return this.actionReducMap
                 .filter(([actions]) => actions.indexOf(action.type) > -1)
                 .reduce((s:T,[,r]) => ({...(s as any), ...(r(state, action.payload) as any)}), state)

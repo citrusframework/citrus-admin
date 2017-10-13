@@ -89,71 +89,77 @@ export class TestStateActions {
     static SELECT_TAB = 'TEST.SELECT_TAB';
     constructor(private store:Store<AppState>) {}
     fetchPackages() {
-        this.store.dispatch({type:TestStateActions.PACKAGES.FETCH})
+        this.store.dispatch({type:TestStateActions.PACKAGES.FETCH} as Action)
     }
 
     addTab(payload:Test) {
         console.log("ADD TAB " + payload.name);
-        this.store.dispatch({type:TestStateActions.ADD_TAB, payload})
+        this.store.dispatch({type:TestStateActions.ADD_TAB, payload} as Action)
     }
 
     removeTab(payload:Test) {
         console.log("REMOVE TAB " + payload.name);
-        this.store.dispatch({type:TestStateActions.REMOVE_TAB, payload})
+        this.store.dispatch({type:TestStateActions.REMOVE_TAB, payload} as Action)
     }
 
     selectTest(payload:Test) {
         console.log("SELECT TAB " + payload.name);
-        this.store.dispatch({type:TestStateActions.SELECT_TAB, payload})
+        this.store.dispatch({type:TestStateActions.SELECT_TAB, payload} as Action)
     }
 
     fetchDetails(payload: Test) {
-        this.store.dispatch(({type:TestStateActions.DETAIL.FETCH, payload}))
+        this.store.dispatch(({type:TestStateActions.DETAIL.FETCH, payload} as Action))
     }
 }
+
+type ActionWithPayload<T> = Action&{payload:T};
 
 export function reduce(state:TestState = TestStateInit, action:Action) {
     switch (action.type) {
         case TestStateActions.PACKAGES.SUCCESS: {
-            const packages = toIdMap(action.payload as TestGroup[], tg => tg.name) ;
-            const tests = toIdMap((action.payload as TestGroup[]).reduce((c: Test[], tg: TestGroup) => [...c, ...tg.tests], [] as Test[]), t => t.name);
+            const {payload} = action as ActionWithPayload<TestGroup[]>;
+            const packages = toIdMap(payload, tg => tg.name) ;
+            const tests = toIdMap((payload).reduce((c: Test[], tg: TestGroup) => [...c, ...tg.tests], [] as Test[]), t => t.name);
             const testNames = Object.keys(tests);
             return { ...state, packages, tests, testNames }
         }
         case TestStateActions.ADD_TAB: {
-            const {name} = action.payload as Test;
+            const {payload} = action as ActionWithPayload<Test>;
+            const name = payload.name;
             const exists = state.openTabs.indexOf(name);
             const openTabs = exists >= 0 ? state.openTabs : [...state.openTabs, name];
             return {...state, openTabs, selectedTest: name};
         }
         case TestStateActions.REMOVE_TAB: {
-            const openTabs = state.openTabs.filter(t => {
-                return t != action.payload.name;
-            });
+          const {payload} = action as ActionWithPayload<Test>;
+          const openTabs = state.openTabs.filter(t => {
+              return t != payload.name;
+          });
 
-            let nextTest;
-            if (openTabs.length === 0) {
-                nextTest = '';
-            } else if (state.selectedTest === action.payload.name) {
-                const i = state.openTabs.findIndex(t => t === state.selectedTest);
-                nextTest = openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)];
-            } else {
-                nextTest = state.selectedTest;
-            }
+          let nextTest;
+          if (openTabs.length === 0) {
+              nextTest = '';
+          } else if (state.selectedTest === payload.name) {
+              const i = state.openTabs.findIndex(t => t === state.selectedTest);
+              nextTest = openTabs[Math.max(Math.min(i -1, openTabs.length -1 ), 0)];
+          } else {
+              nextTest = state.selectedTest;
+          }
 
-            return {...state, openTabs, selectedTest: nextTest};
+          return ({...state, openTabs, selectedTest: nextTest});
         }
         case TestStateActions.SELECT_TAB: {
-            if(state.selectedTest === action.payload.name ||
-                state.openTabs.indexOf(action.payload.name) === -1) {
+          const {payload} = action as ActionWithPayload<Test>;
+            if(state.selectedTest === payload.name ||
+                state.openTabs.indexOf(payload.name) === -1) {
                 return state;
             } else {
-                return {...state, selectedTest: action.payload.name};
+                return ({...state, selectedTest: payload.name});
             }
         }
         case TestStateActions.DETAIL.SUCCESS: {
-            const detail = action.payload as TestDetail;
-            return {...state, details: {[detail.name]:detail}};
+            const {payload: detail} = action as ActionWithPayload<TestDetail>;
+            return ({...state, details: {[detail.name]:detail}});
         }
     }
     return state;

@@ -118,12 +118,10 @@ export const EndpointStateProviders = [
 ];
 
 export const endpointReducer = new ReducerBuilder<EndpointState>(EndpointStateInit)
-    .on(EndpointActions.ENDPOINTS.SUCCESS)
-        ((state:EndpointState, endPoints:Endpoint[]) => {
-            return ({...state, endpoints: toIdMap(endPoints, e => e.id)})
-        })
     .on(EndpointActions.ENDPOINT.CREATE.SUCCESS, EndpointActions.ENDPOINT.UPDATE.SUCCESS)
         ((state:EndpointState, endpoint:Endpoint) => ({...state, endpoints: {...state.endpoints, [endpoint.id]:endpoint}}))
+    .on(EndpointActions.ENDPOINTS.SUCCESS)
+        ((state:EndpointState, endpoints:Endpoint[]) => ({...state, endpoints: toIdMap(endpoints, e => e.id)}))
     .on(EndpointActions.ENDPOINT.DELETE.SUCCESS)
         ((state:EndpointState, id:string) => ({...state, endpoints: deleteFromMap(state.endpoints,id)}))
     .on(EndpointActions.ENDPOINT_TYPE.SUCCESS)

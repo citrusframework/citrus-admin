@@ -63,7 +63,7 @@ export class SchemaRepositoryEffects {
     @Effect({dispatch:false}) alerts = this.actions$.ofType(...Object.keys(Messages))
         .do((action) => {
             const [type, message] = Messages[action.type];
-            this.alertService.add(new Alert(type, message(action.payload.id), true));
+            this.alertService.add(new Alert(type, message((action as any).payload.id), true));
         })
 }
 
@@ -158,7 +158,7 @@ export class SchemaRepositoryStateService {
     }
 }
 
-export const reduce = (state:SchemaRepositoryState = SchemaRepositoryStateInit, action:Action<any>) => {
+export function reduce (state:SchemaRepositoryState = SchemaRepositoryStateInit, action:Action<any>): SchemaRepositoryState {
     switch(action.type) {
         case SchemaRepositoryActions.REPOSITORY.READ.SUCCESS: {
             const {payload:repos} = action as Action<SchemaRepository[]>;
