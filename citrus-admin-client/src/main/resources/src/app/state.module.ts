@@ -8,6 +8,7 @@ import {reduce as configuration} from './components/configuration/configuration.
 import {ConfigurationState} from "./components/configuration/configuration.state";
 import {environment as env} from "../environments/environment";
 import {endpointReducer as endpoint, EndpointState} from "./components/configuration/endpoints/endpoint.state";
+import {EffectsModule} from "@ngrx/effects";
 
 export interface AppState {
     router:any,
@@ -33,7 +34,8 @@ export function getReducers(): ActionReducerMap<any> {
         StoreModule.forRoot(REDUCER_TOKEN),
         //RouterStoreModule.connectRouter(),
         StoreRouterConnectingModule,
-        StoreDevtoolsModule.instrument({})
+        StoreDevtoolsModule.instrument({}),
+        EffectsModule.forRoot([])
     ],
   providers: [
     {
