@@ -18,8 +18,6 @@ package com.consol.citrus.admin.service.command.maven;
 
 import com.consol.citrus.admin.model.build.AbstractBuildContext;
 
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  */
@@ -31,7 +29,7 @@ public class MavenBuildContext extends AbstractBuildContext {
 
     private String testPlugin = "maven-failsafe";
 
-    private List<String> profiles;
+    private String profiles;
 
     public MavenBuildContext() {
         super("maven");
@@ -41,7 +39,7 @@ public class MavenBuildContext extends AbstractBuildContext {
      * Sets the active profiles.
      * @param profiles
      */
-    public void setProfiles(List<String> profiles) {
+    public void setProfiles(String profiles) {
         this.profiles = profiles;
     }
 
@@ -49,7 +47,7 @@ public class MavenBuildContext extends AbstractBuildContext {
      * Gets the active profiles.
      * @return
      */
-    public List<String> getProfiles() {
+    public String getProfiles() {
         return profiles;
     }
 

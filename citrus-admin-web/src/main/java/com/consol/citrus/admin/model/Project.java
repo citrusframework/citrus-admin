@@ -18,14 +18,15 @@ package com.consol.citrus.admin.model;
 
 import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
+import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -251,8 +252,13 @@ public class Project {
      * Load settings from project info file.
      */
     public void loadSettings() {
-        try {
-            Project project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(getProjectInfoFile());
+        try (FileInputStream fileInput = new FileInputStream(getProjectInfoFile())) {
+            String projectInfo = FileUtils.readToString(fileInput);
+
+            // support legacy build configuration
+            projectInfo = projectInfo.replaceAll("com\\.consol\\.citrus\\.admin\\.model\\.build\\.maven\\.MavenBuildConfiguration", MavenBuildContext.class.getName());
+
+            Project project = Jackson2ObjectMapperBuilder.json().build().readerFor(Project.class).readValue(projectInfo);
 
             setName(project.getName());
             setDescription(project.getDescription());

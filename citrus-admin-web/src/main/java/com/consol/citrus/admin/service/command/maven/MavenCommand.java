@@ -26,8 +26,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -85,8 +84,9 @@ public class MavenCommand extends AbstractTerminalCommand {
             builder.append(String.format("-D%s=%s ", propertyEntry.getId(), propertyEntry.getValue()));
         }
 
-        if (!CollectionUtils.isEmpty(buildContext.getProfiles())) {
-            builder.append(String.format("-P%s ", StringUtils.collectionToCommaDelimitedString(buildContext.getProfiles())));
+        List<String> activeProfiles = Arrays.asList(StringUtils.commaDelimitedListToStringArray(buildContext.getProfiles()));
+        if (!CollectionUtils.isEmpty(activeProfiles)) {
+            builder.append(String.format("-P%s ", StringUtils.collectionToCommaDelimitedString(activeProfiles)));
         }
 
         log.debug("Using Maven command: " + builder.toString());
