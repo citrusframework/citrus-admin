@@ -24,6 +24,7 @@ import com.consol.citrus.admin.marshal.XmlTestMarshaller;
 import com.consol.citrus.admin.mock.Mocks;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
+import com.consol.citrus.admin.service.test.TestProvider;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.model.testcase.core.*;
@@ -45,8 +46,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +60,9 @@ public class TestCaseService {
     @Autowired
     private List<TestActionConverter<?, ? extends com.consol.citrus.TestAction>> actionConverter;
 
+    @Autowired
+    private List<TestProvider> testProviders;
+
     /**
      * Lists all available Citrus test cases grouped in test packages.
      * @param project
@@ -70,7 +72,9 @@ public class TestCaseService {
         Map<String, TestGroup> testPackages = new LinkedHashMap<>();
 
         List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
-        List<Test> tests = findTests(project, sourceFiles);
+        List<Test> tests = testProviders.parallelStream()
+                                        .flatMap(provider -> provider.findTests(project, sourceFiles).stream())
+                                        .collect(Collectors.toList());
 
         for (Test test : tests) {
             if (!testPackages.containsKey(test.getPackageName())) {
@@ -94,13 +98,15 @@ public class TestCaseService {
     public List<TestGroup> getLatest(Project project, int limit) {
         Map<String, TestGroup> grouped = new LinkedHashMap<>();
 
-        List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()));
-        sourceFiles = sourceFiles.stream()
-                .sorted((f1, f2) -> f1.lastModified() >= f2.lastModified() ? -1 : 1)
-                .limit(limit)
-                .collect(Collectors.toList());
+        final List<File> sourceFiles = FileUtils.findFiles(project.getJavaDirectory(), StringUtils.commaDelimitedListToSet(project.getSettings().getJavaFilePattern()))
+                                                .stream()
+                                                .sorted((f1, f2) -> f1.lastModified() >= f2.lastModified() ? -1 : 1)
+                                                .limit(limit)
+                                                .collect(Collectors.toList());
 
-        List<Test> tests = findTests(project, sourceFiles);
+        List<Test> tests = testProviders.parallelStream()
+                                        .flatMap(provider -> provider.findTests(project, sourceFiles).stream())
+                                        .collect(Collectors.toList());
         for (Test test : tests) {
             if (!grouped.containsKey(test.getClassName())) {
                 TestGroup testGroup = new TestGroup();
@@ -123,126 +129,21 @@ public class TestCaseService {
      * @return
      */
     public Test findTest(Project project, String packageName, String className, String methodName) {
-        FileSystemResource sourceFile = new FileSystemResource(project.getJavaDirectory() + packageName.replace('.', File.separatorChar) + System.getProperty("file.separator") + className + ".java");
+        final FileSystemResource sourceFile = new FileSystemResource(project.getJavaDirectory() + packageName.replace('.', File.separatorChar) + System.getProperty("file.separator") + className + ".java");
         if (!sourceFile.exists()) {
             throw new ApplicationRuntimeException("Unable to find test source file: " + className + " in " + project.getJavaDirectory());
         }
 
-        Optional<Test> test = findTests(sourceFile.getFile(), packageName, className)
-                .stream()
-                .filter(candidate -> methodName.equals(candidate.getMethodName())).findFirst();
+        Optional<Test> test = testProviders.parallelStream()
+                .flatMap(provider -> provider.findTests(project, Collections.singletonList(sourceFile.getFile())).stream())
+                .filter(candidate -> methodName.equals(candidate.getMethodName()))
+                .findFirst();
 
         if (test.isPresent()) {
             return test.get();
         } else {
             throw new ApplicationRuntimeException("Unable to find test: " + className + "." + methodName);
         }
-
-    }
-
-    /**
-     * Finds all tests case declarations in given source files. Method is loading tests by their annotation presence of @CitrusTest or @CitrusXmlTest.
-     * @param project
-     * @param sourceFiles
-     */
-    private List<Test> findTests(Project project, List<File> sourceFiles) {
-        List<Test> tests = new ArrayList<>();
-        for (File sourceFile : sourceFiles) {
-            String className = FilenameUtils.getBaseName(sourceFile.getName());
-            String testPackageName = sourceFile.getPath().substring(project.getJavaDirectory().length(), sourceFile.getPath().length() - sourceFile.getName().length())
-                    .replace(File.separatorChar, '.');
-
-            if (testPackageName.endsWith(".")) {
-                testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
-            }
-
-            tests.addAll(findTests(sourceFile, testPackageName, className));
-        }
-
-        return tests;
-    }
-
-    /**
-     * Find all tests in give source file. Method is finding tests by their annotation presence of @CitrusTest or @CitrusXmlTest.
-     * @param sourceFile
-     * @param packageName
-     * @param className
-     * @return
-     */
-    private List<Test> findTests(File sourceFile, String packageName, String className) {
-        List<Test> tests = new ArrayList<>();
-
-        try {
-            String sourceCode = FileUtils.readToString(new FileSystemResource(sourceFile));
-
-            Matcher matcher = Pattern.compile("[^/\\*]\\s@CitrusTest").matcher(sourceCode);
-            while (matcher.find()) {
-                Test test = new Test();
-                test.setType(TestType.JAVA);
-                test.setClassName(className);
-                test.setPackageName(packageName);
-
-                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start()));
-                snippet = snippet.substring(0, snippet.indexOf("){"));
-                String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
-                methodName = methodName.substring(0, methodName.indexOf("("));
-                test.setMethodName(methodName);
-
-                if (snippet.contains("@CitrusTest(name=")) {
-                    String explicitName = snippet.substring(snippet.indexOf("name=\"") + 6);
-                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
-                    test.setName(explicitName);
-                } else {
-                    test.setName(className + "." + methodName);
-                }
-
-                tests.add(test);
-            }
-
-            matcher = Pattern.compile("[^/\\*]\\s@CitrusXmlTest").matcher(sourceCode);
-            while (matcher.find()) {
-                Test test = new Test();
-                test.setType(TestType.XML);
-                test.setClassName(className);
-                test.setPackageName(packageName);
-
-                String snippet = StringUtils.trimAllWhitespace(sourceCode.substring(matcher.start()));
-                snippet = snippet.substring(0, snippet.indexOf('{', snippet.indexOf("publicvoid")));
-                String methodName = snippet.substring(snippet.indexOf("publicvoid") + 10);
-                methodName = methodName.substring(0, methodName.indexOf("("));
-                test.setMethodName(methodName);
-
-                if (snippet.contains("@CitrusXmlTest(name=\"")) {
-                    String explicitName = snippet.substring(snippet.indexOf("name=\"") + 6);
-                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
-                    test.setName(explicitName);
-                } else if (snippet.contains("@CitrusXmlTest(name={\"")) {
-                    String explicitName = snippet.substring(snippet.indexOf("name={\"") + 7);
-                    explicitName = explicitName.substring(0, explicitName.indexOf("\""));
-                    test.setName(explicitName);
-                } else {
-                    test.setName(methodName);
-                }
-
-                if (snippet.contains("packageScan=\"")) {
-                    String packageScan = snippet.substring(snippet.indexOf("packageScan=\"") + 13);
-                    packageScan = packageScan.substring(0, packageScan.indexOf("\""));
-                    test.setPackageName(packageScan);
-                }
-
-                if (snippet.contains("packageName=\"")) {
-                    String explicitPackageName = snippet.substring(snippet.indexOf("packageName=\"") + 13);
-                    explicitPackageName = explicitPackageName.substring(0, explicitPackageName.indexOf("\""));
-                    test.setPackageName(explicitPackageName);
-                }
-
-                tests.add(test);
-            }
-        } catch (IOException e) {
-            log.error("Failed to read test source file", e);
-        }
-
-        return tests;
     }
 
     /**
@@ -274,8 +175,14 @@ public class TestCaseService {
 
         if (test.getType().equals(TestType.JAVA)) {
             testDetail.setFile(project.getJavaDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + test.getClassName());
-        } else {
+        } else if (test.getType().equals(TestType.XML)) {
             testDetail.setFile(project.getXmlDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(test.getName()));
+        } else if (test.getType().equals(TestType.CUCUMBER)) {
+            testDetail.setFile(project.getXmlDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + test.getMethodName());
+        }  else if (test.getType().equals(TestType.GROOVY)) {
+            testDetail.setFile(project.getXmlDirectory() + test.getPackageName().replace('.', File.separatorChar) + File.separator + FilenameUtils.getBaseName(test.getName()));
+        } else {
+            throw new ApplicationRuntimeException("Unsupported test type: " + test.getType());
         }
 
         if (testModel.getActions() != null) {
@@ -307,12 +214,12 @@ public class TestCaseService {
 
     /**
      * Gets the source code for the given test.
-     * @param relativePath
+     * @param filePath
      * @return
      */
-    public String getSourceCode(Project project, String relativePath) {
+    public String getSourceCode(Project project, String filePath) {
         try {
-            String sourcePath = project.getAbsolutePath(relativePath);
+            String sourcePath = project.getAbsolutePath(filePath);
             if (new File(sourcePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourcePath));
             } else {
@@ -325,12 +232,12 @@ public class TestCaseService {
 
     /**
      * Updates the source code for the given test.
-     * @param relativePath
+     * @param filePath
      * @param sourceCode
      * @return
      */
-    public void updateSourceCode(Project project, String relativePath, String sourceCode) {
-        String sourcePath = project.getAbsolutePath(relativePath);
+    public void updateSourceCode(Project project, String filePath, String sourceCode) {
+        String sourcePath = project.getAbsolutePath(filePath);
         FileUtils.writeToFile(sourceCode, new File(sourcePath));
     }
 
@@ -366,6 +273,10 @@ public class TestCaseService {
             return getXmlTestModel(project, detail);
         } else if (detail.getType().equals(TestType.JAVA)) {
             return getJavaTestModel(project, detail);
+        } else if (detail.getType().equals(TestType.CUCUMBER)) {
+            return getJavaTestModel(project, detail);
+        } else if (detail.getType().equals(TestType.GROOVY)) {
+            return getJavaTestModel(project, detail);
         } else {
             throw new ApplicationRuntimeException("Unsupported test case type: " + detail.getType());
         }
@@ -377,7 +288,11 @@ public class TestCaseService {
      * @return
      */
     private TestcaseModel getXmlTestModel(Project project, Test test) {
-        String xmlSource = getSourceCode(project, test.getRelativePath());
+        String xmlSource = getSourceCode(project, test.getSourceFiles()
+                                                        .stream()
+                                                        .filter(file -> file.endsWith(".xml"))
+                                                        .findAny()
+                                                        .orElse(""));
 
         if (!StringUtils.hasText(xmlSource)) {
             throw new ApplicationRuntimeException("Failed to get XML source code for test: " + test.getPackageName() + "." + test.getName());

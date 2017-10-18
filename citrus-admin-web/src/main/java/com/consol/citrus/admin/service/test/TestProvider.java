@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.model;
+package com.consol.citrus.admin.service.test;
+
+import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.Test;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
  */
-public enum TestType {
-    XML,
-    JAVA,
-    CUCUMBER,
-    GROOVY
+public interface TestProvider {
+
+    /**
+     * Finds all tests in given source files.
+     * @param project
+     * @param sourceFiles
+     * @return
+     */
+    List<Test> findTests(Project project, List<File> sourceFiles);
 }

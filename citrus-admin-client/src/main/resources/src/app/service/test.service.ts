@@ -40,18 +40,18 @@ export class TestService {
             .catch(this.handleError);
     }
 
-    getSourceCode(relativePath: string) {
+    getSourceCode(path: string) {
         let params = new URLSearchParams();
-        params.set('relativePath', relativePath);
+        params.set('file', path);
 
         return this.http.get(this._testSourceUrl, { search: params })
             .map(res => <string> res.text())
             .catch(this.handleError);
     }
 
-    updateSourceCode(relativePath: string, sourceCode: string) {
+    updateSourceCode(path: string, sourceCode: string) {
         let params = new URLSearchParams();
-        params.set('relativePath', relativePath);
+        params.set('file', path);
 
         return this.http.put(this._testSourceUrl, sourceCode, { search: params })
             .catch(this.handleError);

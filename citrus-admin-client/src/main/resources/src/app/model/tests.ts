@@ -23,7 +23,7 @@ export class Test {
     public methodNames?: string[];
     public type: string;
     public packageName: string;
-    public relativePath: string;
+    public sourceFiles: string[];
 }
 
 export class TestDetail extends Test {

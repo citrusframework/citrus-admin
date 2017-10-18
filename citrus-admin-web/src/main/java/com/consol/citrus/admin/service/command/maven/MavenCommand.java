@@ -81,7 +81,7 @@ public class MavenCommand extends AbstractTerminalCommand {
         builder.append(lifecycleCommand);
 
         for (Property propertyEntry: getSystemProperties()) {
-            builder.append(String.format("-D%s=%s ", propertyEntry.getId(), propertyEntry.getValue()));
+            builder.append(String.format("-D%s=%s ", propertyEntry.getName(), propertyEntry.getValue()));
         }
 
         List<String> activeProfiles = Arrays.asList(StringUtils.commaDelimitedListToStringArray(buildContext.getProfiles()));
@@ -226,7 +226,14 @@ public class MavenCommand extends AbstractTerminalCommand {
         Property utTestNameProperty = null;
         Property itTestNameProperty = null;
 
-        if (test != null && StringUtils.hasText(test.getName())) {
+        if (test.getType().equals(TestType.CUCUMBER)) {
+            utTestNameProperty = new Property<>("cucumber.options", test.getSourceFiles().stream()
+                                                                                        .filter(file -> file.endsWith(".feature"))
+                                                                                        .map(file -> "classpath:" + file)
+                                                                                        .findFirst()
+                                                                                        .orElse(""));
+            itTestNameProperty = utTestNameProperty;
+        } else if (test != null && StringUtils.hasText(test.getName())) {
             utTestNameProperty = new Property<>("test", test.getClassName() + "#" + test.getMethodName());
             itTestNameProperty = new Property<>("it.test", test.getClassName() + "#" + test.getMethodName());
         } else if (group != null && StringUtils.hasText(group.getName())) {

@@ -11,7 +11,7 @@ describe('TesState.reducer', () => {
                 packageName: 'com.consol.citrus.samples.bookstore',
                 className: 'ListBooks_Ok_2_IT',
                 methodName: 'ListBooks_Ok_2_IT',
-                relativePath: 'com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml'
+                sourceFiles: ['com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml']
             },
             "SchemaValidation_Error_1_IT": {
                 name: 'SchemaValidation_Error_1_IT',
@@ -19,7 +19,7 @@ describe('TesState.reducer', () => {
                 packageName: 'com.consol.citrus.samples.bookstore',
                 className: 'SchemaValidation_Error_1_IT',
                 methodName: 'SchemaValidation_Error_1_IT',
-                relativePath: 'com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml'
+                sourceFiles: ['com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml']
             }
         },
         packages: {
@@ -33,7 +33,7 @@ describe('TesState.reducer', () => {
                         packageName: 'com.consol.citrus.samples.bookstore',
                         className: 'ListBooks_Ok_2_IT',
                         methodName: 'ListBooks_Ok_2_IT',
-                        relativePath: 'com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml'
+                        sourceFiles: ['com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml']
                     },
                     {
                         name: 'SchemaValidation_Error_1_IT',
@@ -41,7 +41,7 @@ describe('TesState.reducer', () => {
                         packageName: 'com.consol.citrus.samples.bookstore',
                         className: 'SchemaValidation_Error_1_IT',
                         methodName: 'SchemaValidation_Error_1_IT',
-                        relativePath: 'com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml'
+                        sourceFiles: ['com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml']
                     }
                 ]
             }
@@ -65,14 +65,14 @@ describe('TesState.reducer', () => {
                             "packageName": "com.consol.citrus.samples.bookstore",
                             "className": "ListBooks_Ok_2_IT",
                             "methodName": "ListBooks_Ok_2_IT",
-                            "relativePath": "com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml"
+                            "sourceFiles": ["com/consol/citrus/samples/bookstore/ListBooks_Ok_2_IT.xml"]
                         }, {
                             "name": "SchemaValidation_Error_1_IT",
                             "type": "XML",
                             "packageName": "com.consol.citrus.samples.bookstore",
                             "className": "SchemaValidation_Error_1_IT",
                             "methodName": "SchemaValidation_Error_1_IT",
-                            "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                            "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                         }]
                     },
                     {
@@ -84,7 +84,7 @@ describe('TesState.reducer', () => {
                                 "packageName": "com.consol.citrus.samples.bookstore",
                                 "className": "ListBooks_Ok_1_IT",
                                 "methodName": "ListBooks_Ok_1_IT",
-                                "relativePath": "com/consol/citrus/samples/bookstore/ListBooks_Ok_1_IT.xml"
+                                "sourceFiles": ["com/consol/citrus/samples/bookstore/ListBooks_Ok_1_IT.xml"]
                             }
                         ]
                     }]
@@ -98,7 +98,7 @@ describe('TesState.reducer', () => {
                 "packageName": "com.consol.citrus.samples.bookstore",
                 "className": "SchemaValidation_Error_1_IT",
                 "methodName": "SchemaValidation_Error_1_IT",
-                "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
             })
         })
     })
@@ -120,7 +120,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "SchemaValidation_Error_1_IT",
                     "methodName": "SchemaValidation_Error_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             });
             expect(s.openTabs.length).toBe(1);
@@ -138,7 +138,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "SchemaValidation_Error_1_IT",
                     "methodName": "SchemaValidation_Error_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             });
             const s = reduce(_s as any, {
@@ -149,7 +149,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "GetBookDetails_Ok_1_IT",
                     "methodName": "GetBookDetails_Ok_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"]
                 }
             });
             expect(s.openTabs.length).toBe(2);
@@ -178,7 +178,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "GetBookDetails_Ok_1_IT",
                     "methodName": "GetBookDetails_Ok_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"]
                 }
             })
             expect(s.openTabs.length).toBe(3);
@@ -200,7 +200,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "GetBookDetails_Ok_1_IT",
                     "methodName": "GetBookDetails_Ok_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"]
                 }
             })
             expect(s.openTabs.length).toBe(0);
@@ -221,7 +221,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "SchemaValidation_Error_1_IT",
                     "methodName": "SchemaValidation_Error_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             })
             expect(s.openTabs.length).toBe(3);
@@ -247,7 +247,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "GetBookDetails_Ok_1_IT",
                     "methodName": "GetBookDetails_Ok_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/GetBookDetails_Ok_1_IT.xml"]
                 }
             })
             expect(s.selectedTest).toBe('GetBookDetails_Ok_1_IT');
@@ -267,7 +267,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "SchemaValidation_Error_1_IT",
                     "methodName": "SchemaValidation_Error_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             })
             expect(s).toBe(StateWithTestsAndOpenTests)
@@ -287,7 +287,7 @@ describe('TesState.reducer', () => {
                     "packageName": "com.consol.citrus.samples.bookstore",
                     "className": "SchemaValidation_Error_1_IT",
                     "methodName": "SchemaValidation_Error_1_IT",
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             })
             expect(s).toBe(StateWithTestsAndOpenTests)
@@ -379,7 +379,7 @@ describe('TesState.reducer', () => {
                             ]
                         }
                     ],
-                    "relativePath": "com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"
+                    "sourceFiles": ["com/consol/citrus/samples/bookstore/SchemaValidation_Error_1_IT.xml"]
                 }
             })
 

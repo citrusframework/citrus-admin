@@ -18,7 +18,9 @@
       <pills>
         <pill pill-id="design-sources" pill-title="Design" active="true" pill-icon="fa fa-sitemap"><test-designer [detail]="detail"></test-designer></pill>
         <pill pill-id="java-sources" pill-title="Java" pill-icon="fa fa-code"><source-code [detail]="detail" editor-id="java-code" type="java"></source-code></pill>
-        <pill pill-id="xml-sources" pill-title="XML" pill-icon="fa fa-file-code-o" [disabled]="!(detail.type == 'XML')"><source-code [detail]="detail" editor-id="xml-code"></source-code></pill>
+        <pill *ngIf="detail.type == 'XML'" pill-id="xml-sources" pill-title="XML" pill-icon="fa fa-file-code-o"><source-code [detail]="detail" type="xml" editor-id="xml-code"></source-code></pill>
+        <pill *ngIf="detail.type == 'GROOVY'" pill-id="groovy-sources" pill-title="Groovy" pill-icon="fa fa-file-code-o"><source-code [detail]="detail" type="groovy" editor-id="groovy-code"></source-code></pill>
+        <pill *ngIf="detail.type == 'CUCUMBER'" pill-id="cucumber-sources" pill-title="Feature" pill-icon="fa fa-file-code-o"><source-code [detail]="detail" type="gherkin" editor-id="cucumber-code"></source-code></pill>
       </pills>
     </pill>
     <pill pill-id="logs" pill-title="Logs" pill-icon="fa fa-newspaper-o">

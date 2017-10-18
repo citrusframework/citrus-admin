@@ -17,6 +17,8 @@
 package com.consol.citrus.admin.model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -30,6 +32,8 @@ public class Test {
 
     private String className;
     private String methodName;
+
+    private List<String> sourceFiles = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -52,6 +56,24 @@ public class Test {
         this.methodName= methodName;
         this.name = name;
         this.type = type;
+
+        if (type.equals(TestType.JAVA)) {
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + className + ".java");
+        }
+
+        if (type.equals(TestType.XML)) {
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + className + ".java");
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + name + ".xml");
+        }
+
+        if (type.equals(TestType.CUCUMBER)) {
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + className + ".java");
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + methodName + ".feature");
+        }
+
+        if (type.equals(TestType.GROOVY)) {
+            sourceFiles.add(packageName.replace('.', File.separatorChar) + File.separator + methodName + ".groovy");
+        }
     }
 
     /**
@@ -145,15 +167,20 @@ public class Test {
     }
 
     /**
-     * Gets the relative path for this test
+     * Gets the sourceFiles.
+     *
      * @return
      */
-    public String getRelativePath() {
-        if (type.equals(TestType.JAVA)) {
-            return packageName.replace('.', File.separatorChar) + File.separator + className + ".java";
-        } else {
-            return packageName.replace('.', File.separatorChar) + File.separator + name + ".xml";
-        }
+    public List<String> getSourceFiles() {
+        return sourceFiles;
     }
 
+    /**
+     * Sets the sourceFiles.
+     *
+     * @param sourceFiles
+     */
+    public void setSourceFiles(List<String> sourceFiles) {
+        this.sourceFiles = sourceFiles;
+    }
 }

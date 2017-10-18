@@ -7,6 +7,7 @@ import * as ace from 'brace';
 import 'brace/theme/chrome';
 import 'brace/mode/java';
 import 'brace/mode/xml';
+import 'brace/mode/gherkin';
 import Editor = ace.Editor;
 
 @Component({
@@ -36,7 +37,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     }
 
     getSourceCode() {
-        this._testService.getSourceCode(this.getRelativePath())
+        this._testService.getSourceCode(this.getSourceFilePath())
             .subscribe(
                 sourceCode => {
                     this.sourceCode = sourceCode;
@@ -50,7 +51,7 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
     }
 
     saveSourceCode() {
-        this._testService.updateSourceCode(this.getRelativePath(), this.editor.getValue())
+        this._testService.updateSourceCode(this.getSourceFilePath(), this.editor.getValue())
             .subscribe(error => this.notifyError(<any>error));
     }
 
@@ -62,13 +63,19 @@ export class SourceCodeComponent implements OnChanges, AfterViewInit {
         this._alertService.add(new Alert("danger", JSON.stringify(error), false));
     }
 
-    private getRelativePath() {
-        if (this.type == "java" && this.detail.relativePath.endsWith(".xml")) {
-            //In test-detail.html, there are 2 tabs (xml and java) when detail.type=XML and they both use the same editor (with only one type: xml!).
-            //In this case, when the Java tab is selected, the java file has to be shown
-            return this.detail.relativePath.replace(".xml", ".java");
-        } else {
-            return this.detail.relativePath;
+    private getSourceFilePath() {
+        let fileExtension = "." + this.type;
+
+        if (this.type == "gherkin") {
+            fileExtension = ".feature";
         }
+
+        let files = this.detail.sourceFiles.filter(file => file.indexOf(fileExtension) > 0);
+
+        if (files.length) {
+            return files[0];
+        }
+
+        return "";
     }
 }

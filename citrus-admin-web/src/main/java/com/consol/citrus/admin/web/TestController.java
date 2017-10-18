@@ -95,18 +95,19 @@ public class TestController {
 
     @RequestMapping(value="/source", method = { RequestMethod.GET })
     @ResponseBody
-    public String getSourceCode(@RequestParam("relativePath") String relativePath) {
+    public String getSourceCode(@RequestParam("file") String filePath) {
         try {
-            return testCaseService.getSourceCode(projectService.getActiveProject(), relativePath);
+            return testCaseService.getSourceCode(projectService.getActiveProject(), filePath);
         } catch (ApplicationRuntimeException e) {
+            log.debug(e.getMessage(), e);
             log.warn(e.getMessage());
             return "No sources available!";
         }
     }
 
     @RequestMapping(value="/source", method = { RequestMethod.PUT })
-    public ResponseEntity updateSourceCode(@RequestParam("relativePath") String relativePath, @RequestBody String newSourceCode) {
-        testCaseService.updateSourceCode(projectService.getActiveProject(), relativePath, newSourceCode);
+    public ResponseEntity updateSourceCode(@RequestParam("file") String filePath, @RequestBody String newSourceCode) {
+        testCaseService.updateSourceCode(projectService.getActiveProject(), filePath, newSourceCode);
         return ResponseEntity.ok().build();
     }
 

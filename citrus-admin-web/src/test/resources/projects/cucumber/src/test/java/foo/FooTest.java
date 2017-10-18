@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.model;
+package foo;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import org.junit.runner.RunWith;
 
 /**
  * @author Christoph Deppisch
  */
-public enum TestType {
-    XML,
-    JAVA,
-    CUCUMBER,
-    GROOVY
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+public class FooTest {
 }

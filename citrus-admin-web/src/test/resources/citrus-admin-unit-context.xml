@@ -27,6 +27,9 @@
     <constructor-arg ref="nullChannel"/>
   </bean>
 
+  <bean id="annotationTestProvider" class="com.consol.citrus.admin.service.test.AnnotationTestProvider"/>
+  <bean id="cucumberJunit4TestProvider" class="com.consol.citrus.admin.service.test.CucumberJUnit4TestProvider"/>
+
   <bean id="nullChannel" class="org.springframework.integration.channel.NullChannel"/>
 
   <bean class="com.consol.citrus.admin.marshal.SpringBeanMarshaller"/>

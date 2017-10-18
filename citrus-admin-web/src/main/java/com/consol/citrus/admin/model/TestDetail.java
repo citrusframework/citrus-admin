@@ -50,12 +50,7 @@ public class TestDetail extends Test {
      * @param test
      */
     public TestDetail(Test test) {
-        setName(test.getName());
-        setClassName(test.getClassName());
-        setMethodName(test.getMethodName());
-        setPackageName(test.getPackageName());
-
-        setType(test.getType());
+        super(test.getPackageName(), test.getClassName(), test.getMethodName(), test.getName(), test.getType());
     }
 
     /**

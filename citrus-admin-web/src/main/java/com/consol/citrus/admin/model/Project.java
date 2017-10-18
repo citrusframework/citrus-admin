@@ -167,14 +167,14 @@ public class Project {
 
     /**
      * Gets the absolute pathname string
-     * @param relativePath
+     * @param filePath
      * @return
      */
-    public String getAbsolutePath(String relativePath) {
-        if (relativePath.endsWith(".java")) {
-            return getJavaDirectory() + relativePath;
+    public String getAbsolutePath(String filePath) {
+        if (filePath.endsWith(".java")) {
+            return getJavaDirectory() + filePath;
         } else {
-            return getXmlDirectory() + relativePath;
+            return getXmlDirectory() + filePath;
         }
     }
 
