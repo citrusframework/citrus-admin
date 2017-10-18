@@ -35,10 +35,10 @@ export class TestDesignerComponent {
         this.default = new TestAction();
         this.default.type = "empty";
 
-        let name = new Property();
-        name.id = "reason";
-        name.value = "Unable to read test model";
-        this.default.properties.push(name);
+        let property = new Property();
+        property.name = "reason";
+        property.value = "Unable to read test model";
+        this.default.properties.push(property);
     }
 
     default: TestAction;

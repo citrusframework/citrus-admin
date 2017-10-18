@@ -97,7 +97,7 @@ export class EndpointFormPresentationComponent implements OnInit{
             type: [this.endpoint.type],
             id: [this.endpoint.id, Validators.required],
             ...this.endpoint.properties
-                .reduce((fg,p) => ({...fg, [p.id]: [p.value, ...this.getValidators(p)]}), {} as IdMap<any>)
+                .reduce((fg,p) => ({...fg, [p.name]: [p.value, ...this.getValidators(p)]}), {} as IdMap<any>)
         })
     }
 

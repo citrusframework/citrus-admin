@@ -50,12 +50,12 @@ export class TestActionComponent {
                 propertyName = "all";
         }
 
-        let property = this.action.properties.find(p => p.id === propertyName);
+        let property = this.action.properties.find(p => p.name === propertyName);
 
         if (property) {
-            return property.id + " => " + property.value;
+            return property.name + " => " + property.value;
         } else {
-            return this.action.properties.map(p => p.id + "=" + p.value).concat();
+            return this.action.properties.map(p => p.name + "=" + p.value).concat();
         }
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class Property<T> {
 
-    private String id;
+    private String name;
     private String fieldName;
     private String displayName;
     private T value;
@@ -43,23 +43,23 @@ public class Property<T> {
 
     /**
      * Constructor using is and value fields.
-     * @param id
+     * @param name
      * @param value
      */
-    public Property(String id, T value) {
-        this(id, id, id, value, false);
+    public Property(String name, T value) {
+        this(name, name, name, value, false);
     }
 
     /**
      * Constructor using fields id, field name, displayName, value and required.
-     * @param id
+     * @param name
      * @param fieldName
      * @param displayName
      * @param value
      * @param required
      */
-    public Property(String id, String fieldName, String displayName, T value, boolean required) {
-        this.id = id;
+    public Property(String name, String fieldName, String displayName, T value, boolean required) {
+        this.name = name;
         this.fieldName = fieldName;
         this.displayName = displayName;
         this.value = value;
@@ -131,20 +131,20 @@ public class Property<T> {
     }
 
     /**
-     * Gets the parameter id.
+     * Gets the name.
      * @return
      */
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the id property.
+     * Sets the name.
      *
-     * @param id
+     * @param name
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

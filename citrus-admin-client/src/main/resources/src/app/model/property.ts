@@ -2,7 +2,7 @@ export class Property {
 
     constructor() {}
 
-    public id: string;
+    public name: string;
     public value: any;
 
     public fieldName: string;

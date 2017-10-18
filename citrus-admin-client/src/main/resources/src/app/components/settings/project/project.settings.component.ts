@@ -3,7 +3,7 @@ import {Project} from "../../../model/project";
 import {ProjectService} from "../../../service/project.service";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
-import {BuildProperty} from "../../../model/build.property";
+import {Property} from "../../../model/property";
 
 
 @Component({
@@ -39,7 +39,7 @@ export class ProjectSettingsComponent implements OnInit {
     }
 
     addProperty() {
-        var property = new BuildProperty();
+        var property = new Property();
         property.name = this.propertyName;
         property.value = this.propertyValue;
         this.project.settings.build.properties.push(property);
@@ -48,7 +48,7 @@ export class ProjectSettingsComponent implements OnInit {
         this.propertyValue = "";
     }
 
-    removeProperty(property: BuildProperty, event:MouseEvent) {
+    removeProperty(property: Property, event:MouseEvent) {
         this.project.settings.build.properties.splice(this.project.settings.build.properties.indexOf(property), 1);
         event.stopPropagation();
         return false;

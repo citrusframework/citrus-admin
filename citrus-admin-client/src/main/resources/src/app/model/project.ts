@@ -1,4 +1,4 @@
-import {BuildProperty} from "./build.property";
+import {Property} from "./property";
 
 export class Project {
 
@@ -27,10 +27,10 @@ export class ProjectSettings {
     public useConnector: boolean;
     public connectorActive: boolean;
     public tabSize: number;
-    public build: BuildConfiguration = new BuildConfiguration();
+    public build: BuildContext = new BuildContext();
 }
 
-export class BuildConfiguration {
+export class BuildContext {
 
     constructor() {}
 
@@ -39,5 +39,5 @@ export class BuildConfiguration {
     public clean: boolean;
     public compile: boolean;
     public profiles: string;
-    public properties: BuildProperty[];
+    public properties: Property[];
 }
