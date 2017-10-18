@@ -37,6 +37,16 @@ export class TestGroupRunComponent implements OnInit {
     ngOnInit() {
         this.packages = this.testState.packages;
 
+        this.packages.subscribe(groups => {
+            groups.forEach(group => {
+                group.tests.forEach(t => {
+                    let result = new TestResult();
+                    result.test = t;
+                    this.results.push(result);
+                });
+            });
+        });
+
         this.loggingService.logOutput
             .subscribe((event: SocketEvent) => {
                 this.processOutput += event.msg;
@@ -54,7 +64,7 @@ export class TestGroupRunComponent implements OnInit {
         if (this.selected) {
             this.testService.executeGroup(this.selected)
                 .subscribe(
-                    result => {
+                    processId => {
                         this.processOutput = "";
                         this.currentOutput = "";
                         this.running = true;
@@ -63,7 +73,7 @@ export class TestGroupRunComponent implements OnInit {
         } else {
             this.testService.executeAll()
                 .subscribe(
-                    result => {
+                    processId => {
                         this.processOutput = "";
                         this.currentOutput = "";
                         this.running = true;
@@ -83,6 +93,15 @@ export class TestGroupRunComponent implements OnInit {
             });
         } else {
             this.results = [];
+            this.packages.subscribe(groups => {
+                groups.forEach(group => {
+                    group.tests.forEach(t => {
+                        let result = new TestResult();
+                        result.test = t;
+                        this.results.push(result);
+                    });
+                });
+            });
         }
     }
 
