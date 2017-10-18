@@ -226,7 +226,7 @@ public class MavenCommand extends AbstractTerminalCommand {
         Property utTestNameProperty = null;
         Property itTestNameProperty = null;
 
-        if (test.getType().equals(TestType.CUCUMBER)) {
+        if (test != null && test.getType().equals(TestType.CUCUMBER)) {
             utTestNameProperty = new Property<>("cucumber.options", test.getSourceFiles().stream()
                                                                                         .filter(file -> file.endsWith(".feature"))
                                                                                         .map(file -> "classpath:" + file)
