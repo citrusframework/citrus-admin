@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {TestDetail} from "../../../model/tests";
+import {TestDetail, TestResult} from "../../../model/tests";
 import {Alert} from "../../../model/alert";
 import {AlertService} from "../../../service/alert.service";
 import {Subscription} from "rxjs";
@@ -64,8 +64,10 @@ export class TestDetailComponent implements OnInit {
         this.detail.result = undefined;
         this._testService.execute(this.detail)
             .subscribe(
-                result => {
-                    this.detail.result = result;
+                processId => {
+                    this.detail.result = new TestResult();
+                    this.detail.result.test = this.detail;
+                    this.detail.result.processId = processId;
                 },
                 error => this.notifyError(<any>error));
     }
@@ -86,6 +88,14 @@ export class TestDetailComponent implements OnInit {
             }
         } else if ("TEST_FAILED" == event.type || "PROCESS_FAILED" == event.type) {
             this.failed = true;
+            if (this.detail.result) {
+                this.detail.result.success = false;
+            }
+        } else if ("TEST_SUCCESS" == event.type || "PROCESS_SUCCESS" == event.type) {
+            this.failed = false;
+            if (this.detail.result) {
+                this.detail.result.success = true;
+            }
         } else {
             if (this.completed < 11) {
                 this.completed++;

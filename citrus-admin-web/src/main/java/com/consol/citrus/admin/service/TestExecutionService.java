@@ -55,9 +55,7 @@ public class TestExecutionService {
      * @param project
      * @return
      */
-    public TestResult execute(Project project) {
-        TestResult result = new TestResult();
-
+    public String execute(Project project) {
         File projectHome = new File(project.getProjectHome());
         MavenBuildContext buildContext = getBuildContext(project);
         MavenCommand command = new MavenCommand(projectHome, buildContext, processListeners.toArray(new ProcessListener[processListeners.size()]));
@@ -79,16 +77,11 @@ public class TestExecutionService {
         }
 
         try {
-            String processId = terminalService.execute(command);
-
-            result.setProcessId(processId);
-            result.setSuccess(true);
+            return terminalService.execute(command);
         } catch (Exception e) {
-            log.warn("Failed to execute all test cases", e);
-            setFailureStack(result, e);
+            throw new ApplicationRuntimeException("Failed to execute all test cases", e);
         }
 
-        return result;
     }
 
     /**
@@ -97,10 +90,7 @@ public class TestExecutionService {
      * @param test
      * @return
      */
-    public TestResult execute(Project project, Test test) {
-        TestResult result = new TestResult();
-        result.setTest(test);
-
+    public String execute(Project project, Test test) {
         File projectHome = new File(project.getProjectHome());
         MavenBuildContext buildContext = getBuildContext(project);
         MavenCommand command = new MavenCommand(projectHome, buildContext, processListeners.toArray(new ProcessListener[processListeners.size()]));
@@ -122,16 +112,10 @@ public class TestExecutionService {
         }
 
         try {
-            String processId = terminalService.execute(command);
-
-            result.setProcessId(processId);
-            result.setSuccess(true);
+            return terminalService.execute(command);
         } catch (Exception e) {
-            log.warn("Failed to execute Citrus test case '" + test.getName() + "'", e);
-            setFailureStack(result, e);
+            throw new ApplicationRuntimeException("Failed to execute Citrus test case '" + test.getName() + "'", e);
         }
-
-        return result;
     }
 
     /**
@@ -140,9 +124,7 @@ public class TestExecutionService {
      * @param group
      * @return
      */
-    public TestResult execute(Project project, TestGroup group) {
-        TestResult result = new TestResult();
-
+    public String execute(Project project, TestGroup group) {
         File projectHome = new File(project.getProjectHome());
         MavenBuildContext buildContext = getBuildContext(project);
         MavenCommand command = new MavenCommand(projectHome, buildContext, processListeners.toArray(new ProcessListener[processListeners.size()]));
@@ -164,16 +146,10 @@ public class TestExecutionService {
         }
 
         try {
-            String processId = terminalService.execute(command);
-
-            result.setProcessId(processId);
-            result.setSuccess(true);
+            return terminalService.execute(command);
         } catch (Exception e) {
-            log.warn("Failed to execute test group '" + group.getName() + "'", e);
-            setFailureStack(result, e);
+            throw new ApplicationRuntimeException("Failed to execute test group '" + group.getName() + "'", e);
         }
-
-        return result;
     }
 
     /**
@@ -182,21 +158,6 @@ public class TestExecutionService {
      */
     public void stop(String processId) {
         processMonitor.stop(processId);
-    }
-
-    /**
-     * Adds failure stack information to test result.
-     * @param result
-     * @param e
-     */
-    private void setFailureStack(TestResult result, Exception e) {
-        result.setSuccess(false);
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        e.printStackTrace(new PrintStream(os));
-        result.setErrorMessage(e.getMessage());
-        result.setErrorCause(e.getClass().getName());
-        result.setStackTrace("Caused by: " + os.toString());
     }
 
     /**

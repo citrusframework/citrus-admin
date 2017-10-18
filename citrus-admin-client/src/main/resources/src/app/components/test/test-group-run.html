@@ -46,18 +46,6 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!selected">
-        <td></td>
-        <td>
-          <i class="fa fa-file-text-o"></i>
-          <span title="All tests">All tests</span>
-        </td>
-        <td></td>
-        <td>
-          <img *ngIf="running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
-          <span *ngIf="!running">&nbsp;</span>
-        </td>
-      </tr>
       <tr *ngFor="let result of results" (click)="open(result.test)" class="clickable">
         <td><span class="badge badge-{{result.test.type | lowercase}}">{{result.test.type | lowercase}}</span></td>
         <td>

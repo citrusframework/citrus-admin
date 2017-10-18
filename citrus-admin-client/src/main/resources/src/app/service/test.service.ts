@@ -59,19 +59,19 @@ export class TestService {
 
     execute(test: TestDetail) {
         return this.http.post(this._testExecuteUrl, JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
-            .map(res => <TestResult> res.json())
+            .map(res => <string> res.text())
             .catch(this.handleError);
     }
 
     executeGroup(group: TestGroup) {
         return this.http.post(this._testExecuteUrl + '/group', JSON.stringify(group), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
-            .map(res => <TestResult> res.json())
+            .map(res => <string> res.text())
             .catch(this.handleError);
     }
 
     executeAll() {
         return this.http.get(this._testExecuteUrl)
-            .map(res => <TestResult> res.json())
+            .map(res => <string> res.text())
             .catch(this.handleError);
     }
 

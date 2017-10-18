@@ -113,24 +113,23 @@ public class TestController {
 
     @RequestMapping(value="/execute", method = { RequestMethod.GET })
     @ResponseBody
-    public TestResult executeGroup() {
+    public String executeGroup() {
         return testExecutionService.execute(projectService.getActiveProject());
     }
 
     @RequestMapping(value="/execute", method = { RequestMethod.POST })
     @ResponseBody
-    public TestResult execute(@RequestBody Test test) {
+    public String execute(@RequestBody Test test) {
         return testExecutionService.execute(projectService.getActiveProject(), test);
     }
 
     @RequestMapping(value="/execute/group", method = { RequestMethod.POST })
     @ResponseBody
-    public TestResult executeGroup(@RequestBody TestGroup group) {
+    public String executeGroup(@RequestBody TestGroup group) {
         return testExecutionService.execute(projectService.getActiveProject(), group);
     }
 
     @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })
-    @ResponseBody
     public ResponseEntity stop(@PathVariable("processId") String processId) {
         testExecutionService.stop(processId);
         return ResponseEntity.ok().build();
