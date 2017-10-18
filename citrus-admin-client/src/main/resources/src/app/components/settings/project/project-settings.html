@@ -27,22 +27,56 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">Citrus <em>*</em></label>
     <div class="col-sm-10">
-      <select [(ngModel)]="project.settings.citrusVersion" class="form-control" name="citrusVersion">
-        <option value="2.7.2">2.7.2</option>
-        <option value="2.7.1">2.7.1</option>
-        <option value="2.7">2.7</option>
-        <option value="2.6.2">2.6.2</option>
-        <option value="2.6.1">2.6.1</option>
-        <option value="2.6">2.6</option>
-        <option value="2.5.2">2.5.2</option>
-        <option value="2.5.1">2.5.1</option>
-        <option value="2.5">2.5</option>
-        <option value="2.4">2.4</option>
-        <option value="2.3">2.3</option>
-        <option value="2.2">2.2</option>
-        <option value="2.1">2.1</option>
-        <option value="2.0">2.0</option>
-      </select>
+      <div class="input-group">
+        <input [(ngModel)]="project.settings.citrusVersion" type="text" class="form-control" placeholder="Citrus Version" name="citrusVersion" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.7.2'" class="clickable"><i class="fa fa-cube"></i> 2.7.2</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.7.1'" class="clickable"><i class="fa fa-cube"></i> 2.7.1</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.7'" class="clickable"><i class="fa fa-cube"></i> 2.7</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.6.2'" class="clickable"><i class="fa fa-cube"></i> 2.6.2</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.6.1'" class="clickable"><i class="fa fa-cube"></i> 2.6.1</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.6'" class="clickable"><i class="fa fa-cube"></i> 2.6</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.5.2'" class="clickable"><i class="fa fa-cube"></i> 2.5.2</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.5.1'" class="clickable"><i class="fa fa-cube"></i> 2.5.1</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.5'" class="clickable"><i class="fa fa-cube"></i> 2.5</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.4'" class="clickable"><i class="fa fa-cube"></i> 2.4</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.3'" class="clickable"><i class="fa fa-cube"></i> 2.3</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.2'" class="clickable"><i class="fa fa-cube"></i> 2.2</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.1'" class="clickable"><i class="fa fa-cube"></i> 2.1</a>
+            </li>
+            <li role="presentation">
+              <a role="menuitem" name="all" (click)="project.settings.citrusVersion = '2.0'" class="clickable"><i class="fa fa-cube"></i> 2.0</a>
+            </li>
+          </ul>
+        </span>
+      </div>
     </div>
   </div>
 
