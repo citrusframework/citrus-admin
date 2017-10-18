@@ -46,7 +46,7 @@
         <td>{{endpoint.id}}</td>
         <td>
           <ul class="properties endpoint-properties">
-            <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
+            <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.name}}</b>: {{property.value}}</li>
           </ul>
         </td>
         <td>
@@ -74,7 +74,7 @@
     </div>
     <div class="panel-body" style="min-height: 10em;">
       <ul class="properties endpoint-properties">
-        <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.id}}</b>: {{property.value}}</li>
+        <li *ngFor="let property of endpoint.properties" [hidden]="!property.value"><b>{{property.name}}</b>: {{property.value}}</li>
       </ul>
     </div>
     <div class="panel-footer">
