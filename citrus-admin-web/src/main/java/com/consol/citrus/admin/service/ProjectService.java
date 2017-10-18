@@ -16,12 +16,13 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
-import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
+import com.consol.citrus.admin.model.Module;
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.MavenArchetype;
 import com.consol.citrus.admin.model.spring.Property;
@@ -30,6 +31,7 @@ import com.consol.citrus.admin.service.command.filesystem.DeleteCommand;
 import com.consol.citrus.admin.service.command.filesystem.MoveCommand;
 import com.consol.citrus.admin.service.command.git.GitCommand;
 import com.consol.citrus.admin.service.command.maven.MavenArchetypeCommand;
+import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
 import com.consol.citrus.admin.service.command.util.CurlCommand;
 import com.consol.citrus.admin.service.command.util.UnzipCommand;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
@@ -151,6 +153,19 @@ public class ProjectService {
         }
 
         log.info("Loading project: " + projectHomeDir);
+
+        Optional<File> applicationProperties = FileUtils.findFiles(projectHomeDir + File.separator + project.getSettings().getXmlSrcDirectory(), Collections.singleton("citrus-application.properties")).stream().findAny();
+        if (applicationProperties.isPresent()) {
+            try (FileInputStream fileInputStream = new FileInputStream(applicationProperties.get())) {
+                Properties properties = new Properties();
+                properties.load(fileInputStream);
+
+                Optional.ofNullable(properties.get(Citrus.DEFAULT_APPLICATION_CONTEXT_PROPERTY)).ifPresent(value -> project.getSettings().setSpringApplicationContext(value.toString()));
+                Optional.ofNullable(properties.get(Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY)).ifPresent(value -> project.getSettings().setSpringJavaConfig(value.toString()));
+            } catch (IOException e) {
+                log.warn("Failed to read application properties file in project", e);
+            }
+        }
 
         if (project.isMavenProject()) {
             try {
