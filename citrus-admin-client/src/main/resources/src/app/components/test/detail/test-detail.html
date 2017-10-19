@@ -6,8 +6,9 @@
   <b>Author: </b><span class="label label-primary" [textContent]="detail.author ? detail.author : 'Unknown'"></span>
   <b>Status: </b><span class="label label-primary" [textContent]="detail.status ? detail.status : 'FINAL'"></span>
   <b *ngIf="detail.packageName">Package: </b><span *ngIf="detail.packageName" class="label label-primary">{{detail.packageName}}</span>
-  <b>Last Result: </b><span *ngIf="!detail.running && detail.result" [class]="!detail.result || detail.result.success ? 'label label-success' : 'label label-danger'" [textContent]="!detail.result || detail.result.success ? 'SUCCESS' : 'FAILED'"></span>
-  <span *ngIf="!detail.running && !detail.result" class="label label-default">NO_RESULTS</span>
+  <b>Last Result: </b>
+  <span *ngIf="!detail.running && hasResult()" [class]="detail.result?.success ? 'label label-success' : 'label label-danger'" [textContent]="detail.result?.success ? 'SUCCESS' : 'FAILED'"></span>
+  <span *ngIf="!detail.running && !hasResult()" class="label label-default">NO_RESULTS</span>
   <span *ngIf="detail.running" class="label label-warning">RUNNING</span>
 
   <img *ngIf="detail.running" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>

@@ -8,4 +8,8 @@ import {TestDetail} from "../../../../model/tests";
 export class TestResultComponent {
 
     @Input() detail: TestDetail;
+
+    hasResult() {
+      return this.detail.result != undefined;
+    }
 }

@@ -1,6 +1,6 @@
 <div class="table-responsive">
-  <h2 *ngIf="!detail.running && !detail.result"><i class="fa fa-file-text-o"></i> No results found for test</h2>
-  <div *ngIf="!detail.running && detail.result" [class]="detail.result.success ? 'color-success' : 'color-danger'">
+  <h2 *ngIf="!detail.running && !hasResult()"><i class="fa fa-file-text-o"></i> No results found for test</h2>
+  <div *ngIf="!detail.running && hasResult()" [class]="detail.result?.success ? 'color-success' : 'color-danger'">
     <h2><i class="fa fa-file-text-o"></i> {{detail.name}}: &nbsp;&nbsp;&nbsp;<span [textContent]="detail.result.success ? 'SUCCESS' : 'FAILED'"></span></h2>
     <div *ngIf="detail.result.errorCause" class="error-details">
       <h3 [textContent]="detail.result.errorCause"></h3>
