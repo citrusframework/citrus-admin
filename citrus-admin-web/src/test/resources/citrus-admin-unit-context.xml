@@ -15,11 +15,12 @@
 
   <bean class="com.consol.citrus.admin.service.local.LocalTerminalService"/>
   <bean class="com.consol.citrus.admin.service.TestCaseService"/>
+  <bean class="com.consol.citrus.admin.service.TestReportService"/>
   <bean class="com.consol.citrus.admin.service.ProjectService"/>
   <bean class="com.consol.citrus.admin.service.FileBrowserService"/>
   <bean class="com.consol.citrus.admin.service.TestExecutionService"/>
-  <bean class="com.consol.citrus.admin.service.report.JUnitTestReportService"/>
-  <bean class="com.consol.citrus.admin.service.report.TestNGTestReportService"/>
+  <bean class="com.consol.citrus.admin.service.report.junit.JUnit4TestReportLoader"/>
+  <bean class="com.consol.citrus.admin.service.report.testng.TestNGTestReportLoader"/>
   <bean class="com.consol.citrus.admin.service.spring.SpringBeanService"/>
   <bean class="com.consol.citrus.admin.service.spring.SpringJavaConfigService"/>
 

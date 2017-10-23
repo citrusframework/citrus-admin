@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {TestReport} from "../model/test.report";
 import {Observable} from 'rxjs/Observable';
-import {Test, TestResult} from "../model/tests";
+import {Test} from "../model/tests";
 
 @Injectable()
 export class ReportService {
@@ -19,7 +19,7 @@ export class ReportService {
 
     getTestResult(test: Test) {
         return this.http.post(this._serviceUrl + '/result', JSON.stringify(test), new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) }))
-                        .map(res => <TestResult> res.json())
+                        .map(res => <TestReport> res.json())
                         .catch(this.handleError);
     }
 

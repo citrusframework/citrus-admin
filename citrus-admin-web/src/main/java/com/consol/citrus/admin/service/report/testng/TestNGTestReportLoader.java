@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service.report;
+package com.consol.citrus.admin.service.report.testng;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.admin.service.report.TestReportLoader;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -25,9 +26,11 @@ import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;
 
@@ -40,11 +43,12 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-@Service
-public class TestNGTestReportService implements TestReportService {
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class TestNGTestReportLoader implements TestReportLoader {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestNGTestReportService.class);
+    private static Logger log = LoggerFactory.getLogger(TestNGTestReportLoader.class);
 
     /** Date format */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -53,16 +57,24 @@ public class TestNGTestReportService implements TestReportService {
     private TestCaseService testCaseService;
 
     @Override
-    public TestResult getLatest(Project activeProject, Test test) {
-        TestResult result = new TestResult();
-        result.setSuccess(true);
-        result.setTest(test);
+    public TestReport getLatest(Project activeProject, Test test) {
+        TestReport report = new TestReport();
+
         if (hasTestResults(activeProject)) {
             try {
                 Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
                 Node testClass = XPathUtils.evaluateAsNode(testResults, "/testng-results/suite[1]/test/class[@name = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
                 Element testMethod = (Element) XPathUtils.evaluateAsNode(testClass, "test-method[@name='" + test.getMethodName() + "']", null);
-                fillResult(result, testMethod);
+
+                TestResult result = getResult(test, testMethod);
+                report.setTotal(1);
+                if (result.isSuccess()) {
+                    report.setPassed(1L);
+                } else {
+                    report.setFailed(1L);
+                }
+
+                report.getResults().add(result);
             } catch (CitrusRuntimeException e) {
                 log.warn("No results found for test: " + test.getPackageName() + "." + test.getClassName() + "#" + test.getMethodName());
             } catch (IOException e) {
@@ -70,7 +82,7 @@ public class TestNGTestReportService implements TestReportService {
             }
         }
 
-        return result;
+        return report;
     }
 
     @Override
@@ -102,15 +114,12 @@ public class TestNGTestReportService implements TestReportService {
                     List<Element> testMethods = DomUtils.getChildElementsByTagName(testClass, "test-method");
                     for (Element testMethod : testMethods) {
                         if (!testMethod.hasAttribute("is-config") || testMethod.getAttribute("is-config").equals("false")) {
-                            TestResult result = new TestResult();
                             String packageName = testClass.getAttribute("name").substring(0, testClass.getAttribute("name").lastIndexOf('.'));
                             String className = testClass.getAttribute("name").substring(packageName.length() + 1);
                             String methodName = testMethod.getAttribute("name");
 
                             Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
-                            result.setTest(test);
-                            fillResult(result, testMethod);
-
+                            TestResult result = getResult(test, testMethod);
                             report.getResults().add(result);
                         }
                     }
@@ -125,10 +134,13 @@ public class TestNGTestReportService implements TestReportService {
 
     /**
      * Fills result object with test method information.
-     * @param result
+     * @param test
      * @param testMethod
+     * @return
      */
-    private void fillResult(TestResult result, Element testMethod) {
+    private TestResult getResult(Test test, Element testMethod) {
+        TestResult result = new TestResult();
+        result.setTest(test);
         result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
 
         Element exceptionElement = DomUtils.getChildElementByTagName(testMethod, "exception");
@@ -145,6 +157,8 @@ public class TestNGTestReportService implements TestReportService {
                 result.setStackTrace(DomUtils.getTextValue(stackTraceElement).trim());
             }
         }
+
+        return result;
     }
 
     @Override

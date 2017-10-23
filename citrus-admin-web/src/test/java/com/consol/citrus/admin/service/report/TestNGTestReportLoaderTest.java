@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service.report;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.admin.service.report.testng.TestNGTestReportLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
@@ -30,9 +31,9 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class TestNGTestReportServiceTest {
+public class TestNGTestReportLoaderTest {
 
-    private TestNGTestReportService service = new TestNGTestReportService();
+    private TestNGTestReportLoader service = new TestNGTestReportLoader();
 
     @Mock
     private TestCaseService testCaseService;
@@ -102,22 +103,30 @@ public class TestNGTestReportServiceTest {
     public void testResult() throws Exception {
         Assert.assertTrue(service.hasTestResults(project));
 
-        TestResult testResult = service.getLatest(project, test1);
-        Assert.assertEquals(testResult.getTest().getClassName(), "Test_1_IT");
-        Assert.assertEquals(testResult.getTest().getName(), "Test_1_IT.test_1");
-        Assert.assertEquals(testResult.getTest().getMethodName(), "test_1");
-        Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertTrue(testResult.isSuccess());
-        Assert.assertNull(testResult.getErrorCause());
+        TestReport report = service.getLatest(project, test1);
+        Assert.assertEquals(report.getResults().size(), 1L);
+        Assert.assertEquals(report.getTotal(), 1L);
+        Assert.assertEquals(report.getPassed(), 1L);
+        Assert.assertEquals(report.getFailed(), 0L);
+        Assert.assertEquals(report.getResults().get(0).getTest().getClassName(), "Test_1_IT");
+        Assert.assertEquals(report.getResults().get(0).getTest().getName(), "Test_1_IT.test_1");
+        Assert.assertEquals(report.getResults().get(0).getTest().getMethodName(), "test_1");
+        Assert.assertEquals(report.getResults().get(0).getTest().getPackageName(), "com.consol.citrus.samples");
+        Assert.assertTrue(report.getResults().get(0).isSuccess());
+        Assert.assertNull(report.getResults().get(0).getErrorCause());
 
-        testResult = service.getLatest(project, test3);
-        Assert.assertEquals(testResult.getTest().getClassName(), "Test_3_IT");
-        Assert.assertEquals(testResult.getTest().getName(), "Test_3_IT.test_3");
-        Assert.assertEquals(testResult.getTest().getMethodName(), "test_3");
-        Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertFalse(testResult.isSuccess());
-        Assert.assertEquals(testResult.getErrorCause(), "com.consol.citrus.exceptions.TestCaseFailedException");
-        Assert.assertEquals(testResult.getErrorMessage(), "Test case failed");
-        Assert.assertNotNull(testResult.getStackTrace());
+        report = service.getLatest(project, test3);
+        Assert.assertEquals(report.getResults().size(), 1L);
+        Assert.assertEquals(report.getTotal(), 1L);
+        Assert.assertEquals(report.getPassed(), 0L);
+        Assert.assertEquals(report.getFailed(), 1L);
+        Assert.assertEquals(report.getResults().get(0).getTest().getClassName(), "Test_3_IT");
+        Assert.assertEquals(report.getResults().get(0).getTest().getName(), "Test_3_IT.test_3");
+        Assert.assertEquals(report.getResults().get(0).getTest().getMethodName(), "test_3");
+        Assert.assertEquals(report.getResults().get(0).getTest().getPackageName(), "com.consol.citrus.samples");
+        Assert.assertFalse(report.getResults().get(0).isSuccess());
+        Assert.assertEquals(report.getResults().get(0).getErrorCause(), "com.consol.citrus.exceptions.TestCaseFailedException");
+        Assert.assertEquals(report.getResults().get(0).getErrorMessage(), "Test case failed");
+        Assert.assertNotNull(report.getResults().get(0).getStackTrace());
     }
 }

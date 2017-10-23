@@ -21,7 +21,7 @@ import com.consol.citrus.admin.model.*;
 /**
  * @author Christoph Deppisch
  */
-public interface TestReportService {
+public interface TestReportLoader {
 
     /**
      * Loads latest test results and creates report.
@@ -35,7 +35,7 @@ public interface TestReportService {
      * @param test
      * @return
      */
-    TestResult getLatest(Project activeProject, Test test);
+    TestReport getLatest(Project activeProject, Test test);
 
     /**
      * Checks whether test results are available in active project.

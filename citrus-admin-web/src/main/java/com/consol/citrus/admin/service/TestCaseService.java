@@ -125,24 +125,35 @@ public class TestCaseService {
      * @param project
      * @param packageName
      * @param className
+     * @return
+     */
+    public Test findTest(Project project, String packageName, String className) {
+        return findTest(project, packageName, className, null);
+    }
+
+    /**
+     * Finds test for given package, class and method name.
+     * @param project
+     * @param packageName
+     * @param className
      * @param methodName
      * @return
      */
     public Test findTest(Project project, String packageName, String className, String methodName) {
         final FileSystemResource sourceFile = new FileSystemResource(project.getJavaDirectory() + packageName.replace('.', File.separatorChar) + System.getProperty("file.separator") + className + ".java");
         if (!sourceFile.exists()) {
-            throw new ApplicationRuntimeException("Unable to find test source file: " + className + " in " + project.getJavaDirectory());
+            throw new ApplicationRuntimeException("Unable to find test source file: " + packageName + "." + className + " in " + project.getJavaDirectory());
         }
 
         Optional<Test> test = testProviders.parallelStream()
                 .flatMap(provider -> provider.findTests(project, Collections.singletonList(sourceFile.getFile())).stream())
-                .filter(candidate -> methodName.equals(candidate.getMethodName()))
+                .filter(candidate -> methodName == null || methodName.equals(candidate.getMethodName()))
                 .findFirst();
 
         if (test.isPresent()) {
             return test.get();
         } else {
-            throw new ApplicationRuntimeException("Unable to find test: " + className + "." + methodName);
+            throw new ApplicationRuntimeException("Unable to find test: " + packageName + "." + className + "#" + methodName);
         }
     }
 

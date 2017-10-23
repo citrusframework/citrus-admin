@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service.report;
+package com.consol.citrus.admin.service.report.junit;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.admin.service.report.TestReportLoader;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -25,35 +26,51 @@ import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
  */
-@Service
-public class JUnitTestReportService implements TestReportService {
+@Component
+@Order(Ordered.LOWEST_PRECEDENCE)
+public class JUnit4TestReportLoader implements TestReportLoader {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JUnitTestReportService.class);
+    private static Logger log = LoggerFactory.getLogger(JUnit4TestReportLoader.class);
 
     @Autowired
     private TestCaseService testCaseService;
 
     @Override
-    public TestResult getLatest(Project activeProject, Test test) {
-        TestResult result = new TestResult();
-        result.setTest(test);
+    public TestReport getLatest(Project activeProject, Test test) {
+        TestReport report = new TestReport();
+
         if (hasTestResults(activeProject)) {
             try {
                 Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
                 Element testCase = (Element) XPathUtils.evaluateAsNode(testResults, "/testsuite/testcase[@classname = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
-                fillResult(result, testCase);
+
+                TestResult result = getResult(test, testCase);
+                report.setTotal(1);
+                if (result.isSuccess()) {
+                    report.setPassed(1L);
+                } else {
+                    report.setFailed(1L);
+                }
+
+                report.getResults().add(result);
             } catch (CitrusRuntimeException e) {
                 log.warn("No results found for test: " + test.getPackageName() + "." + test.getClassName() + "#" + test.getMethodName());
             } catch (IOException e) {
@@ -61,7 +78,7 @@ public class JUnitTestReportService implements TestReportService {
             }
         }
 
-        return result;
+        return report;
     }
 
     @Override
@@ -83,16 +100,29 @@ public class JUnitTestReportService implements TestReportService {
                 NodeList testCases = XPathUtils.evaluateAsNodeList(testResults, "/testsuite/testcase", null);
                 for (int i = 0; i < testCases.getLength(); i++) {
                     Element testCase = (Element) testCases.item(i);
-                    TestResult result = new TestResult();
-                    String packageName = testCase.getAttribute("classname").substring(0, testCase.getAttribute("classname").lastIndexOf('.'));
-                    String className = testCase.getAttribute("classname").substring(packageName.length() + 1);
+
+                    String className = testCase.getAttribute("classname");
                     String methodName = testCase.getAttribute("name");
+                    String packageName;
+                    if (className.indexOf(':') > 0 || className.indexOf(' ') > 0) {
+                        // Cucumber BDD test
+                        packageName = report.getSuiteName().substring(0, report.getSuiteName().lastIndexOf('.'));
 
-                    Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
-                    result.setTest(test);
-                    fillResult(result, testCase);
+                        String classFileName = report.getSuiteName().substring(packageName.length() + 1);
+                        Test test = testCaseService.findTest(activeProject, packageName, classFileName);
+                        TestResult result = getResult(test, testCase);
+                        
+                        result.getTest().setName(className + " - " + methodName);
 
-                    report.getResults().add(result);
+                        report.getResults().add(result);
+                    } else if (className.indexOf('.') > 0) {
+                        packageName = className.substring(0, className.lastIndexOf('.'));
+                        className = className.substring(packageName.length() + 1);
+
+                        Test test = testCaseService.findTest(activeProject, packageName, className, methodName);
+                        TestResult result = getResult(test, testCase);
+                        report.getResults().add(result);
+                    }
                 }
             } catch (IOException e) {
                 log.error("Failed to read test results file", e);
@@ -104,10 +134,14 @@ public class JUnitTestReportService implements TestReportService {
 
     /**
      * Fills result object with test case information.
-     * @param result
+     * @param test
      * @param testCase
+     * @return
      */
-    private void fillResult(TestResult result, Element testCase) {
+    private TestResult getResult(Test test, Element testCase) {
+        TestResult result = new TestResult();
+        result.setTest(test);
+
         Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");
         if (failureElement != null) {
             result.setSuccess(false);
@@ -117,6 +151,8 @@ public class JUnitTestReportService implements TestReportService {
         } else {
             result.setSuccess(true);
         }
+
+        return result;
     }
 
     @Override
@@ -139,7 +175,17 @@ public class JUnitTestReportService implements TestReportService {
      * @return
      */
     private Resource getTestResultsFile(Project activeProject) {
-        return new FileSystemResource(activeProject.getProjectHome() + "/target/failsafe-reports/TEST-TestSuite.xml");
+        FileSystemResource testSuiteFile = new FileSystemResource(activeProject.getProjectHome() + "/target/failsafe-reports/TEST-TestSuite.xml");
+        if (testSuiteFile.exists()) {
+            return testSuiteFile;
+        }
+
+        List<File> testCaseFiles = FileUtils.findFiles(activeProject.getProjectHome() + "/target/failsafe-reports", Collections.singleton("/TEST-*.xml"));
+        if (!CollectionUtils.isEmpty(testCaseFiles)) {
+            return new FileSystemResource(testCaseFiles.get(0));
+        }
+
+        return testSuiteFile;
     }
 
     /**

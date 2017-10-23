@@ -18,8 +18,7 @@ package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
-import com.consol.citrus.admin.service.report.JUnitTestReportService;
-import com.consol.citrus.admin.service.report.TestNGTestReportService;
+import com.consol.citrus.admin.service.TestReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,41 +34,17 @@ public class ReportController {
     private ProjectService projectService;
 
     @Autowired
-    private TestNGTestReportService testNGTestReportService;
-
-    @Autowired
-    private JUnitTestReportService junitTestReportService;
+    private TestReportService testReportService;
 
     @RequestMapping(value = "/latest", method = RequestMethod.GET)
     @ResponseBody
     public TestReport getLatest() {
-        Project project = projectService.getActiveProject();
-        if (null != project) {
-            if (testNGTestReportService.hasTestResults(project)) {
-                return testNGTestReportService.getLatest(project);
-            } else if (junitTestReportService.hasTestResults(project)) {
-                return junitTestReportService.getLatest(project);
-            }
-        }
-
-        return new TestReport();
+        return testReportService.getLatest(projectService.getActiveProject());
     }
 
     @RequestMapping(value="/result", method = { RequestMethod.POST })
     @ResponseBody
-    public TestResult getTestResult(@RequestBody Test test) {
-        Project project = projectService.getActiveProject();
-        if (null != project) {
-            if (testNGTestReportService.hasTestResults(project)) {
-                return testNGTestReportService.getLatest(project, test);
-            } else if (junitTestReportService.hasTestResults(project)) {
-                return junitTestReportService.getLatest(project, test);
-            }
-        }
-
-        TestResult result = new TestResult();
-        result.setTest(test);
-        result.setSuccess(true);
-        return result;
+    public TestReport getTestResult(@RequestBody Test test) {
+        return testReportService.getLatest(projectService.getActiveProject(), test);
     }
 }

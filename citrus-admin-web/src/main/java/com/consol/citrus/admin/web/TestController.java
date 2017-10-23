@@ -19,13 +19,12 @@ package com.consol.citrus.admin.web;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.admin.service.report.JUnitTestReportService;
-import com.consol.citrus.admin.service.report.TestNGTestReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,11 +49,7 @@ public class TestController {
     private TestExecutionService testExecutionService;
 
     @Autowired
-    private TestNGTestReportService testNGTestReportService;
-
-    @Autowired
-    private JUnitTestReportService junitTestReportService;
-
+    private TestReportService testReportService;
 
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
@@ -79,17 +74,12 @@ public class TestController {
     public TestDetail getTestDetail(@RequestBody Test test) {
         Project project = projectService.getActiveProject();
         TestDetail detail = testCaseService.getTestDetail(project, test);
-        TestResult result = null;
-        if (testNGTestReportService.hasTestResults(project)) {
-            result = testNGTestReportService.getLatest(project, test);
-        } else if (junitTestReportService.hasTestResults(project)) {
-            result = junitTestReportService.getLatest(project, test);
+
+        TestReport report = testReportService.getLatest(project, test);
+        if (!CollectionUtils.isEmpty(report.getResults())) {
+            detail.setResult(report.getResults().get(0));
         }
 
-        if (result != null) {
-            detail.setResult(result);
-        }
-        
         return detail;
     }
 
