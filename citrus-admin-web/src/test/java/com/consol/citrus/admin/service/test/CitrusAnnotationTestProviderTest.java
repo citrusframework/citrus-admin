@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 /**
  * @author Christoph Deppisch
  */
-public class AnnotationTestProviderTest {
+public class CitrusAnnotationTestProviderTest {
 
-    private AnnotationTestProvider testProvider = new AnnotationTestProvider();
+    private CitrusAnnotationTestProvider testProvider = new CitrusAnnotationTestProvider();
 
     @Test
     public void testFindTests() throws IOException {

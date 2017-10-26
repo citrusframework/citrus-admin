@@ -76,7 +76,7 @@ public class JUnit4TestReportLoaderTest {
         Assert.assertEquals(testResult.getTest().getName(), "Test_1_IT.test_1");
         Assert.assertEquals(testResult.getTest().getMethodName(), "test_1");
         Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertTrue(testResult.isSuccess());
+        Assert.assertTrue(testResult.getStatus().equals(TestStatus.PASS));
         Assert.assertNull(testResult.getErrorCause());
 
         testResult = report.getResults().get(1);
@@ -84,7 +84,7 @@ public class JUnit4TestReportLoaderTest {
         Assert.assertEquals(testResult.getTest().getName(), "Test_2_IT.test_2");
         Assert.assertEquals(testResult.getTest().getMethodName(), "test_2");
         Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertTrue(testResult.isSuccess());
+        Assert.assertTrue(testResult.getStatus().equals(TestStatus.PASS));
         Assert.assertNull(testResult.getErrorCause());
 
         testResult = report.getResults().get(2);
@@ -92,7 +92,7 @@ public class JUnit4TestReportLoaderTest {
         Assert.assertEquals(testResult.getTest().getName(), "Test_3_IT.test_3");
         Assert.assertEquals(testResult.getTest().getMethodName(), "test_3");
         Assert.assertEquals(testResult.getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertFalse(testResult.isSuccess());
+        Assert.assertTrue(testResult.getStatus().equals(TestStatus.FAIL));
         Assert.assertEquals(testResult.getErrorCause(), "com.consol.citrus.exceptions.TestCaseFailedException");
         Assert.assertEquals(testResult.getErrorMessage(), "Test case failed");
         Assert.assertNotNull(testResult.getStackTrace());
@@ -111,7 +111,7 @@ public class JUnit4TestReportLoaderTest {
         Assert.assertEquals(report.getResults().get(0).getTest().getName(), "Test_1_IT.test_1");
         Assert.assertEquals(report.getResults().get(0).getTest().getMethodName(), "test_1");
         Assert.assertEquals(report.getResults().get(0).getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertTrue(report.getResults().get(0).isSuccess());
+        Assert.assertTrue(report.getResults().get(0).getStatus().equals(TestStatus.PASS));
         Assert.assertNull(report.getResults().get(0).getErrorCause());
 
         report = service.getLatest(project, test3);
@@ -123,7 +123,7 @@ public class JUnit4TestReportLoaderTest {
         Assert.assertEquals(report.getResults().get(0).getTest().getName(), "Test_3_IT.test_3");
         Assert.assertEquals(report.getResults().get(0).getTest().getMethodName(), "test_3");
         Assert.assertEquals(report.getResults().get(0).getTest().getPackageName(), "com.consol.citrus.samples");
-        Assert.assertFalse(report.getResults().get(0).isSuccess());
+        Assert.assertTrue(report.getResults().get(0).getStatus().equals(TestStatus.FAIL));
         Assert.assertEquals(report.getResults().get(0).getErrorCause(), "com.consol.citrus.exceptions.TestCaseFailedException");
         Assert.assertEquals(report.getResults().get(0).getErrorMessage(), "Test case failed");
         Assert.assertNotNull(report.getResults().get(0).getStackTrace());

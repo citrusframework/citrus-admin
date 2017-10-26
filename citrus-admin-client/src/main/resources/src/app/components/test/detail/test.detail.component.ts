@@ -89,12 +89,17 @@ export class TestDetailComponent implements OnInit {
         } else if ("TEST_FAILED" == event.type || "PROCESS_FAILED" == event.type) {
             this.failed = true;
             if (this.detail.result) {
-                this.detail.result.success = false;
+                this.detail.result.status = 'FAIL';
             }
         } else if ("TEST_SUCCESS" == event.type || "PROCESS_SUCCESS" == event.type) {
             this.failed = false;
             if (this.detail.result) {
-                this.detail.result.success = true;
+                this.detail.result.status = 'PASS';
+            }
+        } else if ("TEST_SKIP" == event.type) {
+            this.failed = false;
+            if (this.detail.result) {
+                this.detail.result.status = 'SKIP';
             }
         } else {
             if (this.completed < 11) {

@@ -28,16 +28,16 @@ import org.testng.annotations.Test;
 @Test
 public class DataProviderJavaTest extends TestNGCitrusTestDesigner {
 
+    @Test(dataProvider = "messageDataProvider")
     @CitrusTest
     @CitrusParameters({ "message" })
-    @Test(dataProvider = "messageDataProvider")
     public void fooProviderTest(String message) {
         echo(message);
     }
 
+    @Test(dataProvider = "messageDataProvider")
     @CitrusTest(name = "BarProviderTest")
     @CitrusParameters({ "message" })
-    @Test(dataProvider = "messageDataProvider")
     public void barProviderTest(String message) {
         echo(message);
     }

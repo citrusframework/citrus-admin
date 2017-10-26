@@ -60,7 +60,7 @@ export class TestGroupRunComponent implements OnInit {
     }
 
     execute() {
-        this.results.forEach(r => r.success = undefined);
+        this.results.forEach(r => r.status = undefined);
         if (this.selected) {
             this.testService.executeGroup(this.selected)
                 .subscribe(
@@ -117,7 +117,7 @@ export class TestGroupRunComponent implements OnInit {
         let found: TestResult = this.results.find(r => r.test.name == result.test.name);
 
         if (found) {
-            found.success = result.success;
+            found.status = result.status;
             found.processId = result.processId;
         } else {
             this.results.unshift(result);

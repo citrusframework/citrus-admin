@@ -7,7 +7,7 @@
   <b>Status: </b><span class="label label-primary" [textContent]="detail.status ? detail.status : 'FINAL'"></span>
   <b *ngIf="detail.packageName">Package: </b><span *ngIf="detail.packageName" class="label label-primary">{{detail.packageName}}</span>
   <b>Last Result: </b>
-  <span *ngIf="!detail.running && hasResult()" [class]="detail.result?.success ? 'label label-success' : 'label label-danger'" [textContent]="detail.result?.success ? 'SUCCESS' : 'FAILED'"></span>
+  <span *ngIf="!detail.running && hasResult()" [class]="detail.result?.status == 'PASS' ? 'label label-success' : (detail.result?.status == 'FAIL' ? 'label label-danger' : 'label label-warning')" [textContent]="detail.result?.status ? detail.result?.status : 'NO RESULTS'"></span>
   <span *ngIf="!detail.running && !hasResult()" class="label label-default">NO_RESULTS</span>
   <span *ngIf="detail.running" class="label label-warning">RUNNING</span>
 

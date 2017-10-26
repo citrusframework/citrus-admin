@@ -22,7 +22,7 @@ package com.consol.citrus.admin.model;
 public class TestResult {
 
     private Test test;
-    private boolean success;
+    private TestStatus status;
 
     private String errorMessage;
     private String errorCause;
@@ -45,17 +45,21 @@ public class TestResult {
     }
 
     /**
-     * @return
+     * Sets the status.
+     *
+     * @param status
      */
-    public boolean isSuccess() {
-        return success;
+    public void setStatus(TestStatus status) {
+        this.status = status;
     }
 
     /**
-     * @param value
+     * Gets the status.
+     *
+     * @return
      */
-    public void setSuccess(boolean value) {
-        this.success = value;
+    public TestStatus getStatus() {
+        return status;
     }
 
     /**

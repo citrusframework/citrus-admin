@@ -54,9 +54,9 @@
         </td>
         <td>{{result.test.className}}</td>
         <td>
-          <span *ngIf="!running && result.success == undefined">&nbsp;</span>
-          <img *ngIf="running && result.success == undefined" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
-          <span *ngIf="result.success != undefined" [class]="(result.success == undefined) ? 'badge' : (result.success ? 'badge badge-success' : 'badge badge-danger')" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span>
+          <span *ngIf="!running && result.status == undefined">&nbsp;</span>
+          <img *ngIf="running && result.status == undefined" class="ajax-loader" src="assets/images/ajax-loader.gif" style="width: 1.3em;"/>
+          <span *ngIf="result.status != undefined" [class]="result.status == 'PASS' ? 'badge badge-success' : ( result.status == 'FAIL' ? 'badge badge-danger' : 'badge badge-warning')" [textContent]="result.status"></span>
         </td>
       </tr>
     </tbody>

@@ -16,12 +16,14 @@
 
 package com.consol.citrus.admin.process.listener;
 
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -70,10 +72,13 @@ public class WebSocketProcessListener extends AbstractProcessListener {
             messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_START, output));
         } else if (output.contains("TEST SUCCESS")) {
             messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_SUCCESS, output));
-            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, true));
+            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, TestStatus.PASS));
         } else if (output.contains("TEST FAILED")) {
             messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_FAILED, output));
-            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, false));
+            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, TestStatus.FAIL));
+        }  else if (output.contains("SKIPPING TEST")) {
+            messagingTemplate.convertAndSend(TOPIC_TEST_EVENTS, SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_SKIP, output));
+            messagingTemplate.convertAndSend(TOPIC_TEST_RESULTS, getTestResult(processId, output, TestStatus.SKIP));
         } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
             String actionIndex = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1));
             SocketEvent event = SocketEvent.createEvent(processId, SocketEvent.EventType.TEST_ACTION_FINISH,
@@ -82,19 +87,31 @@ public class WebSocketProcessListener extends AbstractProcessListener {
         }
     }
 
-    private TestResult getTestResult(String processId, String output, boolean success) {
+    private TestResult getTestResult(String processId, String output, TestStatus status) {
         String lineMarker;
         String packageMarker;
-        if (success) {
+        if (status.equals(TestStatus.PASS)) {
             lineMarker =  "TEST SUCCESS";
             packageMarker =  "()";
-        } else {
+        } else if (status.equals(TestStatus.FAIL)) {
             lineMarker =  "TEST FAILED";
             packageMarker =  "<>";
+        } else if (status.equals(TestStatus.SKIP)) {
+            lineMarker =  "SKIPPING TEST";
+            packageMarker =  null;
+        } else {
+            throw new ApplicationRuntimeException("Unsupported test status: " + status);
         }
 
-        String testName = output.substring(output. indexOf(lineMarker) + lineMarker.length(), output.indexOf(packageMarker.charAt(0))).trim();
-        String testPackage = output.substring(output.indexOf(packageMarker.charAt(0)) + 1, output.indexOf(packageMarker.charAt(1))).trim();
+        String testName;
+        String testPackage;
+        if (StringUtils.hasText(packageMarker)) {
+            testName = output.substring(output.indexOf(lineMarker) + lineMarker.length(), output.indexOf(packageMarker.charAt(0))).trim();
+            testPackage = output.substring(output.indexOf(packageMarker.charAt(0)) + 1, output.indexOf(packageMarker.charAt(1))).trim();
+        } else {
+            testName = output.substring(output.indexOf(lineMarker) + lineMarker.length()).trim();
+            testPackage = "";
+        }
 
         TestResult result = new TestResult();
         Test test = new Test();
@@ -103,7 +120,7 @@ public class WebSocketProcessListener extends AbstractProcessListener {
         test.setPackageName(testPackage);
         result.setTest(test);
 
-        result.setSuccess(success);
+        result.setStatus(status);
         result.setProcessId(processId);
         return result;
     }

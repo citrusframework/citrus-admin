@@ -57,7 +57,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertNotNull(testPackages);
         Assert.assertEquals(testPackages.size(), 5L);
         assertTestPackage(testPackages, "javadsl", 4L);
-        assertTestPackage(testPackages, "foo", 2L);
+        assertTestPackage(testPackages, "foo", 3L);
         assertTestPackage(testPackages, "bar", 2L);
         assertTestPackage(testPackages, "com.consol.citrus.bar", 2L);
         assertTestPackage(testPackages, "com.consol.citrus.bar.scan", 1L);
@@ -68,6 +68,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         assertTestPresent(getTests(testPackages, "javadsl"), "BarProviderTest", "DataProviderJavaTest", "barProviderTest");
         assertTestPresent(getTests(testPackages, "foo"), "FooTest", "FooTest", "FooTest");
         assertTestPresent(getTests(testPackages, "foo"), "WithoutLastUpdatedOnTest", "WithoutLastUpdatedOnTest", "withoutLastUpdatedOnTest");
+        assertTestPresent(getTests(testPackages, "foo"), "FooTest.testNGTest", "FooTest", "testNGTest");
         assertTestPresent(getTests(testPackages, "bar"), "BarTest", "BarTest", "barTest");
         assertTestPresent(getTests(testPackages, "bar"), "Bar2Test", "BarTest", "bar2Test");
         assertTestPresent(getTests(testPackages, "com.consol.citrus.bar"), "BarPackageTest", "BarTest", "barPackageTest");

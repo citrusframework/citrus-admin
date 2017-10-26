@@ -68,10 +68,12 @@ public class TestNGTestReportLoader implements TestReportLoader {
 
                 TestResult result = getResult(test, testMethod);
                 report.setTotal(1);
-                if (result.isSuccess()) {
+                if (result.getStatus().equals(TestStatus.PASS)) {
                     report.setPassed(1L);
-                } else {
+                } else if (result.getStatus().equals(TestStatus.FAIL)) {
                     report.setFailed(1L);
+                } else if (result.getStatus().equals(TestStatus.SKIP)) {
+                    report.setSkipped(1L);
                 }
 
                 report.getResults().add(result);
@@ -141,7 +143,7 @@ public class TestNGTestReportLoader implements TestReportLoader {
     private TestResult getResult(Test test, Element testMethod) {
         TestResult result = new TestResult();
         result.setTest(test);
-        result.setSuccess(testMethod.getAttribute("status").equals("PASS"));
+        result.setStatus(TestStatus.valueOf(testMethod.getAttribute("status")));
 
         Element exceptionElement = DomUtils.getChildElementByTagName(testMethod, "exception");
         if (exceptionElement != null) {

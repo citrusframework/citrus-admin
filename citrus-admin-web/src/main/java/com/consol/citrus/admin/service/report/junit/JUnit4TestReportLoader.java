@@ -64,10 +64,12 @@ public class JUnit4TestReportLoader implements TestReportLoader {
 
                 TestResult result = getResult(test, testCase);
                 report.setTotal(1);
-                if (result.isSuccess()) {
+                if (result.getStatus().equals(TestStatus.PASS)) {
                     report.setPassed(1L);
-                } else {
+                } else if (result.getStatus().equals(TestStatus.FAIL)) {
                     report.setFailed(1L);
+                } else if (result.getStatus().equals(TestStatus.SKIP)) {
+                    report.setSkipped(1L);
                 }
 
                 report.getResults().add(result);
@@ -144,12 +146,12 @@ public class JUnit4TestReportLoader implements TestReportLoader {
 
         Element failureElement = DomUtils.getChildElementByTagName(testCase, "failure");
         if (failureElement != null) {
-            result.setSuccess(false);
+            result.setStatus(TestStatus.FAIL);
             result.setErrorMessage(failureElement.getAttribute("message"));
             result.setErrorCause(failureElement.getAttribute("type"));
             result.setStackTrace(DomUtils.getTextValue(failureElement).trim());
         } else {
-            result.setSuccess(true);
+            result.setStatus(TestStatus.PASS);
         }
 
         return result;

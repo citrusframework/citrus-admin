@@ -37,10 +37,10 @@ import java.util.regex.Pattern;
  * @author Christoph Deppisch
  */
 @Component
-public class AnnotationTestProvider extends AbstractJavaTestProvider {
+public class CitrusAnnotationTestProvider extends AbstractJavaTestProvider {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AnnotationTestProvider.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusAnnotationTestProvider.class);
 
     @Override
     protected List<Test> findTests(Project project, File sourceFile, String packageName, String className) {

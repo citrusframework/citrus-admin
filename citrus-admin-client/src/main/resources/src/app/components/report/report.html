@@ -73,7 +73,7 @@
           <i class="fa fa-file-text-o"></i>
           <span title="{{result.test.className}}.{{result.test.methodName}}">{{result.test.name}}</span>
         </td>
-        <td><span [class]="result.success ? 'badge badge-success' : 'badge badge-danger'" [textContent]="result.success ? 'SUCCESS' : 'FAILED'"></span></td>
+        <td><span [class]="result.status == 'PASS' ? 'badge badge-success' : (result.status == 'FAIL' ? 'badge badge-danger' : 'badge badge-warning')" [textContent]="result.status"></span></td>
       </tr>
       <tr *ngIf="result.errorCause" class="color-danger">
         <td colspan="2">
