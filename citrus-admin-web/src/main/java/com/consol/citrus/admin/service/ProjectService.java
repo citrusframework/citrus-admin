@@ -429,6 +429,14 @@ public class ProjectService {
     }
 
     /**
+     * Close the currently active project.
+     * @return
+     */
+    public void closeActiveProject() {
+        this.project = null;
+    }
+
+    /**
      * Sets the project property.
      *
      * @param project

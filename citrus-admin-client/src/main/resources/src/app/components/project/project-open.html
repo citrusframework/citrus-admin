@@ -1,19 +1,32 @@
 <div class="container space-top-30">
   <h1 class="page-header">Open project <span name="edit-settings" class="clickable pull-right" (click)="showSettings()" title="Edit project settings"><i class="fa fa-wrench"></i></span></h1>
 
-  <form (ngSubmit)="onSubmit()">
+  <form (ngSubmit)="onSubmit()" class="form-horizontal">
     <fieldset>
       <div class="form-group">
-        <label>Select project home directory</label>
+        <label class="col-sm-2 control-label">Project home</label>
 
-        <div class="input-group">
-          <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Project Home" name="projectHome" />
-          <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
+        <div class="col-sm-10">
+          <div class=" input-group">
+            <input [(ngModel)]="projectHome" type="text" class="form-control" placeholder="Home directory" name="projectHome" />
+            <a (click)="browse()" class="btn btn-default input-group-addon" type="button">...</a>
+          </div>
         </div>
       </div>
 
       <div class="form-group">
-        <div>
+        <label class="col-sm-2 control-label">Recent projects</label>
+
+        <div class="col-sm-10">
+          <ul class="list-group">
+            <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
+            <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
           <button class="btn btn-primary" type="submit" [disabled]="projectHome?.length > 0 ? false : true">Open</button>
           <button (click)="cancel()" class="btn btn-default" type="reset">Cancel</button>
         </div>
@@ -33,12 +46,6 @@
     <button type="button" class="close" (click)="clearSuccess()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <strong>Success!</strong>&nbsp;<span [textContent]="success"></span>
   </div>
-  
-  <h2 class="sub-header">Recent projects</h2>
-  <ul class="list-group">
-    <li *ngIf="recentlyOpened.length == 0" class="list-group-item"><span><i class="fa fa-file-text-o"></i> No recently opened projects</span></li>
-    <li *ngFor="let item of recentlyOpened" class="list-group-item clickable" (click)="open(item)"><span><i class="fa fa-file-text-o"></i> <strong>{{item | slice:item.lastIndexOf('/')+1}}</strong> {{item}}</span></li>
-  </ul>
 </div>
 
 <div id="dialog-settings" class="modal fade">

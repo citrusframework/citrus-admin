@@ -585,6 +585,16 @@ fieldset[disabled] .btn.focus {
     border-bottom-color: #ffffff;
 }
 
+.thumbnail {
+  border: none;
+}
+
+.btn-thumbnail {
+    min-width: 11em;
+    padding: 3em;
+    font-size: 1.5em;
+}
+
 /** Labels **/
 
 .label {

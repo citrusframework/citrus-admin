@@ -44,6 +44,12 @@ public class ProjectController {
         return projectService.getActiveProject();
     }
 
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity closeProject() {
+        projectService.closeActiveProject();
+        return ResponseEntity.ok().build();
+    }
+
     @RequestMapping(value = "/load/repository", method = RequestMethod.POST)
     @ResponseBody
     public Project loadProject(@RequestBody Repository repository) {

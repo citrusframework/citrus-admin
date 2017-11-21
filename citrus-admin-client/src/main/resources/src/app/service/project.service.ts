@@ -30,6 +30,14 @@ export class ProjectService {
         }
     }
 
+    closeActiveProject() {
+      this.cachedProject = null;
+      this.cachedObservable = null;
+
+      return this.http.delete(this._serviceUrl)
+          .catch(this.handleError);
+    }
+
     update(project: Project) {
         if(project === this.cachedProject) {
             this.cachedProject = null;

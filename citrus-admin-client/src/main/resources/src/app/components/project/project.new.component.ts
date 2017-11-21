@@ -20,9 +20,8 @@ export class NewProjectComponent {
     error: any;
     loading: boolean = false;
 
-    cancel() {
-        this._router.navigate(["/"]);
-    }
+    maven: boolean;
+    git: boolean;
 
     clearError() {
         this.error = undefined;
