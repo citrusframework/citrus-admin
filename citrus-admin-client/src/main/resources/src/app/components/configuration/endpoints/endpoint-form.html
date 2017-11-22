@@ -8,11 +8,11 @@
       <input formControlName="type" type="hidden" class="form-control" [(ngModel)]="endpoint.type"/>
     </div>
   </div>
-  <form-group [control]="form.get('id')" label="Name *">
+  <form-group [control]="form.get('id')" label="Id *">
     <input-with-addon
         formControlName="id"
         [autofocus]="true"
-        [message]="form.get('id').errors ? 'Name is required' : ''"
+        [message]="form.get('id').errors ? 'Id is required' : ''"
         [(ngModel)]="endpoint.id"></input-with-addon>
   </form-group>
   <form-group *ngFor="let property of endpoint.properties"

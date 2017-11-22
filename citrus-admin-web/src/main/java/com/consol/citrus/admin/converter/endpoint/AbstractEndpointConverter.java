@@ -53,7 +53,7 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
                     .optionType(getOptionType(field));
 
             endpointModel.add(property);
-        });
+        }, method -> !method.getName().equals("id"));
 
         return endpointModel;
     }
