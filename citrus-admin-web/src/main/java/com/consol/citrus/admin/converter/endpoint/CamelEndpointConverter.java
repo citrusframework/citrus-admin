@@ -16,8 +16,6 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.camel.CamelEndpointModel;
 import org.springframework.stereotype.Component;
 
@@ -28,18 +26,13 @@ import org.springframework.stereotype.Component;
 public class CamelEndpointConverter extends AbstractEndpointConverter<CamelEndpointModel> {
 
     @Override
-    public EndpointModel convert(CamelEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(CamelEndpointModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("camelContext", model));
-        endpointModel.add(property("endpointUri", model, true));
-
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "endpointUri" };
     }
 
     @Override

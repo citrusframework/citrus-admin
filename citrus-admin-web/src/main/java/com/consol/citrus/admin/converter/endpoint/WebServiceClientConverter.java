@@ -16,16 +16,15 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.ws.WebServiceClientModel;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -34,41 +33,49 @@ import java.util.List;
 public class WebServiceClientConverter extends AbstractEndpointConverter<WebServiceClientModel> {
 
     @Override
-    public EndpointModel convert(WebServiceClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(WebServiceClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("requestUrl", model, true));
-        endpointModel.add(property("webServiceTemplate", model)
-                .optionType(WebServiceTemplate.class));
-        endpointModel.add(property("messageFactory", model)
-                .optionType(SoapMessageFactory.class));
-        endpointModel.add(property("messageSender", model));
-        endpointModel.add(property("messageCorrelator", model)
-                .optionType(MessageCorrelator.class));
-        endpointModel.add(property("interceptors", model));
-        endpointModel.add(property("endpointResolver", model)
-                .optionType(EndpointUriResolver.class));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("faultStrategy", model, ErrorHandlingStrategy.THROWS_EXCEPTION.getName())
-                .options(getErrorHandlingStrategyOptions()));
-        endpointModel.add(property("pollingInterval", model));
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "requestUrl" };
+    }
 
-        addEndpointProperties(endpointModel, model);
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("faultStrategy", ErrorHandlingStrategy.THROWS_EXCEPTION.getName());
+        return mappings;
+    }
 
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("messageSender", WebServiceMessageSender.class);
+        mappings.put("endpointResolver", EndpointUriResolver.class);
+        mappings.put("messageFactory", SoapMessageFactory.class);
+        mappings.put("webServiceTemplate", WebServiceTemplate.class);
+        return mappings;
+    }
+
+    @Override
+    protected Map<String, String[]> getFieldOptionMappings() {
+        Map<String, String[]> mappings = new HashMap<>();
+        mappings.put("faultStrategy", getErrorHandlingStrategyOptions());
+        return mappings;
     }
 
     /**
      * Gets the error handling strategy names as list.
      * @return
      */
-    private List<String> getErrorHandlingStrategyOptions() {
+    private String[] getErrorHandlingStrategyOptions() {
         List<String> strategyNames = new ArrayList<String>();
         for (ErrorHandlingStrategy errorHandlingStrategy : ErrorHandlingStrategy.values()) {
             strategyNames.add(errorHandlingStrategy.getName());
         }
-        return strategyNames;
+        return strategyNames.toArray(new String[strategyNames.size()]);
     }
 
     @Override

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.rmi.RmiServerModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -27,27 +27,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RmiServerConverter extends AbstractEndpointConverter<RmiServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(RmiServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(RmiServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String[] getRequiredFields() {
+        return new String[] { "binding", "_interface" };
+    }
 
-        endpointModel.add(property("host", model));
-        endpointModel.add(property("port", model));
-        endpointModel.add(property("binding", model, true));
-        endpointModel.add(property("_interface", model, true));
-        endpointModel.add(property("createRegistry", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("createRegistry", TRUE);
+        return mappings;
     }
 
     @Override

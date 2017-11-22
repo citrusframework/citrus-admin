@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.websocket.WebSocketClientModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -29,19 +29,20 @@ import org.springframework.stereotype.Component;
 public class WebSocketClientConverter extends AbstractEndpointConverter<WebSocketClientModel> {
 
     @Override
-    public EndpointModel convert(WebSocketClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(WebSocketClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("url", model, true));
-        endpointModel.add(property("pollingInterval", model, "500"));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("endpointResolver", model)
-                .optionType(EndpointUriResolver.class));
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "url" };
+    }
 
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("endpointResolver", EndpointUriResolver.class);
+        return mappings;
     }
 
     @Override

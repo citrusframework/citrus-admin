@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.vertx.VertxEndpointModel;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -29,26 +29,27 @@ import org.springframework.stereotype.Component;
 public class VertxEndpointConverter extends AbstractEndpointConverter<VertxEndpointModel> {
 
     @Override
-    public EndpointModel convert(VertxEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(VertxEndpointModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("host", model, true));
-        endpointModel.add(property("port", model, true));
-        endpointModel.add(property("address", model, true));
-        endpointModel.add(property("pollingInterval", model, "500"));
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "host", "port", "address" };
+    }
 
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("pubSubDomain", FALSE);
+        return mappings;
+    }
 
-        endpointModel.add(property("vertxFactory", model)
-                .optionType(VertxInstanceFactory.class));
-
-        endpointModel.add(property("pubSubDomain", model, "false")
-                .options("true", "false"));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("vertxFactory", VertxInstanceFactory.class);
+        return mappings;
     }
 
     @Override

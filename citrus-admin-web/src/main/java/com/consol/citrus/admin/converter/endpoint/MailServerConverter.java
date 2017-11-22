@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.mail.MailServerModel;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -29,29 +29,31 @@ import java.util.Properties;
 @Component
 public class MailServerConverter extends AbstractEndpointConverter<MailServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(MailServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(MailServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String[] getRequiredFields() {
+        return new String[] { "port" };
+    }
 
-        endpointModel.add(property("port", model, true));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("autoAccept", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("splitMultipart", model, FALSE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("endpointAdapter", model));
-        endpointModel.add(property("mailProperties", model)
-                .optionType(Properties.class));
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("autoAccept", TRUE);
+        mappings.put("splitMultipart", FALSE);
+        mappings.put("port", "2222");
+        mappings.put("protocol", JavaMailSenderImpl.DEFAULT_PROTOCOL);
+        return mappings;
+    }
 
-        endpointModel.add(property("timeout", model, "5000"));
-
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("mailProperties", Properties.class);
+        return mappings;
     }
 
     @Override

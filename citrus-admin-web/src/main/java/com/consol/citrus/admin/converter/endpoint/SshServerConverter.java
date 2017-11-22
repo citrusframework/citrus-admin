@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.ssh.SshServerModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -27,26 +27,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class SshServerConverter extends AbstractEndpointConverter<SshServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(SshServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(SshServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String[] getRequiredFields() {
+        return new String[] { "port" };
+    }
 
-        endpointModel.add(property("port", model, true));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("hostKeyPath", model));
-        endpointModel.add(property("allowedKeyPath", model));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("endpointAdapter", model));
-        endpointModel.add(property("interceptors", model));
-        endpointModel.add(property("user", model));
-        endpointModel.add(property("password", model));
-
-        return endpointModel;
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("port", "22");
+        return mappings;
     }
 
     @Override

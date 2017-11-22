@@ -16,16 +16,14 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.http.HttpClientModel;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -34,54 +32,61 @@ import java.util.List;
 public class HttpClientConverter extends AbstractEndpointConverter<HttpClientModel> {
 
     @Override
-    public EndpointModel convert(HttpClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(HttpClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("requestUrl", model, true));
-        endpointModel.add(property("requestMethod", model, HttpMethod.POST.name())
-                .options(getHttpMethodOptions()));
-        endpointModel.add(property("errorStrategy", model, ErrorHandlingStrategy.PROPAGATE.getName())
-                .options(getErrorHandlingStrategyOptions()));
-        endpointModel.add(property("pollingInterval", model, "500"));
-        endpointModel.add(property("messageCorrelator", model)
-                .optionType(MessageCorrelator.class));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("requestFactory", model)
-                .optionType(ClientHttpRequestFactory.class));
-        endpointModel.add(property("restTemplate", model)
-                .optionType(RestTemplate.class));
-        endpointModel.add(property("charset", model));
-        endpointModel.add(property("contentType", model));
-        endpointModel.add(property("interceptors", model));
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("requestMethod", HttpMethod.POST.name());
+        mappings.put("errorStrategy", ErrorHandlingStrategy.PROPAGATE.getName());
+        return mappings;
+    }
 
-        addEndpointProperties(endpointModel, model);
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("requestFactory", ClientHttpRequestFactory.class);
+        mappings.put("restTemplate", RestTemplate.class);
+        return mappings;
+    }
 
-        return endpointModel;
+    @Override
+    protected Map<String, String[]> getFieldOptionMappings() {
+        Map<String, String[]> mappings = new HashMap<>();
+        mappings.put("requestMethod", getHttpMethodOptions());
+        mappings.put("errorStrategy", getErrorHandlingStrategyOptions());
+        return mappings;
+    }
+
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "requestUrl" };
     }
 
     /**
      * Gets the error handling strategy names as list.
      * @return
      */
-    private List<String> getErrorHandlingStrategyOptions() {
+    private String[] getErrorHandlingStrategyOptions() {
         List<String> strategyNames = new ArrayList<String>();
         for (ErrorHandlingStrategy errorHandlingStrategy : ErrorHandlingStrategy.values()) {
             strategyNames.add(errorHandlingStrategy.getName());
         }
-        return strategyNames;
+        return strategyNames.toArray(new String[strategyNames.size()]);
     }
 
     /**
      * Gets the available Http request method names as list.
      * @return
      */
-    private List<String> getHttpMethodOptions() {
+    private String[] getHttpMethodOptions() {
         List<String> methodNames = new ArrayList<String>();
         for (HttpMethod method : HttpMethod.values()) {
             methodNames.add(method.name());
         }
-        return methodNames;
+        return methodNames.toArray(new String[methodNames.size()]);
     }
 
     @Override

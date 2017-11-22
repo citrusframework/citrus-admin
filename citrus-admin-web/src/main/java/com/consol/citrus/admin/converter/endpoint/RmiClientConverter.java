@@ -16,9 +16,6 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.model.config.rmi.RmiClientModel;
 import org.springframework.stereotype.Component;
 
@@ -29,23 +26,8 @@ import org.springframework.stereotype.Component;
 public class RmiClientConverter extends AbstractEndpointConverter<RmiClientModel> {
 
     @Override
-    public EndpointModel convert(RmiClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
-
-        endpointModel.add(property("serverUrl", model));
-        endpointModel.add(property("host", model));
-        endpointModel.add(property("port", model));
-        endpointModel.add(property("binding", model));
-        endpointModel.add(property("method", model));
-        endpointModel.add(property("messageCorrelator", model)
-                .optionType(MessageCorrelator.class));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("pollingInterval", model, "500"));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    protected String getId(RmiClientModel model) {
+        return model.getId();
     }
 
     @Override

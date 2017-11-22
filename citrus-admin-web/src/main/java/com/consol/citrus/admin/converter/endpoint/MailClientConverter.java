@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.mail.MailClientModel;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -29,21 +29,22 @@ import org.springframework.stereotype.Component;
 public class MailClientConverter extends AbstractEndpointConverter<MailClientModel> {
 
     @Override
-    public EndpointModel convert(MailClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(MailClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("host", model, "localhost", true));
-        endpointModel.add(property("port", model, "25", true));
-        endpointModel.add(property("protocol", model, JavaMailSenderImpl.DEFAULT_PROTOCOL));
-        endpointModel.add(property("username", model));
-        endpointModel.add(property("password", model));
-        endpointModel.add(property("properties", model));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "host", "port" };
+    }
 
-        endpointModel.add(property("actor", "TestActor", model));
-
-        return endpointModel;
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("host", "localhost");
+        mappings.put("port", "2222");
+        mappings.put("protocol", JavaMailSenderImpl.DEFAULT_PROTOCOL);
+        return mappings;
     }
 
     @Override

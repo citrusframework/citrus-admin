@@ -16,11 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.model.config.jmx.JmxClientModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -29,23 +28,20 @@ import org.springframework.stereotype.Component;
 public class JmxClientConverter extends AbstractEndpointConverter<JmxClientModel> {
 
     @Override
-    public EndpointModel convert(JmxClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(JmxClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("serverUrl", model, "platform", true));
-        endpointModel.add(property("username", model));
-        endpointModel.add(property("password", model));
-        endpointModel.add(property("autoReconnect", model));
-        endpointModel.add(property("delayOnReconnect", model));
-        endpointModel.add(property("messageCorrelator", model)
-                .optionType(MessageCorrelator.class));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("pollingInterval", model, "500"));
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("serverUrl", "platform");
+        return mappings;
+    }
 
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "serverUrl" };
     }
 
     @Override

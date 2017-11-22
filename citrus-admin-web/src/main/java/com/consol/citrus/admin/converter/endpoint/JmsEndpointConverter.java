@@ -16,14 +16,13 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -32,25 +31,24 @@ import javax.jms.Destination;
 public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointModel> {
 
     @Override
-    public EndpointModel convert(JmsEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(JmsEndpointModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("destinationName", "Destination Name", model));
-        endpointModel.add(property("destination", "Destination", model)
-                .optionType(Destination.class));
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("connectionFactory", ConnectionFactory.class);
+        mappings.put("jmsTemplate", JmsTemplate.class);
+        mappings.put("destination", Destination.class);
+        return mappings;
+    }
 
-        endpointModel.add(property("connectionFactory", model)
-                .optionType(ConnectionFactory.class));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("jmsTemplate", model)
-                .optionType(JmsTemplate.class));
-        endpointModel.add(property("pubSubDomain", model, "false")
-                .options("true", "false"));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("pubSubDomain", FALSE);
+        return mappings;
     }
 
     @Override

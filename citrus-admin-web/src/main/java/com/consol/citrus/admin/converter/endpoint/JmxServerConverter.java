@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.jmx.JmxServerModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -27,29 +27,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class JmxServerConverter extends AbstractEndpointConverter<JmxServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(JmxServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(JmxServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
-
-        endpointModel.add(property("serverUrl", model));
-        endpointModel.add(property("host", model));
-        endpointModel.add(property("port", model));
-        endpointModel.add(property("protocol", model));
-        endpointModel.add(property("binding", model));
-        endpointModel.add(property("environmentProperties", model));
-        endpointModel.add(property("createRegistry", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("createRegistry", TRUE);
+        return mappings;
     }
 
     @Override

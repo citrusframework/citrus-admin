@@ -19,7 +19,7 @@
               [control]="form.get(property.name)"
               [label]="property.displayName + (property.required ? ' *' : '')">
     <input-with-addon
-        *ngIf="!property.optionType && !property.options"
+        *ngIf="!property.optionType && !property.options?.length"
         [formControlName]="property.name"
         [message]="form.get(property.name).errors ? property.displayName + ' is required' : ''"
         [(ngModel)]="property.value"></input-with-addon>
@@ -31,7 +31,7 @@
           [(ngModel)]="property.value"
           [formControlName]="property.name"></autocomplete>
     </div>
-    <select *ngIf="property.options" class="form-control" [(ngModel)]="property.value" [formControlName]="property.name">
+    <select *ngIf="property.options?.length" class="form-control" [(ngModel)]="property.value" [formControlName]="property.name">
       <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
     </select>
   </form-group>

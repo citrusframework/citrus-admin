@@ -16,10 +16,11 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.model.config.ftp.FtpServerModel;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -27,25 +28,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class FtpServerConverter extends AbstractEndpointConverter<FtpServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(FtpServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(FtpServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
-
-        endpointModel.add(property("server", model));
-        endpointModel.add(property("port", model));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("endpointAdapter", model));
-        endpointModel.add(property("userManager", model)
-                .optionType(UserManager.class));
-        endpointModel.add(property("userManagerProperties", model));
-
-        endpointModel.add(property("timeout", model, "5000"));
-
-        return endpointModel;
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("userManager", UserManager.class);
+        return mappings;
     }
 
     @Override

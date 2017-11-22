@@ -16,12 +16,12 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
 import com.consol.citrus.model.config.core.ChannelEndpointModel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -30,23 +30,16 @@ import org.springframework.util.StringUtils;
 public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpointModel> {
 
     @Override
-    public EndpointModel convert(ChannelEndpointModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(ChannelEndpointModel model) {
+        return model.getId();
+    }
 
-        if (StringUtils.hasText(model.getChannelName())) {
-            endpointModel.add(property("channelName", "Channel", model));
-        } else {
-            endpointModel.add(property("channel", model));
-        }
-
-        endpointModel.add(property("messagingTemplate", model)
-                .optionType(MessagingTemplate.class));
-        endpointModel.add(property("channelResolver", model)
-                .optionType(DestinationResolver.class));
-
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("messagingTemplate", MessagingTemplate.class);
+        mappings.put("channelResolver", DestinationResolver.class);
+        return mappings;
     }
 
     @Override

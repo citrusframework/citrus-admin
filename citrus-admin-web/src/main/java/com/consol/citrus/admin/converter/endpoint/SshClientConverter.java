@@ -16,10 +16,10 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.model.config.ssh.SshClientModel;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -28,25 +28,22 @@ import org.springframework.stereotype.Component;
 public class SshClientConverter extends AbstractEndpointConverter<SshClientModel> {
 
     @Override
-    public EndpointModel convert(SshClientModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String getId(SshClientModel model) {
+        return model.getId();
+    }
 
-        endpointModel.add(property("host", model, "localhost", true));
-        endpointModel.add(property("port", model, "2222", true));
-        endpointModel.add(property("user", model));
-        endpointModel.add(property("password", model));
-        endpointModel.add(property("strictHostChecking", model, "false")
-                .options("true", "false"));
-        endpointModel.add(property("knownHostsPath", model));
-        endpointModel.add(property("commandTimeout", model));
-        endpointModel.add(property("connectionTimeout", model));
-        endpointModel.add(property("messageCorrelator", model)
-                .optionType(MessageCorrelator.class));
-        endpointModel.add(property("pollingInterval", model, "500"));
+    @Override
+    protected String[] getRequiredFields() {
+        return new String[] { "host", "port" };
+    }
 
-        addEndpointProperties(endpointModel, model);
-
-        return endpointModel;
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("host", "localhost");
+        mappings.put("port", "2222");
+        mappings.put("strictHostChecking", FALSE);
+        return mappings;
     }
 
     @Override

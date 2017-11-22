@@ -16,13 +16,13 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.admin.model.EndpointModel;
-import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.ws.WebServiceServerModel;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -30,41 +30,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebServiceServerConverter extends AbstractEndpointConverter<WebServiceServerModel> {
 
-    public static final String TRUE = "true";
-    public static final String FALSE = "false";
+    @Override
+    protected String getId(WebServiceServerModel model) {
+        return model.getId();
+    }
 
     @Override
-    public EndpointModel convert(WebServiceServerModel model) {
-        EndpointModel endpointModel = new EndpointModel(getEndpointType(), model.getId(), getSourceModelClass());
+    protected String[] getRequiredFields() {
+        return new String[] { "port" };
+    }
 
-        endpointModel.add(property("port", model, true));
-        endpointModel.add(property("autoStart", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("resourceBase", model));
-        endpointModel.add(property("contextPath", model));
-        endpointModel.add(property("rootParentContext", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("handleMimeHeaders", model, TRUE)
-                .options(TRUE, FALSE));
-        endpointModel.add(property("messageConverter", model)
-                .optionType(MessageConverter.class));
-        endpointModel.add(property("endpointAdapter", model));
-        endpointModel.add(property("securityHandler", model)
-                .optionType(SecurityHandler.class));
-        endpointModel.add(property("servletHandler", model)
-                .optionType(ServletHandler.class));
-        endpointModel.add(property("connector", model)
-                .optionType(Connector.class));
-        endpointModel.add(property("connectors", model));
-        endpointModel.add(property("servletName", model));
-        endpointModel.add(property("servletMappingPath", model));
-        endpointModel.add(property("interceptors", model));
-        endpointModel.add(property("soapHeaderNamespace", model));
-        endpointModel.add(property("soapHeaderPrefix", model));
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("rootParentContext", TRUE);
+        mappings.put("handleMimeHeaders", TRUE);
+        return mappings;
+    }
 
-        endpointModel.add(property("timeout", model, "5000"));
-
-        return endpointModel;
+    @Override
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
+        mappings.put("securityHandler", SecurityHandler.class);
+        mappings.put("servletHandler", ServletHandler.class);
+        mappings.put("connector", Connector.class);
+        return mappings;
     }
 
     @Override
