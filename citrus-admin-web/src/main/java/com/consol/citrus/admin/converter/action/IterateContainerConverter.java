@@ -16,11 +16,13 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.model.testcase.core.IterateModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -34,13 +36,8 @@ public class IterateContainerConverter extends AbstractTestContainerConverter<It
     }
 
     @Override
-    public TestAction convert(IterateModel model) {
-        TestAction action = new TestAction(getActionType(), getSourceModelClass());
-        addActionProperties(action, model);
-
-        action.setActions(getNestedActions(model.getActionsAndSendsAndReceives()));
-
-        return action;
+    protected List<Object> getNestedActions(IterateModel model) {
+        return model.getActionsAndSendsAndReceives();
     }
 
     @Override
@@ -50,6 +47,11 @@ public class IterateContainerConverter extends AbstractTestContainerConverter<It
         convertActions(model, action.getActionsAndSendsAndReceives());
 
         return action;
+    }
+
+    @Override
+    protected boolean include(IterateModel model, Field field) {
+        return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override

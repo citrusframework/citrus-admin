@@ -13,7 +13,7 @@ export class FormGroupComponent {
     @Input() control:FormControl;
     @Input() label:string;
 
-    @HostBinding('class') get hostClasses() { return `form-group ${this.control.errors ? 'has-error':''}`;}
+    @HostBinding('class') get hostClasses() { return `form-group ${this.control && this.control.errors ? 'has-error':''}`;}
     @HostBinding('style.display') styleDisplay = 'block'
 }
 

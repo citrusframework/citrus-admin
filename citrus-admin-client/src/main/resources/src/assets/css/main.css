@@ -1070,7 +1070,7 @@ i.channel {
     content: "\f05a";
 }
 
-.icon-sleep:before {
+.icon-sleep:before, .icon-timer:before {
     content: "\f017";
 }
 

@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.action;
+package com.consol.citrus.admin.converter.action.ws;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.admin.converter.action.AbstractTestActionConverter;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.config.xml.PayloadElementParser;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.ReceiveModel;
+import com.consol.citrus.model.testcase.ws.ObjectFactory;
+import com.consol.citrus.model.testcase.ws.ReceiveModel;
+import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -35,12 +36,12 @@ import java.util.stream.Stream;
  * @author Christoph Deppisch
  */
 @Component
-public class ReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveModel, ReceiveMessageAction> {
+public class WsReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveModel, ReceiveSoapMessageAction> {
 
     /**
      * Default constructor using action type reference.
      */
-    public ReceiveMessageActionConverter() {
+    public WsReceiveMessageActionConverter() {
         super("receive");
     }
 
@@ -99,7 +100,7 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public ReceiveModel convertModel(ReceiveMessageAction model) {
+    public ReceiveModel convertModel(ReceiveSoapMessageAction model) {
         ReceiveModel action = new ObjectFactory().createReceiveModel();
 
         if (model.getActor() != null) {
@@ -120,7 +121,7 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public Class<ReceiveMessageAction> getActionModelClass() {
-        return ReceiveMessageAction.class;
+    public Class<ReceiveSoapMessageAction> getActionModelClass() {
+        return ReceiveSoapMessageAction.class;
     }
 }

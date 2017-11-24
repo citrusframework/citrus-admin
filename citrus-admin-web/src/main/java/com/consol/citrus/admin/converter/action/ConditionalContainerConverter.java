@@ -16,8 +16,9 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.container.Sequence;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.container.Conditional;
+import com.consol.citrus.model.testcase.core.ConditionalModel;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -25,23 +26,23 @@ import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.7
  */
 @Component
-public class SequentialContainerConverter extends AbstractTestContainerConverter<SequentialModel, Sequence> {
+public class ConditionalContainerConverter extends AbstractTestContainerConverter<ConditionalModel, Conditional> {
 
-    public SequentialContainerConverter() {
-        super("sequential");
+    public ConditionalContainerConverter() {
+        super("conditional");
     }
 
     @Override
-    protected List<Object> getNestedActions(SequentialModel model) {
+    protected List<Object> getNestedActions(ConditionalModel model) {
         return model.getActionsAndSendsAndReceives();
     }
 
     @Override
-    public SequentialModel convertModel(Sequence model) {
-        SequentialModel action = new ObjectFactory().createSequentialModel();
+    public ConditionalModel convertModel(Conditional model) {
+        ConditionalModel action = new ObjectFactory().createConditionalModel();
         action.setDescription(model.getDescription());
         convertActions(model, action.getActionsAndSendsAndReceives());
 
@@ -49,17 +50,17 @@ public class SequentialContainerConverter extends AbstractTestContainerConverter
     }
 
     @Override
-    protected boolean include(SequentialModel model, Field field) {
+    protected boolean include(ConditionalModel model, Field field) {
         return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override
-    public Class<Sequence> getActionModelClass() {
-        return Sequence.class;
+    public Class<Conditional> getActionModelClass() {
+        return Conditional.class;
     }
 
     @Override
-    public Class<SequentialModel> getSourceModelClass() {
-        return SequentialModel.class;
+    public Class<ConditionalModel> getSourceModelClass() {
+        return ConditionalModel.class;
     }
 }

@@ -17,12 +17,12 @@
 package com.consol.citrus.admin.converter.action.ws;
 
 import com.consol.citrus.admin.converter.action.AbstractTestContainerConverter;
-import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.model.testcase.core.*;
 import com.consol.citrus.model.testcase.ws.AssertFaultModel;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -37,15 +37,13 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
     }
 
     @Override
-    public TestAction convert(AssertFaultModel model) {
-        TestAction action = new TestAction(getActionType(), getSourceModelClass());
-        addActionProperties(action, model);
-
-        if (model.getWhen() != null) {
-            action.setActions(getNestedActions(Collections.singletonList(getNestedAction(model))));
+    protected List<Object> getNestedActions(AssertFaultModel model) {
+        Object nestedAction = getNestedAction(model);
+        if (nestedAction != null) {
+            return Collections.singletonList(nestedAction);
+        } else {
+            return Collections.emptyList();
         }
-
-        return action;
     }
 
     @Override
@@ -61,6 +59,11 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
         }
 
         return action;
+    }
+
+    @Override
+    protected boolean include(AssertFaultModel model, Field field) {
+        return super.include(model, field) && !field.getType().equals(AssertFaultModel.When.class);
     }
 
     private void setNestedAction(AssertFaultModel action, Object object) {
@@ -140,6 +143,10 @@ public class AssertSoapFaultContainerConverter extends AbstractTestContainerConv
     }
 
     private Object getNestedAction(AssertFaultModel model) {
+        if (model.getWhen() == null) {
+            return null;
+        }
+
         if (model.getWhen().getAction() != null) {
             return model.getWhen().getAction();
         } else if (model.getWhen().getAnt() != null) {

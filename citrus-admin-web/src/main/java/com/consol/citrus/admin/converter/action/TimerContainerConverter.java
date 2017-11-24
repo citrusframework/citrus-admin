@@ -16,8 +16,9 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.container.Sequence;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.container.Timer;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.model.testcase.core.TimerModel;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -28,20 +29,20 @@ import java.util.List;
  * @since 2.6
  */
 @Component
-public class SequentialContainerConverter extends AbstractTestContainerConverter<SequentialModel, Sequence> {
+public class TimerContainerConverter extends AbstractTestContainerConverter<TimerModel, Timer> {
 
-    public SequentialContainerConverter() {
-        super("sequential");
+    public TimerContainerConverter() {
+        super("timer");
     }
 
     @Override
-    protected List<Object> getNestedActions(SequentialModel model) {
+    protected List<Object> getNestedActions(TimerModel model) {
         return model.getActionsAndSendsAndReceives();
     }
 
     @Override
-    public SequentialModel convertModel(Sequence model) {
-        SequentialModel action = new ObjectFactory().createSequentialModel();
+    public TimerModel convertModel(Timer model) {
+        TimerModel action = new ObjectFactory().createTimerModel();
         action.setDescription(model.getDescription());
         convertActions(model, action.getActionsAndSendsAndReceives());
 
@@ -49,17 +50,17 @@ public class SequentialContainerConverter extends AbstractTestContainerConverter
     }
 
     @Override
-    protected boolean include(SequentialModel model, Field field) {
+    protected boolean include(TimerModel model, Field field) {
         return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override
-    public Class<Sequence> getActionModelClass() {
-        return Sequence.class;
+    public Class<Timer> getActionModelClass() {
+        return Timer.class;
     }
 
     @Override
-    public Class<SequentialModel> getSourceModelClass() {
-        return SequentialModel.class;
+    public Class<TimerModel> getSourceModelClass() {
+        return TimerModel.class;
     }
 }

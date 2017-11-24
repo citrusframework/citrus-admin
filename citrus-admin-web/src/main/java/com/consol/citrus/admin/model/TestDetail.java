@@ -34,7 +34,7 @@ public class TestDetail extends Test {
     private Map<String, Object> variables = new LinkedHashMap<String, Object>();
     private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
-    private List<TestAction> actions = new ArrayList<>();
+    private List<TestActionModel> actions = new ArrayList<>();
 
     private TestResult result;
 
@@ -184,7 +184,7 @@ public class TestDetail extends Test {
      *
      * @return the actions
      */
-    public List<TestAction> getActions() {
+    public List<TestActionModel> getActions() {
         return actions;
     }
 
@@ -193,7 +193,7 @@ public class TestDetail extends Test {
      *
      * @param actions
      */
-    public void setActions(List<TestAction> actions) {
+    public void setActions(List<TestActionModel> actions) {
         this.actions = actions;
     }
 

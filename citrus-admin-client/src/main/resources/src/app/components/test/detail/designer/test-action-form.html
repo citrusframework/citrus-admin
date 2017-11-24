@@ -1,0 +1,30 @@
+<form *ngIf="action" class="form-horizontal" (ngSubmit)="invokeSave()" [formGroup]="form">
+    <h3>{{action.type}}</h3>
+    <form-group *ngFor="let property of action.properties"
+                [control]="form.get(property.name)"
+                [label]="property.displayName + (property.required ? ' *' : '')">
+        <input-with-addon
+            *ngIf="!property.optionType && !property.options?.length"
+            [formControl]="form.controls[property.name]"
+            [message]="form.get(property.name)?.errors ? property.displayName + ' is required' : ''"
+            [(ngModel)]="property.value"></input-with-addon>
+        <div *ngIf="property.optionType" style="display: flex">
+            <autocomplete
+                [items]="beans[property.optionType]|async"
+                icon="coffee"
+                addon="search"
+                [(ngModel)]="property.value"
+                [formControl]="form.controls[property.name]"></autocomplete>
+        </div>
+        <select *ngIf="property.options?.length" class="form-control" [(ngModel)]="property.value" [formControl]="form.controls[property.name]">
+            <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
+        </select>
+    </form-group>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary"
+                    [disabled]="form.invalid"
+                    type="submit">Save</button>
+        </div>
+    </div>
+</form>

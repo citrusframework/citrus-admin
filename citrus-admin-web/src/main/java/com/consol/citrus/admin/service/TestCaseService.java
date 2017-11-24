@@ -58,7 +58,7 @@ public class TestCaseService {
     private static Logger log = LoggerFactory.getLogger(TestCaseService.class);
 
     @Autowired
-    private List<TestActionConverter<?, ? extends com.consol.citrus.TestAction>> actionConverter;
+    private List<TestActionConverter> actionConverter;
 
     @Autowired
     private List<TestProvider> testProviders;
@@ -198,7 +198,7 @@ public class TestCaseService {
 
         if (testModel.getActions() != null) {
             for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
-                TestAction model = null;
+                TestActionModel model = null;
                 for (TestActionConverter converter : actionConverter) {
                     if (converter.getSourceModelClass().isInstance(actionType)) {
                         model = converter.convert(actionType);

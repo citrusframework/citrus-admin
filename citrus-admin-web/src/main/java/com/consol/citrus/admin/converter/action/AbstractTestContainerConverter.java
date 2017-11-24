@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.TestAction;
+import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.container.TestActionContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public abstract class AbstractTestContainerConverter<S, R extends com.consol.cit
     private static Logger log = LoggerFactory.getLogger(SequentialContainerConverter.class);
 
     @Autowired
-    private List<TestActionConverter<?, ? extends TestAction>> actionConverter;
+    private List<TestActionConverter> actionConverter;
 
     /**
      * Default constructor using action type reference.
@@ -47,15 +47,28 @@ public abstract class AbstractTestContainerConverter<S, R extends com.consol.cit
         super(actionType);
     }
 
+    @Override
+    public TestActionModel convert(S model) {
+        TestActionModel action = super.convert(model);
+        action.setActions(convertNestedActions(getNestedActions(model)));
+        return action;
+    }
+
+    /**
+     * Provide list of nested test actions.
+     * @return
+     */
+    protected abstract List<Object> getNestedActions(S model);
+
     /**
      * Reads and converts list of nested actions.
      * @param objectList
      * @return
      */
-    protected List<com.consol.citrus.admin.model.TestAction> getNestedActions(List<Object> objectList) {
-        List<com.consol.citrus.admin.model.TestAction> actions = new ArrayList<>();
+    protected List<TestActionModel> convertNestedActions(List<Object> objectList) {
+        List<TestActionModel> actions = new ArrayList<>();
         for (Object actionType : objectList) {
-            com.consol.citrus.admin.model.TestAction nested = null;
+            TestActionModel nested = null;
             for (TestActionConverter converter : actionConverter) {
                 if (converter.getSourceModelClass().isInstance(actionType)) {
                     nested = converter.convert(actionType);
@@ -102,5 +115,15 @@ public abstract class AbstractTestContainerConverter<S, R extends com.consol.cit
                 objectList.add(nested);
             }
         }
+    }
+
+    /**
+     * Sets the actionConverter.
+     *
+     * @param actionConverter
+     */
+    public AbstractTestContainerConverter setActionConverter(List<TestActionConverter> actionConverter) {
+        this.actionConverter = actionConverter;
+        return this;
     }
 }

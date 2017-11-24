@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
@@ -28,20 +28,20 @@ import java.util.List;
  * @since 2.6
  */
 @Component
-public class SequentialContainerConverter extends AbstractTestContainerConverter<SequentialModel, Sequence> {
+public class RepeatOnErrorContainerConverter extends AbstractTestContainerConverter<RepeatOnerrorUntilTrueModel, RepeatOnErrorUntilTrue> {
 
-    public SequentialContainerConverter() {
-        super("sequential");
+    public RepeatOnErrorContainerConverter() {
+        super("repeat-on-error");
     }
 
     @Override
-    protected List<Object> getNestedActions(SequentialModel model) {
+    protected List<Object> getNestedActions(RepeatOnerrorUntilTrueModel model) {
         return model.getActionsAndSendsAndReceives();
     }
 
     @Override
-    public SequentialModel convertModel(Sequence model) {
-        SequentialModel action = new ObjectFactory().createSequentialModel();
+    public RepeatOnerrorUntilTrueModel convertModel(RepeatOnErrorUntilTrue model) {
+        RepeatOnerrorUntilTrueModel action = new ObjectFactory().createRepeatOnerrorUntilTrueModel();
         action.setDescription(model.getDescription());
         convertActions(model, action.getActionsAndSendsAndReceives());
 
@@ -49,17 +49,17 @@ public class SequentialContainerConverter extends AbstractTestContainerConverter
     }
 
     @Override
-    protected boolean include(SequentialModel model, Field field) {
+    protected boolean include(RepeatOnerrorUntilTrueModel model, Field field) {
         return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override
-    public Class<Sequence> getActionModelClass() {
-        return Sequence.class;
+    public Class<RepeatOnErrorUntilTrue> getActionModelClass() {
+        return RepeatOnErrorUntilTrue.class;
     }
 
     @Override
-    public Class<SequentialModel> getSourceModelClass() {
-        return SequentialModel.class;
+    public Class<RepeatOnerrorUntilTrueModel> getSourceModelClass() {
+        return RepeatOnerrorUntilTrueModel.class;
     }
 }

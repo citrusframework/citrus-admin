@@ -150,17 +150,14 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(testDetail.getActions().get(0).getProperties().get(0).getName(), "description");
         Assert.assertEquals(testDetail.getActions().get(0).getProperties().get(1).getName(), "message");
 
-        Assert.assertEquals(testDetail.getActions().get(1).getProperties().size(), 4L);
-        Assert.assertEquals(testDetail.getActions().get(1).getProperties().get(0).getName(), "endpoint");
-        Assert.assertEquals(testDetail.getActions().get(1).getProperties().get(0).getValue(), "sampleEndpoint");
-        Assert.assertEquals(testDetail.getActions().get(1).getProperties().get(1).getName(), "message.data");
-        Assert.assertEquals(testDetail.getActions().get(1).getProperties().get(1).getValue(), "Hello");
+        Assert.assertEquals(testDetail.getActions().get(1).getProperties().size(), 9L);
+        Assert.assertEquals(testDetail.getActions().get(1).getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElseThrow(CitrusRuntimeException::new).getValue(), "sampleEndpoint");
+        Assert.assertEquals(testDetail.getActions().get(1).getProperties().stream().filter(property -> property.getName().equals("message")).findFirst().orElseThrow(CitrusRuntimeException::new).getValue(), "Hello");
 
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().size(), 4L);
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(0).getName(), "endpoint");
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(0).getValue(), "samplePayloadEndpoint");
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getName(), "message.payload");
-        Assert.assertEquals(testDetail.getActions().get(2).getProperties().get(1).getValue(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Test xmlns=\"http://www.citrusframework.org\" xmlns:spring=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">Hello</Test>");
+        Assert.assertEquals(testDetail.getActions().get(2).getProperties().size(), 9L);
+        Assert.assertEquals(testDetail.getActions().get(2).getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElseThrow(CitrusRuntimeException::new).getValue(), "samplePayloadEndpoint");
+        Assert.assertEquals(testDetail.getActions().get(2).getProperties().stream().filter(property -> property.getName().equals("message")).findFirst().orElseThrow(CitrusRuntimeException::new).getValue(),
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Test xmlns=\"http://www.citrusframework.org\" xmlns:spring=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">Hello</Test>");
     }
 
     @Test

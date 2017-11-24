@@ -47,16 +47,17 @@ export class EndpointFormComponent implements OnInit{
     }
 
     save([mode, endpoint]:EditorDataTupel<Endpoint>) {
-        if(EditorMode.NEW === mode) {
+        if (EditorMode.NEW === mode) {
             this.endpointActions.createEndpoint(endpoint);
-            this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
-                this.router.navigate(['configuration/endpoints'])
-            })
         }
 
-        if(EditorMode.EDIT === mode) {
+        if (EditorMode.EDIT === mode) {
             this.endpointActions.updateEndpoint(endpoint);
         }
+
+        this.endpointState.getEndpoint(endpoint.id).first().subscribe(e => {
+            this.router.navigate(['configuration/endpoints'])
+        });
     }
 
     cancel() {

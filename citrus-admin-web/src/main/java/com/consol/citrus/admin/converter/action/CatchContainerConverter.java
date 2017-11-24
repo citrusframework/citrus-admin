@@ -16,32 +16,35 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.container.Sequence;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.model.testcase.core.CatchModel;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.7
  */
 @Component
-public class SequentialContainerConverter extends AbstractTestContainerConverter<SequentialModel, Sequence> {
+public class CatchContainerConverter extends AbstractTestContainerConverter<CatchModel, Catch> {
 
-    public SequentialContainerConverter() {
-        super("sequential");
+    public CatchContainerConverter() {
+        super("catch");
     }
 
     @Override
-    protected List<Object> getNestedActions(SequentialModel model) {
+    protected List<Object> getNestedActions(CatchModel model) {
         return model.getActionsAndSendsAndReceives();
     }
 
     @Override
-    public SequentialModel convertModel(Sequence model) {
-        SequentialModel action = new ObjectFactory().createSequentialModel();
+    public CatchModel convertModel(Catch model) {
+        CatchModel action = new ObjectFactory().createCatchModel();
         action.setDescription(model.getDescription());
         convertActions(model, action.getActionsAndSendsAndReceives());
 
@@ -49,17 +52,24 @@ public class SequentialContainerConverter extends AbstractTestContainerConverter
     }
 
     @Override
-    protected boolean include(SequentialModel model, Field field) {
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("exception", CitrusRuntimeException.class.getName());
+        return mappings;
+    }
+
+    @Override
+    protected boolean include(CatchModel model, Field field) {
         return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override
-    public Class<Sequence> getActionModelClass() {
-        return Sequence.class;
+    public Class<Catch> getActionModelClass() {
+        return Catch.class;
     }
 
     @Override
-    public Class<SequentialModel> getSourceModelClass() {
-        return SequentialModel.class;
+    public Class<CatchModel> getSourceModelClass() {
+        return CatchModel.class;
     }
 }

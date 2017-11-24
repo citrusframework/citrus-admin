@@ -28,6 +28,8 @@ import org.springframework.util.StringUtils;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -39,6 +41,9 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
 
     @Autowired
     private ProjectService projectService;
+
+    protected static final String TRUE = "true";
+    protected static final String FALSE = "false";
 
     /**
      * Adds new endpoint property.
@@ -113,7 +118,7 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
         Field field = ReflectionUtils.findField(definition.getClass(), fieldName);
 
         if (field != null) {
-            Method getter = ReflectionUtils.findMethod(definition.getClass(), getMethodName(fieldName));
+            Method getter = ReflectionUtils.findMethod(definition.getClass(), getterMethodName(field, fieldName));
 
             V value = defaultValue;
             if (getter != null) {
@@ -125,12 +130,12 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    return new Property<>(field.getAnnotation(XmlAttribute.class).name(), fieldName, displayName, resolvePropertyExpression(value), required);
+                    return new Property<>(getFieldName(field.getAnnotation(XmlAttribute.class).name()), fieldName, displayName, resolvePropertyExpression(value), required);
                 } else {
-                    return new Property<>(fieldName, fieldName, displayName, resolvePropertyExpression(value), required);
+                    return new Property<>(getFieldName(fieldName), fieldName, displayName, resolvePropertyExpression(value), required);
                 }
             } else {
-                return new Property<>(fieldName, fieldName, displayName, null, required);
+                return new Property<>(getFieldName(fieldName), fieldName, displayName, null, required);
             }
         } else {
             log.warn(String.format("Unknown field '%s' on source type '%s'", fieldName, definition.getClass()));
@@ -152,11 +157,146 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
     }
 
     /**
-     * Construct default Java bean property getter for field name.
+     * Evaluates if field is required.
+     * @param field
+     * @return
+     */
+    protected boolean isRequiredField(Field field) {
+        return Stream.of(getRequiredFields()).parallel().anyMatch(name -> field.getName().equals(name));
+    }
+
+    /**
+     * Optional list of required field names.
+     * @return
+     */
+    protected String[] getRequiredFields() {
+        return new String[] {};
+    }
+
+    /**
+     * Evaluates the target field name.
+     * @param field
+     * @return
+     */
+    protected Object getDefaultValue(Field field) {
+        return getDefaultValueMappings().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(field.getName()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElseGet(() -> {
+                    if (field.getType().equals(Boolean.class)) {
+                        return FALSE;
+                    } else {
+                        return null;
+                    }
+                });
+    }
+
+    /**
+     * Optional mappings for field names to default values.
+     * @return
+     */
+    protected Map<String, Object> getDefaultValueMappings() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Evaluates the target field name.
      * @param fieldName
      * @return
      */
-    private String getMethodName(String fieldName) {
+    protected String getFieldName(String fieldName) {
+        return getFieldNameMappings().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(fieldName))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(fieldName);
+    }
+
+    /**
+     * Optional mappings for field names.
+     * @return
+     */
+    protected Map<String, String> getFieldNameMappings() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Evaluates the display name.
+     * @param fieldName
+     * @return
+     */
+    protected String getDisplayName(String fieldName) {
+        return getDisplayNameMappings().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(fieldName))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(StringUtils.capitalize(fieldName));
+    }
+
+    /**
+     * Optional mappings for field names.
+     * @return
+     */
+    protected Map<String, String> getDisplayNameMappings() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Evaluates option type for given field or null if not applicable.
+     * @param field
+     * @return
+     */
+    protected Class<?> getOptionType(Field field) {
+        return getOptionTypeMappings().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(field.getName()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Optional type mappings for fields. Keys are field names.
+     * @return
+     */
+    protected Map<String, Class<?>> getOptionTypeMappings() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Evaluates field options if any.
+     * @param field
+     * @return
+     */
+    protected String[] getFieldOptions(Field field) {
+        return getFieldOptionMappings().entrySet().stream()
+                .filter(entry -> entry.getKey().equals(field.getName()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElseGet(() -> {
+                    if (field.getType().equals(Boolean.class)) {
+                        return new String[] {TRUE, FALSE};
+                    } else {
+                        return new String[]{};
+                    }
+                });
+    }
+
+    /**
+     * Optional field options. Keys are field names.
+     * @return
+     */
+    protected Map<String, String[]> getFieldOptionMappings() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Construct default Java bean property getter for field name.
+     * @param field
+     * @param fieldName
+     * @return
+     */
+    protected String getterMethodName(Field field, String fieldName) {
         return "get" + StringUtils.capitalize(fieldName);
     }
 }

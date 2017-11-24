@@ -1,10 +1,14 @@
-import {Component,  Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {TestAction, TestDetail} from "../../../../model/tests";
 import {Property} from "../../../../model/property";
 
 @Component({
     selector: "test-designer",
-    template: `<div class="test-actions fill">
+    template: `<div class="row">
+  <div class="col-md-2">
+  </div>  
+  <div class="col-md-10">
+    <div class="test-actions">
       <div class="start-action">
         <i class="fa fa-play"></i>
       </div>
@@ -25,11 +29,20 @@ import {Property} from "../../../../model/property";
       <div class="stop-action">
         <i class="fa fa-stop"></i>
       </div>
-    </div>`
+    </div>
+
+    <test-action-form *ngIf="selectedAction"
+                    [action]="selectedAction"
+                    (save)="onSave($event)"></test-action-form>  
+  </div>
+</div>`
 })
 export class TestDesignerComponent {
 
     @Input() detail: TestDetail;
+
+    default: TestAction;
+    selectedAction: TestAction;
 
     constructor() {
         this.default = new TestAction();
@@ -41,10 +54,11 @@ export class TestDesignerComponent {
         this.default.properties.push(property);
     }
 
-    default: TestAction;
-    selectedAction: TestAction;
-
     onActionSelected(action: TestAction) {
         this.selectedAction = action;
+    }
+
+    onSave(action: TestAction) {
+        //ToDo
     }
 }

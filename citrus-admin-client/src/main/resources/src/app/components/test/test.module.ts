@@ -18,10 +18,11 @@ import {TestContainerComponent} from "./detail/designer/test.container.component
 import {TestActionComponent} from "./detail/designer/test.action.component";
 import {TestResultComponent} from "./detail/results/test.result.component";
 import {UtilModule} from "../../util/util.module";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TestRoutingModule} from "./test-routing.module";
 import {TestStateActions, TestStateEffects, TestStateService} from "./test.state";
 import {EffectsModule} from "@ngrx/effects";
+import {TestActionFormComponent} from "./detail/designer/test.action.form.component";
 
 const components = [
     TestsComponent,
@@ -35,6 +36,7 @@ const components = [
     TestMessageComponent,
     TestProgressComponent,
     TestActionComponent,
+    TestActionFormComponent,
     TestContainerComponent,
     TestDesignerComponent,
     TestTransitionComponent,
@@ -49,7 +51,8 @@ const components = [
         CommonModule,
         ServiceModule,
         TestRoutingModule,
-        EffectsModule.forFeature([TestStateEffects])
+        EffectsModule.forFeature([TestStateEffects]),
+        ReactiveFormsModule
     ],
     providers: [
         TestStateActions,

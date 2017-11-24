@@ -28,10 +28,9 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.xml.bind.annotation.XmlSchema;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract endpoint converter provides basic endpoint property handling by Java reflection on JAXb objects.
@@ -40,15 +39,12 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractEndpointConverter<S> extends AbstractObjectConverter<EndpointModel, S> implements EndpointConverter<S> {
 
-    protected static final String TRUE = "true";
-    protected static final String FALSE = "false";
-
     @Override
     public EndpointModel convert(S model) {
         EndpointModel endpointModel = new EndpointModel(getEndpointType(), getId(model), getSourceModelClass());
 
         ReflectionUtils.doWithFields(getSourceModelClass(), field -> {
-            Property property = property(getFieldName(field), getDisplayName(getFieldName(field)), model, getDefaultValue(field), isRequiredField(field))
+            Property property = property(field.getName(), getDisplayName(getFieldName(field.getName())), model, getDefaultValue(field), isRequiredField(field))
                     .options(getFieldOptions(field))
                     .optionType(getOptionType(field));
 
@@ -96,46 +92,7 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
         return EndpointModel.class;
     }
 
-    /**
-     * Evaluates if field is required.
-     * @param field
-     * @return
-     */
-    protected boolean isRequiredField(Field field) {
-        return Stream.of(getRequiredFields()).parallel().anyMatch(name -> field.getName().equals(name));
-    }
-
-    /**
-     * Optional list of required field names.
-     * @return
-     */
-    protected String[] getRequiredFields() {
-        return new String[] {};
-    }
-
-    /**
-     * Evaluates the target field name.
-     * @param field
-     * @return
-     */
-    protected Object getDefaultValue(Field field) {
-        return getDefaultValueMappings().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(field.getName()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElseGet(() -> {
-                    if (field.getType().equals(Boolean.class)) {
-                        return FALSE;
-                    } else {
-                        return null;
-                    }
-                });
-    }
-
-    /**
-     * Optional mappings for field names to default values.
-     * @return
-     */
+    @Override
     protected Map<String, Object> getDefaultValueMappings() {
         Map<String, Object> mappings = new HashMap<>();
         mappings.put("timeout", "5000");
@@ -144,99 +101,19 @@ public abstract class AbstractEndpointConverter<S> extends AbstractObjectConvert
         return mappings;
     }
 
-    /**
-     * Evaluates the target field name.
-     * @param field
-     * @return
-     */
-    protected String getFieldName(Field field) {
-        return getFieldNameMappings().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(field.getName()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElse(field.getName());
-    }
-
-    /**
-     * Optional mappings for field names.
-     * @return
-     */
-    protected Map<String, String> getFieldNameMappings() {
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Evaluates the display name.
-     * @param fieldName
-     * @return
-     */
-    protected String getDisplayName(String fieldName) {
-        return getDisplayNameMappings().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(fieldName))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElse(StringUtils.capitalize(fieldName));
-    }
-
-    /**
-     * Optional mappings for field names.
-     * @return
-     */
+    @Override
     protected Map<String, String> getDisplayNameMappings() {
         Map<String, String> mappings = new HashMap<>();
         mappings.put("actor", "TestActor");
         return mappings;
     }
 
-    /**
-     * Evaluates option type for given field or null if not applicable.
-     * @param field
-     * @return
-     */
-    protected Class<?> getOptionType(Field field) {
-        return getOptionTypeMappings().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(field.getName()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Optional type mappings for fields. Keys are field names.
-     * @return
-     */
+    @Override
     protected Map<String, Class<?>> getOptionTypeMappings() {
         Map<String, Class<?>> mappings = new HashMap<>();
         mappings.put("messageCorrelator", MessageCorrelator.class);
         mappings.put("messageConverter", MessageConverter.class);
         return mappings;
-    }
-
-    /**
-     * Evaluates field options if any.
-     * @param field
-     * @return
-     */
-    protected String[] getFieldOptions(Field field) {
-        return getFieldOptionMappings().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(field.getName()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElseGet(() -> {
-                    if (field.getType().equals(Boolean.class)) {
-                        return new String[] {TRUE, FALSE};
-                    } else {
-                        return new String[]{};
-                    }
-                });
-    }
-
-    /**
-     * Optional field options. Keys are field names.
-     * @return
-     */
-    protected Map<String, String[]> getFieldOptionMappings() {
-        return Collections.emptyMap();
     }
 
     /**

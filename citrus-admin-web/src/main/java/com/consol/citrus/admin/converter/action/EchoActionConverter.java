@@ -17,8 +17,8 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.admin.model.TestAction;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.model.testcase.core.EchoModel;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,17 +29,6 @@ public class EchoActionConverter extends AbstractTestActionConverter<EchoModel, 
 
     public EchoActionConverter() {
         super("echo");
-    }
-
-    @Override
-    public TestAction convert(EchoModel model) {
-        TestAction action = new TestAction(getActionType(), getSourceModelClass());
-
-        addActionProperties(action, model);
-
-        action.add(property("message", model));
-
-        return action;
     }
 
     @Override

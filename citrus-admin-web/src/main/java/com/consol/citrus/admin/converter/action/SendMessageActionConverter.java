@@ -16,14 +16,21 @@
 
 package com.consol.citrus.admin.converter.action;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.admin.model.Property;
-import com.consol.citrus.admin.model.TestAction;
+import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.config.xml.PayloadElementParser;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.SendModel;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -39,31 +46,54 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public TestAction convert(SendModel model) {
-        TestAction action = new TestAction(getActionType(), getSourceModelClass());
-
-        action.add(property("endpoint", model));
+    public TestActionModel convert(SendModel model) {
+        TestActionModel action = super.convert(model);
 
         if (model.getMessage() != null) {
-            if (StringUtils.hasText(model.getMessage().getData())) {
-                action.add(new Property<>("message.data", "message.data", "Message Data", model.getMessage().getData(), false));
+            action.add(new Property<>("message.name", "message.name", "MessageName", model.getMessage().getName(), false));
+
+            action.add(new Property<>("message.type", "message.type", "MessageType", Optional.ofNullable(model.getMessage().getType()).orElse(Citrus.DEFAULT_MESSAGE_TYPE).toLowerCase(), true)
+                                .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
+        }
+
+        return action;
+    }
+
+    @Override
+    protected <V> V resolvePropertyExpression(V value) {
+        if (value instanceof SendModel.Message) {
+            SendModel.Message message = (SendModel.Message) value;
+
+            if (StringUtils.hasText(message.getData())) {
+                return (V) message.getData().trim();
             }
 
-            if (model.getMessage().getPayload()!= null) {
-                action.add(new Property<>("message.payload", "message.payload", "Message Payload", PayloadElementParser.parseMessagePayload(model.getMessage().getPayload().getAnies().get(0)), false));
+            if (message.getPayload()!= null) {
+                return (V) PayloadElementParser.parseMessagePayload(message.getPayload().getAnies().get(0));
             }
 
-            if (model.getMessage().getResource() != null &&
-                    StringUtils.hasText(model.getMessage().getResource().getFile())) {
-                action.add(new Property<>("message.resource", "message.resource", "Message Resource", model.getMessage().getResource().getFile(), false));
+            if (message.getResource() != null &&
+                    StringUtils.hasText(message.getResource().getFile())) {
+                return (V) message.getResource().getFile();
+            }
+
+            if (message.getBuilder() != null) {
+                return (V) message.getBuilder().getValue().trim();
             }
         }
 
-        action.add(property("fork", model, "false")
-                .options("true", "false"));
-        action.add(property("actor", "TestActor", model));
+        if (value instanceof SendModel.Header) {
+            return (V) ((SendModel.Header) value).getElements().stream().map(header -> header.getName() + "=" + header.getValue()).collect(Collectors.joining(","));
+        }
 
-        return action;
+        return super.resolvePropertyExpression(value);
+    }
+
+    @Override
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("fork", FALSE);
+        return mappings;
     }
 
     @Override
@@ -78,6 +108,7 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
 
         action.setDescription(model.getDescription());
         action.setEndpoint(model.getEndpoint() != null ? model.getEndpoint().getName() : model.getEndpointUri());
+        action.setFork(model.isForkMode());
 
         return action;
     }

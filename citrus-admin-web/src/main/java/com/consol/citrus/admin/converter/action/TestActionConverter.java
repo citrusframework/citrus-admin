@@ -17,16 +17,16 @@
 package com.consol.citrus.admin.converter.action;
 
 import com.consol.citrus.admin.converter.ObjectConverter;
-import com.consol.citrus.admin.model.TestAction;
+import com.consol.citrus.admin.model.TestActionModel;
 
 /**
  * @author Christoph Deppisch
  */
-public interface TestActionConverter<S, T extends com.consol.citrus.TestAction> extends ObjectConverter<TestAction, S> {
+public interface TestActionConverter<S, T extends com.consol.citrus.TestAction> extends ObjectConverter<TestActionModel, S> {
 
 
     @Override
-    TestAction convert(S model);
+    TestActionModel convert(S model);
 
     /**
      * Gets the action type name.

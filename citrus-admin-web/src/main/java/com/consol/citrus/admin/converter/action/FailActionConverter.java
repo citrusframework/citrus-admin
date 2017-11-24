@@ -16,39 +16,38 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.model.testcase.core.FailModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.SleepModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class SleepActionConverter extends AbstractTestActionConverter<SleepModel, SleepAction> {
+public class FailActionConverter extends AbstractTestActionConverter<FailModel, FailAction> {
 
-    public SleepActionConverter() {
-        super("sleep");
+    public FailActionConverter() {
+        super("fail");
     }
 
     @Override
-    public SleepModel convertModel(SleepAction model) {
-        SleepModel action = new ObjectFactory().createSleepModel();
+    public FailModel convertModel(FailAction model) {
+        FailModel action = new ObjectFactory().createFailModel();
 
         action.setDescription(model.getDescription());
-        action.setMilliseconds(model.getMilliseconds());
-        action.setSeconds(model.getSeconds());
+        action.setMessage(model.getMessage());
 
         return action;
     }
 
     @Override
-    public Class<SleepModel> getSourceModelClass() {
-        return SleepModel.class;
+    public Class<FailModel> getSourceModelClass() {
+        return FailModel.class;
     }
 
     @Override
-    public Class<SleepAction> getActionModelClass() {
-        return SleepAction.class;
+    public Class<FailAction> getActionModelClass() {
+        return FailAction.class;
     }
 }

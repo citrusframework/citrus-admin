@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.action;
+package com.consol.citrus.admin.converter.action.ws;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.admin.converter.action.AbstractTestActionConverter;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.config.xml.PayloadElementParser;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.ReceiveModel;
+import com.consol.citrus.model.testcase.ws.ObjectFactory;
+import com.consol.citrus.model.testcase.ws.SendModel;
+import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,24 +37,24 @@ import java.util.stream.Stream;
  * @author Christoph Deppisch
  */
 @Component
-public class ReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveModel, ReceiveMessageAction> {
+public class WsSendMessageActionConverter extends AbstractTestActionConverter<SendModel, SendSoapMessageAction> {
 
     /**
      * Default constructor using action type reference.
      */
-    public ReceiveMessageActionConverter() {
-        super("receive");
+    public WsSendMessageActionConverter() {
+        super("send");
     }
 
     @Override
-    public TestActionModel convert(ReceiveModel model) {
+    public TestActionModel convert(SendModel model) {
         TestActionModel action = super.convert(model);
 
         if (model.getMessage() != null) {
             action.add(new Property<>("message.name", "message.name", "MessageName", model.getMessage().getName(), false));
 
             action.add(new Property<>("message.type", "message.type", "MessageType", Optional.ofNullable(model.getMessage().getType()).orElse(Citrus.DEFAULT_MESSAGE_TYPE).toLowerCase(), true)
-                    .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
+                                .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
         }
 
         return action;
@@ -60,8 +62,8 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
 
     @Override
     protected <V> V resolvePropertyExpression(V value) {
-        if (value instanceof ReceiveModel.Message) {
-            ReceiveModel.Message message = (ReceiveModel.Message) value;
+        if (value instanceof SendModel.Message) {
+            SendModel.Message message = (SendModel.Message) value;
 
             if (StringUtils.hasText(message.getData())) {
                 return (V) message.getData().trim();
@@ -81,26 +83,23 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
             }
         }
 
-        if (value instanceof ReceiveModel.Header) {
-            return (V) ((ReceiveModel.Header) value).getElements().stream().map(header -> header.getName() + "=" + header.getValue()).collect(Collectors.joining(","));
-        }
-
-        if (value instanceof ReceiveModel.Selector) {
-            ReceiveModel.Selector selector = (ReceiveModel.Selector) value;
-
-            if (StringUtils.hasText(selector.getSelectorValue())) {
-                return (V) selector.getSelectorValue().trim();
-            } else {
-                return (V) selector.getElements().stream().map(header -> header.getName() + "=" + header.getValue()).collect(Collectors.joining(","));
-            }
+        if (value instanceof SendModel.Header) {
+            return (V) ((SendModel.Header) value).getElements().stream().map(header -> header.getName() + "=" + header.getValue()).collect(Collectors.joining(","));
         }
 
         return super.resolvePropertyExpression(value);
     }
 
     @Override
-    public ReceiveModel convertModel(ReceiveMessageAction model) {
-        ReceiveModel action = new ObjectFactory().createReceiveModel();
+    protected Map<String, Object> getDefaultValueMappings() {
+        Map<String, Object> mappings = super.getDefaultValueMappings();
+        mappings.put("fork", FALSE);
+        return mappings;
+    }
+
+    @Override
+    public SendModel convertModel(SendSoapMessageAction model) {
+        SendModel action = new ObjectFactory().createSendModel();
 
         if (model.getActor() != null) {
             action.setActor(model.getActor().getName());
@@ -110,17 +109,18 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
 
         action.setDescription(model.getDescription());
         action.setEndpoint(model.getEndpoint() != null ? model.getEndpoint().getName() : model.getEndpointUri());
+        action.setFork(model.isForkMode());
 
         return action;
     }
 
     @Override
-    public Class<ReceiveModel> getSourceModelClass() {
-        return ReceiveModel.class;
+    public Class<SendModel> getSourceModelClass() {
+        return SendModel.class;
     }
 
     @Override
-    public Class<ReceiveMessageAction> getActionModelClass() {
-        return ReceiveMessageAction.class;
+    public Class<SendSoapMessageAction> getActionModelClass() {
+        return SendSoapMessageAction.class;
     }
 }

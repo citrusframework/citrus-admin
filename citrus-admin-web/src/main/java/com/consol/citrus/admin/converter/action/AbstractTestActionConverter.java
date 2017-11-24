@@ -16,13 +16,20 @@
 
 package com.consol.citrus.admin.converter.action;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.admin.converter.AbstractObjectConverter;
-import com.consol.citrus.admin.model.TestAction;
+import com.consol.citrus.admin.model.Property;
+import com.consol.citrus.admin.model.TestActionModel;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestActionConverter<S, R extends com.consol.citrus.TestAction> extends AbstractObjectConverter<TestAction, S> implements TestActionConverter<S, R> {
+public abstract class AbstractTestActionConverter<S, R extends TestAction> extends AbstractObjectConverter<TestActionModel, S> implements TestActionConverter<S, R> {
 
     private final String actionType;
 
@@ -34,13 +41,36 @@ public abstract class AbstractTestActionConverter<S, R extends com.consol.citrus
         this.actionType = actionType;
     }
 
+    @Override
+    public TestActionModel convert(S model) {
+        TestActionModel actionModel = new TestActionModel(getActionType(), getSourceModelClass());
+
+        ReflectionUtils.doWithFields(getSourceModelClass(), field -> {
+            Property property = property(field.getName(), getDisplayName(getFieldName(field.getName())), model, getDefaultValue(field), isRequiredField(field))
+                    .options(getFieldOptions(field))
+                    .optionType(getOptionType(field));
+
+            actionModel.add(property);
+        }, field -> include(model, field));
+
+        return actionModel;
+    }
+
     /**
-     * Adds basic action properties using reflection on definition objects.
-     * @param action
-     * @param definition
+     * Decides if field should be included in model conversion.
+     * @param model
+     * @param field
+     * @return
      */
-    protected void addActionProperties(TestAction action, S definition) {
-        action.add(property("description", definition));
+    protected boolean include(S model, Field field) {
+        return true;
+    }
+
+    @Override
+    protected Map<String, String> getDisplayNameMappings() {
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("actor", "TestActor");
+        return mappings;
     }
 
     @Override
@@ -49,7 +79,7 @@ public abstract class AbstractTestActionConverter<S, R extends com.consol.citrus
     }
 
     @Override
-    public Class<TestAction> getTargetModelClass() {
-        return TestAction.class;
+    public Class<TestActionModel> getTargetModelClass() {
+        return TestActionModel.class;
     }
 }

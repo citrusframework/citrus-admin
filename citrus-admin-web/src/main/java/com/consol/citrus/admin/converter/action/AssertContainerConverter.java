@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.admin.model.TestAction;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -35,15 +35,13 @@ public class AssertContainerConverter extends AbstractTestContainerConverter<Ass
     }
 
     @Override
-    public TestAction convert(AssertModel model) {
-        TestAction action = new TestAction(getActionType(), getSourceModelClass());
-        addActionProperties(action, model);
-
-        if (model.getWhen() != null) {
-            action.setActions(getNestedActions(Collections.singletonList(getNestedAction(model))));
+    protected List<Object> getNestedActions(AssertModel model) {
+        Object nestedAction = getNestedAction(model);
+        if (nestedAction != null) {
+            return Collections.singletonList(nestedAction);
+        } else {
+            return Collections.emptyList();
         }
-
-        return action;
     }
 
     @Override
@@ -59,6 +57,11 @@ public class AssertContainerConverter extends AbstractTestContainerConverter<Ass
         }
 
         return action;
+    }
+
+    @Override
+    protected boolean include(AssertModel model, Field field) {
+        return super.include(model, field) && !field.getType().equals(AssertModel.When.class);
     }
 
     private void setNestedAction(AssertModel action, Object object) {
@@ -138,6 +141,10 @@ public class AssertContainerConverter extends AbstractTestContainerConverter<Ass
     }
 
     private Object getNestedAction(AssertModel model) {
+        if (model.getWhen() == null) {
+            return null;
+        }
+
         if (model.getWhen().getAction() != null) {
             return model.getWhen().getAction();
         } else if (model.getWhen().getAnt() != null) {

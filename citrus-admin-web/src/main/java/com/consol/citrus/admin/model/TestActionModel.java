@@ -22,19 +22,19 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class TestAction {
+public class TestActionModel {
 
     private final String type;
     private final Class<?> modelType;
     private List<Property> properties = new ArrayList<>();
 
-    private List<TestAction> actions = new ArrayList<>();
+    private List<TestActionModel> actions = new ArrayList<>();
 
     /**
      * Constructor using action type field and identifier.
      * @param type
      */
-    public TestAction(String type, Class<?> modelType) {
+    public TestActionModel(String type, Class<?> modelType) {
         this.modelType = modelType;
         this.type = type;
     }
@@ -44,7 +44,7 @@ public class TestAction {
      * @param property
      * @return
      */
-    public TestAction add(Property property) {
+    public TestActionModel add(Property property) {
         if (property != null) {
             properties.add(property);
         }
@@ -88,7 +88,7 @@ public class TestAction {
      *
      * @return the actions
      */
-    public List<TestAction> getActions() {
+    public List<TestActionModel> getActions() {
         return actions;
     }
 
@@ -97,7 +97,7 @@ public class TestAction {
      *
      * @param actions
      */
-    public void setActions(List<TestAction> actions) {
+    public void setActions(List<TestActionModel> actions) {
         this.actions = actions;
     }
 }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter.action;
 
-import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
@@ -28,20 +28,20 @@ import java.util.List;
  * @since 2.6
  */
 @Component
-public class SequentialContainerConverter extends AbstractTestContainerConverter<SequentialModel, Sequence> {
+public class RepeatContainerConverter extends AbstractTestContainerConverter<RepeatUntilTrueModel, RepeatUntilTrue> {
 
-    public SequentialContainerConverter() {
-        super("sequential");
+    public RepeatContainerConverter() {
+        super("repeat");
     }
 
     @Override
-    protected List<Object> getNestedActions(SequentialModel model) {
+    protected List<Object> getNestedActions(RepeatUntilTrueModel model) {
         return model.getActionsAndSendsAndReceives();
     }
 
     @Override
-    public SequentialModel convertModel(Sequence model) {
-        SequentialModel action = new ObjectFactory().createSequentialModel();
+    public RepeatUntilTrueModel convertModel(RepeatUntilTrue model) {
+        RepeatUntilTrueModel action = new ObjectFactory().createRepeatUntilTrueModel();
         action.setDescription(model.getDescription());
         convertActions(model, action.getActionsAndSendsAndReceives());
 
@@ -49,17 +49,17 @@ public class SequentialContainerConverter extends AbstractTestContainerConverter
     }
 
     @Override
-    protected boolean include(SequentialModel model, Field field) {
+    protected boolean include(RepeatUntilTrueModel model, Field field) {
         return super.include(model, field) && !field.getName().equals("actionsAndSendsAndReceives");
     }
 
     @Override
-    public Class<Sequence> getActionModelClass() {
-        return Sequence.class;
+    public Class<RepeatUntilTrue> getActionModelClass() {
+        return RepeatUntilTrue.class;
     }
 
     @Override
-    public Class<SequentialModel> getSourceModelClass() {
-        return SequentialModel.class;
+    public Class<RepeatUntilTrueModel> getSourceModelClass() {
+        return RepeatUntilTrueModel.class;
     }
 }
