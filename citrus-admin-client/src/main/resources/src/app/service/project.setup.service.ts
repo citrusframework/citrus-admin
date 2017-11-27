@@ -23,14 +23,18 @@ export class ProjectSetupService {
         return this.http.get(this._serviceUrl + "/settings/default");
     }
 
+    getRepository(type: string) {
+        return this.http.get(this._serviceUrl + "/repository/" + type);
+    }
+
     loadProject(repository: Repository) {
-        return this.http.post(this._serviceUrl + "/load/repository", repository);
+        return this.http.post(this._serviceUrl + "/repository", repository);
     }
-    
+
     createProject(archetype: Archetype) {
-        return this.http.post(this._serviceUrl + "/create/archetype", archetype);
+        return this.http.post(this._serviceUrl + "/archetype", archetype);
     }
-    
+
     saveDefaultProjectSettings(settings: ProjectSettings) {
         return this.http.post(this._serviceUrl + "/settings/default", settings);
     }

@@ -23,15 +23,16 @@ import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
 import com.consol.citrus.admin.model.Module;
 import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.MavenArchetype;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.admin.model.vcs.*;
 import com.consol.citrus.admin.service.command.filesystem.DeleteCommand;
 import com.consol.citrus.admin.service.command.filesystem.MoveCommand;
 import com.consol.citrus.admin.service.command.git.GitCommand;
 import com.consol.citrus.admin.service.command.maven.MavenArchetypeCommand;
 import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
+import com.consol.citrus.admin.service.command.svn.SvnCommand;
 import com.consol.citrus.admin.service.command.util.CurlCommand;
 import com.consol.citrus.admin.service.command.util.UnzipCommand;
 import com.consol.citrus.admin.service.spring.SpringBeanService;
@@ -104,13 +105,25 @@ public class ProjectService {
 
         String repositoryUrl = System.getProperty(Application.PROJECT_REPOSITORY, System.getenv(Application.PROJECT_REPOSITORY_ENV));
         if (project == null && StringUtils.hasText(repositoryUrl)) {
-            Repository repository = new Repository();
-            repository.setUrl(repositoryUrl);
+            Repository repository;
 
+            String vcs = System.getProperty(Application.PROJECT_VERSION_CONTROL, Optional.ofNullable(System.getenv(Application.PROJECT_VERSION_CONTROL_ENV)).orElse(Repository.VERSION_CONTROL_GIT));
+            if (vcs.equalsIgnoreCase(Repository.VERSION_CONTROL_GIT)) {
+                repository = new GitRepository();
+            } else if (vcs.equalsIgnoreCase(Repository.VERSION_CONTROL_SVN)) {
+                repository = new SvnRepository();
+            } else {
+                throw new ApplicationRuntimeException(String.format("Unsupported version control system '%s'", vcs));
+            }
+
+            repository.setUrl(repositoryUrl);
             repository.setBranch(System.getProperty(Application.PROJECT_REPOSITORY_BRANCH,
                     System.getenv(Application.PROJECT_REPOSITORY_BRANCH_ENV) != null ? System.getenv(Application.PROJECT_REPOSITORY_BRANCH_ENV) : repository.getBranch()));
             repository.setModule(System.getProperty(Application.PROJECT_REPOSITORY_MODULE,
                     System.getenv(Application.PROJECT_REPOSITORY_MODULE_ENV) != null ? System.getenv(Application.PROJECT_REPOSITORY_MODULE_ENV) : repository.getModule()));
+
+            repository.setUsername(System.getProperty(Application.PROJECT_REPOSITORY_USERNAME, System.getenv(Application.PROJECT_REPOSITORY_USERNAME_ENV)));
+            repository.setPassword(System.getProperty(Application.PROJECT_REPOSITORY_PASSWORD, System.getenv(Application.PROJECT_REPOSITORY_PASSWORD_ENV)));
 
             create(repository);
         }
@@ -236,26 +249,52 @@ public class ProjectService {
      * @return
      */
     public Project create(Repository repository) {
-        log.info("Loading project sources from git: " + repository.getUrl());
+        log.info(String.format("Loading project sources from %s: %s", repository.getVcs(), repository.getUrl()));
 
         try {
             File rootDirectory = new File(Application.getWorkingDirectory());
-            String cloneTarget = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1, repository.getUrl().length() - ".git".length());
-            boolean gitCloneSuccess = terminalService.executeAndWait(new GitCommand(rootDirectory).version()) &&
-                    terminalService.executeAndWait(new GitCommand(rootDirectory)
-                            .clone(new URL(repository.getUrl()), cloneTarget));
+            String targetDirectory;
+            if (repository instanceof GitRepository) {
+                targetDirectory = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1, repository.getUrl().length() - ".git".length());
+                boolean gitCloneSuccess = terminalService.executeAndWait(new GitCommand(rootDirectory).version()) &&
+                        terminalService.executeAndWait(new GitCommand(rootDirectory)
+                                .clone(new URL(repository.getUrl()), targetDirectory));
 
-            if (gitCloneSuccess && !repository.getBranch().equals("master")) {
-                terminalService.executeAndWait(new GitCommand(rootDirectory).checkout(repository.getBranch()));
-            } else if (!gitCloneSuccess && terminalService.executeAndWait(new CurlCommand(rootDirectory).get(new URL(getCloneDownloadUrl(repository)), cloneTarget + ".zip"))) {
-                terminalService.executeAndWait(new UnzipCommand(rootDirectory).archive(cloneTarget + ".zip"));
+                if (gitCloneSuccess && !repository.getBranch().equals("master")) {
+                    terminalService.executeAndWait(new GitCommand(rootDirectory).checkout(repository.getBranch()));
+                } else if (!gitCloneSuccess && terminalService.executeAndWait(new CurlCommand(rootDirectory).get(new URL(getCloneDownloadUrl(repository)), targetDirectory + ".zip"))) {
+                    terminalService.executeAndWait(new UnzipCommand(rootDirectory).archive(targetDirectory + ".zip"));
 
-                terminalService.executeAndWait(new MoveCommand(rootDirectory)
-                        .source(cloneTarget + File.separator + "**/*")
-                        .target(cloneTarget));
+                    terminalService.executeAndWait(new MoveCommand(rootDirectory)
+                            .source(targetDirectory + File.separator + "**/*")
+                            .target(targetDirectory));
 
-                terminalService.executeAndWait(new DeleteCommand(rootDirectory)
-                        .file(cloneTarget + ".zip"));
+                    terminalService.executeAndWait(new DeleteCommand(rootDirectory)
+                            .file(targetDirectory + ".zip"));
+                }
+
+                String module = "";
+                if (StringUtils.hasText(repository.getModule()) && repository.getModule().length() > 1) {
+                    module = repository.getModule().startsWith("/") ? repository.getModule() : File.separator + repository.getModule();
+                }
+
+                load(Application.getWorkingDirectory() + File.separator + targetDirectory + module);
+                return getActiveProject();
+            } else if (repository instanceof SvnRepository) {
+                targetDirectory = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1);
+                SvnCommand checkoutCmd = new SvnCommand(rootDirectory)
+                        .checkout(new URL(repository.getUrl()), repository.getBranch(), targetDirectory);
+
+                if (StringUtils.hasText(repository.getUsername())) {
+                    checkoutCmd.username(repository.getUsername())
+                            .password(repository.getPassword());
+                }
+
+                if (!(terminalService.executeAndWait(new SvnCommand(rootDirectory).version()) && terminalService.executeAndWait(checkoutCmd))) {
+                    throw new ApplicationRuntimeException("Failed to checkout subversion repository: " + repository.getUrl());
+                }
+            } else {
+                throw new ApplicationRuntimeException("Unsupported repository type: " + repository.getClass().getName());
             }
 
             String module = "";
@@ -263,7 +302,7 @@ public class ProjectService {
                 module = repository.getModule().startsWith("/") ? repository.getModule() : File.separator + repository.getModule();
             }
 
-            load(Application.getWorkingDirectory() + File.separator + cloneTarget + module);
+            load(Application.getWorkingDirectory() + File.separator + targetDirectory + module);
             return getActiveProject();
         } catch (MalformedURLException e) {
             throw new ApplicationRuntimeException("Invalid project repository url", e);

@@ -585,13 +585,17 @@ fieldset[disabled] .btn.focus {
     border-bottom-color: #ffffff;
 }
 
-.thumbnail {
-  border: none;
+.thumbnail:hover {
+    cursor: pointer;
+    background: #e3effc;
 }
 
-.btn-thumbnail {
-    min-width: 11em;
-    padding: 3em;
+.thumbnail:hover .well {
+    color: #fff;
+    background: #0096D6;
+}
+
+.thumbnail .well {
     font-size: 1.5em;
 }
 

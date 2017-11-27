@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.model.git;
+package com.consol.citrus.admin.model.vcs;
 
 /**
  * @author Christoph Deppisch
  */
-public class Repository {
+public abstract class AbstractRepository implements Repository {
+
+    private final String vcs;
 
     private String url;
-    private String branch = "master";
+    private String branch;
     private String module = "/";
+
+    private String username;
+    private String password;
+
+    /**
+     * Default constructor using version control type.
+     * @param vcs
+     */
+    public AbstractRepository(String vcs) {
+        this.vcs = vcs;
+    }
 
     /**
      * Gets the url.
@@ -78,4 +91,50 @@ public class Repository {
     public void setModule(String module) {
         this.module = module;
     }
+
+    /**
+     * Gets the vcs.
+     *
+     * @return
+     */
+    public String getVcs() {
+        return vcs;
+    }
+
+    /**
+     * Gets the username.
+     *
+     * @return
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username.
+     *
+     * @param username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Gets the password.
+     *
+     * @return
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets the password.
+     *
+     * @param password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 }

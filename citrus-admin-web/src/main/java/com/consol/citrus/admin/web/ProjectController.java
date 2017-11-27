@@ -17,9 +17,10 @@
 package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.configuration.ConfigurationProvider;
+import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.model.git.Repository;
 import com.consol.citrus.admin.model.maven.MavenArchetype;
+import com.consol.citrus.admin.model.vcs.*;
 import com.consol.citrus.admin.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,13 +51,25 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/load/repository", method = RequestMethod.POST)
+    @RequestMapping(value = "/repository/{type}", method = {RequestMethod.GET})
+    @ResponseBody
+    public Repository getRepositoryType(@PathVariable("type") String type) {
+        if (type.equalsIgnoreCase(Repository.VERSION_CONTROL_GIT)) {
+            return new GitRepository();
+        } else if (type.equalsIgnoreCase(Repository.VERSION_CONTROL_SVN)) {
+            return new SvnRepository();
+        }
+
+        throw new ApplicationRuntimeException("Unsupported repository type '" + type + "'");
+    }
+
+    @RequestMapping(value = "/repository", method = RequestMethod.POST)
     @ResponseBody
     public Project loadProject(@RequestBody Repository repository) {
         return projectService.create(repository);
     }
 
-    @RequestMapping(value = "/create/archetype", method = RequestMethod.POST)
+    @RequestMapping(value = "/archetype", method = RequestMethod.POST)
     @ResponseBody
     public Project createProject(@RequestBody MavenArchetype archetype) {
         return projectService.create(archetype);

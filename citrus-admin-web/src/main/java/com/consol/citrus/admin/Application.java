@@ -49,12 +49,18 @@ public class Application extends SpringBootServletInitializer {
     public static final String WORKING_DIRECTORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "WORKING_DIRECTORY";
 
     /** Git repository to load on startup */
+    public static final String PROJECT_VERSION_CONTROL = CITRUS_ADMIN_PREFIX + "project.version.control";
+    public static final String PROJECT_VERSION_CONTROL_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_VERSION_CONTROL";
     public static final String PROJECT_REPOSITORY = CITRUS_ADMIN_PREFIX + "project.repository";
     public static final String PROJECT_REPOSITORY_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY";
     public static final String PROJECT_REPOSITORY_BRANCH = CITRUS_ADMIN_PREFIX + "project.repository.branch";
     public static final String PROJECT_REPOSITORY_BRANCH_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_BRANCH";
     public static final String PROJECT_REPOSITORY_MODULE = CITRUS_ADMIN_PREFIX + "project.repository.module";
     public static final String PROJECT_REPOSITORY_MODULE_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_MODULE";
+    public static final String PROJECT_REPOSITORY_USERNAME = CITRUS_ADMIN_PREFIX + "project.repository.username";
+    public static final String PROJECT_REPOSITORY_USERNAME_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_USERNAME";
+    public static final String PROJECT_REPOSITORY_PASSWORD = CITRUS_ADMIN_PREFIX + "project.repository.password";
+    public static final String PROJECT_REPOSITORY_PASSWORD_ENV = CITRUS_ADMIN_ENV_PREFIX + "PROJECT_REPOSITORY_PASSWORD";
 
     /** Maven archetype to load on startup */
     public static final String MAVEN_ARCHETYPE_COORDINATES = CITRUS_ADMIN_PREFIX + "maven.archetype.coordinates";
