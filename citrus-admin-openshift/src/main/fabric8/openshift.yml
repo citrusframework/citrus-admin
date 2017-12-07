@@ -49,6 +49,21 @@ items:
           - containerPort: 8080
             name: http
             protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 1Gi
           securityContext:
             privileged: false
           volumeMounts:
