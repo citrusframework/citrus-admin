@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import {TestGroup, Test, TestDetail, TestResult} from '../model/tests';
+import {TestGroup, Test, TestDetail, TestResult, TestAction} from '../model/tests';
 import {URLSearchParams} from "@angular/http";
 
 @Injectable()
@@ -15,6 +15,7 @@ export class TestService {
     private _testDetailUrl = this._serviceUrl + '/detail';
     private _testSourceUrl = this._serviceUrl + '/source';
     private _testExecuteUrl = this._serviceUrl + '/execute';
+    private _testActionsUrl = this._serviceUrl + '/actions';
 
     getTestPackages():Observable<TestGroup[]> {
         return this.http.get(this._serviceUrl)
@@ -72,6 +73,18 @@ export class TestService {
     executeAll() {
         return this.http.get(this._testExecuteUrl)
             .map(res => <string> res.text())
+            .catch(this.handleError);
+    }
+
+    getActionTypes(): Observable<string[]> {
+        return this.http.get(`${this._testActionsUrl}/types`)
+            .map(res => <string[]> res.json())
+            .catch(this.handleError);
+    }
+
+    getActionType(type: string): Observable<TestAction> {
+        return this.http.get(`${this._testActionsUrl}/type/${type}`)
+            .map(res => <TestAction> res.json())
             .catch(this.handleError);
     }
 

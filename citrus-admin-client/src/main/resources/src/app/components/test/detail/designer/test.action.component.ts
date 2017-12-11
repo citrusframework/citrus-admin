@@ -3,17 +3,10 @@ import {TestAction} from "../../../../model/tests";
 
 @Component({
     selector: "test-action",
-    template: `<div class="test-action" (click)="select()" (mouseenter)="focused = true" (mouseleave)="focused = false">
+    template: `<div [class]="action.dirty ? 'test-action dirty' : 'test-action'" (click)="select()" (mouseenter)="focused = true" (mouseleave)="focused = false">
+            <a (click)="remove($event)" [hidden]="!focused" name="remove" title="Remove action" class="pull-right"><i class="fa fa-times" style="color: #A50000;"></i></a>
             <i class="fa icon-{{action.type}}"></i>
             <span>{{action.type}}</span>
-            <div [hidden]="!focused" class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">{{action.type}}</h3>
-              </div>
-              <div class="panel-body">
-                <span [textContent]="getProperty()"></span>
-              </div>
-            </div>
         </div>`
 })
 export class TestActionComponent {
@@ -21,6 +14,7 @@ export class TestActionComponent {
     @Input() action: TestAction;
 
     @Output() selected = new EventEmitter(true);
+    @Output() removed = new EventEmitter(true);
 
     focused = false;
 
@@ -30,33 +24,10 @@ export class TestActionComponent {
         this.selected.emit(this.action);
     }
 
-    getProperty() {
-        let propertyName: string;
-
-        switch (this.action.type) {
-            case "send":
-                propertyName = "endpoint";
-                break;
-            case "receive":
-                propertyName = "endpoint";
-                break;
-            case "sleep":
-                propertyName = "milliseconds";
-                break;
-            case "echo":
-                propertyName = "message";
-                break;
-            default:
-                propertyName = "all";
-        }
-
-        let property = this.action.properties.find(p => p.name === propertyName);
-
-        if (property) {
-            return property.name + " => " + property.value;
-        } else {
-            return this.action.properties.map(p => p.name + "=" + p.value).concat();
-        }
+    remove(event: MouseEvent) {
+        this.removed.emit(this.action);
+        event.stopPropagation();
+        return false;
     }
 
 }

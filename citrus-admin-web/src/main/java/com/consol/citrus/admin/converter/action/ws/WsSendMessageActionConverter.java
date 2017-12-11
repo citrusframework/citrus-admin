@@ -43,7 +43,7 @@ public class WsSendMessageActionConverter extends AbstractTestActionConverter<Se
      * Default constructor using action type reference.
      */
     public WsSendMessageActionConverter() {
-        super("send");
+        super("ws:send");
     }
 
     @Override

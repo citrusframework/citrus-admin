@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.web;
 
+import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.*;
@@ -28,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -50,6 +52,9 @@ public class TestController {
 
     @Autowired
     private TestReportService testReportService;
+
+    @Autowired
+    private List<TestActionConverter> actionConverter;
 
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
@@ -123,5 +128,27 @@ public class TestController {
     public ResponseEntity stop(@PathVariable("processId") String processId) {
         testExecutionService.stop(processId);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "actions//types", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<String> getActionTypes() {
+        return actionConverter.stream().map(TestActionConverter::getActionType).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "actions/type/{type}", method = {RequestMethod.GET})
+    @ResponseBody
+    public TestActionModel getActionType(@PathVariable("type") String type) {
+        for (TestActionConverter converter : actionConverter) {
+            if (converter.getActionType().equals(type)) {
+                try {
+                    return converter.convert(converter.getSourceModelClass().newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new ApplicationRuntimeException("Failed to create new test action model instance", e);
+                }
+            }
+        }
+
+        throw new ApplicationRuntimeException("Unable to find test action definition for type '" + type + "'");
     }
 }

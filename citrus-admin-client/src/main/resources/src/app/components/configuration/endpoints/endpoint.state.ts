@@ -26,26 +26,26 @@ export const EndpointStateInit:EndpointState = {
 export class EndpointEffects {
     constructor(
        private actions:AsyncActions,
-       private endPointService:EndpointService
+       private endpointService:EndpointService
     ) {}
 
     @Effect() endpoints = this.actions
-        .handleEffect(EndpointActions.ENDPOINTS, (a) => this.endPointService.getEndpoints());
+        .handleEffect(EndpointActions.ENDPOINTS, (a) => this.endpointService.getEndpoints());
 
     @Effect() endpointCreate = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.CREATE, ({payload}) => this.endPointService.createEndpoint(payload).map(r => payload));
+        .handleEffect(EndpointActions.ENDPOINT.CREATE, ({payload}) => this.endpointService.createEndpoint(payload).map(r => payload));
 
     @Effect() endpointUpdate = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.UPDATE, ({payload}) => this.endPointService.updateEndpoint(payload).map(r => payload));
+        .handleEffect(EndpointActions.ENDPOINT.UPDATE, ({payload}) => this.endpointService.updateEndpoint(payload).map(r => payload));
 
     @Effect() endpointDelete = this.actions
-        .handleEffect(EndpointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endPointService.deleteEndpoint(payload).map(r => payload));
+        .handleEffect(EndpointActions.ENDPOINT.DELETE, ({payload}:Action<string>) => this.endpointService.deleteEndpoint(payload).map(r => payload));
 
     @Effect() endpointTypes = this.actions
-        .handleEffect(EndpointActions.ENDPOINT_TYPES, (a) => this.endPointService.getEndpointTypes());
+        .handleEffect(EndpointActions.ENDPOINT_TYPES, (a) => this.endpointService.getEndpointTypes());
 
     @Effect() endpointType = this.actions
-        .handleEffect(EndpointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endPointService.getEndpointType(payload));
+        .handleEffect(EndpointActions.ENDPOINT_TYPE, ({payload}:Action<string>) => this.endpointService.getEndpointType(payload));
 
     @Effect({dispatch:false}) endpointsError = this.actions
         .handleError([

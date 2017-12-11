@@ -42,7 +42,7 @@ public class WsReceiveMessageActionConverter extends AbstractTestActionConverter
      * Default constructor using action type reference.
      */
     public WsReceiveMessageActionConverter() {
-        super("receive");
+        super("ws:receive");
     }
 
     @Override

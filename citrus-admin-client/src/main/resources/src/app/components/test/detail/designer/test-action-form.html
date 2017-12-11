@@ -1,5 +1,9 @@
-<form *ngIf="action" class="form-horizontal" (ngSubmit)="invokeSave()" [formGroup]="form">
-    <h3>{{action.type}}</h3>
+<div *ngIf="action && action.type == 'new'" class="box-center">
+    <h3>Please choose action type ...</h3>
+</div>
+
+<form *ngIf="action && action.type != 'new'" class="form-horizontal" (ngSubmit)="save()" [formGroup]="form">
+    <h1><i class="fa icon-{{action.type}}"></i> {{action.type}}</h1>
     <form-group *ngFor="let property of action.properties"
                 [control]="form.get(property.name)"
                 [label]="property.displayName + (property.required ? ' *' : '')">

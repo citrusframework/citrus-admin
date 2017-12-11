@@ -25,7 +25,6 @@ import com.consol.citrus.model.testcase.http.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class ReceiveResponseActionConverter extends AbstractTestActionConverter<
      * Default constructor using action type reference.
      */
     public ReceiveResponseActionConverter() {
-        super("receive");
+        super("http-client:receive");
     }
 
     @Override
@@ -68,8 +67,6 @@ public class ReceiveResponseActionConverter extends AbstractTestActionConverter<
 
         mappings.put("client", "endpoint");
         mappings.put("uri", "endpointUri");
-
-        Stream.of(RequestMethod.values()).map(RequestMethod::name).map(String::toLowerCase).forEach(name -> mappings.put(name, "message"));
 
         return mappings;
     }

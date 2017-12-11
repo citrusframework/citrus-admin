@@ -140,6 +140,10 @@ body {
     background-color: #fff;
 }
 
+.test-result span.badge-primary:hover {
+    border-color: #3b73af;
+}
+
 .test-result span.badge-success:hover {
     border-color: #468847;
 }
@@ -960,16 +964,27 @@ i.channel {
 
 /** Test design icons **/
 
-.test-actions {
+.test-designer {
     border: 1px solid #ddd;
-    padding-top: 30px;
+    border-collapse: collapse;
+}
+
+.test-designer #sidebar {
+    max-height: 600px;
+    padding-top: 50px;
     padding-bottom: 30px;
-    min-height: 500px;
     overflow-y: scroll;
 }
 
+.test-designer #main {
+    min-height: 600px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-left: 1px solid #ddd;
+}
+
 .test-action, .test-container, .test-transition,
-.start-action, .stop-action {
+.start-action, .stop-action, .add-action {
     text-align: center;
     cursor: pointer;
     margin-left: auto;
@@ -977,15 +992,27 @@ i.channel {
 }
 
 .test-transition {
-    height: 15px;
+    height: 45px;
+}
+
+.test-transition span {
+    background: #ddd;
+    display: inline-block;
+    width: 2px;
+    height: 45px;
 }
 
 .test-action {
     background-color: #eff6fb;
     border-radius: 15px;
     width: 135px;
-    height: 65px;
+    height: 75px;
     border: 1px solid #ddd;
+}
+
+.test-action.dirty {
+    background-color: #eee;
+    border: 1px solid #aaa;
 }
 
 .test-container {
@@ -1016,11 +1043,16 @@ i.channel {
     background-color: #e3effc;
 }
 
+.test-action.dirty:hover {
+    background-color: #ddd;
+}
+
 .test-action > i, .test-container > i {
     display: block;
     text-align: left;
     padding-left: 10px;
     padding-top: 5px;
+    margin-bottom: 10px;
 }
 
 .test-action > span, .test-container > span {
@@ -1033,14 +1065,7 @@ i.channel {
     padding-left: 15px;
 }
 
-.test-action > .panel {
-    position: relative;
-    top: -120%;
-    left: 120%;
-    width: 450px;
-}
-
-.start-action i, .stop-action i {
+.start-action i, .stop-action i, .add-action i {
     width: 50px;
     height: 50px;
     border-radius: 25px;
@@ -1053,12 +1078,36 @@ i.channel {
     font-size: 25px;
 }
 
+.test-transition .add-action {
+    position: relative;
+    top: -40px;
+    left: 0;
+}
+
+.test-transition .add-action i {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    padding-top: 6px;
+}
+
+.test-action .fa-times, .test-container .fa-times {
+    width: 15px;
+    font-size: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
 .test-transition i {
     font-size: 14px;
 }
 
 .start-action i.fa-play {
     color: #5ab15a;
+}
+
+.add-action i.fa-plus {
+    color: #3b73af;
 }
 
 .stop-action i.fa-stop {
@@ -1103,18 +1152,24 @@ i.channel {
     content: "\f0e7";
 }
 
-.icon-send:before {
+.icon-send:before,
+.icon-ws\:send:before,
+.icon-http-client\:send:before,
+.icon-http-server\:send:before {
     content: "\f08b";
     color: #92bed2;
 }
 
-.icon-receive:before {
+.icon-receive:before,
+.icon-ws\:receive:before,
+.icon-http-client\:receive:before,
+.icon-http-server\:receive:before {
     content: "\f090";
     color: #5ab15a;
 }
 
-.icon-empty:before {
-    content: "\f05e";
+.icon-new:before {
+    content: "\f055";
 }
 
 /** Colors */

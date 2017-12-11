@@ -14,7 +14,7 @@ import {TestAction} from "../../../../model/tests";
 export class TestActionFormComponent implements OnChanges {
     @Input() action:TestAction;
 
-    @Output() save = new EventEmitter<TestAction>();
+    @Output() saved = new EventEmitter<TestAction>();
 
     form:FormGroup;
 
@@ -53,7 +53,7 @@ export class TestActionFormComponent implements OnChanges {
         ];
     }
 
-    invokeSave(action:TestAction) {
-        this.save.next(action);
+    save() {
+        this.saved.next(this.action);
     }
 }

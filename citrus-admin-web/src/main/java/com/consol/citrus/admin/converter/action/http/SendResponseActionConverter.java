@@ -25,7 +25,6 @@ import com.consol.citrus.model.testcase.http.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class SendResponseActionConverter extends AbstractTestActionConverter<Sen
      * Default constructor using action type reference.
      */
     public SendResponseActionConverter() {
-        super("send");
+        super("http-server:send");
     }
 
     @Override
@@ -67,8 +66,6 @@ public class SendResponseActionConverter extends AbstractTestActionConverter<Sen
         Map<String, String> mappings = super.getFieldNameMappings();
 
         mappings.put("server", "endpoint");
-
-        Stream.of(RequestMethod.values()).map(RequestMethod::name).map(String::toLowerCase).forEach(name -> mappings.put(name, "message"));
 
         return mappings;
     }

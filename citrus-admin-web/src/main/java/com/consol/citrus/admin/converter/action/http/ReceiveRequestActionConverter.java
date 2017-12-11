@@ -26,11 +26,11 @@ import com.consol.citrus.model.testcase.http.*;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,7 +45,7 @@ public class ReceiveRequestActionConverter extends AbstractTestActionConverter<R
      * Default constructor using action type reference.
      */
     public ReceiveRequestActionConverter() {
-        super("receive");
+        super("http-server:receive");
     }
 
     @Override
@@ -58,6 +58,21 @@ public class ReceiveRequestActionConverter extends AbstractTestActionConverter<R
         ServerRequestType request = getRequestType(model);
         if (request != null) {
             action.add(new Property<>("path", "path", "Path", request.getPath(), false));
+
+            if (request.getBody() != null) {
+                if (StringUtils.hasText(request.getBody().getData())) {
+                    action.add(new Property<>("body", "body", "Body", request.getBody().getData().trim(), false));
+                } else if (request.getBody().getPayload() != null) {
+                    action.add(new Property<>("body", "body", "Body", PayloadElementParser.parseMessagePayload(request.getBody().getPayload().getAnies().get(0)), false));
+                } else if (request.getBody().getResource() != null &&
+                        StringUtils.hasText(request.getBody().getResource().getFile())) {
+                    action.add(new Property<>("body", "body", "Body", request.getBody().getResource().getFile(), false));
+                } else {
+                    action.add(new Property<>("body", "body", "Body", null, false));
+                }
+            } else {
+                action.add(new Property<>("body", "body", "Body", null, false));
+            }
 
             if (request.getHeaders() != null) {
                 action.add(new Property<>("headers", "headers", "Headers", request.getHeaders().getHeaders().stream().map(header -> header.getName() + "=" + header.getValue()).collect(Collectors.joining(",")), false));
@@ -75,48 +90,15 @@ public class ReceiveRequestActionConverter extends AbstractTestActionConverter<R
 
     @Override
     protected boolean include(ReceiveRequestModel model, Field field) {
-        if (field.getType().equals(ServerRequestType.class)) {
-            Method getter = ReflectionUtils.findMethod(model.getClass(), getterMethodName(field, field.getName()));
-            if (getter != null) {
-                Object getterResult = ReflectionUtils.invokeMethod(getter, model);
-                return getterResult != null;
-            }
-        }
+        return !field.getType().equals(ServerRequestType.class) && super.include(model, field);
 
-        return super.include(model, field);
     }
 
     @Override
     protected Map<String, String> getFieldNameMappings() {
         Map<String, String> mappings = super.getFieldNameMappings();
-
         mappings.put("server", "endpoint");
-
-        Stream.of(RequestMethod.values()).map(RequestMethod::name).map(String::toLowerCase).forEach(name -> mappings.put(name, "message"));
-
         return mappings;
-    }
-
-    @Override
-    protected <V> V resolvePropertyExpression(V value) {
-        if (value instanceof ServerRequestType) {
-            ServerRequestType request = (ServerRequestType) value;
-
-            if (request.getBody() != null) {
-                if (StringUtils.hasText(request.getBody().getData())) {
-                    return (V) request.getBody().getData().trim();
-                } else if (request.getBody().getPayload() != null) {
-                    return (V) PayloadElementParser.parseMessagePayload(request.getBody().getPayload().getAnies().get(0));
-                } else if (request.getBody().getResource() != null &&
-                        StringUtils.hasText(request.getBody().getResource().getFile())) {
-                    return (V) request.getBody().getResource().getFile();
-                } else {
-                    return null;
-                }
-            }
-        }
-
-        return super.resolvePropertyExpression(value);
     }
 
     @Override
