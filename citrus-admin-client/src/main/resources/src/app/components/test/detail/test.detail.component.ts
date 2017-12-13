@@ -19,8 +19,8 @@ export class TestDetailComponent implements OnInit {
                 private _testService: TestService,
                 private loggingService: LoggingService) {}
 
-    private logginOutputSubscription: Subscription;
-    private logginEventSubscription: Subscription;
+    private loggingOutputSubscription: Subscription;
+    private loggingEventSubscription: Subscription;
 
     completed = 0;
     failed = false;
@@ -31,7 +31,7 @@ export class TestDetailComponent implements OnInit {
     loggingFrame = "";
 
     ngOnInit() {
-        this.logginOutputSubscription = this.loggingService.logOutput
+        this.loggingOutputSubscription = this.loggingService.logOutput
             .subscribe((e: SocketEvent) => {
                 jQuery('pre.logger').scrollTop(jQuery('pre.logger')[0].scrollHeight);
                 this.logs += e.msg;
@@ -39,17 +39,17 @@ export class TestDetailComponent implements OnInit {
                 this.handle(e);
             });
 
-        this.logginEventSubscription = this.loggingService.testEvents
+        this.loggingEventSubscription = this.loggingService.testEvents
             .subscribe(this.handle);
     }
 
     ngOnDestroy(): void {
-        if(this.logginOutputSubscription) {
-            this.logginOutputSubscription.unsubscribe();
+        if(this.loggingOutputSubscription) {
+            this.loggingOutputSubscription.unsubscribe();
         }
 
-        if(this.logginEventSubscription) {
-            this.logginEventSubscription.unsubscribe();
+        if(this.loggingEventSubscription) {
+            this.loggingEventSubscription.unsubscribe();
         }
     }
 

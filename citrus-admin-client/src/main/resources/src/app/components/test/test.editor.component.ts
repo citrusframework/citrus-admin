@@ -35,7 +35,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.packages = this.testState.packages;
         this.selectedTest = this.testState.selectedTest;
-        
+
         this.openTestSubscription = this.testState.openTabs.subscribe(tests => {
             this.openTests.forEach(open => {
                 if (!tests.find(t => t.name == open.name)) {
@@ -77,7 +77,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.selectedDetail = undefined;
         this.openTests = [];
-        
+
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
         }
@@ -121,7 +121,7 @@ export class TestEditorComponent implements OnInit, OnDestroy {
     }
 
     handleKeyUp(event:KeyboardEvent) {
-        if (event && event.key.toUpperCase() == "O") {
+        if (event && event.altKey && event.keyCode == 79) {
             this.openTestList();
         }
     }
