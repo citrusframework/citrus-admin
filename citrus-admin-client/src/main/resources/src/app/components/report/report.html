@@ -8,16 +8,16 @@
     <br/>
     <ul class="list-group">
       <li class="list-group-item">
-        <b>Project:</b> {{report.projectName}}
+        <b style="width: 5em; display: inline-block;">Project:</b> {{report.projectName}}
       </li>
       <li class="list-group-item">
-        <b>Suite:</b> {{report.suiteName}}
+        <b style="width: 5em; display: inline-block;">Suite:</b> {{report.suiteName}}
       </li>
       <li class="list-group-item">
-        <b>Date:</b> {{ report.executionDate | date:"MM/dd/yyyy" }}<br/>
+        <b style="width: 5em; display: inline-block;">Date:</b> {{ report.executionDate | date:"MM/dd/yyyy" }}<br/>
       </li>
       <li class="list-group-item">
-        <b>Duration:</b> {{report.duration / 1000 }} s<br/>
+        <b style="width: 5em; display: inline-block;">Duration:</b> {{(report.duration / 1000) | number : '1.1-1'}} s<br/>
       </li>
     </ul>
   </div>
@@ -26,21 +26,21 @@
     <a routerLink="/report" title="View all tests">
       <span class="badge badge-success border-success" alt="PASSED">{{report?.passed}}</span>
       <h4>PASSED</h4>
-      <span class="text-muted">{{report?.total > 0 ? report?.passed / report?.total * 100 : 0}} %</span>
+      <span class="text-muted">{{(report?.total > 0 ? report?.passed / report?.total * 100 : 0) | number : '1.2-2'}} %</span>
     </a>
   </div>
   <div class="col-lg-2 test-result">
     <a routerLink="/report" title="View all tests">
       <span class="badge badge-danger border-danger" alt="FAILED">{{report?.failed}}</span>
       <h4>FAILED</h4>
-      <span class="text-muted">{{report?.total > 0 ? report?.failed / report?.total * 100 : 0}} %</span>
+      <span class="text-muted">{{(report?.total > 0 ? report?.failed / report?.total * 100 : 0) | number : '1.2-2'}} %</span>
     </a>
   </div>
   <div class="col-lg-2 test-result">
     <a routerLink="/report" title="View all tests">
       <span class="badge badge-warning border-warning" alt="SKIPPED">{{report?.skipped}}</span>
       <h4>SKIPPED</h4>
-      <span class="text-muted">{{report?.total > 0 ? report?.skipped / report?.total * 100 : 0}} %</span>
+      <span class="text-muted">{{(report?.total > 0 ? report?.skipped / report?.total * 100 : 0) | number : '1.2-2'}} %</span>
     </a>
   </div>
   <div class="col-lg-2 test-result">
