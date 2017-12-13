@@ -525,9 +525,9 @@ public class TestActionConverterTest {
 
                     @Override
                     public void assertModel(TestActionModel model) {
-                        Assert.assertEquals(model.getType(), "send");
+                        Assert.assertEquals(model.getType(), "http-client:send");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElse(new Property()).getValue(), "myEndpoint");
-                        Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("message")).findFirst().orElse(new Property()).getValue(), "Hello Citrus!");
+                        Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("body")).findFirst().orElse(new Property()).getValue(), "Hello Citrus!");
                     }
 
                     @Override
@@ -555,7 +555,7 @@ public class TestActionConverterTest {
 
                     @Override
                     public void assertModel(TestActionModel model) {
-                        Assert.assertEquals(model.getType(), "receive");
+                        Assert.assertEquals(model.getType(), "http-client:receive");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElse(new Property()).getValue(), "myEndpoint");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("status")).findFirst().orElse(new Property()).getValue(), "200");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("version")).findFirst().orElse(new Property()).getValue(), "HTTP/1.1");
@@ -586,9 +586,9 @@ public class TestActionConverterTest {
 
                     @Override
                     public void assertModel(TestActionModel model) {
-                        Assert.assertEquals(model.getType(), "receive");
+                        Assert.assertEquals(model.getType(), "http-server:receive");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElse(new Property()).getValue(), "myEndpoint");
-                        Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("message")).findFirst().orElse(new Property()).getValue(), "Hello Citrus!");
+                        Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("body")).findFirst().orElse(new Property()).getValue(), "Hello Citrus!");
                     }
 
                     @Override
@@ -616,7 +616,7 @@ public class TestActionConverterTest {
 
                     @Override
                     public void assertModel(TestActionModel model) {
-                        Assert.assertEquals(model.getType(), "send");
+                        Assert.assertEquals(model.getType(), "http-server:send");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("endpoint")).findFirst().orElse(new Property()).getValue(), "myEndpoint");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("status")).findFirst().orElse(new Property()).getValue(), "200");
                         Assert.assertEquals(model.getProperties().stream().filter(property -> property.getName().equals("version")).findFirst().orElse(new Property()).getValue(), "HTTP/1.1");

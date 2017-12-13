@@ -3,6 +3,7 @@ import {TruncatePipe} from "./truncate.pipe";
 import {ClazzPipe} from "./clazz.pipe";
 import {AsyncActions} from "./redux.util";
 import {LogPipe} from "./log.pipe";
+import {PrettyPrintPipe} from "./prettyprint.pipe";
 
 @NgModule({
     providers: [
@@ -11,12 +12,14 @@ import {LogPipe} from "./log.pipe";
     declarations: [
         TruncatePipe,
         ClazzPipe,
-        LogPipe
+        LogPipe,
+        PrettyPrintPipe
     ],
     exports: [
         TruncatePipe,
         ClazzPipe,
-        LogPipe
+        LogPipe,
+        PrettyPrintPipe
     ]
 })
 export class UtilModule {}

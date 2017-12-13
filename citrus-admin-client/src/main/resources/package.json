@@ -29,6 +29,7 @@
     "@types/immutability-helper": "^2.0.15",
     "bootstrap": "^3.3.7",
     "brace": "^0.10.0",
+    "pretty-data": "0.40.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
     "jquery": "^2.2.4",

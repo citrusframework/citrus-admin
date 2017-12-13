@@ -40,7 +40,7 @@ const components = [
     TestContainerComponent,
     TestDesignerComponent,
     TestTransitionComponent,
-    TestResultComponent,
+    TestResultComponent
 ];
 
 @NgModule({

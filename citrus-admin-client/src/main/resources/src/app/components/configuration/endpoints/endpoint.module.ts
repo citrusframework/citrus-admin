@@ -9,7 +9,6 @@ import {UtilModule} from "../../../util/util.module";
 import {EndpointsComponent, EndpointsPresentationComponent} from "./endpoints.component";
 import {EndpointFormComponent, EndpointFormPresentationComponent} from "./endpoint-form.component";
 import {OutletComponent} from "../../util/outlet.component";
-import {EndpointLabelComponent} from "./endpoint-label.component";
 
 export const endpointRoutes:Routes = [{
     path: 'endpoints',
@@ -38,8 +37,7 @@ export const endpointRoutes:Routes = [{
         EndpointsComponent,
         EndpointsPresentationComponent,
         EndpointFormComponent,
-        EndpointFormPresentationComponent,
-        EndpointLabelComponent
+        EndpointFormPresentationComponent
     ],
     exports: [
         EndpointsComponent

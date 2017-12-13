@@ -16,11 +16,13 @@
 
 package com.consol.citrus.admin.converter.action.http;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.admin.converter.action.AbstractTestActionConverter;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.config.xml.PayloadElementParser;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.model.testcase.http.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -56,6 +58,17 @@ public class ReceiveResponseActionConverter extends AbstractTestActionConverter<
                         .options(Stream.of(HttpStatus.values()).map(HttpStatus::getReasonPhrase).collect(Collectors.toList())));
 
             action.add(new Property<>("version", "version", "Version", Optional.ofNullable(model.getHeaders().getVersion()).orElse("HTTP/1.1"), false));
+        }
+
+        if (model.getBody() != null) {
+            action.add(new Property<>("message.name", "message.name", "MessageName", model.getBody().getName(), false));
+
+            action.add(new Property<>("message.type", "message.type", "MessageType", Optional.ofNullable(model.getBody().getType()).orElse(Citrus.DEFAULT_MESSAGE_TYPE).toLowerCase(), true)
+                    .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
+        } else {
+            action.add(new Property<>("message.name", "message.name", "MessageName", null, false));
+            action.add(new Property<>("message.type", "message.type", "MessageType", Citrus.DEFAULT_MESSAGE_TYPE.toLowerCase(), true)
+                    .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
         }
 
         return action;

@@ -27,6 +27,7 @@ import com.consol.citrus.model.testcase.core.ReceiveModel;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,9 +54,20 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
 
             action.add(new Property<>("message.type", "message.type", "MessageType", Optional.ofNullable(model.getMessage().getType()).orElse(Citrus.DEFAULT_MESSAGE_TYPE).toLowerCase(), true)
                     .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
+        } else {
+            action.add(new Property<>("message.name", "message.name", "MessageName", null, false));
+            action.add(new Property<>("message.type", "message.type", "MessageType", Citrus.DEFAULT_MESSAGE_TYPE.toLowerCase(), true)
+                    .options(Stream.of(MessageType.values()).map(MessageType::name).map(String::toLowerCase).collect(Collectors.toList())));
         }
 
         return action;
+    }
+
+    @Override
+    protected Map<String, String> getDisplayNameMappings() {
+        Map<String, String> mappings = super.getDisplayNameMappings();
+        mappings.put("header", "Headers");
+        return mappings;
     }
 
     @Override

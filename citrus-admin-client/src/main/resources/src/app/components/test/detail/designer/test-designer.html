@@ -1,0 +1,124 @@
+<div class="row test-designer">
+  <div id="sidebar" class="col-md-2">
+    <div class="start-action" (click)="selectedAction = undefined">
+      <i class="fa fa-play"></i>
+    </div>
+
+    <div *ngFor="let action of detail.actions; let i = index">
+      <div *ngIf="newAction && newActionIndex == i">
+        <test-transition [actionIndex]="-1"></test-transition>
+        <test-action [action]="newAction" (selected)="onSelected($event)" (removed)="onRemoved($event)"></test-action>
+      </div>
+
+      <test-transition [actionIndex]="i" (added)="onAdded($event)"></test-transition>
+      <test-action *ngIf="action.actions?.length == 0" [action]="action" (selected)="onSelected($event)" (removed)="onRemoved($event)"></test-action>
+      <test-container *ngIf="action.actions?.length > 0" [container]="action" (selected)="onSelected($event)" (removed)="onRemoved($event)"></test-container>
+    </div>
+
+    <div *ngIf="!newAction && detail.actions.length == 0">
+      <test-transition [actionIndex]="-1"></test-transition>
+      <div class="add-action" (click)="onAdded(0)">
+        <i class="fa fa-plus"></i>
+      </div>
+    </div>
+
+    <div *ngIf="newAction && detail.actions.length == newActionIndex">
+      <test-transition [actionIndex]="-1"></test-transition>
+      <test-action [action]="newAction" (selected)="onSelected($event)" (removed)="onRemoved($event)"></test-action>
+    </div>
+
+    <test-transition [actionIndex]="detail.actions.length ? detail.actions.length : -1" (added)="onAdded($event)"></test-transition>
+
+    <div class="stop-action" (click)="selectedAction = undefined">
+      <i class="fa fa-stop"></i>
+    </div>
+  </div>
+  <div id="main" class="col-md-10">
+    <div *ngIf="!selectedAction">
+      <h1 class="page-header">{{detail.name}}</h1>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-1">
+            <p><span>Author: </span></p>
+            <p><span>Status: </span></p>
+            <p><span>Package: </span></p>
+            <p><span>Description: </span></p>
+          </div>
+          <div class="col-md-11">
+            <p><span class="label label-primary" [textContent]="detail.author ? detail.author : 'Unknown'"></span></p>
+            <p><span class="label label-primary" [textContent]="detail.status ? detail.status : 'FINAL'"></span></p>
+            <p><span class="label label-primary" [textContent]="detail.packageName ? detail.packageName : 'Unknown'"></span></p>
+            <p class="well well-sm"><span [textContent]="detail.description ? detail.description : 'No description'"></span></p>
+          </div>
+        </div>
+      </div>
+      <p>&nbsp;</p>
+
+      <h3 class="page-header">Test variables</h3>
+      <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+            <th width="20"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="detail.variables.length == 0">
+            <td colspan="3"><i class="fa fa-times"></i> No variables defined</td>
+          </tr>
+          <tr *ngFor="let variable of detail.variables" class="clickable">
+            <td>{{variable.name}}</td>
+            <td>{{variable.value}}</td>
+            <td><a class="btn-remove" (click)="removeVariable(variable, $event)" name="remove" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <form class="form-horizontal" (ngSubmit)="addVariable()">
+        <fieldset>
+          <div class="form-group">
+            <div class="col-sm-5">
+              <input [(ngModel)]="variable.name" type="text" class="form-control" placeholder="Name" name="variableName" />
+            </div>
+            <div class="col-sm-7">
+              <input [(ngModel)]="variable.value" type="text" class="form-control" placeholder="Value" name="variableValue" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-12">
+              <button class="btn btn-primary" [disabled]="!variable.name || !variable.value" type="submit"><i class="fa fa-plus"></i> Add</button>
+              <button class="btn btn-default" type="reset">Reset</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+    <div *ngIf="selectedAction && selectedAction === newAction && selectedAction.type != 'new'" class="btn-group pull-right">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">ActionType <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let type of actionTypes" role="presentation">
+          <a role="menuitem" name="all" (click)="selectType(type)" class="clickable"><i class="fa icon-{{type}}"></i> {{type}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <test-action-form *ngIf="selectedAction"
+                      [action]="selectedAction"
+                      (saved)="onSave($event)"></test-action-form>
+
+    <h1 class="box-center">
+      <div *ngIf="selectedAction && selectedAction === newAction && selectedAction.type == 'new'" class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">ActionType <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li *ngFor="let type of actionTypes" role="presentation">
+            <a role="menuitem" name="all" (click)="selectType(type)" class="clickable"><i class="fa icon-{{type}}"></i> {{type}}</a>
+          </li>
+        </ul>
+      </div>
+    </h1>
+  </div>
+</div>

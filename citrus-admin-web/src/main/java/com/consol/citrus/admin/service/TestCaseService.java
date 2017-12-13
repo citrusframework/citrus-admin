@@ -169,7 +169,7 @@ public class TestCaseService {
 
         if (testModel.getVariables() != null) {
             for (VariablesModel.Variable variable : testModel.getVariables().getVariables()) {
-                testDetail.getVariables().put(variable.getName(), variable.getValue());
+                testDetail.getVariables().add(new Property<>(variable.getName(), variable.getValue()));
             }
         }
 

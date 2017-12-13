@@ -1,5 +1,6 @@
 import {Property} from "./property";
 import {Message} from "./message";
+import {Variable} from "./variable";
 
 export class TestGroup {
 
@@ -39,7 +40,7 @@ export class TestDetail extends Test {
     public author: string;
     public description: string;
 
-    public variables: any[];
+    public variables: Variable[];
     public parameters: any[];
 
     public actions: TestAction[];

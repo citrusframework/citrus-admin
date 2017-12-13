@@ -13,7 +13,7 @@ import {Component, Input} from "@angular/core";
     template: `
       <span class="label label-{{type}}">
         <i class="fa fa-share-alt-square"></i>
-      </span><span *ngIf="!iconOnly">&nbsp;{{type}}</span>
+      </span>&nbsp;<span *ngIf="!iconOnly">{{type}}</span>
     `
 })
 export class EndpointLabelComponent {

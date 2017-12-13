@@ -48,7 +48,7 @@ body {
 
 .nav-sidebar > .nav > li > a:hover {
     color: #3b73af;
-    background-color: #f3faff;
+    background-color: #e3effc;
     border-right: 4px solid #3b73af;
 }
 
@@ -57,7 +57,7 @@ body {
 .nav-sidebar > .nav > li.active > a:focus {
     font-weight: bold;
     color: #3b73af;
-    background-color: #f3faff;
+    background-color: #e3effc;
     border-right: 4px solid #3b73af;
 }
 
@@ -234,13 +234,13 @@ form {
 /** Tables **/
 
 .table > thead > tr > th {
-    background-color: #e3effc;
+    background-color: #f9f9f9;
     color: #333;
     border-bottom: 1px solid #ddd;
 }
 
 .table-hover > tbody > tr:hover {
-    background-color: #e3effc;
+    background-color: #eff6fb;
 }
 
 /** Boxing **/
@@ -971,8 +971,8 @@ i.channel {
 
 .test-designer #sidebar {
     max-height: 600px;
-    padding-top: 50px;
-    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     overflow-y: scroll;
 }
 
@@ -1035,7 +1035,7 @@ i.channel {
 }
 
 .test-container hr {
-    margin: 0px;
+    margin: 0;
     border-top: 1px solid #ddd;
 }
 

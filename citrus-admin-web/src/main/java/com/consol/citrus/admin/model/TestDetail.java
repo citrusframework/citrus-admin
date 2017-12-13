@@ -16,7 +16,8 @@
 
 package com.consol.citrus.admin.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -31,8 +32,8 @@ public class TestDetail extends Test {
     private String status;
     private String description;
 
-    private Map<String, Object> variables = new LinkedHashMap<String, Object>();
-    private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+    private List<Property<String>> variables = new ArrayList<>();
+    private List<Property<String>> parameters = new ArrayList<>();
 
     private List<TestActionModel> actions = new ArrayList<>();
 
@@ -144,38 +145,38 @@ public class TestDetail extends Test {
     }
 
     /**
-     * Gets the value of the variables property.
+     * Gets the variables.
      *
-     * @return the variables
+     * @return
      */
-    public Map<String, Object> getVariables() {
+    public List<Property<String>> getVariables() {
         return variables;
     }
 
     /**
-     * Sets the variables property.
+     * Sets the variables.
      *
      * @param variables
      */
-    public void setVariables(Map<String, Object> variables) {
+    public void setVariables(List<Property<String>> variables) {
         this.variables = variables;
     }
 
     /**
-     * Gets the value of the parameters property.
+     * Gets the parameters.
      *
-     * @return the parameters
+     * @return
      */
-    public Map<String, Object> getParameters() {
+    public List<Property<String>> getParameters() {
         return parameters;
     }
 
     /**
-     * Sets the parameters property.
+     * Sets the parameters.
      *
      * @param parameters
      */
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(List<Property<String>> parameters) {
         this.parameters = parameters;
     }
 

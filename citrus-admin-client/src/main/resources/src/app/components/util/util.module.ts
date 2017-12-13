@@ -12,6 +12,7 @@ import {RouterModule} from "@angular/router";
 import {FormGroupComponent, InputWithAddonComponent} from "./forms.component";
 import {AlertConsole} from './alert.console';
 import {AlertDialog} from './alert.dialog';
+import {EndpointLabelComponent} from "./endpoint-label.component";
 
 const components = [
     AutoCompleteComponent,
@@ -29,7 +30,8 @@ const components = [
     FormGroupComponent,
     AlertConsole,
     AlertDialog,
-    InputWithAddonComponent
+    InputWithAddonComponent,
+    EndpointLabelComponent
 ];
 
 @NgModule({

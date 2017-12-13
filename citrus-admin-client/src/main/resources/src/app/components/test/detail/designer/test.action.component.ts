@@ -6,7 +6,7 @@ import {TestAction} from "../../../../model/tests";
     template: `<div [class]="action.dirty ? 'test-action dirty' : 'test-action'" (click)="select()" (mouseenter)="focused = true" (mouseleave)="focused = false">
             <a (click)="remove($event)" [hidden]="!focused" name="remove" title="Remove action" class="pull-right"><i class="fa fa-times" style="color: #A50000;"></i></a>
             <i class="fa icon-{{action.type}}"></i>
-            <span>{{action.type}}</span>
+            <span [textContent]="action.dirty ? action.type + ' *' : action.type"></span>
         </div>`
 })
 export class TestActionComponent {

@@ -1,34 +1,102 @@
 <div *ngIf="action && action.type == 'new'" class="box-center">
-    <h3>Please choose action type ...</h3>
+  <h3>Please choose action type ...</h3>
 </div>
 
 <form *ngIf="action && action.type != 'new'" class="form-horizontal" (ngSubmit)="save()" [formGroup]="form">
-    <h1><i class="fa icon-{{action.type}}"></i> {{action.type}}</h1>
-    <form-group *ngFor="let property of action.properties"
-                [control]="form.get(property.name)"
-                [label]="property.displayName + (property.required ? ' *' : '')">
-        <input-with-addon
-            *ngIf="!property.optionType && !property.options?.length"
-            [formControl]="form.controls[property.name]"
-            [message]="form.get(property.name)?.errors ? property.displayName + ' is required' : ''"
-            [(ngModel)]="property.value"></input-with-addon>
-        <div *ngIf="property.optionType" style="display: flex">
-            <autocomplete
-                [items]="beans[property.optionType]|async"
-                icon="coffee"
-                addon="search"
-                [(ngModel)]="property.value"
-                [formControl]="form.controls[property.name]"></autocomplete>
-        </div>
-        <select *ngIf="property.options?.length" class="form-control" [(ngModel)]="property.value" [formControl]="form.controls[property.name]">
-            <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
-        </select>
-    </form-group>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary"
-                    [disabled]="form.invalid"
-                    type="submit">Save</button>
-        </div>
+  <h1 class="page-header"><i class="fa icon-{{action.type}}"></i> {{action.type}} <span class="sub-header">{{property('description')?.value}}</span></h1>
+
+  <form-group *ngFor="let property of properties('endpoint')"
+              [control]="form.get(property.name)"
+              [label]="property.displayName + (property.required ? ' *' : '')">
+    <div class="input-group">
+      <input (ngModelChange)="property.value != $event ? action.dirty = true : false" [(ngModel)]="property.value" [formControl]="form.controls[property.name]" type="text" class="form-control" placeholder="{{property.displayName}}" name="{{property.name}}" />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li role="presentation" *ngFor="let endpoint of getEndpoints() | async">
+            <a role="menuitem" name="{{endpoint.id}}" (click)="property.value = endpoint.id" class="clickable"><endpoint-label [type]="endpoint.type" [iconOnly]="true"></endpoint-label> {{endpoint.id}}</a>
+          </li>
+        </ul>
+      </span>
     </div>
+  </form-group>
+
+  <form-group *ngFor="let property of properties('message', 'body')"
+              [control]="form.get(property.name)"
+              [label]="property.displayName + (property.required ? ' *' : '')">
+    <textarea class="form-control" (ngModelChange)="property.value != $event ? action.dirty = true : false" [(ngModel)]="property.value" [formControl]="form.controls[property.name]" placeholder="{{property.displayName}}" [rows]="property.value?.length > 500 ? 10 : (property.value?.length > 100 ? 5 : 3)"></textarea>
+  </form-group>
+
+  <div class="form-group" *ngIf="property('header', 'headers')">
+    <label class="col-sm-2 control-label">Headers</label>
+    <div class="col-sm-3">
+      <input placeholder="Name" type="text" class="form-control"
+             [(ngModel)]="header.name"
+             [ngModelOptions]="{standalone: true}"
+             name="headerName"/>
+    </div>
+    <div class="col-sm-6">
+      <input placeholder="Value" type="text" class="form-control"
+             [(ngModel)]="header.value"
+             [ngModelOptions]="{standalone: true}"
+             name="headerVaule"/>
+    </div>
+    <div class="col-sm-1 text-right">
+      <button (click)="addHeader()"
+              class="btn btn-primary"
+              [disabled]="header.name?.length === 0 || header.value?.length === 0">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="form-group" *ngFor="let existing of headers()">
+    <div class="col-sm-offset-2 col-sm-3">
+      <input placeholder="Name" type="text" class="form-control"
+             value="{{existing.name}}"
+             contenteditable="false"/>
+    </div>
+    <div class="col-sm-6">
+      <input placeholder="Value" type="text" class="form-control"
+             value="{{existing.value}}"
+             contenteditable="false"/>
+    </div>
+    <div class="col-sm-1 text-right">
+      <button (click)="removeHeader(existing)"
+              class="btn btn-danger">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+  </div>
+
+  <form-group *ngFor="let property of getProperties()"
+              [control]="form.get(property.name)"
+              [label]="property.displayName + (property.required ? ' *' : '')">
+    <input-with-addon
+      *ngIf="!property.optionType && !property.options?.length"
+      [formControl]="form.controls[property.name]"
+      [message]="form.get(property.name)?.errors ? property.displayName + ' is required' : ''"
+      (ngModelChange)="property.value != $event ? action.dirty = true : false"
+      [(ngModel)]="property.value"></input-with-addon>
+    <div *ngIf="property.optionType" style="display: flex">
+      <autocomplete
+        [items]="beans[property.optionType]|async"
+        icon="coffee"
+        addon="search"
+        (ngModelChange)="property.value != $event ? action.dirty = true : false"
+        [(ngModel)]="property.value"
+        [formControl]="form.controls[property.name]"></autocomplete>
+    </div>
+    <select *ngIf="property.options?.length" class="form-control" (ngModelChange)="property.value != $event ? action.dirty = true : false" [(ngModel)]="property.value" [formControl]="form.controls[property.name]">
+      <option *ngFor="let option of property.options" value="{{option}}">{{option}}</option>
+    </select>
+  </form-group>
+
+  <div class="form-group" [hidden]="!action.dirty">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary"
+              [disabled]="form.invalid"
+              type="submit">Save</button>
+    </div>
+  </div>
 </form>
