@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {TestAction, TestDetail} from "../../../../model/tests";
 import {TestService} from "../../../../service/test.service";
 import {Variable} from "../../../../model/variable";
+import {AlertService} from "../../../../service/alert.service";
+import {Alert} from "../../../../model/alert";
 
 @Component({
     selector: "test-designer",
@@ -18,7 +20,8 @@ export class TestDesignerComponent {
 
     actionTypes: string[];
 
-    constructor(private testService: TestService) {
+    constructor(private testService: TestService,
+                private _alertService: AlertService) {
         this.testService.getActionTypes()
             .subscribe(res => this.actionTypes = res);
     }
@@ -41,7 +44,11 @@ export class TestDesignerComponent {
             this.newActionIndex = 0;
             this.newAction = undefined;
         } else {
-            this.detail.actions.splice(this.detail.actions.indexOf(action), 1);
+            this.testService.deleteAction(this.detail.actions.indexOf(action), this.detail)
+                .subscribe(res => {
+                        this.detail.actions.splice(this.detail.actions.indexOf(action), 1);
+                    },
+                    error => this.notifyError(error));
         }
 
         this.selectedAction = undefined;
@@ -56,16 +63,24 @@ export class TestDesignerComponent {
     }
 
     onSave(action: TestAction) {
-        action.dirty = false;
-
         if (action === this.newAction) {
             this.detail.actions.splice(this.newActionIndex, 0, this.newAction);
-            this.newActionIndex = 0;
-            this.newAction = undefined;
-            this.selectedAction = undefined;
+
+            this.testService.addAction(this.newActionIndex, this.detail)
+                .subscribe(res => {
+                        this.newActionIndex = 0;
+                        this.newAction = undefined;
+                        this.selectedAction = undefined;
+                        action.dirty = false;
+                },
+                error => this.notifyError(error));
         } else {
-            //ToDo update action
-            console.log(action);
+            this.testService.updateAction(this.detail.actions.indexOf(action), this.detail)
+                .subscribe(res => {
+                        this.selectedAction = undefined;
+                        action.dirty = false;
+                    },
+                    error => this.notifyError(error));
         }
     }
 
@@ -80,5 +95,9 @@ export class TestDesignerComponent {
         this.detail.variables.splice(this.detail.variables.indexOf(variable), 1);
         event.stopPropagation();
         return false;
+    }
+
+    notifyError(error: any) {
+        this._alertService.add(new Alert("danger", JSON.stringify(error), false));
     }
 }

@@ -18,8 +18,7 @@ package com.consol.citrus.admin.web;
 
 import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.model.TestActionModel;
-import com.consol.citrus.admin.model.TestDetail;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestActionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,31 +45,31 @@ public class TestActionController {
     @Autowired
     private List<TestActionConverter> actionConverter;
 
-    @RequestMapping(value = "/{pos}", method = {RequestMethod.POST})
+    @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createTestAction(@PathVariable("pos") Integer position, @RequestBody TestDetail testDetail) {
+    public void addTestAction(@RequestParam("pos") Integer position, @RequestBody TestDetail testDetail) {
         if (projectService.hasSpringXmlApplicationContext()) {
-            testActionService.addTestAction(new File(testDetail.getFile()), projectService.getActiveProject(), position, convertToModel(testDetail.getActions().get(position)));
+            testActionService.addTestAction(getXmlSourceFile(testDetail), projectService.getActiveProject(), position, convertToModel(testDetail.getActions().get(position)));
         } else if (projectService.hasSpringJavaConfig()) {
             throw new UnsupportedOperationException();
         }
     }
 
-    @RequestMapping(value = "/{pos}", method = {RequestMethod.PUT})
+    @RequestMapping(method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateTestAction(@PathVariable("pos") Integer position, @RequestBody TestDetail testDetail) {
+    public void updateTestAction(@RequestParam("pos") Integer position, @RequestBody TestDetail testDetail) {
         if (projectService.hasSpringXmlApplicationContext()) {
-            testActionService.updateTestAction(new File(testDetail.getFile()), projectService.getActiveProject(), position, convertToModel(testDetail.getActions().get(position)));
+            testActionService.updateTestAction(getXmlSourceFile(testDetail), projectService.getActiveProject(), position, convertToModel(testDetail.getActions().get(position)));
         } else if (projectService.hasSpringJavaConfig()) {
             throw new UnsupportedOperationException();
         }
     }
 
-    @RequestMapping(value = "/{pos}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST})
     @ResponseBody
-    public void deleteTestAction(@PathVariable("pos") Integer position, @RequestBody TestDetail testDetail) {
+    public void deleteTestAction(@RequestParam("pos") Integer position, @RequestBody TestDetail testDetail) {
         if (projectService.hasSpringXmlApplicationContext()) {
-            testActionService.removeTestAction(new File(testDetail.getFile()), projectService.getActiveProject(), position);
+            testActionService.removeTestAction(getXmlSourceFile(testDetail), projectService.getActiveProject(), position);
         } else if (projectService.hasSpringJavaConfig()) {
             throw new UnsupportedOperationException();
         }
@@ -115,5 +114,14 @@ public class TestActionController {
         }
 
         throw new ApplicationRuntimeException("Unable to convert test action definition to proper model type");
+    }
+
+    /**
+     * Find XML source file in test detail.
+     * @param detail
+     * @return
+     */
+    private File getXmlSourceFile(TestDetail detail) {
+        return new File(detail.getFile() + ".xml");
     }
 }

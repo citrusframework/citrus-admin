@@ -23,12 +23,6 @@
 
   <xsl:param name="action_index"/>
 
-  <xsl:template match="/spring:beans/citrus:testcase/citrus:actions/citrus:*[position()=$action_index]">
-    <xsl:call-template name="update-action"/>
-    <xsl:call-template name="add-action"/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
   <xsl:template match="node()">
     <xsl:choose>
       <xsl:when test="local-name(.) = 'beans'">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -36,7 +30,12 @@
       <xsl:when test="local-name(.) = 'actions'">&lt;<xsl:value-of select="name(.)"/>&gt;
         <xsl:for-each select="child::*">
           <xsl:choose>
-            <xsl:when test="position() = $action_index"><xsl:call-template name="update-action"/><xsl:call-template name="add-action"/></xsl:when>
+            <xsl:when test="position() = $action_index">
+              <xsl:choose>
+                <xsl:when test="$action_index > 0"><xsl:call-template name="update-action"/><xsl:call-template name="add-action"/></xsl:when>
+                <xsl:otherwise><xsl:call-template name="add-action"/><xsl:call-template name="update-action"/></xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
             <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:otherwise>
           </xsl:choose>
         </xsl:for-each>&lt;/<xsl:value-of select="name(.)"/>&gt;

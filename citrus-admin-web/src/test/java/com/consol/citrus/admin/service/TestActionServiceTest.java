@@ -58,9 +58,9 @@ public class TestActionServiceTest {
 
         File tempFile = createTempContextFile("test-add");
 
-        testActionService.addTestAction(tempFile, project, 1L, echo1);
-        testActionService.addTestAction(tempFile, project, 1L, echo2);
-        testActionService.addTestAction(tempFile, project, 3L, sendModel);
+        testActionService.addTestAction(tempFile, project, 0, echo1);
+        testActionService.addTestAction(tempFile, project, 0, echo2);
+        testActionService.addTestAction(tempFile, project, 2, sendModel);
 
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
@@ -82,7 +82,7 @@ public class TestActionServiceTest {
 
         File tempFile = createTempContextFile("test-add");
 
-        testActionService.addTestAction(tempFile, project, 1L, sendRequestModel);
+        testActionService.addTestAction(tempFile, project, 0, sendRequestModel);
 
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
@@ -94,8 +94,8 @@ public class TestActionServiceTest {
     public void testRemoveActionDefinition() throws Exception {
         File tempFile = createTempContextFile("test-remove");
 
-        testActionService.removeTestAction(tempFile, project, 2L);
-        testActionService.removeTestAction(tempFile, project, 3L);
+        testActionService.removeTestAction(tempFile, project, 1);
+        testActionService.removeTestAction(tempFile, project, 2);
 
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
@@ -112,7 +112,7 @@ public class TestActionServiceTest {
         EchoModel echo = new EchoModel();
         echo.setMessage("Citrus rocks!");
 
-        testActionService.updateTestAction(tempFile, project, 2L, echo);
+        testActionService.updateTestAction(tempFile, project, 1, echo);
 
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 

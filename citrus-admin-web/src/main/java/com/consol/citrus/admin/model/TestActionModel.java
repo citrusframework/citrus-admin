@@ -24,11 +24,18 @@ import java.util.List;
  */
 public class TestActionModel {
 
-    private final String type;
-    private final Class<?> modelType;
+    private String type;
+    private Class<?> modelType;
     private List<Property> properties = new ArrayList<>();
 
     private List<TestActionModel> actions = new ArrayList<>();
+
+    /**
+     * Default constructor.
+     */
+    public TestActionModel() {
+        super();
+    }
 
     /**
      * Constructor using action type field and identifier.
@@ -60,11 +67,29 @@ public class TestActionModel {
     }
 
     /**
+     * Sets the type.
+     *
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * Gets the model type that is logically linked to this action data.
      * @return
      */
     public Class<?> getModelType() {
         return modelType;
+    }
+
+    /**
+     * Sets the modelType.
+     *
+     * @param modelType
+     */
+    public void setModelType(Class<?> modelType) {
+        this.modelType = modelType;
     }
 
     /**

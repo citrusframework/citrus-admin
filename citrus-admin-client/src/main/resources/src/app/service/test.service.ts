@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import {TestGroup, Test, TestDetail, TestResult, TestAction} from '../model/tests';
+import {TestGroup, Test, TestDetail, TestAction} from '../model/tests';
 import {URLSearchParams} from "@angular/http";
+import {JsonHeader} from "./common";
 
 @Injectable()
 export class TestService {
@@ -85,6 +86,21 @@ export class TestService {
     getActionType(type: string): Observable<TestAction> {
         return this.http.get(`${this._testActionsUrl}/type/${type}`)
             .map(res => <TestAction> res.json())
+            .catch(this.handleError);
+    }
+
+    addAction(position: number, detail: TestDetail) {
+        return this.http.post(`${this._testActionsUrl}?pos=${position}`, JSON.stringify(detail), JsonHeader)
+            .catch(this.handleError);
+    }
+
+    updateAction(position: number, detail: TestDetail) {
+        return this.http.put(`${this._testActionsUrl}?pos=${position}`, JSON.stringify(detail), JsonHeader)
+            .catch(this.handleError);
+    }
+
+    deleteAction(position: number, detail: TestDetail) {
+        return this.http.post(`${this._testActionsUrl}/delete?pos=${position}`, JSON.stringify(detail), JsonHeader)
             .catch(this.handleError);
     }
 

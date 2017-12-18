@@ -30,7 +30,7 @@
       <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/><xsl:call-template name="element-namespaces"/>/&gt;</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template name="namespaces">
     <xsl:for-each select="namespace::*">
       <xsl:if test="not(name(.) = 'xml')">

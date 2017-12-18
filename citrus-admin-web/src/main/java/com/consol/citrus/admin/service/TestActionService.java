@@ -71,10 +71,10 @@ public class TestActionService {
      * Method adds a new test action definition to the XML testcase file.
      * @param testFile
      * @param project
-     * @param index
+     * @param position
      * @param jaxbElement
      */
-    public void addTestAction(File testFile, Project project, long index, Object jaxbElement) {
+    public void addTestAction(File testFile, Project project, int position, Object jaxbElement) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -85,7 +85,7 @@ public class TestActionService {
 
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
-            transformer.setParameter("action_index", index);
+            transformer.setParameter("action_index", position + 1);
             transformer.setParameter("action_content", getXmlContent(jaxbElement)
                     .replaceAll("(?m)^(.)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
 
@@ -105,9 +105,9 @@ public class TestActionService {
      * identified by its position in the list of actions.
      * @param testFile
      * @param project
-     * @param index
+     * @param position
      */
-    public void removeTestAction(File testFile, Project project, long index) {
+    public void removeTestAction(File testFile, Project project, int position) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -119,7 +119,7 @@ public class TestActionService {
 
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
-            transformer.setParameter("action_index", index);
+            transformer.setParameter("action_index", position + 1);
 
             //transform
             StringResult result = new StringResult();
@@ -137,10 +137,10 @@ public class TestActionService {
      * identified by its position in the list of actions.
      * @param testFile
      * @param project
-     * @param index
+     * @param position
      * @param jaxbElement
      */
-    public void updateTestAction(File testFile, Project project, long index, Object jaxbElement) {
+    public void updateTestAction(File testFile, Project project, int position, Object jaxbElement) {
         Source xsltSource;
         Source xmlSource;
         try {
@@ -154,7 +154,7 @@ public class TestActionService {
 
             //create transformer
             Transformer transformer = transformerFactory.newTransformer(xsltSource);
-            transformer.setParameter("action_index", index);
+            transformer.setParameter("action_index", position + 1);
             transformer.setParameter("action_content", getXmlContent(jaxbElement)
                     .replaceAll("(?m)^(\\s<)", getTabs(1, project.getSettings().getTabSize()) + "$1")
                     .replaceAll("(?m)^(</)", getTabs(1, project.getSettings().getTabSize()) + "$1"));
