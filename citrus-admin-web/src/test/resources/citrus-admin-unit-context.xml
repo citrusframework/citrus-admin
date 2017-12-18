@@ -15,6 +15,7 @@
 
   <bean class="com.consol.citrus.admin.service.local.LocalTerminalService"/>
   <bean class="com.consol.citrus.admin.service.TestCaseService"/>
+  <bean class="com.consol.citrus.admin.service.TestActionService"/>
   <bean class="com.consol.citrus.admin.service.TestReportService"/>
   <bean class="com.consol.citrus.admin.service.ProjectService"/>
   <bean class="com.consol.citrus.admin.service.FileBrowserService"/>
@@ -35,4 +36,5 @@
   <bean id="nullChannel" class="org.springframework.integration.channel.NullChannel"/>
 
   <bean class="com.consol.citrus.admin.marshal.SpringBeanMarshaller"/>
+  <bean class="com.consol.citrus.admin.marshal.TestActionMarshaller"/>
 </beans>
