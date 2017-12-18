@@ -6,7 +6,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin</artifactId>
   <name>citrus-admin</name>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <packaging>pom</packaging>
   <description>Citrus Administration UI</description>
   <url>http://www.citrusframework.org</url>
