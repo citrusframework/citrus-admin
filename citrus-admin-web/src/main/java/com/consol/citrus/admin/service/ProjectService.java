@@ -20,7 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.Application;
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
+import com.consol.citrus.admin.marshal.SpringBeanNamespacePrefixMapper;
 import com.consol.citrus.admin.model.Module;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.maven.MavenArchetype;
@@ -583,7 +583,7 @@ public class ProjectService {
      */
     public List<Module> getModules() {
         List<Module> modules = new ArrayList<>();
-        Collection<String> allModules = new NamespacePrefixMapper().getNamespaceMappings().values();
+        Collection<String> allModules = new SpringBeanNamespacePrefixMapper().getNamespaceMappings().values();
 
         if (project.isMavenProject()) {
             try {

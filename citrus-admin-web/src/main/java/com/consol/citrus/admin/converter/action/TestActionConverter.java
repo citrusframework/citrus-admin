@@ -29,6 +29,13 @@ public interface TestActionConverter<S, T extends com.consol.citrus.TestAction> 
     TestActionModel convert(S model);
 
     /**
+     * Convert back to source model.
+     * @param model
+     * @return
+     */
+    S convertBack(TestActionModel model);
+
+    /**
      * Gets the action type name.
      * @return
      */

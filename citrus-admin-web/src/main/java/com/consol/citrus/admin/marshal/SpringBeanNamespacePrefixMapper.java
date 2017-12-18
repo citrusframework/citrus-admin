@@ -22,12 +22,12 @@ import java.util.Map;
 /**
  * @author Christoph Deppisch
  */
-public class NamespacePrefixMapper extends com.sun.xml.bind.marshaller.NamespacePrefixMapper {
+public class SpringBeanNamespacePrefixMapper extends com.sun.xml.bind.marshaller.NamespacePrefixMapper {
 
     /** List of known namespaces with mapping to prefix */
     private Map<String, String> namespaceMappings = new HashMap<String, String>();
 
-    public NamespacePrefixMapper() {
+    public SpringBeanNamespacePrefixMapper() {
         namespaceMappings.put("http://www.citrusframework.org/schema/config", "citrus");
         namespaceMappings.put("http://www.citrusframework.org/schema/jms/config", "citrus-jms");
         namespaceMappings.put("http://www.citrusframework.org/schema/http/config", "citrus-http");

@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.admin.converter.action.ActionConverter;
 import com.consol.citrus.admin.converter.action.TestActionConverter;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.marshal.XmlTestMarshaller;
+import com.consol.citrus.admin.marshal.TestCaseMarshaller;
 import com.consol.citrus.admin.mock.Mocks;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.spring.SpringBeans;
@@ -309,7 +309,7 @@ public class TestCaseService {
             throw new ApplicationRuntimeException("Failed to get XML source code for test: " + test.getPackageName() + "." + test.getName());
         }
 
-        return ((SpringBeans) new XmlTestMarshaller().unmarshal(new StringSource(xmlSource))).getTestcase();
+        return ((SpringBeans) new TestCaseMarshaller().unmarshal(new StringSource(xmlSource))).getTestcase();
     }
 
     /**

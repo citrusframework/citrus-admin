@@ -29,29 +29,21 @@ import java.util.Map;
  * @author Christoph Deppisch
  */
 @Component
-public class SpringBeanMarshaller extends Jaxb2Marshaller {
+public class TestActionMarshaller extends Jaxb2Marshaller {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SpringBeanMarshaller.class);
+    private static Logger log = LoggerFactory.getLogger(TestActionMarshaller.class);
 
-    private SpringBeanNamespacePrefixMapper namespacePrefixMapper = new SpringBeanNamespacePrefixMapper();
+    private TestActionNamespacePrefixMapper namespacePrefixMapper = new TestActionNamespacePrefixMapper();
 
-    public SpringBeanMarshaller() {
-        setContextPaths("com.consol.citrus.admin.model.spring",
-                "com.consol.citrus.model.config.core",
-                "com.consol.citrus.model.config.jms",
-                "com.consol.citrus.model.config.ws",
-                "com.consol.citrus.model.config.websocket",
-                "com.consol.citrus.model.config.ssh",
-                "com.consol.citrus.model.config.vertx",
-                "com.consol.citrus.model.config.ftp",
-                "com.consol.citrus.model.config.mail",
-                "com.consol.citrus.model.config.docker",
-                "com.consol.citrus.model.config.kubernetes",
-                "com.consol.citrus.model.config.selenium",
-                "com.consol.citrus.model.config.rmi",
-                "com.consol.citrus.model.config.jmx",
-                "com.consol.citrus.model.config.http");
+    public TestActionMarshaller() {
+        setContextPaths("com.consol.citrus.model.testcase.core",
+                "com.consol.citrus.model.testcase.http",
+                "com.consol.citrus.model.testcase.ws",
+                "com.consol.citrus.model.testcase.jms",
+                "com.consol.citrus.model.testcase.docker",
+                "com.consol.citrus.model.testcase.kubernetes",
+                "com.consol.citrus.model.testcase.selenium");
 
         Map<String, Object> marshallerProperties = new HashMap<>();
         marshallerProperties.put(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -73,7 +65,7 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
      *
      * @return
      */
-    public SpringBeanNamespacePrefixMapper getNamespacePrefixMapper() {
+    public TestActionNamespacePrefixMapper getNamespacePrefixMapper() {
         return namespacePrefixMapper;
     }
 
@@ -82,7 +74,7 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
      *
      * @param namespacePrefixMapper
      */
-    public void setNamespacePrefixMapper(SpringBeanNamespacePrefixMapper namespacePrefixMapper) {
+    public void setNamespacePrefixMapper(TestActionNamespacePrefixMapper namespacePrefixMapper) {
         this.namespacePrefixMapper = namespacePrefixMapper;
     }
 }

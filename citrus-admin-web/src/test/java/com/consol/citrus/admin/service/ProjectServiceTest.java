@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.connector.WebSocketPushEventsListener;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
-import com.consol.citrus.admin.marshal.NamespacePrefixMapper;
+import com.consol.citrus.admin.marshal.SpringBeanNamespacePrefixMapper;
 import com.consol.citrus.admin.model.Module;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.spring.SpringBean;
@@ -113,7 +113,7 @@ public class ProjectServiceTest {
         projectService.setActiveProject(testProject);
 
         List<Module> modules = projectService.getModules();
-        Assert.assertEquals(modules.size(), new NamespacePrefixMapper().getNamespaceMappings().size());
+        Assert.assertEquals(modules.size(), new SpringBeanNamespacePrefixMapper().getNamespaceMappings().size());
 
         Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("core")));
         Assert.assertTrue(modules.stream().anyMatch(module -> module.isActive() && module.getName().equals("java-dsl")));

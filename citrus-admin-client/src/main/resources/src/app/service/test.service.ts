@@ -15,7 +15,7 @@ export class TestService {
     private _testDetailUrl = this._serviceUrl + '/detail';
     private _testSourceUrl = this._serviceUrl + '/source';
     private _testExecuteUrl = this._serviceUrl + '/execute';
-    private _testActionsUrl = this._serviceUrl + '/actions';
+    private _testActionsUrl = 'api/test/actions';
 
     getTestPackages():Observable<TestGroup[]> {
         return this.http.get(this._serviceUrl)

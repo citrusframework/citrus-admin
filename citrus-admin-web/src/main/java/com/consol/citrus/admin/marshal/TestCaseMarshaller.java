@@ -23,18 +23,20 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 /**
  * @author Christoph Deppisch
  */
-public class XmlTestMarshaller extends Jaxb2Marshaller {
+public class TestCaseMarshaller extends Jaxb2Marshaller {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SpringBeanMarshaller.class);
 
-    public XmlTestMarshaller() {
+    public TestCaseMarshaller() {
         setPackagesToScan("com.consol.citrus.admin.model.spring",
                 "com.consol.citrus.model.testcase.core",
                 "com.consol.citrus.model.testcase.http",
                 "com.consol.citrus.model.testcase.ws",
                 "com.consol.citrus.model.testcase.jms",
-                "com.consol.citrus.model.testcase.docker");
+                "com.consol.citrus.model.testcase.docker",
+                "com.consol.citrus.model.testcase.kubernetes",
+                "com.consol.citrus.model.testcase.selenium");
 
         try {
             afterPropertiesSet();
