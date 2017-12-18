@@ -504,7 +504,7 @@ public class ProjectService {
                         Matcher matcher = Pattern.compile(pattern).matcher(pomXml);
 
                         if (matcher.find()) {
-                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-admin-connector</artifactId>%n      <version>1.0.2</version>%n    </dependency>") + pomXml.substring(matcher.end());
+                            pomXml = pomXml.substring(0, matcher.end()) + String.format("%n    <dependency>%n      <groupId>com.consol.citrus</groupId>%n      <artifactId>citrus-admin-connector</artifactId>%n      <version>1.0.3-SNAPSHOT</version>%n    </dependency>") + pomXml.substring(matcher.end());
                             break;
                         }
                     }

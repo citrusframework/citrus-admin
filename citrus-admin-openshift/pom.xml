@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-admin-openshift</artifactId>
   <name>citrus-admin-openshift</name>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
