@@ -14,15 +14,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>1.5.7.RELEASE</spring.boot.version>
-    <citrus.version>2.7.2</citrus.version>
+    <spring.boot.version>1.5.10.RELEASE</spring.boot.version>
+    <citrus.version>2.7.3</citrus.version>
     <slf4j.version>1.7.25</slf4j.version>
     <logback.classic.version>1.2.3</logback.classic.version>
     <testng.version>6.11</testng.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
 
-    <node.version>v8.1.3</node.version>
-    <npm.version>5.0.3</npm.version>
+    <node.version>v8.9.1</node.version>
+    <npm.version>5.5.1</npm.version>
 
     <skip.gpg>false</skip.gpg>
   </properties>

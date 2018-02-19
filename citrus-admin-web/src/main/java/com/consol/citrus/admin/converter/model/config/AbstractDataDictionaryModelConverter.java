@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.converter.model.config;
 
 import com.consol.citrus.admin.converter.model.AbstractModelConverter;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.model.config.core.DataDictionaryType;
 import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.slf4j.Logger;
@@ -51,6 +52,14 @@ public abstract class AbstractDataDictionaryModelConverter<T, S> extends Abstrac
             public Object decorateArgument(Object arg) {
                 getAdditionalImports().add(AbstractDataDictionary.class);
                 return "AbstractDataDictionary.PathMappingStrategy." + arg.toString();
+            }
+        });
+
+        addDecorator(new MethodCallDecorator("setDirection") {
+            @Override
+            public Object decorateArgument(Object arg) {
+                getAdditionalImports().add(MessageDirection.class);
+                return "MessageDirection." + arg.toString();
             }
         });
 

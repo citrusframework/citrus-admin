@@ -57,6 +57,16 @@
       </select>
   </form-group>
 
+  <form-group
+      label="Direction *"
+      [control]="form.get('direction')">
+      <select formControlName="direction" [(ngModel)]="selectedDictionary.direction" class="form-control" placeholder="Direction" name="selectedDirection">
+        <option value="UNBOUND">UNBOUND</option>
+        <option value="INBOUND">INBOUND</option>
+        <option value="OUTBOUND">OUTBOUND</option>
+      </select>
+  </form-group>
+
   <div class="form-group">
     <label class="col-sm-2 control-label">Mappings</label>
     <div class="col-sm-3">

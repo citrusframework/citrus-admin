@@ -7,6 +7,7 @@ export class DataDictionary {
     public id: string;
     public globalScope: boolean;
     public mappingStrategy: string;
+    public direction: string;
     public mappings: Mappings;
 }
 
