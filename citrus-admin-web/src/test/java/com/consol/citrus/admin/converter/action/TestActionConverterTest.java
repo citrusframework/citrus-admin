@@ -541,7 +541,7 @@ public class TestActionConverterTest {
                         ReceiveResponseModel model = new ReceiveResponseModel();
                         model.setClient("myEndpoint");
 
-                        ResponseHeadersType headers = new ResponseHeadersType();
+                        ReceiveResponseModel.Headers headers = new ReceiveResponseModel.Headers();
                         headers.setStatus(HttpStatus.OK.toString());
                         model.setHeaders(headers);
                         return model;
