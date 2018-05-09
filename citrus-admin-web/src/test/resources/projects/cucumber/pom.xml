@@ -27,10 +27,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <citrus.version>2.7.2</citrus.version>
-    <cucumber.version>1.2.5</cucumber.version>
+    <citrus.version>2.7.5</citrus.version>
+    <cucumber.version>2.3.1</cucumber.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <testng.version>6.11</testng.version>
+    <testng.version>6.14.3</testng.version>
   </properties>
 
   <dependencies>

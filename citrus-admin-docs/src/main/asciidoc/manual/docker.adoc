@@ -23,7 +23,7 @@ You can set the Maven archetype coordinates (*groupId*, *artifactId*, *version*)
 
 [source]
 ----
-docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.2 consol/citrus-admin:latest
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.5 consol/citrus-admin:latest
 ----
 
 The UI will load the Maven archetype and create the project sources when the container is started. The new project gets its Maven coordinates from another environment setting:

@@ -14,11 +14,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>1.5.10.RELEASE</spring.boot.version>
-    <citrus.version>2.7.3</citrus.version>
+    <spring.boot.version>1.5.12.RELEASE</spring.boot.version>
+    <citrus.version>2.7.6-SNAPSHOT</citrus.version>
     <slf4j.version>1.7.25</slf4j.version>
     <logback.classic.version>1.2.3</logback.classic.version>
-    <testng.version>6.11</testng.version>
+    <testng.version>6.14.3</testng.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
 
     <node.version>v8.9.1</node.version>
