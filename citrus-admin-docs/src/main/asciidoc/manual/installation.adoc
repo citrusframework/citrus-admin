@@ -6,7 +6,7 @@ is a Java WAR file located at https://labs.consol.de/maven/repository/com/consol
 
 [source,bash]
 ----
-curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.3-SNAPSHOT/citrus-admin-web-1.0.3-SNAPSHOT-executable.war
+curl -o citrus-admin.war https://labs.consol.de/maven/repository/com/consol/citrus/citrus-admin-web/1.0.3/citrus-admin-web-1.0.3-executable.war
 ----
 
 Save the Java web archive to a folder on your local machine and start the Spring boot web application. The downloaded artifact should be executable

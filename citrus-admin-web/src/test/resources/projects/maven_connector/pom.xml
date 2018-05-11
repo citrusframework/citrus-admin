@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <citrus.version>2.7.5</citrus.version>
-    <citrus.admin.version>1.0.3-SNAPSHOT</citrus.admin.version>
+    <citrus.admin.version>1.0.3</citrus.admin.version>
     <slf4j.version>1.7.25</slf4j.version>
     <testng.version>6.14.3</testng.version>
   </properties>
