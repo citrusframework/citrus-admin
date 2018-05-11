@@ -24,6 +24,7 @@ import com.consol.citrus.ftp.client.FtpClient;
 import com.consol.citrus.ftp.server.FtpServer;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.server.JmxServer;
@@ -35,6 +36,7 @@ import com.consol.citrus.model.config.ftp.FtpClientModel;
 import com.consol.citrus.model.config.ftp.FtpServerModel;
 import com.consol.citrus.model.config.http.HttpClientModel;
 import com.consol.citrus.model.config.http.HttpServerModel;
+import com.consol.citrus.model.config.jdbc.JdbcServerModel;
 import com.consol.citrus.model.config.jms.JmsEndpointModel;
 import com.consol.citrus.model.config.jmx.JmxClientModel;
 import com.consol.citrus.model.config.jmx.JmxServerModel;
@@ -90,6 +92,7 @@ public class EndpointModelConverterTest {
             new Object[] {new WebSocketServerModelConverter(), new WebSocketServerModel(), new WebSocketServer(), "websocket().server()"},
             new Object[] {new FtpClientModelConverter(), new FtpClientModel(), new FtpClient(), "ftp().client()"},
             new Object[] {new FtpServerModelConverter(), new FtpServerModel(), new FtpServer(), "ftp().server()"},
+            new Object[] {new JdbcServerModelConverter(), new JdbcServerModel(), new JdbcServer(), "jdbc().server()"},
             new Object[] {new SshClientModelConverter(), new SshClientModel(), new SshClient(), "ssh().client()"},
             new Object[] {new SshServerModelConverter(), new SshServerModel(), new SshServer(), "ssh().server()"},
             new Object[] {new RmiClientModelConverter(), new RmiClientModel(), new RmiClient(), "rmi().client()"},

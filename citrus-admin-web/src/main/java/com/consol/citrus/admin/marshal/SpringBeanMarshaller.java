@@ -44,6 +44,7 @@ public class SpringBeanMarshaller extends Jaxb2Marshaller {
                 "com.consol.citrus.model.config.websocket",
                 "com.consol.citrus.model.config.ssh",
                 "com.consol.citrus.model.config.vertx",
+                "com.consol.citrus.model.config.jdbc",
                 "com.consol.citrus.model.config.ftp",
                 "com.consol.citrus.model.config.mail",
                 "com.consol.citrus.model.config.docker",

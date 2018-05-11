@@ -107,6 +107,11 @@
       <artifactId>citrus-admin-client</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-admin-connector</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.consol.citrus</groupId>
@@ -172,11 +177,9 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-selenium</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-admin-connector</artifactId>
-      <version>${project.version}</version>
+      <artifactId>citrus-jdbc</artifactId>
     </dependency>
 
     <dependency>

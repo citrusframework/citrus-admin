@@ -132,83 +132,10 @@
 
       <dependency>
         <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-core</artifactId>
+        <artifactId>citrus-bom</artifactId>
         <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-java-dsl</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-jms</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-http</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-websocket</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-ws</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-mail</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-ssh</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-ftp</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-vertx</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-camel</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-docker</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-kubernetes</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-rmi</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-jmx</artifactId>
-        <version>${citrus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-selenium</artifactId>
-        <version>${citrus.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>

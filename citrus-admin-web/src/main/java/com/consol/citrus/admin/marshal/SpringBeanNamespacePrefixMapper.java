@@ -25,7 +25,7 @@ import java.util.Map;
 public class SpringBeanNamespacePrefixMapper extends com.sun.xml.bind.marshaller.NamespacePrefixMapper {
 
     /** List of known namespaces with mapping to prefix */
-    private Map<String, String> namespaceMappings = new HashMap<String, String>();
+    private Map<String, String> namespaceMappings = new HashMap<>();
 
     public SpringBeanNamespacePrefixMapper() {
         namespaceMappings.put("http://www.citrusframework.org/schema/config", "citrus");
@@ -36,11 +36,11 @@ public class SpringBeanNamespacePrefixMapper extends com.sun.xml.bind.marshaller
         namespaceMappings.put("http://www.citrusframework.org/schema/ssh/config", "citrus-ssh");
         namespaceMappings.put("http://www.citrusframework.org/schema/mail/config", "citrus-mail");
         namespaceMappings.put("http://www.citrusframework.org/schema/vertx/config", "citrus-vertx");
+        namespaceMappings.put("http://www.citrusframework.org/schema/jdbc/config", "citrus-jdbc");
         namespaceMappings.put("http://www.citrusframework.org/schema/camel/config", "citrus-camel");
         namespaceMappings.put("http://www.citrusframework.org/schema/arquillian/config", "citrus-arquillian");
         namespaceMappings.put("http://www.citrusframework.org/schema/cucumber/config", "citrus-cucumber");
         namespaceMappings.put("http://www.citrusframework.org/schema/ftp/config", "citrus-ftp");
-        namespaceMappings.put("http://www.citrusframework.org/schema/mail/config", "citrus-mail");
         namespaceMappings.put("http://www.citrusframework.org/schema/docker/config", "citrus-docker");
         namespaceMappings.put("http://www.citrusframework.org/schema/kubernetes/config", "citrus-k8s");
         namespaceMappings.put("http://www.citrusframework.org/schema/jmx/config", "citrus-jmx");
