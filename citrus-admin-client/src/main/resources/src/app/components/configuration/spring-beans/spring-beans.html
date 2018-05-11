@@ -103,7 +103,7 @@
         <td>
           <ul class="properties endpoint-properties">
             <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>:
-              {{property.value}}
+              {{property.value | truncate:80}}
             </li>
           </ul>
         </td>
@@ -137,7 +137,7 @@
       </ul>
       <ul class="properties endpoint-properties">
         <li *ngFor="let property of bean.properties" [hidden]="!property.value"><b>{{property.name}}</b>:
-          {{property.value}}
+          {{property.value | truncate:80}}
         </li>
       </ul>
     </div>

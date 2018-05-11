@@ -19,6 +19,9 @@ package com.consol.citrus.admin.converter.model.spring;
 import com.consol.citrus.admin.converter.model.AbstractModelConverter;
 import com.consol.citrus.admin.model.spring.Property;
 import com.consol.citrus.admin.model.spring.SpringBean;
+import com.consol.citrus.util.TypeConversionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -28,6 +31,10 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 public class SpringBeanModelConverter<T> extends AbstractModelConverter<SpringBean, T> {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SpringBeanModelConverter.class);
+
     /**
      * Default constructor using source model type.
      *
@@ -78,13 +85,16 @@ public class SpringBeanModelConverter<T> extends AbstractModelConverter<SpringBe
         SpringBean converted = super.convert(model);
 
         ReflectionUtils.doWithMethods(model.getClass(), method -> {
-            Object object = ReflectionUtils.invokeMethod(method, model);
-            if (object != null) {
-                Property property = new Property();
-                property.setName(getMethodCall(method.getName()));
-                property.setValue(object.toString());
-
-                converted.getProperties().add(property);
+            try {
+                Object object = ReflectionUtils.invokeMethod(method, model);
+                if (object != null) {
+                    Property property = new Property();
+                    property.setName(getMethodCall(method.getName()));
+                    property.setValue(TypeConversionUtils.convertIfNecessary(object, String.class));
+                    converted.getProperties().add(property);
+                }
+            } catch (Exception e) {
+                log.warn(String.format("Unable to access Spring bean property '%s': %s", method.getName(), e.getMessage()));
             }
         }, method -> (method.getName().startsWith("get") || method.getName().startsWith("is"))
                 && !method.getName().equals("getClass")

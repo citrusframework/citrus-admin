@@ -177,7 +177,7 @@ public class SpringJavaConfigService {
                     }
                 }
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                throw new ApplicationRuntimeException("Failed to access bean definition method in Java config", e);
+                log.error("Failed to access bean definition method in Java config", e);
             }
         }
 
