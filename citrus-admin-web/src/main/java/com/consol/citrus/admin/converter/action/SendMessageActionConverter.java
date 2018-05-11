@@ -22,8 +22,9 @@ import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.model.TestActionModel;
 import com.consol.citrus.config.xml.PayloadElementParser;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.SendModel;
+import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.util.TypeConversionUtils;
+import com.consol.citrus.validation.builder.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -91,6 +92,8 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
             if (message.getBuilder() != null) {
                 return (V) message.getBuilder().getValue().trim();
             }
+
+            return (V) "";
         }
 
         if (value instanceof SendModel.Header) {
@@ -120,6 +123,51 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
         action.setDescription(model.getDescription());
         action.setEndpoint(model.getEndpoint() != null ? model.getEndpoint().getName() : model.getEndpointUri());
         action.setFork(model.isForkMode());
+
+        SendModel.Message message = new SendModel.Message();
+
+        if (model.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
+            PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) model.getMessageBuilder();
+
+            message.setName(messageBuilder.getMessageName());
+            message.setData(messageBuilder.getPayloadData());
+
+            if (StringUtils.hasText(messageBuilder.getPayloadResourcePath()))  {
+                SendModel.Message.Resource messageResource = new SendModel.Message.Resource();
+                messageResource.setFile(messageBuilder.getPayloadResourcePath());
+                messageResource.setCharset(messageBuilder.getPayloadResourceCharset());
+                message.setResource(messageResource);
+            }
+        }
+
+        if (model.getMessageBuilder() instanceof StaticMessageContentBuilder) {
+            StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) model.getMessageBuilder();
+
+            message.setName(messageBuilder.getMessageName());
+            message.setData(messageBuilder.getMessage().getPayload(String.class));
+        }
+
+        action.setMessage(message);
+
+        if (model.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            SendModel.Header header = new SendModel.Header();
+            ((AbstractMessageContentBuilder) model.getMessageBuilder()).getMessageHeaders().forEach((key, value) -> {
+                SendModel.Header.Element headerElement = new SendModel.Header.Element();
+                headerElement.setName(key);
+                headerElement.setValue(TypeConversionUtils.convertIfNecessary(value, String.class));
+                header.getElements().add(headerElement);
+            });
+
+            header.getDatas().addAll(((AbstractMessageContentBuilder) model.getMessageBuilder()).getHeaderData());
+
+            (((AbstractMessageContentBuilder) model.getMessageBuilder()).getHeaderResources()).forEach(resource -> {
+                SendModel.Header.Resource headerResource = new SendModel.Header.Resource();
+                headerResource.setFile(resource);
+                header.getResources().add(headerResource);
+            });
+
+            action.setHeader(header);
+        }
 
         return action;
     }

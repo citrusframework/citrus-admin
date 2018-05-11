@@ -28,7 +28,8 @@ import org.springframework.util.StringUtils;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -297,6 +298,10 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
      * @return
      */
     protected String getterMethodName(Field field, String fieldName) {
+        if (field.getType().equals(Boolean.class)) {
+            return "is" + StringUtils.capitalize(fieldName);
+        }
+
         return "get" + StringUtils.capitalize(fieldName);
     }
 }
