@@ -87,7 +87,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             components = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), GlobalVariablesModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            components = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), GlobalVariablesModel.class);
+            components = springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), GlobalVariablesModel.class);
         }
 
         if (CollectionUtils.isEmpty(components)) {
@@ -134,7 +134,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             components = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), NamespaceContextModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            components = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), NamespaceContextModel.class);
+            components = springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), NamespaceContextModel.class);
         }
 
         if (CollectionUtils.isEmpty(components)) {
@@ -150,7 +150,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SchemaRepositoryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), SchemaRepositoryModel.class);
+            return springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), SchemaRepositoryModel.class);
         }
 
         return new ArrayList<>();
@@ -162,7 +162,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
+            return springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaRepositoryModel.class);
         }
 
         throw new ApplicationRuntimeException("No proper Spring application context defined in project");
@@ -195,7 +195,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             schemas = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SchemaModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            schemas = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), SchemaModel.class);
+            schemas = springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), SchemaModel.class);
         }
 
         for (int i = 0; i < schemas.size(); i++) {
@@ -213,7 +213,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, SchemaModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaModel.class);
+            return springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, SchemaModel.class);
         }
 
         throw new ApplicationRuntimeException("No proper Spring application context defined in project");
@@ -245,7 +245,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), FunctionLibraryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), FunctionLibraryModel.class);
+            return springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), FunctionLibraryModel.class);
         }
 
         return new ArrayList<>();
@@ -257,7 +257,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
+            return springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, FunctionLibraryModel.class);
         } else {
             throw new ApplicationRuntimeException("No proper Spring application context defined in project");
         }
@@ -289,7 +289,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
+            return springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), ValidationMatcherLibraryModel.class);
         }
 
         return new ArrayList<>();
@@ -301,7 +301,7 @@ public class ConfigurationController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
+            return springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, ValidationMatcherLibraryModel.class);
         }
 
         throw new ApplicationRuntimeException("No proper Spring application context defined in project");
@@ -336,7 +336,7 @@ public class ConfigurationController {
             libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
             libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
         } else if (projectService.hasSpringJavaConfig()) {
-            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+            Class<?> springJavaConfig = projectService.getActiveProject().getSpringJavaConfig();
 
             libraries.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), XpathDataDictionaryModel.class));
             libraries.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), XmlDataDictionaryModel.class));
@@ -362,7 +362,7 @@ public class ConfigurationController {
                 library = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
             }
         } else if (projectService.hasSpringJavaConfig()) {
-            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+            Class<?> springJavaConfig = projectService.getActiveProject().getSpringJavaConfig();
 
             library = springJavaConfigService.getBeanDefinition(springJavaConfig, projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
 
@@ -463,7 +463,7 @@ public class ConfigurationController {
             ).stream().filter(Objects::nonNull).collect(Collectors.toList());
         } else if (projectService.hasSpringJavaConfig()) {
             return springJavaConfigService.getBeanNames(
-                    projectService.getSpringJavaConfig(),
+                    projectService.getActiveProject().getSpringJavaConfig(),
                     projectService.getActiveProject(),
                     XsdSchemaMappingStrategy.class
             ).stream().filter(Objects::nonNull).collect(Collectors.toList());

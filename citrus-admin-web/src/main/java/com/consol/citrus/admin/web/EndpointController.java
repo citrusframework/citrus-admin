@@ -91,7 +91,7 @@ public class EndpointController {
                 models.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), converter.getSourceModelClass()));
             }
         } else if (projectService.hasSpringJavaConfig()) {
-            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+            Class<?> springJavaConfig = projectService.getActiveProject().getSpringJavaConfig();
             for (EndpointConverter converter : endpointConverter) {
                 models.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), converter.getSourceModelClass()));
             }
@@ -115,7 +115,7 @@ public class EndpointController {
             if (projectService.hasSpringXmlApplicationContext()) {
                 model = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, converter.getSourceModelClass());
             } else if (projectService.hasSpringJavaConfig()) {
-                model = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, converter.getSourceModelClass());
+                model = springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, converter.getSourceModelClass());
             }
 
             if (model != null) {

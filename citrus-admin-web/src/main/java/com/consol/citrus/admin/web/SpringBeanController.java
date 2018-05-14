@@ -114,7 +114,7 @@ public class SpringBeanController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), SpringBean.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), SpringBean.class);
+            return springJavaConfigService.getBeanDefinitions(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), SpringBean.class);
         }
 
         return new ArrayList<>();
@@ -138,7 +138,7 @@ public class SpringBeanController {
         if (projectService.hasSpringXmlApplicationContext()) {
             return springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, SpringBean.class);
         } else if (projectService.hasSpringJavaConfig()) {
-            return springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, SpringBean.class);
+            return springJavaConfigService.getBeanDefinition(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), id, SpringBean.class);
         }
 
         throw new ApplicationRuntimeException("No proper Spring application context defined in project");
@@ -151,7 +151,7 @@ public class SpringBeanController {
             return springBeanService.getBeanNames(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), type);
         } else if (projectService.hasSpringJavaConfig()) {
             try {
-                return springJavaConfigService.getBeanNames(projectService.getSpringJavaConfig(), projectService.getActiveProject(), projectService.getActiveProject().getClassLoader().loadClass(type));
+                return springJavaConfigService.getBeanNames(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject(), projectService.getActiveProject().getClassLoader().loadClass(type));
             } catch (ClassNotFoundException | IOException e) {
                 throw new ApplicationRuntimeException("Failed to access bean type", e);
             }
@@ -179,8 +179,8 @@ public class SpringBeanController {
                     .collect(Collectors.toList());
         } else if (projectService.hasSpringJavaConfig()) {
             List<Class<?>> configFiles = new ArrayList<>();
-            configFiles.add(projectService.getSpringJavaConfig());
-            configFiles.addAll(springJavaConfigService.getConfigImports(projectService.getSpringJavaConfig(), projectService.getActiveProject()));
+            configFiles.add(projectService.getActiveProject().getSpringJavaConfig());
+            configFiles.addAll(springJavaConfigService.getConfigImports(projectService.getActiveProject().getSpringJavaConfig(), projectService.getActiveProject()));
 
             return configFiles
                     .stream()
@@ -211,7 +211,7 @@ public class SpringBeanController {
                         .orElseThrow(() -> new ApplicationRuntimeException("Failed to find Spring context file with name: " + fileName)));
             }
         } else if (projectService.hasSpringJavaConfig()) {
-            Class<?> projectConfig = projectService.getSpringJavaConfig();
+            Class<?> projectConfig = projectService.getActiveProject().getSpringJavaConfig();
             if (projectConfig.getName().equals(fileName)) {
                 FileUtils.writeToFile(source, projectService.getSpringJavaConfigFile());
             } else {
@@ -246,7 +246,7 @@ public class SpringBeanController {
                             .orElseThrow(() -> new ApplicationRuntimeException("Failed to find Spring context file with name: " + fileName))));
                 }
             } else if (projectService.hasSpringJavaConfig()) {
-                Class<?> projectConfig = projectService.getSpringJavaConfig();
+                Class<?> projectConfig = projectService.getActiveProject().getSpringJavaConfig();
 
                 if (projectConfig.getName().equals(fileName)) {
                     return FileUtils.readToString(new FileSystemResource(projectService.getSpringJavaConfigFile()));

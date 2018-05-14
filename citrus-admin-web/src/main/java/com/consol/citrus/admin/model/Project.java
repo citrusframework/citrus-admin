@@ -49,6 +49,9 @@ public class Project {
 
     private ProjectSettings settings = ConfigurationProvider.load(ProjectSettings.class);
 
+    @JsonIgnore
+    private Class<?> springJavaConfig;
+
     /** Citrus project information as Json file */
     public static final String PROJECT_INFO_FILENAME = "citrus-project.json";
 
@@ -272,6 +275,24 @@ public class Project {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read project settings file", e);
         }
+    }
+
+    /**
+     * Returns the project's Spring Java config file.
+     * @return the config file or null if no config file exists within the selected project.
+     */
+    @JsonIgnore
+    public Class<?> getSpringJavaConfig() {
+        if (springJavaConfig == null) {
+            try {
+                ClassLoader classLoader = getClassLoader();
+                springJavaConfig = classLoader.loadClass(getSettings().getSpringJavaConfig());
+            } catch (IOException | ClassNotFoundException | NoClassDefFoundError e) {
+                throw new ApplicationRuntimeException("Failed to access Spring Java config class", e);
+            }
+        }
+
+        return springJavaConfig;
     }
 
     /**

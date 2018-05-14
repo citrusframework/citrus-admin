@@ -97,10 +97,10 @@ public class ProjectService {
     private static Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     @PostConstruct
-    public void loadDefaultProject() throws Exception {
+    public void loadDefaultProject() {
         String defaultProjectHome = System.getProperty(Application.PROJECT_HOME, System.getenv(Application.PROJECT_HOME_ENV));
         if (project == null && StringUtils.hasText(defaultProjectHome)) {
-            load(defaultProjectHome);
+            setActiveProject(load(defaultProjectHome));
         }
 
         String repositoryUrl = System.getProperty(Application.PROJECT_REPOSITORY, System.getenv(Application.PROJECT_REPOSITORY_ENV));
@@ -157,7 +157,7 @@ public class ProjectService {
      * @param projectHomeDir
      * @return
      */
-    public void load(String projectHomeDir) {
+    public Project load(String projectHomeDir) {
         Project project = new Project(projectHomeDir);
         if (project.getProjectInfoFile().exists()) {
             project.loadSettings();
@@ -230,17 +230,9 @@ public class ProjectService {
             }
         }
 
-        saveProject(project);
+        saveProjectInfo(project);
 
-        this.project = project;
-        if (!this.recentlyOpened.contains(projectHomeDir)) {
-            if (projectHomeDir.endsWith("/")) {
-                this.recentlyOpened.add(projectHomeDir.substring(0, projectHomeDir.length() - 1));
-            } else {
-                this.recentlyOpened.add(projectHomeDir);
-            }
-        }
-        System.setProperty(Application.PROJECT_HOME, projectHomeDir);
+        return project;
     }
 
     /**
@@ -278,8 +270,8 @@ public class ProjectService {
                     module = repository.getModule().startsWith("/") ? repository.getModule() : File.separator + repository.getModule();
                 }
 
-                load(Application.getWorkingDirectory() + File.separator + targetDirectory + module);
-                return getActiveProject();
+                setActiveProject(load(Application.getWorkingDirectory() + File.separator + targetDirectory + module));
+                return project;
             } else if (repository instanceof SvnRepository) {
                 targetDirectory = repository.getUrl().substring(repository.getUrl().lastIndexOf('/') + 1);
                 SvnCommand checkoutCmd = new SvnCommand(rootDirectory)
@@ -302,8 +294,8 @@ public class ProjectService {
                 module = repository.getModule().startsWith("/") ? repository.getModule() : File.separator + repository.getModule();
             }
 
-            load(Application.getWorkingDirectory() + File.separator + targetDirectory + module);
-            return getActiveProject();
+            setActiveProject(load(Application.getWorkingDirectory() + File.separator + targetDirectory + module));
+            return project;
         } catch (MalformedURLException e) {
             throw new ApplicationRuntimeException("Invalid project repository url", e);
         }
@@ -319,8 +311,8 @@ public class ProjectService {
 
         if (terminalService.executeAndWait(new MavenArchetypeCommand(new File(Application.getWorkingDirectory()), new MavenBuildContext())
                 .generate(archetype))) {
-            load(Application.getWorkingDirectory() + File.separator + archetype.getArtifactId());
-            return getActiveProject();
+            setActiveProject(load(Application.getWorkingDirectory() + File.separator + archetype.getArtifactId()));
+            return project;
         } else {
             throw new ApplicationRuntimeException("Failed to create project from Maven archetype");
         }
@@ -359,19 +351,6 @@ public class ProjectService {
     }
 
     /**
-     * Returns the project's Spring Java config file.
-     * @return the config file or null if no config file exists within the selected project.
-     */
-    public Class<?> getSpringJavaConfig() {
-        try {
-            ClassLoader classLoader = project.getClassLoader();
-            return classLoader.loadClass(project.getSettings().getSpringJavaConfig());
-        }  catch (IOException | ClassNotFoundException | NoClassDefFoundError e) {
-            throw new ApplicationRuntimeException("Failed to access Spring Java config class", e);
-        }
-    }
-
-    /**
      * Checks if Spring application context file is present.
      * @return
      */
@@ -393,14 +372,14 @@ public class ProjectService {
     public void update(Project project) {
         this.project.setDescription(project.getDescription());
         this.project.setSettings(project.getSettings());
-        saveProject(this.project);
+        saveProjectInfo(this.project);
     }
 
     /**
-     * Save project to file system.
+     * Save project information to file system.
      * @param project
      */
-    public void saveProject(Project project) {
+    public void saveProjectInfo(Project project) {
         try (FileOutputStream fos = new FileOutputStream(project.getProjectInfoFile())) {
             fos.write(Jackson2ObjectMapperBuilder.json().build().writer().withDefaultPrettyPrinter().writeValueAsBytes(project));
             fos.flush();
@@ -482,6 +461,15 @@ public class ProjectService {
      */
     public void setActiveProject(Project project) {
         this.project = project;
+
+        if (!this.recentlyOpened.contains(project.getProjectHome())) {
+            if (project.getProjectHome().endsWith("/")) {
+                this.recentlyOpened.add(project.getProjectHome().substring(0, project.getProjectHome().length() - 1));
+            } else {
+                this.recentlyOpened.add(project.getProjectHome());
+            }
+        }
+        System.setProperty(Application.PROJECT_HOME, project.getProjectHome());
     }
 
     /**
@@ -518,7 +506,7 @@ public class ProjectService {
 
                 project.getSettings().setUseConnector(true);
                 project.getSettings().setConnectorActive(true);
-                saveProject(project);
+                saveProjectInfo(project);
 
                 SpringBean bean = new SpringBean();
                 bean.setId(WebSocketPushEventsListener.class.getSimpleName());
@@ -531,10 +519,10 @@ public class ProjectService {
                     bean.getProperties().add(portProperty);
                 }
 
-                if (hasSpringXmlApplicationContext() && springBeanService.getBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), SpringBean.class) == null) {
-                    springBeanService.addBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), bean);
-                } else if (hasSpringJavaConfig() && springJavaConfigService.getBeanDefinition(getSpringJavaConfig(), getActiveProject(), WebSocketPushEventsListener.class.getSimpleName(), WebSocketPushEventsListener.class) == null) {
-                    springJavaConfigService.addBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
+                if (hasSpringXmlApplicationContext() && springBeanService.getBeanDefinition(getSpringXmlApplicationContextFile(), project, WebSocketPushEventsListener.class.getSimpleName(), SpringBean.class) == null) {
+                    springBeanService.addBeanDefinition(getSpringXmlApplicationContextFile(), project, bean);
+                } else if (hasSpringJavaConfig() && springJavaConfigService.getBeanDefinition(project.getSpringJavaConfig(), project, WebSocketPushEventsListener.class.getSimpleName(), WebSocketPushEventsListener.class) == null) {
+                    springJavaConfigService.addBeanDefinition(getSpringJavaConfigFile(), project, bean);
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Failed to add admin connector dependency to Maven pom.xml file", e);
@@ -557,18 +545,18 @@ public class ProjectService {
 
                 project.getSettings().setUseConnector(false);
                 project.getSettings().setConnectorActive(false);
-                saveProject(project);
+                saveProjectInfo(project);
 
                 List<String> beans;
                 if (hasSpringXmlApplicationContext()) {
-                    beans = springBeanService.getBeanNames(getSpringXmlApplicationContextFile(), getActiveProject(), WebSocketPushEventsListener.class.getName());
+                    beans = springBeanService.getBeanNames(getSpringXmlApplicationContextFile(), project, WebSocketPushEventsListener.class.getName());
                     for (String bean : beans) {
-                        springBeanService.removeBeanDefinition(getSpringXmlApplicationContextFile(), getActiveProject(), bean);
+                        springBeanService.removeBeanDefinition(getSpringXmlApplicationContextFile(), project, bean);
                     }
                 } else if (hasSpringJavaConfig()) {
-                    beans = springJavaConfigService.getBeanNames(getSpringJavaConfig(), getActiveProject(), WebSocketPushEventsListener.class);
+                    beans = springJavaConfigService.getBeanNames(project.getSpringJavaConfig(), project, WebSocketPushEventsListener.class);
                     for (String bean : beans) {
-                        springJavaConfigService.removeBeanDefinition(getSpringJavaConfigFile(), getActiveProject(), bean);
+                        springJavaConfigService.removeBeanDefinition(getSpringJavaConfigFile(), project, bean);
                     }
                 }
             } catch (IOException e) {
@@ -604,7 +592,7 @@ public class ProjectService {
                         allModules.remove(moduleName);
                     }
 
-                    modules.add(new Module(moduleName.substring("citrus-".length()), getActiveProject().getVersion(), true));
+                    modules.add(new Module(moduleName.substring("citrus-".length()), project.getVersion(), true));
                 }
             } catch (IOException e) {
                 throw new ApplicationRuntimeException("Unable to open Maven pom.xml file", e);
@@ -614,7 +602,7 @@ public class ProjectService {
         allModules.stream()
                 .filter(name -> !name.equals("citrus-test"))
                 .map(name -> name.equals("citrus") ? "citrus-core" : name)
-                .map(name -> new Module(name.substring("citrus-".length()), getActiveProject().getVersion(), false))
+                .map(name -> new Module(name.substring("citrus-".length()), project.getVersion(), false))
                 .forEach(modules::add);
 
         return modules;
@@ -641,7 +629,7 @@ public class ProjectService {
                         Matcher matcher = Pattern.compile(pattern, Pattern.MULTILINE).matcher(pomXml);
 
                         if (matcher.find()) {
-                            String version = getActiveProject().getVersion();
+                            String version = project.getVersion();
                             if (matcher.groupCount() > 0) {
                                 version = matcher.group(1);
                             }

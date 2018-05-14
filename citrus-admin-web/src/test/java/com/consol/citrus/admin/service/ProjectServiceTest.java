@@ -67,9 +67,7 @@ public class ProjectServiceTest {
             }
         }
 
-        projectService.load(home);
-
-        Project project = projectService.getActiveProject();
+        Project project = projectService.load(home);
         Assert.assertNotNull(project);
         Assert.assertEquals(project.getProjectHome(), home);
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
@@ -80,11 +78,10 @@ public class ProjectServiceTest {
         Assert.assertEquals(project.getSettings().isConnectorActive(), connectorActive);
         Assert.assertEquals(project.getDescription(), description);
 
-        projectService.getActiveProject().getSettings().setUseConnector(false);
-        projectService.saveProject(projectService.getActiveProject());
+        project.getSettings().setUseConnector(false);
+        projectService.saveProjectInfo(project);
 
-        projectService.load(home);
-        project = projectService.getActiveProject();
+        project = projectService.load(home);
         Assert.assertEquals(project.getName(), "citrus-integration-tests");
         Assert.assertEquals(project.getVersion(), "1.0.0");
         Assert.assertEquals(project.getSettings().getCitrusVersion(), "2.7.5");

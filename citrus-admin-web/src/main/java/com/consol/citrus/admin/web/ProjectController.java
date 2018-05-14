@@ -128,7 +128,7 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity open(@RequestBody String projectHome) {
-        projectService.load(projectHome);
+        projectService.setActiveProject(projectService.load(projectHome));
         return ResponseEntity.ok().build();
     }
 
