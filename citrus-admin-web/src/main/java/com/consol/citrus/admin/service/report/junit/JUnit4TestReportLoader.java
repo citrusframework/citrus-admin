@@ -32,13 +32,13 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -59,24 +59,25 @@ public class JUnit4TestReportLoader implements TestReportLoader {
 
         if (hasTestResults(activeProject)) {
             try {
-                Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
-                Element testCase = (Element) XPathUtils.evaluateAsNode(testResults, "/testsuite/testcase[@classname = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
+                String testResultsContent = getTestResultsAsString(activeProject);
+                if (StringUtils.hasText(testResultsContent)) {
+                    Document testResults = XMLUtils.parseMessagePayload(testResultsContent);
+                    Element testCase = (Element) XPathUtils.evaluateAsNode(testResults, "/testsuite/testcase[@classname = '" + test.getPackageName() + "." + test.getClassName() + "']", null);
 
-                TestResult result = getResult(test, testCase);
-                report.setTotal(1);
-                if (result.getStatus().equals(TestStatus.PASS)) {
-                    report.setPassed(1L);
-                } else if (result.getStatus().equals(TestStatus.FAIL)) {
-                    report.setFailed(1L);
-                } else if (result.getStatus().equals(TestStatus.SKIP)) {
-                    report.setSkipped(1L);
+                    TestResult result = getResult(test, testCase);
+                    report.setTotal(1);
+                    if (result.getStatus().equals(TestStatus.PASS)) {
+                        report.setPassed(1L);
+                    } else if (result.getStatus().equals(TestStatus.FAIL)) {
+                        report.setFailed(1L);
+                    } else if (result.getStatus().equals(TestStatus.SKIP)) {
+                        report.setSkipped(1L);
+                    }
+
+                    report.getResults().add(result);
                 }
-
-                report.getResults().add(result);
             } catch (CitrusRuntimeException e) {
                 log.warn("No results found for test: " + test.getPackageName() + "." + test.getClassName() + "#" + test.getMethodName());
-            } catch (IOException e) {
-                log.error("Failed to read test results file", e);
             }
         }
 
@@ -88,8 +89,9 @@ public class JUnit4TestReportLoader implements TestReportLoader {
         TestReport report = new TestReport();
 
         if (hasTestResults(activeProject)) {
-            try {
-                Document testResults = XMLUtils.parseMessagePayload(getTestResultsAsString(activeProject));
+            String testResultsContent = getTestResultsAsString(activeProject);
+            if (StringUtils.hasText(testResultsContent)) {
+                Document testResults = XMLUtils.parseMessagePayload(testResultsContent);
                 report.setProjectName(activeProject.getName());
                 report.setSuiteName(XPathUtils.evaluateAsString(testResults, "/testsuite/@name", null));
                 report.setDuration(Math.round(Double.valueOf(XPathUtils.evaluateAsString(testResults, "/testsuite/@time", null)) * 1000));
@@ -113,7 +115,7 @@ public class JUnit4TestReportLoader implements TestReportLoader {
                         String classFileName = report.getSuiteName().substring(packageName.length() + 1);
                         Test test = testCaseService.findTest(activeProject, packageName, classFileName);
                         TestResult result = getResult(test, testCase);
-                        
+
                         result.getTest().setName(className + " - " + methodName);
 
                         report.getResults().add(result);
@@ -126,8 +128,6 @@ public class JUnit4TestReportLoader implements TestReportLoader {
                         report.getResults().add(result);
                     }
                 }
-            } catch (IOException e) {
-                log.error("Failed to read test results file", e);
             }
         }
 
@@ -159,16 +159,22 @@ public class JUnit4TestReportLoader implements TestReportLoader {
 
     @Override
     public boolean hasTestResults(Project activeProject) {
-        return getTestResultsFile(activeProject).exists();
+        return Optional.ofNullable(getTestResultsFile(activeProject)).map(Resource::exists).orElse(false);
     }
 
     /**
      * Reads test results file content.
      * @return
-     * @throws java.io.IOException
      */
-    private String getTestResultsAsString(Project activeProject) throws IOException {
-        return FileUtils.readToString(getTestResultsFile(activeProject));
+    private String getTestResultsAsString(Project activeProject) {
+        return Optional.ofNullable(getTestResultsFile(activeProject)).map(resultFile -> {
+            try {
+                return FileUtils.readToString(resultFile);
+            } catch (IOException e) {
+                log.error("Failed to access test results", e);
+                return "";
+            }
+        }).orElse("");
     }
 
     /**
@@ -182,12 +188,14 @@ public class JUnit4TestReportLoader implements TestReportLoader {
             return testSuiteFile;
         }
 
-        List<File> testCaseFiles = FileUtils.findFiles(activeProject.getProjectHome() + "/target/failsafe-reports", Collections.singleton("/TEST-*.xml"));
-        if (!CollectionUtils.isEmpty(testCaseFiles)) {
-            return new FileSystemResource(testCaseFiles.get(0));
+        if (new File(activeProject.getProjectHome() + "/target/failsafe-reports").exists()) {
+            List<File> testCaseFiles = FileUtils.findFiles(activeProject.getProjectHome() + "/target/failsafe-reports", Collections.singleton("/TEST-*.xml"));
+            if (!CollectionUtils.isEmpty(testCaseFiles)) {
+                return new FileSystemResource(testCaseFiles.get(0));
+            }
         }
 
-        return testSuiteFile;
+        return null;
     }
 
     /**
