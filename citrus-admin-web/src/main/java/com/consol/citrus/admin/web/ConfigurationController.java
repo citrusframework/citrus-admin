@@ -336,9 +336,11 @@ public class ConfigurationController {
             libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
             libraries.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
         } else if (projectService.hasSpringJavaConfig()) {
-            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), XpathDataDictionaryModel.class));
-            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), XmlDataDictionaryModel.class));
-            libraries.addAll(springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), JsonDataDictionaryModel.class));
+            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), XpathDataDictionaryModel.class));
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), XmlDataDictionaryModel.class));
+            libraries.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), JsonDataDictionaryModel.class));
         }
 
         return libraries;
@@ -360,14 +362,16 @@ public class ConfigurationController {
                 library = springBeanService.getBeanDefinition(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
             }
         } else if (projectService.hasSpringJavaConfig()) {
-            library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
+            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+
+            library = springJavaConfigService.getBeanDefinition(springJavaConfig, projectService.getActiveProject(), id, XpathDataDictionaryModel.class);
 
             if (library == null) {
-                library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, XmlDataDictionaryModel.class);
+                library = springJavaConfigService.getBeanDefinition(springJavaConfig, projectService.getActiveProject(), id, XmlDataDictionaryModel.class);
             }
 
             if (library == null) {
-                library = springJavaConfigService.getBeanDefinition(projectService.getSpringJavaConfig(), projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
+                library = springJavaConfigService.getBeanDefinition(springJavaConfig, projectService.getActiveProject(), id, JsonDataDictionaryModel.class);
             }
         }
 

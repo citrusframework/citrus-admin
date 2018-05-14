@@ -126,7 +126,10 @@ public class SpringJavaConfigService {
      * @return
      */
     public <T> List<T> getBeanDefinitions(Class<?> configFile, Project project, Class<T> type) {
-        List<T> beanDefinitions = new ArrayList<T>();
+        log.debug(String.format("Reading Java config: %s", configFile.getName()));
+        log.debug(String.format("Reading beans of type: %s", type.getName()));
+
+        List<T> beanDefinitions = new ArrayList<>();
 
         List<Class<?>> importedFiles = getConfigImports(configFile, project);
         for (Class<?> importLocation : importedFiles) {
@@ -134,20 +137,18 @@ public class SpringJavaConfigService {
         }
 
         final List<Method> beanDefinitionMethods = new ArrayList<>();
-        if (type.equals(SpringBean.class)) {
-            ReflectionUtils.doWithMethods(configFile, method -> {
+        ReflectionUtils.doWithMethods(configFile, method -> {
+            if (type.equals(SpringBean.class)) {
                 if (modelConverter.stream().noneMatch(converter -> converter.getSourceModelClass().equals(method.getReturnType()))) {
                     beanDefinitionMethods.add(method);
                 }
-            }, method -> method.getAnnotation(Bean.class) != null);
-        } else {
-            ReflectionUtils.doWithMethods(configFile, method -> {
+            } else {
                 if (method.getReturnType().equals(type) ||
                         modelConverter.stream().anyMatch(converter -> converter.getTargetModelClass().equals(type) && converter.getSourceModelClass().equals(method.getReturnType()))) {
                     beanDefinitionMethods.add(method);
                 }
-            }, method -> method.getAnnotation(Bean.class) != null);
-        }
+            }
+        }, method -> method.getAnnotation(Bean.class) != null);
 
         for (Method beanDefinitionMethod : beanDefinitionMethods) {
             try {
@@ -160,6 +161,8 @@ public class SpringJavaConfigService {
                         beanId = beanAnnotation.name()[0];
                     }
                 }
+
+                log.debug(String.format("Found bean definition '%s' through method: %s()", beanId, beanDefinitionMethod.getName()));
 
                 Object bean = beanDefinitionMethod.invoke(configFile.newInstance());
                 if (bean.getClass().equals(type)) {
@@ -181,7 +184,7 @@ public class SpringJavaConfigService {
             }
         }
 
-        log.debug(String.format("Found %s beans in Java config of type: %s", beanDefinitions.size(), type.getName()));
+        log.debug(String.format("Found %s Java config beans of type: %s", beanDefinitions.size(), type.getName()));
 
         return beanDefinitions;
     }

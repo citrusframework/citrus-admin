@@ -23,6 +23,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -36,6 +38,9 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 public class Project {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(Project.class);
 
     private final String projectHome;
     private String name;
@@ -293,6 +298,11 @@ public class Project {
             for (File mavenDependency : mavenDependencies) {
                 classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
             }
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Loading test project classes ...");
+            classpathUrls.forEach(url -> log.debug(url.getPath()));
         }
 
         return URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]));

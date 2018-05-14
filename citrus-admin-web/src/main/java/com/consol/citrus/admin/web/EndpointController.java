@@ -84,17 +84,24 @@ public class EndpointController {
     @ResponseBody
     public List<?> listEndpoints() {
         List<EndpointModel> endpoints = new ArrayList<>();
-        for (EndpointConverter converter : endpointConverter) {
-            List<?> models = new ArrayList<>();
-            if (projectService.hasSpringXmlApplicationContext()) {
-                models = springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), converter.getSourceModelClass());
-            } else if (projectService.hasSpringJavaConfig()) {
-                models = springJavaConfigService.getBeanDefinitions(projectService.getSpringJavaConfig(), projectService.getActiveProject(), converter.getSourceModelClass());
-            }
+        List<?> models = new ArrayList<>();
 
-            for (Object endpoint : models) {
-                endpoints.add(converter.convert(endpoint));
+        if (projectService.hasSpringXmlApplicationContext()) {
+            for (EndpointConverter converter : endpointConverter) {
+                models.addAll(springBeanService.getBeanDefinitions(projectService.getSpringXmlApplicationContextFile(), projectService.getActiveProject(), converter.getSourceModelClass()));
             }
+        } else if (projectService.hasSpringJavaConfig()) {
+            Class<?> springJavaConfig = projectService.getSpringJavaConfig();
+            for (EndpointConverter converter : endpointConverter) {
+                models.addAll(springJavaConfigService.getBeanDefinitions(springJavaConfig, projectService.getActiveProject(), converter.getSourceModelClass()));
+            }
+        }
+
+        for (Object endpoint : models) {
+            endpointConverter.stream()
+                                .filter(candidate -> candidate.getSourceModelClass().equals(endpoint.getClass()))
+                                .findFirst()
+                                .ifPresent(converter -> endpoints.add(converter.convert(endpoint)));
         }
 
         return endpoints;
