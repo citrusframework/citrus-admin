@@ -306,22 +306,4 @@ public class SpringJavaConfigService {
     public void updateBeanDefinitions(File configFile, Project project, Class<?> type, Object model) {
 
     }
-
-    /**
-     * Construct tabs according to project settings.
-     * @param amount
-     * @param tabSize
-     * @return
-     */
-    private String getTabs(int amount, int tabSize) {
-        StringBuilder tabs = new StringBuilder();
-
-        for (int i = 1; i <= amount; i++) {
-            for (int k = 1; k <= tabSize; k++) {
-                tabs.append(" ");
-            }
-        }
-
-        return tabs.toString();
-    }
 }

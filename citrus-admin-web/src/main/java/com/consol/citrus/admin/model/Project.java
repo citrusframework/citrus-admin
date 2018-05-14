@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.model;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.configuration.ConfigurationProvider;
 import com.consol.citrus.admin.exception.ApplicationRuntimeException;
 import com.consol.citrus.admin.service.command.maven.MavenBuildContext;
@@ -27,12 +28,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.util.ClassUtils;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -51,6 +56,9 @@ public class Project {
 
     @JsonIgnore
     private Class<?> springJavaConfig;
+
+    @JsonIgnore
+    private ClassLoader classLoader;
 
     /** Citrus project information as Json file */
     public static final String PROJECT_INFO_FILENAME = "citrus-project.json";
@@ -302,30 +310,78 @@ public class Project {
      */
     @JsonIgnore
     public ClassLoader getClassLoader() throws IOException {
-        List<URL> classpathUrls = new ArrayList<>();
+        if (classLoader == null) {
+            List<URL> classpathUrls = new ArrayList<>();
 
-        classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "classes").getURL());
-        classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "test-classes").getURL());
+            classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "classes").getURL());
+            classpathUrls.add(new FileSystemResource(projectHome + File.separator + "target" + File.separator + "test-classes").getURL());
 
-        if (isMavenProject()) {
-            File[] mavenDependencies = Maven.configureResolver()
-                    .workOffline()
-                    .loadPomFromFile(getMavenPomFile())
-                    .importRuntimeAndTestDependencies()
-                    .resolve()
-                    .withTransitivity()
-                    .asFile();
+            if (isMavenProject()) {
+                List<String> citrusDependencies = Stream.of(Maven.configureResolver()
+                            .workOffline()
+                            .resolve(getCitrusArtifacts())
+                            .withTransitivity()
+                            .asFile())
+                        .parallel()
+                        .map(File::getPath)
+                        .collect(Collectors.toList());
 
-            for (File mavenDependency : mavenDependencies) {
-                classpathUrls.add(new FileSystemResource(mavenDependency).getURL());
+                Stream.of(Maven.configureResolver()
+                            .workOffline()
+                            .loadPomFromFile(getMavenPomFile())
+                            .importRuntimeAndTestDependencies()
+                            .resolve()
+                            .withTransitivity()
+                            .asFile())
+                        .parallel()
+                        .map(File::getPath)
+                        .filter(dependency -> !dependency.contains("com/consol/citrus/"))
+                        .filter(dependency -> citrusDependencies.parallelStream().noneMatch(citrusDependency -> citrusDependency.equals(dependency)))
+                        .forEach(dependency -> {
+                            try {
+                                classpathUrls.add(new FileSystemResource(dependency).getURL());
+                            } catch (IOException e) {
+                                log.warn(String.format("Failed to access project dependency: %s", dependency));
+                            }
+                        });
             }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Loading test project classes ...");
+                classpathUrls.forEach(url -> log.debug(url.getPath()));
+            }
+
+            classLoader = URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]), Optional.ofNullable(ClassUtils.getDefaultClassLoader())
+                                                                                                                    .orElse(AccessController.doPrivileged((PrivilegedAction<ClassLoader>) () -> Thread.currentThread().getContextClassLoader())));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Loading test project classes ...");
-            classpathUrls.forEach(url -> log.debug(url.getPath()));
-        }
+        return classLoader;
+    }
 
-        return URLClassLoader.newInstance(classpathUrls.toArray(new URL[classpathUrls.size()]));
+    /**
+     * Provides all Citrus artifact coordinates in Maven canonical format.
+     * @return
+     */
+    private List<String> getCitrusArtifacts() {
+        return Stream.of("citrus-core",
+                "citrus-jms",
+                "citrus-jdbc",
+                "citrus-http",
+                "citrus-websocket",
+                "citrus-ws",
+                "citrus-ftp",
+                "citrus-ssh",
+                "citrus-camel",
+                "citrus-docker",
+                "citrus-kubernetes",
+                "citrus-selenium",
+                "citrus-zookeeper",
+                "citrus-cucumber",
+                "citrus-rmi",
+                "citrus-jmx",
+                "citrus-restdocs",
+                "citrus-mail",
+                "citrus-vertx",
+                "citrus-java-dsl").map(name -> String.format("com.consol.citrus:%s:%s", name, Citrus.getVersion())).collect(Collectors.toList());
     }
 }
