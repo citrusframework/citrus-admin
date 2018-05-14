@@ -2,7 +2,7 @@ export class Archetype {
 
     constructor() { }
 
-    public archetypeGroupId: string = "com.consol.citrus.mvn";
+    public archetypeGroupId: string = "com.consol.citrus.archetypes";
     public archetypeArtifactId: string = "citrus-quickstart";
     public archetypeVersion: string = "2.7.5";
 

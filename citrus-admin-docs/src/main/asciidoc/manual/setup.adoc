@@ -28,7 +28,7 @@ local file system. Once again the new project sources are saved to the admin UI 
 [[setup-maven-archetype]]
 === Maven archetype
 
-The second approach for creating new projects is to generate the project sources from a Maven archetype. Citrus provides several archetypes on Maven central (link:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.consol.citrus.mvn%22[search.maven.org]). Just
+The second approach for creating new projects is to generate the project sources from a Maven archetype. Citrus provides several archetypes on Maven central (link:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.consol.citrus.archetypes%22[search.maven.org]). Just
 fill out the archetype forms and enter the Maven archetype coordinates (*groupId*, *artifactId* and *version*) that should be used.
 
 image:screenshots/project-new-archetype.png[Maven Archetype]

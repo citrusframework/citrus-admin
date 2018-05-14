@@ -27,7 +27,7 @@ import java.io.File;
  */
 public class MavenArchetypeCommand extends MavenCommand {
 
-    private static final String GENERATE = "archetype:generate ";
+    private static final String GENERATE = "archetype:generate -B ";
 
     /**
      * Constructor for executing a command.

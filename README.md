@@ -30,7 +30,7 @@ In case you do not have a Citrus project ready yet, the admin UI can also create
 You can set the Maven archetype coordinates (*groupId*, *artifactId*, *version*) as environment variables when running the container.
 
 ```
-docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.mvn:citrus-quickstart:2.7.5 consol/citrus-admin:latest
+docker run -d -p 8080:8080 -v $PWD:/maven -e CITRUS_ADMIN_MAVEN_ARCHETYPE_COORDINATES=com.consol.citrus.archetypes:citrus-quickstart:2.7.5 consol/citrus-admin:latest
 ```
 
 The UI will load the Maven archetype and create the project sources when the container is started. The new project gets its Maven coordinates from another environment setting:
