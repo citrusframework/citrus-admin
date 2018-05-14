@@ -653,7 +653,7 @@ fieldset[disabled] .btn.focus {
     background-color: #026ebe;
 }
 
-.label-jms, .badge-jms {
+.label-jms, .badge-jms, .label-jms-sync, .badge-jms-sync {
     background-color: #fa6c00;
 }
 
@@ -687,7 +687,7 @@ fieldset[disabled] .btn.focus {
     background-color: #026ebe;
 }
 
-.label-channel, .badge-channel {
+.label-channel, .badge-channel, .label-channel-sync, .badge-channel-sync {
     background-color: #96c1d2;
 }
 
@@ -697,6 +697,10 @@ fieldset[disabled] .btn.focus {
 
 .label-vertx, .badge-vertx {
     background-color: #a562ff;
+}
+
+.label-jdbc, .badge-jdbc {
+    background-color: #374d85;
 }
 
 .label-ftp, .label-ftp-client, .badge-ftp, .badge-ftp-client,

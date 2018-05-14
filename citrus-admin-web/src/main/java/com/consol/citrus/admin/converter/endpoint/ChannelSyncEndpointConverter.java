@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
-import com.consol.citrus.model.config.core.ChannelEndpointModel;
+import com.consol.citrus.model.config.core.ChannelSyncEndpointModel;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class ChannelEndpointConverter extends ChannelAdapterConverter<ChannelEndpointModel> {
+public class ChannelSyncEndpointConverter extends ChannelAdapterConverter<ChannelSyncEndpointModel> {
 
     @Override
-    public Class<ChannelEndpointModel> getSourceModelClass() {
-        return ChannelEndpointModel.class;
+    public Class<ChannelSyncEndpointModel> getSourceModelClass() {
+        return ChannelSyncEndpointModel.class;
     }
 
     @Override
     public String getEndpointType() {
-        return "channel";
+        return "channel-sync";
     }
 }

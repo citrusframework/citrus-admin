@@ -131,7 +131,11 @@ public class EndpointController {
                 .filter(Module::isActive)
                 .map(Module::getName).collect(Collectors.toList());
 
-        return endpointTypes.stream().filter(type -> activeModuleNames.contains(type.replaceAll("-client", "").replaceAll("-server", ""))).collect(Collectors.toList());
+        return endpointTypes.stream()
+                            .filter(type -> activeModuleNames.contains(type.replaceAll("-client", "")
+                                                                                .replaceAll("-server", "")
+                                                                                .replaceAll("-sync", "")))
+                                                                                .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/type/{type}", method = {RequestMethod.GET})

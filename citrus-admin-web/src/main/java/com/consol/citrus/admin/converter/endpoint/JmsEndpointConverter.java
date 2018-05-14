@@ -17,42 +17,21 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.model.config.jms.JmsEndpointModel;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  */
 @Component
-public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointModel> {
-
-    @Override
-    protected String getId(JmsEndpointModel model) {
-        return model.getId();
-    }
-
-    @Override
-    protected Map<String, Class<?>> getOptionTypeMappings() {
-        Map<String, Class<?>> mappings = super.getOptionTypeMappings();
-        mappings.put("connectionFactory", ConnectionFactory.class);
-        mappings.put("jmsTemplate", JmsTemplate.class);
-        mappings.put("destination", Destination.class);
-        return mappings;
-    }
-
-    @Override
-    protected Map<String, Object> getDefaultValueMappings() {
-        Map<String, Object> mappings = super.getDefaultValueMappings();
-        mappings.put("pubSubDomain", FALSE);
-        return mappings;
-    }
+public class JmsEndpointConverter extends JmsAdapterConverter<JmsEndpointModel> {
 
     @Override
     public Class<JmsEndpointModel> getSourceModelClass() {
         return JmsEndpointModel.class;
+    }
+
+    @Override
+    public String getEndpointType() {
+        return "jms";
     }
 }
