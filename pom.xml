@@ -92,9 +92,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:christophd/citrus-admin.git</connection>
-    <developerConnection>scm:git:git@github.com/christophd/citrus-admin.git</developerConnection>
-    <url>http://github.com/christophd/citrus-admin.git</url>
+    <connection>scm:git:git@github.com:citrusframework/citrus-admin.git</connection>
+    <developerConnection>scm:git:git@github.com/citrusframework/citrus-admin.git</developerConnection>
+    <url>http://github.com/citrusframework/citrus-admin.git</url>
   </scm>
 
   <organization>

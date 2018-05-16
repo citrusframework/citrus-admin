@@ -134,8 +134,8 @@
             <artifactId>maven-scm-plugin</artifactId>
             <version>1.9.5</version>
             <configuration>
-              <connectionUrl>scm:git:git@github.com:christophd/citrus-admin.git</connectionUrl>
-              <developerConnectionUrl>scm:git:git@github.com:christophd/citrus-admin.git</developerConnectionUrl>
+              <connectionUrl>scm:git:git@github.com:citrusframework/citrus-admin.git</connectionUrl>
+              <developerConnectionUrl>scm:git:git@github.com:citrusframework/citrus-admin.git</developerConnectionUrl>
               <scmVersion>gh-pages</scmVersion>
               <scmVersionType>branch</scmVersionType>
             </configuration>

@@ -7,7 +7,7 @@ are project and configuration management as well as test execution and reporting
 
 ![Dashboard](citrus-admin-docs/src/main/asciidoc/images/screenshots/project-dashboard.png)
 
-See the complete [User Manual](https://christophd.github.io/citrus-admin/) for a detailed description 
+See the complete [User Manual](https://citrusframework.org/citrus-admin/) for a detailed description 
 on all features ond how to use them.
 
 Docker image
@@ -149,7 +149,7 @@ That's it you are ready to use the Citrus administration UI. Next thing to do is
 Development
 ---------
 
-After forking/cloning the source code repository from [https://github.com/christophd/citrus-admin](https://github.com/christophd/citrus-admin) you can build the application locally with Maven:
+After forking/cloning the source code repository from [https://github.com/citrusframework/citrus-admin](https://github.com/citrusframework/citrus-admin) you can build the application locally with Maven:
 
 ```
 mvn clean install
@@ -184,7 +184,7 @@ Resources
 ---------
 
 * Citrus's source repository is hosted on github.com. You can fork/clone the
-repository on [https://github.com/christophd/citrus-admin](https://github.com/christophd/citrus-admin)
+repository on [https://github.com/citrusframework/citrus-admin](https://github.com/citrusframework/citrus-admin)
 
 * Find our blog and more interesting articles around Citrus on
 [http://labs.consol.de](http://labs.consol.de) and checkout the various post categories for selecting a specific topic.
@@ -212,7 +212,7 @@ Bugs
 ---------
 
 Please report any bugs and/or feature requests to dev@citrusframework.org
-or directly to http://github.com/christophd/citrus-admin/issues
+or directly to http://github.com/citrusframework/citrus-admin/issues
   
 Team
 ---------
