@@ -25,7 +25,7 @@ import com.consol.citrus.admin.configuration.SystemProperty;
 @SystemConfigurable
 public class MavenConfiguration {
 
-    @SystemProperty(name = "sweetest.maven.home", environment = "MAVEN_HOME", defaultValue = "")
+    @SystemProperty(name = "citrus.admin.maven.home", environment = "MAVEN_HOME", defaultValue = "")
     private String mavenHome;
 
     /**
