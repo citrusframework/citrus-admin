@@ -219,9 +219,6 @@ Team
 
 ```
 ConSol Software GmbH
-Christoph Deppisch
-christoph.deppisch@consol.de
-
 http://www.citrusframework.org
 ```
 
