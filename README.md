@@ -219,6 +219,8 @@ Team
 
 ```
 ConSol Software GmbH
+citrus-dev-l@consol.de
+
 http://www.citrusframework.org
 ```
 
